@@ -475,6 +475,16 @@ Note:
                     <div class="sum-row total"><span>GRAND TOTAL:</span> <span>RM <span id="grandTotal_screen">0.00</span></span></div>
                 </div>
 
+                <div class="clearfix print-only" id="internalPrintFooter">
+                    <div class="summary-box">
+                        <div class="sum-row" id="sumWeight_print_row"><span id="sumWeight_print_label">Est. Total Wt:</span> <span style="font-weight:800; color:#0f172a;" id="sumWeight_print">0 kg</span></div>
+                        <div class="sum-row" id="sumSubtotal_print_row"><span>Subtotal:</span> <span>RM <span id="sumSubtotal_print">0.00</span></span></div>
+                        <div class="sum-row" id="sumDiscount_print_row"><span>Discount:</span> <span style="color: #b91c1c;">- RM <span id="sumDiscount_print">0.00</span></span></div>
+                        <div class="sum-row" id="sumSST_print_row"><span>SST Tax:</span> <span>+ RM <span id="sumSST_print">0.00</span></span></div>
+                        <div class="sum-row total"><span>GRAND TOTAL:</span> <span style="float:right;">RM <span id="grandTotal_print">0.00</span></span></div>
+                    </div>
+                </div>
+
                 <div class="section-title" style="margin-top:0;">Assembly Draft (Auto-calculated: <span id="totalPanelsCount" style="color:#ea580c;">0</span> panels)</div>
                 <div class="visual-container" id="visualsArea">
                     <div class="view-box"><div class="view-title">Top</div><div id="topGrid" class="grid-draft"></div></div>
@@ -536,6 +546,13 @@ Note:
             </div>
         </div>
 
+        <div class="print-footer print-only" id="internalSig">
+            <div class="sig-box">
+                <p>Issued By:</p>
+                <div class="sig-line"></div>
+                <p><strong>JUTARAMA INDUSTRIES (M) SDN BHD</strong></p>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -592,9 +609,10 @@ Note:
                     <strong>Supply and Install New <span id="cpMaterial"></span> Pressed Steel Tank Size: <span id="cpDims"></span></strong><br><br>
                     Comply to <span id="cpStd"></span><br>
                     <span style="display:inline-block; margin-top:8px;">a) Ladders: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="cpLadders"></span></span><br>
-                    <span>b) Water Level Ind.: &nbsp;&nbsp;<span id="cpWLI"></span></span><br>
-                    <span>c) Tank to be sit on existing I-Beam or RC plinths (to be provided by client)</span><br>
-                    <span>d) Exclude flanges, nozzles, vortex inhibitor, pipe works valves and etc..</span>
+                    <span>b) Water Level Ind.: &nbsp;&nbsp;<span id="cpWLI"></span></span>
+                    <span id="cpPartSection"></span><br>
+                    <span>d) Tank to be sit on existing I-Beam or RC plinths (to be provided by client)</span><br>
+                    <span>e) Exclude flanges, nozzles, vortex inhibitor, pipe works valves and etc..</span>
                 </td>
                 <td class="td-right" style="padding-top:15px;" id="cpUnitPrice"></td>
                 <td class="td-center" style="padding-top:15px;">1</td>
@@ -742,14 +760,15 @@ Note:
         }
     }
 
-    // --- FULL BOM STRUCTURE (BASE TEMPLATE WITH WEIGHTS) ---
+    // --- FULL BOM STRUCTURE (ADDED DEDICATED PARTITION ROW) ---
     const systemBaseStructure = [
         { category: "Panels", items: [
             {name: "Manhole Panel", def: 450, wt: 45}, 
             {name: "1.5mm Panel", def: 220, wt: 25}, 
             {name: "3.0mm Panel", def: 280, wt: 45}, 
             {name: "4.5mm Panel", def: 350, wt: 65}, 
-            {name: "Base Panel", def: 320, wt: 65}
+            {name: "Base Panel", def: 320, wt: 65},
+            {name: "Partition Panel", def: 280, wt: 45} // NEW: Explicit Partition Row
         ]},
         { category: "Cleat & Trusses", items: [
             {name: "Type A Cleat", def: 25, wt: 1}, {name: "Type B Cleat", def: 28, wt: 1.5}, {name: "Type C Cleat", def: 30, wt: 2},
@@ -923,16 +942,7 @@ Note:
                 });
             });
             
-            let factor = document.getElementById('unitChoice').value === 'ft' ? 4 : 1;
-            let L = Math.ceil(parseFloat(document.getElementById('length').value) / factor);
-            let W = Math.ceil(parseFloat(document.getElementById('width').value) / factor);
-            let H = Math.ceil(parseFloat(document.getElementById('height').value) / factor);
-            drawGrid('topGrid', L, W); drawGrid('bottomGrid', L, W);
-            drawGrid('frontGrid', L, H); drawGrid('backGrid', L, H);
-            drawGrid('leftGrid', W, H); drawGrid('rightGrid', W, H);
-            
-            calcTotals();
-            syncPrintHeader();
+            processTankData(); // Recalculate everything securely
         }
     }
 
@@ -953,8 +963,8 @@ Note:
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
             
-            // V3 CACHE BUSTER - Clears the old saved memory so it fetches the new layout properly
-            localStorage.removeItem('winkoProDataV3'); 
+            // V5 CACHE BUSTER - Hard wipe of browser memory for fresh layout
+            localStorage.removeItem('winkoProDataV5'); 
             
             document.getElementById('partChoice').value = 'no';
             togglePartitionDetails();
@@ -970,6 +980,34 @@ Note:
     // --- SYNC PRINT METADATA (DEFENSIVE PROGRAMMING) ---
     function syncPrintHeader() {
         try {
+            // Internal Print Strings
+            document.getElementById('metaQuoteId').innerText = document.getElementById('quoteIdInput').value || "N/A";
+            document.getElementById('metaProject').innerText = document.getElementById('projectName').value || "_____________________";
+            document.getElementById('metaStd').innerText = document.getElementById('stdChoice').value || "";
+            
+            let l = document.getElementById('length').value || 0;
+            let w = document.getElementById('width').value || 0;
+            let h = document.getElementById('height').value || 0;
+            let u = document.getElementById('unitChoice').value === 'ft' ? 'ft' : 'm';
+            let dimsStr = `${l}${u} (L) x ${w}${u} (W) x ${h}${u} (H)`;
+            document.getElementById('metaDims').innerText = dimsStr;
+            
+            let matStr = document.getElementById('coatChoice').value || "";
+            document.getElementById('metaCoat').innerText = matStr;
+            
+            let partChoice = document.getElementById('partChoice').value || "no";
+            let pQty = parseInt(document.getElementById('partQty').value) || 0;
+            let pLen = document.getElementById('partLen').value || 0;
+            let pHgt = document.getElementById('partHgt').value || 0;
+            let pType = document.getElementById('partType').value || 'Standard';
+            
+            let partDisplay = 'None';
+            if(partChoice === 'yes' && pQty > 0) { 
+                partDisplay = `${pQty}x ${pType} (${pLen}${u} x ${pHgt}${u})`; 
+            }
+            
+            document.getElementById('metaPart').innerText = partDisplay;
+            
             // CUSTOMER PRINT SYNC (Mapping to the ELCO layout variables)
             document.getElementById('cpCustName').innerText = document.getElementById('custCompany').value || document.getElementById('projectName').value || "Client Name";
             document.getElementById('cpCustAddress').innerHTML = (document.getElementById('custAddr').value || '').replace(/\n/g, '<br>');
@@ -977,27 +1015,24 @@ Note:
             document.getElementById('cpProject').innerText = document.getElementById('projectName').value || "";
             document.getElementById('cpRef').innerText = document.getElementById('quoteIdInput').value || "";
 
-            let matStr = document.getElementById('coatChoice').value || "";
             document.getElementById('cpMaterial').innerText = matStr;
-            
-            let l = document.getElementById('length').value || 0;
-            let w = document.getElementById('width').value || 0;
-            let h = document.getElementById('height').value || 0;
-            let u = document.getElementById('unitChoice').value === 'ft' ? 'ft' : 'm';
-            let dimsStr = `${l}${u} (L) x ${w}${u} (W) x ${h}${u} (H)`;
-            
             document.getElementById('cpDims').innerText = dimsStr;
             document.getElementById('cpStd').innerText = document.getElementById('stdChoice').value || "";
 
-            // Safely grab dynamic select inputs if they exist in the DOM
+            // Dynamic Partition Injector for Customer Print
+            if(partChoice === 'yes' && pQty > 0) {
+                document.getElementById('cpPartSection').innerHTML = `<br><span style="display:inline-block; margin-top:8px;">c) Partition: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${partDisplay}</span>`;
+            } else {
+                document.getElementById('cpPartSection').innerHTML = '';
+            }
+
             let extLad = document.getElementById('extLadMat') ? document.getElementById('extLadMat').value : '';
             let intLad = document.getElementById('intLadMat') ? document.getElementById('intLadMat').value : '';
-            document.getElementById('cpLadders').innerText = `${intLad} Internal Ladder, ${extLad} External Ladder`;
+            document.getElementById('cpLadders').innerText = `${intLad} Internal, ${extLad} External`;
 
             let wli = document.getElementById('wliType') ? document.getElementById('wliType').value : '';
             document.getElementById('cpWLI').innerText = wli;
 
-            // Update Both text boxes to the 2 pages
             document.getElementById('cpShortExclusionsText').innerHTML = (document.getElementById('shortExclusions').value || '').replace(/\n/g, '<br>');
             document.getElementById('cpFullTermsText').innerHTML = (document.getElementById('fullTermsNotes').value || '');
             
@@ -1029,11 +1064,11 @@ Note:
                 if(it.selectId && document.getElementById(it.selectId)) data[it.selectId] = document.getElementById(it.selectId).value; 
             });
         });
-        localStorage.setItem('winkoProDataV3', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV5', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV3');
+        let savedData = localStorage.getItem('winkoProDataV5');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1179,7 +1214,6 @@ Note:
         const pL = Math.ceil(pLen_in / factor);
         const pH = Math.ceil(pHgt_in / factor);
 
-        // Update Dynamic Plinth Text
         const numPlinths = W + 1;
         const plinthLen = L_in;
         document.getElementById('plinthCalcText').innerText = `Recommendation: Require ${numPlinths} rows of concrete plinths, each ${plinthLen}${unitStr} long, spaced at ${spacingStr} C/C.`;
@@ -1191,8 +1225,10 @@ Note:
         // Math
         let roof = L * W, base = L * W, sides = ((L * 2) + (W * 2)) * H;
         
-        if(partChoice === 'yes' && pQty > 0) { sides += (pL * pH * pQty); }
-        let totalP = roof + base + sides;
+        // Explicit Partition Math
+        let partPanels = 0;
+        if(partChoice === 'yes' && pQty > 0) { partPanels = (pL * pH * pQty); }
+        let totalP = roof + base + sides + partPanels;
 
         document.getElementById('totalPanelsCount').innerText = totalP;
 
@@ -1208,12 +1244,15 @@ Note:
         if(document.getElementById('qty_item_0_2')) document.getElementById('qty_item_0_2').value = sides; 
         if(document.getElementById('qty_item_0_3')) document.getElementById('qty_item_0_3').value = 0; 
         if(document.getElementById('qty_item_0_4')) document.getElementById('qty_item_0_4').value = base; 
+        
+        // NEW: Explicitly assign Partition panels to their own dedicated BOM row (Item 5 in Category 0)
+        if(document.getElementById('qty_item_0_5')) document.getElementById('qty_item_0_5').value = partPanels; 
 
         // Truss
         if(document.getElementById('qty_item_1_3')) document.getElementById('qty_item_1_3').value = L_in; 
         if(document.getElementById('qty_item_1_4')) document.getElementById('qty_item_1_4').value = L_in; 
 
-        // Accessories
+        // Accessories scale with totalP (including partitions)
         if(document.getElementById('qty_item_3_0')) document.getElementById('qty_item_3_0').value = H_in; 
         if(document.getElementById('qty_item_3_1')) document.getElementById('qty_item_3_1').value = H_in; 
         if(document.getElementById('qty_item_3_2')) document.getElementById('qty_item_3_2').value = 1; 
@@ -1225,7 +1264,6 @@ Note:
         if(document.getElementById('qty_item_4_0') && (!document.getElementById('qty_item_4_0').value || document.getElementById('qty_item_4_0').value == "0")) document.getElementById('qty_item_4_0').value = 1;
         if(document.getElementById('qty_item_4_1') && (!document.getElementById('qty_item_4_1').value || document.getElementById('qty_item_4_1').value == "0")) document.getElementById('qty_item_4_1').value = 1;
 
-        // Drawings
         drawGrid('topGrid', L, W); drawGrid('bottomGrid', L, W);
         drawGrid('frontGrid', L, H); drawGrid('backGrid', L, H);
         drawGrid('leftGrid', W, H); drawGrid('rightGrid', W, H);
@@ -1237,7 +1275,6 @@ Note:
     // --- CSV EXPORT (BUG FIX FOR FIREFOX/CHROME BLOCKING) ---
     function exportCSV() {
         try {
-            // Added BOM marker \uFEFF to ensure Excel reads UTF-8 characters correctly
             let csv = "\uFEFFWINKO INDUSTRIAL SDN BHD\n";
             csv += "OFFICIAL TECHNICAL QUOTATION\n\n";
             
