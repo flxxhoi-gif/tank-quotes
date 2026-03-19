@@ -65,7 +65,7 @@
         .col-input input { width: 100%; padding: 5px; text-align: center; border: 1px dashed #0284c7; border-radius: 4px; background: #f0f9ff; font-weight: bold; color: #0f172a;}
         .col-input input:focus { background: #fff; border: 1px solid #0284c7; outline: none; text-align: right;}
         
-        .section-header { background: #f1f5f9; font-weight: bold; text-align: left; padding-left: 10px; color: #475569; }
+        .section-header { background: #f1f5f9; font-weight: bold; text-align: left; color: #475569; }
         .bom-inline-select { flex: 0 0 auto; max-width: 125px; margin-left: 4px; padding: 2px 6px; border: 1px solid #94a3b8; border-radius: 3px; font-size: 0.85em; font-weight: bold; color: #0369a1; background: #fff; cursor: pointer;}
         .bom-inline-select:focus { outline: none; border-color: #0284c7; }
 
@@ -117,26 +117,29 @@
 
             .section-title { margin-top: 20px !important; margin-bottom: 12px !important; background: transparent !important; border-left: none !important; border-bottom: 2px solid #e2e8f0 !important; padding: 0 0 5px 0 !important; color: #0f172a !important; font-size: 12pt !important; text-transform: uppercase; letter-spacing: 0.5px;}
             
-            /* Sleek Table Design */
+            /* Sleek Table Design with Zebra Striping */
             table { font-size: 9pt; margin-bottom: 20px; border-collapse: collapse; width: 100%; }
             tr { border-bottom: 1px solid #e2e8f0; page-break-inside: avoid; }
+            /* Striping for items, ignoring headers */
+            tr:nth-child(even):not(.section-header-row) { background-color: #f8fafc !important; }
+            
             th { background-color: #0f172a !important; color: #ffffff !important; padding: 10px; border: none; font-weight: 600; text-align: left;}
             th.text-center { text-align: center; } th.text-right { text-align: right; }
             td { border: none; padding: 8px 10px; color: #1e293b;}
-            td.text-center { text-align: center; } td.text-right { text-align: right; }
-            .section-header { background-color: #f1f5f9 !important; font-weight: 700; color: #0f172a !important; border-bottom: 1px solid #cbd5e1 !important; padding-top: 15px !important;}
+            td.text-center { text-align: center; } td.text-right { text-align: right; font-weight: 700; color: #0f172a !important;}
+            .section-header { background-color: #e2e8f0 !important; font-weight: 700; color: #0f172a !important; border-bottom: none !important; padding: 8px 10px !important; text-transform: uppercase; font-size: 8.5pt;}
             .col-item { background: transparent !important; font-weight: normal; }
             
             input, .desc-input, .bom-inline-select { border: none !important; background: transparent !important; color: #1e293b !important; box-shadow: none !important; font-weight: 500; padding: 0 !important; font-size: inherit; appearance: none; -webkit-appearance: none; width: auto;}
             .bom-inline-select { margin-left: 4px; color: #64748b !important;}
             
-            /* Professional Summary Box */
+            /* Professional Summary Box perfectly aligned */
             .clearfix::after { content: ""; clear: both; display: table; }
-            .summary-box { background: #f8fafc !important; color: #0f172a !important; border: 1px solid #cbd5e1 !important; border-radius: 6px; padding: 15px 20px !important; margin-top: 10px; width: 320px; float: right; page-break-inside: avoid; box-shadow: none;}
+            .summary-box { background: #f8fafc !important; color: #0f172a !important; border: 1px solid #cbd5e1 !important; border-radius: 6px; padding: 15px 20px !important; margin-top: 10px; width: 340px; float: right; page-break-inside: avoid; box-shadow: none;}
             .sum-row { border-bottom: 1px solid #e2e8f0 !important; margin-bottom: 8px; padding-bottom: 6px; color: #475569 !important; font-size: 9.5pt; font-weight: 500;}
             .sum-row.total { background: #0f172a !important; color: #ffffff !important; border: none !important; padding: 12px !important; font-size: 13pt; margin: 10px -20px -15px -20px; border-radius: 0 0 5px 5px;}
 
-            .tc-box { margin-top: 10px; padding-right: 20px; font-size: 8.5pt; color: #475569; white-space: pre-wrap; width: calc(100% - 340px); float: left; line-height: 1.5;}
+            .tc-box { margin-top: 10px; padding-right: 20px; font-size: 8.5pt; color: #475569; white-space: pre-wrap; width: calc(100% - 360px); float: left; line-height: 1.5;}
             .tc-title { font-weight: 700; color: #0f172a; margin-bottom: 8px; font-size: 9.5pt; text-transform: uppercase;}
 
             .visual-container { max-width: 100%; display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin: 0 auto 20px auto; page-break-inside: avoid; clear: both;}
@@ -367,8 +370,8 @@
         document.querySelectorAll('.unitLabel').forEach(el => el.innerText = unit);
     }
 
-    // --- FULL BOM STRUCTURE ---
-    const bomStructure = [
+    // --- FULL BOM STRUCTURE (BASE TEMPLATE) ---
+    const baseBomStructure = [
         { category: "Panels", items: [
             {name: "Manhole Panel", def: 450, wt: 45}, 
             {name: "1.5mm Panel", def: 220, wt: 25}, 
@@ -397,7 +400,40 @@
         ]}
     ];
 
+    let bomStructure = JSON.parse(JSON.stringify(baseBomStructure));
+    let customRowCounts = JSON.parse(localStorage.getItem('winkoCustomCounts')) || [0,0,0,0,0];
+
     const configIDs = ['quoteIdInput', 'stdChoice','unitChoice','partChoice','coatChoice','length','width','height','discountPct','sstPct', 'quoteNotes'];
+
+    // --- DYNAMIC CUSTOM ROW LOGIC ---
+    function applyCustomRows() {
+        bomStructure = JSON.parse(JSON.stringify(baseBomStructure));
+        for(let i=0; i<customRowCounts.length; i++) {
+            for(let j=0; j<customRowCounts[i]; j++) {
+                bomStructure[i].items.push({name: "Custom Added Item", def: 0, wt: 0});
+            }
+        }
+    }
+
+    function addCategoryRow(sIdx) {
+        savePrices(); 
+        customRowCounts[sIdx]++;
+        localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
+        applyCustomRows();
+        buildBOMTable();
+        loadPrices();
+    }
+
+    function removeCategoryRow(sIdx) {
+        if(customRowCounts[sIdx] > 0) {
+            savePrices();
+            customRowCounts[sIdx]--;
+            localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
+            applyCustomRows();
+            buildBOMTable();
+            loadPrices();
+        }
+    }
 
     // --- MEMORY BANK LOGIC ---
     function refreshMemoryDropdown() {
@@ -416,6 +452,8 @@
         let data = {};
         configIDs.forEach(id => { if(document.getElementById(id)) data[id] = document.getElementById(id).value; });
         
+        data.customRowCounts = JSON.parse(JSON.stringify(customRowCounts));
+
         bomStructure.forEach((sec, sIdx) => {
             sec.items.forEach((it, iIdx) => {
                 let uId = `item_${sIdx}_${iIdx}`;
@@ -423,7 +461,7 @@
                 data[`wt_${uId}`] = document.getElementById(`wt_${uId}`).value;
                 data[`price_${uId}`] = document.getElementById(`price_${uId}`).value;
                 data[`qty_${uId}`] = document.getElementById(`qty_${uId}`).value;
-                if(it.selectId) data[it.selectId] = document.getElementById(it.selectId).value; 
+                if(it.selectId && document.getElementById(it.selectId)) data[it.selectId] = document.getElementById(it.selectId).value; 
             });
         });
 
@@ -444,6 +482,11 @@
         let savedData = memory[pName];
         
         if (savedData) {
+            customRowCounts = savedData.customRowCounts || [0,0,0,0,0];
+            localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
+            applyCustomRows();
+            buildBOMTable();
+
             document.getElementById('projectName').value = pName;
             configIDs.forEach(id => {
                 if (savedData[id] !== undefined && document.getElementById(id)) {
@@ -490,6 +533,9 @@
 
     function resetDefaultPrices() {
         if(confirm("Reset the current board back to default template?")) {
+            customRowCounts = [0,0,0,0,0];
+            localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
+            applyCustomRows();
             buildBOMTable();
             document.getElementById('projectName').value = "";
             processTankData();
@@ -515,12 +561,63 @@
         document.getElementById('printNotesDisplay').innerHTML = notes.replace(/\n/g, '<br>');
     }
 
+    // --- SAVE / LOAD TEMPORARY BROWSER DATA ---
+    function savePrices() {
+        let data = {};
+        configIDs.forEach(id => { if(document.getElementById(id)) data[id] = document.getElementById(id).value; });
+        
+        bomStructure.forEach((sec, sIdx) => {
+            sec.items.forEach((it, iIdx) => {
+                let uId = `item_${sIdx}_${iIdx}`;
+                if(document.getElementById(`desc_${uId}`)) data[`desc_${uId}`] = document.getElementById(`desc_${uId}`).value;
+                if(document.getElementById(`wt_${uId}`)) data[`wt_${uId}`] = document.getElementById(`wt_${uId}`).value;
+                if(document.getElementById(`price_${uId}`)) data[`price_${uId}`] = document.getElementById(`price_${uId}`).value;
+                if(document.getElementById(`qty_${uId}`)) data[`qty_${uId}`] = document.getElementById(`qty_${uId}`).value;
+                if(it.selectId && document.getElementById(it.selectId)) data[it.selectId] = document.getElementById(it.selectId).value; 
+            });
+        });
+        localStorage.setItem('jutaramaProData', JSON.stringify(data));
+    }
+
+    function loadPrices() {
+        let savedData = localStorage.getItem('jutaramaProData');
+        if (savedData) {
+            savedData = JSON.parse(savedData);
+            configIDs.forEach(id => {
+                if (savedData[id] !== undefined && document.getElementById(id)) {
+                    document.getElementById(id).value = savedData[id];
+                }
+            });
+            updateLabels();
+            
+            bomStructure.forEach((sec, sIdx) => {
+                sec.items.forEach((it, iIdx) => {
+                    let uId = `item_${sIdx}_${iIdx}`;
+                    if(savedData[`desc_${uId}`] && document.getElementById(`desc_${uId}`)) document.getElementById(`desc_${uId}`).value = savedData[`desc_${uId}`]; 
+                    if(savedData[`wt_${uId}`] && document.getElementById(`wt_${uId}`)) document.getElementById(`wt_${uId}`).value = savedData[`wt_${uId}`]; 
+                    if(savedData[`price_${uId}`] && document.getElementById(`price_${uId}`)) document.getElementById(`price_${uId}`).value = savedData[`price_${uId}`];
+                    if(savedData[`qty_${uId}`] && document.getElementById(`qty_${uId}`)) document.getElementById(`qty_${uId}`).value = savedData[`qty_${uId}`];
+                    if(it.selectId && savedData[it.selectId] && document.getElementById(it.selectId)) document.getElementById(it.selectId).value = savedData[it.selectId]; 
+                });
+            });
+        }
+    }
+
     // --- BUILD & CALCULATE ---
     function buildBOMTable() {
         const tbody = document.getElementById('bomBody');
         let html = '';
         bomStructure.forEach((sec, sIdx) => {
-            html += `<tr><td colspan="5" class="section-header">${sec.category}</td></tr>`;
+            html += `<tr class="section-header-row"><td colspan="5" class="section-header" style="padding:0;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span>${sec.category}</span>
+                    <div class="no-print">
+                        <button type="button" onclick="addCategoryRow(${sIdx})" style="padding:4px 8px; font-size:11px; background:#e0f2fe; border:1px solid #0284c7; color:#0284c7; border-radius:3px; cursor:pointer; font-weight:bold;">+ Add Item</button>
+                        <button type="button" onclick="removeCategoryRow(${sIdx})" style="padding:4px 8px; font-size:11px; background:#ffe4e6; border:1px solid #e11d48; color:#e11d48; border-radius:3px; cursor:pointer; margin-left:6px; font-weight:bold;">- Remove</button>
+                    </div>
+                </div>
+            </td></tr>`;
+            
             sec.items.forEach((it, iIdx) => {
                 const id = `item_${sIdx}_${iIdx}`;
                 
@@ -552,16 +649,16 @@
         bomStructure.forEach((sec, sIdx) => {
             sec.items.forEach((it, iIdx) => {
                 const id = `item_${sIdx}_${iIdx}`;
-                const q = parseFloat(document.getElementById(`qty_${id}`).value) || 0;
-                const p = parseFloat(document.getElementById(`price_${id}`).value) || 0;
-                const w = parseFloat(document.getElementById(`wt_${id}`).value) || 0;
-                
-                const total = q * p;
-                document.getElementById(`total_${id}`).innerText = total.toLocaleString('en-MY', {minimumFractionDigits:2});
-                subtotal += total;
-
-                // Calculate Custom Weight
-                totalWeight += q * w;
+                if(document.getElementById(`qty_${id}`)) {
+                    const q = parseFloat(document.getElementById(`qty_${id}`).value) || 0;
+                    const p = parseFloat(document.getElementById(`price_${id}`).value) || 0;
+                    const w = parseFloat(document.getElementById(`wt_${id}`).value) || 0;
+                    
+                    const total = q * p;
+                    document.getElementById(`total_${id}`).innerText = total.toLocaleString('en-MY', {minimumFractionDigits:2});
+                    subtotal += total;
+                    totalWeight += q * w;
+                }
             });
         });
 
@@ -614,30 +711,32 @@
 
         // Auto-fill Logic
         let manholeInput = document.getElementById('qty_item_0_0'); 
-        let manholeQty = parseInt(manholeInput.value) || 0;
-        if(manholeQty === 0) manholeQty = 1; 
-        manholeInput.value = manholeQty;
+        if(manholeInput) {
+            let manholeQty = parseInt(manholeInput.value) || 0;
+            if(manholeQty === 0) manholeQty = 1; 
+            manholeInput.value = manholeQty;
+            if(document.getElementById('qty_item_0_1')) document.getElementById('qty_item_0_1').value = Math.max(0, roof - manholeQty); 
+        }
 
-        document.getElementById('qty_item_0_1').value = Math.max(0, roof - manholeQty); 
-        document.getElementById('qty_item_0_2').value = sides; 
-        document.getElementById('qty_item_0_3').value = 0; 
-        document.getElementById('qty_item_0_4').value = base; 
+        if(document.getElementById('qty_item_0_2')) document.getElementById('qty_item_0_2').value = sides; 
+        if(document.getElementById('qty_item_0_3')) document.getElementById('qty_item_0_3').value = 0; 
+        if(document.getElementById('qty_item_0_4')) document.getElementById('qty_item_0_4').value = base; 
 
         // Truss
-        document.getElementById('qty_item_1_3').value = L_in; 
-        document.getElementById('qty_item_1_4').value = L_in; 
+        if(document.getElementById('qty_item_1_3')) document.getElementById('qty_item_1_3').value = L_in; 
+        if(document.getElementById('qty_item_1_4')) document.getElementById('qty_item_1_4').value = L_in; 
 
         // Accessories
-        document.getElementById('qty_item_3_0').value = H_in; 
-        document.getElementById('qty_item_3_1').value = H_in; 
-        document.getElementById('qty_item_3_2').value = 1; 
-        document.getElementById('qty_item_3_3').value = 1; 
-        document.getElementById('qty_item_3_4').value = Math.ceil((totalP * 4.2) / 15); 
-        document.getElementById('qty_item_3_5').value = Math.ceil(totalP * 16 * 1.05); 
+        if(document.getElementById('qty_item_3_0')) document.getElementById('qty_item_3_0').value = H_in; 
+        if(document.getElementById('qty_item_3_1')) document.getElementById('qty_item_3_1').value = H_in; 
+        if(document.getElementById('qty_item_3_2')) document.getElementById('qty_item_3_2').value = 1; 
+        if(document.getElementById('qty_item_3_3')) document.getElementById('qty_item_3_3').value = 1; 
+        if(document.getElementById('qty_item_3_4')) document.getElementById('qty_item_3_4').value = Math.ceil((totalP * 4.2) / 15); 
+        if(document.getElementById('qty_item_3_5')) document.getElementById('qty_item_3_5').value = Math.ceil(totalP * 16 * 1.05); 
 
         // Services
-        if(!document.getElementById('qty_item_4_0').value || document.getElementById('qty_item_4_0').value == "0") document.getElementById('qty_item_4_0').value = 1;
-        if(!document.getElementById('qty_item_4_1').value || document.getElementById('qty_item_4_1').value == "0") document.getElementById('qty_item_4_1').value = 1;
+        if(document.getElementById('qty_item_4_0') && (!document.getElementById('qty_item_4_0').value || document.getElementById('qty_item_4_0').value == "0")) document.getElementById('qty_item_4_0').value = 1;
+        if(document.getElementById('qty_item_4_1') && (!document.getElementById('qty_item_4_1').value || document.getElementById('qty_item_4_1').value == "0")) document.getElementById('qty_item_4_1').value = 1;
 
         // Drawings
         drawGrid('topGrid', L, W); drawGrid('bottomGrid', L, W);
@@ -648,34 +747,67 @@
         savePrices();
     }
 
-    // --- CSV EXPORT ---
+    // --- CSV EXPORT (MASSIVE UPGRADE) ---
     function exportCSV() {
-        let csv = "Category,Item Description,Qty,Unit Wt (kg),Unit Price (RM),Total (RM)\n";
+        // Build the corporate header
+        let csv = "WINKO INDUSTRIAL SDN BHD\n";
+        csv += "OFFICIAL TECHNICAL QUOTATION\n\n";
+        
+        let qid = document.getElementById('quoteIdInput').value || "N/A";
+        let proj = document.getElementById('projectName').value || "Unnamed Project";
+        let d = new Date().toLocaleDateString('en-MY');
+        let dim = document.getElementById('metaDims').innerText;
+        let mat = document.getElementById('coatChoice').value;
+        let part = document.getElementById('partChoice').value === 'yes' ? 'Yes' : 'No';
+        
+        csv += `"Quote No:","${qid}"\n`;
+        csv += `"Project / Client:","${proj}"\n`;
+        csv += `"Date:","${d}"\n`;
+        csv += `"Dimensions:","${dim}"\n`;
+        csv += `"Material:","${mat}"\n`;
+        csv += `"Partition:","${part}"\n\n`;
+
+        // Table Headers
+        csv += "Category,Item Description,Qty,Unit Wt (kg),Unit Price (RM),Total (RM)\n";
+        
+        // Table Data
         bomStructure.forEach((s, si) => { s.items.forEach((it, ii) => {
             let id = `item_${si}_${ii}`;
+            if(!document.getElementById(`desc_${id}`)) return;
+            
             let label = document.getElementById(`desc_${id}`).value;
-            if(it.selectId) { label += " (" + document.getElementById(it.selectId).value + ")"; }
+            if(it.selectId && document.getElementById(it.selectId)) { label += " (" + document.getElementById(it.selectId).value + ")"; }
             let q = document.getElementById(`qty_${id}`).value;
             let w = document.getElementById(`wt_${id}`).value;
             let p = document.getElementById(`price_${id}`).value;
             let t = document.getElementById(`total_${id}`).innerText.replace(/,/g, '');
             if(q > 0) csv += `"${s.category}","${label}",${q},${w},${p},${t}\n`;
         })});
+        
+        // Blank row before totals
+        csv += `\n`;
+        
+        // Grab totals
         let sub = document.getElementById('sumSubtotal_screen').innerText.replace(/,/g, '');
         let disc = document.getElementById('sumDiscount_screen').innerText.replace(/,/g, '');
         let sst = document.getElementById('sumSST_screen').innerText.replace(/,/g, '');
         let grand = document.getElementById('grandTotal_screen').innerText.replace(/,/g, '');
-        
-        let wt = document.getElementById('sumWeight_screen').innerText;
+        let wt = document.getElementById('sumWeight_screen').innerText.replace(' kg', '').replace(/,/g, '');
 
-        csv += `\n,,,"Estimated Weight",${wt}\n,,,"Subtotal",${sub}\n,,,"Discount",-${disc}\n,,,"SST Tax",${sst}\n,,,"GRAND TOTAL",${grand}\n`;
+        // Formatted Totals
+        csv += `,,,,"Est. Total Weight (kg)",${wt}\n`;
+        csv += `,,,,"Subtotal (RM)",${sub}\n`;
+        csv += `,,,,"Discount (RM)",-${disc}\n`;
+        csv += `,,,,"SST Tax (RM)",${sst}\n`;
+        csv += `,,,,"GRAND TOTAL (RM)",${grand}\n`;
 
         const blob = new Blob([csv], { type: 'text/csv' });
         const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = 'Jutarama_Quotation_BOM.csv'; a.click();
+        const a = document.createElement('a'); a.href = url; a.download = `Jutarama_Quote_${qid}.csv`; a.click();
     }
 
-    // Initialize
+    // Initialize Base Data
+    applyCustomRows();
     buildBOMTable();
     loadPrices();
 </script>
