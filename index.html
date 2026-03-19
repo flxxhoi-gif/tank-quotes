@@ -23,7 +23,7 @@
         .login-card button:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(234, 88, 12, 0.3); }
         
         #mainContent, #adminContent { display: none; }
-        #customerPrintView { display: none; } /* Hidden on screen by default */
+        #customerPrintView { display: none; } 
 
         /* --- DASHBOARD STYLES (SCREEN) --- */
         .container { max-width: 1550px; margin: auto; background: white; padding: 35px; border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.01); }
@@ -86,7 +86,6 @@
         .export-btn { background: #334155; } .export-btn:hover { background: #1e293b; box-shadow: 0 8px 15px -3px rgba(15,23,42,0.3);}
         .print-btn { background: #059669; } .print-btn:hover { background: #047857; box-shadow: 0 8px 15px -3px rgba(5,150,105,0.3);}
 
-        /* Drafting Visuals */
         .visual-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; justify-items: center; }
         .view-box { text-align: center; background: #fff; padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; width: 100%; max-width: 160px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);} 
         .view-title { font-size: 0.75em; font-weight: 800; margin-bottom: 8px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;}
@@ -166,7 +165,7 @@
             body.print-internal .sum-row { border-bottom: 1px solid #cbd5e1 !important; margin-bottom: 5px; padding-bottom: 3px; color: #334155 !important; font-size: 8pt; font-weight: 700;}
             body.print-internal .sum-row.total { background: #0f172a !important; color: #ffffff !important; border: none !important; padding: 8px !important; font-size: 11pt; margin: 8px -15px -10px -15px; border-radius: 0 0 2px 2px;}
 
-            body.print-internal .tc-box { display: none; } /* Hide T&C to save space internally */
+            body.print-internal .tc-box { display: none; } 
             
             body.print-internal .visual-container { max-width: 100%; display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin: 0 auto 15px auto; page-break-inside: avoid; clear: both;}
             body.print-internal .view-box { padding: 5px; border: 1px solid #cbd5e1 !important; background: #fff !important; border-radius: 4px; }
@@ -192,36 +191,40 @@
             body.print-customer #mainContent { display: none !important; }
             body.print-customer #customerPrintView { display: block !important; }
 
+            .cp-header { display: flex; margin-bottom: 25px;}
+            .cp-header-left { width: 35%; display: flex; align-items: center; justify-content: center; background: #475569; padding: 10px;}
+            .cp-header-right { width: 65%; padding-left: 20px;}
+            
             .cp-meta-layout { display: flex; justify-content: space-between; align-items: stretch; margin-bottom: 20px;}
-            .cp-meta-left { width: 50%; font-size: 9pt;}
+            .cp-meta-left { width: 45%; font-size: 8.5pt;}
             .cp-meta-left table { width: 100%; border: none; margin: 0;}
             .cp-meta-left td { border: none; padding: 2px 5px 2px 0; vertical-align: top;}
-            .cp-meta-left td:first-child { width: 70px; font-weight: normal; color: #475569;}
+            .cp-meta-left td:first-child { width: 70px; font-weight: normal; color: #000;}
             
-            .cp-meta-center { width: 15%; text-align: center; display: flex; align-items: center; justify-content: center;}
-            .cp-quotation-box { border: 2px solid #0f172a; padding: 8px 15px; font-weight: bold; font-size: 10pt; letter-spacing: 1px;}
+            .cp-meta-center { width: 20%; text-align: center; display: flex; align-items: center; justify-content: center;}
+            .cp-quotation-box { border: 2px solid #000; padding: 6px 15px; font-weight: bold; font-size: 10pt; letter-spacing: 1px;}
             
-            .cp-meta-right { width: 30%; font-size: 9pt; text-align: right;}
+            .cp-meta-right { width: 35%; font-size: 8.5pt; text-align: right;}
             .cp-meta-right table { width: 100%; border: none; margin: 0;}
             .cp-meta-right td { border: none; padding: 2px 0 2px 5px; vertical-align: top; text-align: left;}
-            .cp-meta-right td:first-child { width: 60px; font-weight: normal; color: #475569; text-align: right;}
+            .cp-meta-right td:first-child { width: 60px; font-weight: normal; color: #000; text-align: right;}
 
             /* Formal Customer Table */
-            .cp-table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 20px; font-size: 9pt; border: 2px solid #000; }
-            .cp-table th { background: #d1d5db !important; color: #000 !important; border: 1px solid #000; padding: 8px; font-weight: bold; text-align: center;}
-            .cp-table td { border: 1px solid #000; padding: 8px; vertical-align: top; color: #000;}
+            .cp-table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 15px; font-size: 9pt; border: 2px solid #000; }
+            .cp-table th { background: #d1d5db !important; color: #000 !important; border: 1px solid #000; padding: 6px; font-weight: bold; text-align: center; -webkit-print-color-adjust: exact;}
+            .cp-table td { border: 1px solid #000; padding: 6px; vertical-align: top; color: #000;}
             .cp-table .td-center { text-align: center;}
             .cp-table .td-right { text-align: right;}
             
             /* Customer T&C Block */
-            .cp-exclusions { border: 1px solid #000; padding: 10px; margin-bottom: 20px; background: #f8fafc !important; font-size: 8.5pt; line-height: 1.4;}
-            .cp-tnc { font-size: 8.5pt; margin-bottom: 40px; }
+            .cp-exclusions { border: 1px solid #000; padding: 8px 12px; margin-bottom: 20px; background: #f8fafc !important; font-size: 8pt; line-height: 1.4; -webkit-print-color-adjust: exact; page-break-inside: avoid;}
+            .cp-tnc { font-size: 8.5pt; margin-bottom: 30px; page-break-inside: avoid;}
             .cp-tnc-title { font-weight: bold; text-decoration: underline; margin-bottom: 5px; font-size: 9pt;}
-            .cp-tnc table { width: 100%; border: none;}
-            .cp-tnc td { border: none; padding: 3px 5px; vertical-align: top;}
-            .cp-tnc td:first-child { width: 150px; font-weight: bold; color: #334155;}
+            .cp-tnc table { width: 100%; border: none; border-collapse: collapse;}
+            .cp-tnc td { border: none; padding: 4px 5px; vertical-align: top;}
+            .cp-tnc td:first-child { width: 140px; font-weight: bold; color: #000;}
 
-            .cp-signoff { display: flex; justify-content: space-between; margin-top: 20px;}
+            .cp-signoff { display: flex; justify-content: space-between; margin-top: 15px; page-break-inside: avoid;}
             .cp-signoff-left { width: 50%; }
             .cp-signoff-left p { margin: 2px 0; font-size: 9pt;}
         }
@@ -286,6 +289,20 @@
             </div>
             <div class="header-right">
                 <h2 id="docTypeTitle">INTERNAL QUOTATION</h2>
+                <p><strong>Quote No:</strong> <span id="metaQuoteId"></span></p>
+                <p><strong>Date:</strong> <span id="metaDate"></span></p>
+            </div>
+        </div>
+
+        <div class="quote-meta print-only">
+            <div class="meta-box">
+                <div class="meta-item"><span class="meta-label">Prepared For:</span> <span class="meta-value" id="metaProject">________________</span></div>
+                <div class="meta-item"><span class="meta-label">Standard:</span> <span class="meta-value" id="metaStd"></span></div>
+            </div>
+            <div class="meta-box">
+                <div class="meta-item"><span class="meta-label">Dimensions:</span> <span class="meta-value" id="metaDims"></span></div>
+                <div class="meta-item"><span class="meta-label">Material:</span> <span class="meta-value" id="metaCoat"></span></div>
+                <div class="meta-item"><span class="meta-label">Partition:</span> <span class="meta-value" id="metaPart"></span></div>
             </div>
         </div>
 
@@ -368,7 +385,7 @@
                 </div>
                 <div class="config-grid no-print" style="margin-bottom: 15px; background: #f8fafc; padding:15px; border-radius:8px; border:1px solid #e2e8f0;">
                     <div class="form-group"><label>Quotation Validity</label><input type="text" id="tcValidity" value="14 Days from the date of quotation, subject to stock availability and our confirmation." oninput="syncPrintHeader(); savePrices();"></div>
-                    <div class="form-group"><label>Delivery Lead-time</label><input type="text" id="tcLead" value="6-10 weeks from official confirmation order, non-refundable down payment received and all technical details in good order. (NO Retention sump and LAD will be entertained)" oninput="syncPrintHeader(); savePrices();"></div>
+                    <div class="form-group"><label>Delivery Lead-time</label><input type="text" id="tcLead" value="6 - 10 weeks from official confirmation order, non-refundable down payment received and all technical details in good order. (NO Retention sump and LAD will be entertained)" oninput="syncPrintHeader(); savePrices();"></div>
                     <div class="form-group" style="grid-column: span 2;"><label>Delivery Location</label><input type="text" id="tcDelivery" value="Deliver to site exclude unloading, materials handling at site and hoisting." oninput="syncPrintHeader(); savePrices();"></div>
                     <div class="form-group" style="grid-column: span 2;"><label>Payment Terms</label><textarea id="tcPayment" rows="3" oninput="syncPrintHeader(); savePrices();">30% down payment upon confirmation of order
 50% payment before delivery
@@ -379,10 +396,10 @@
 
                 <div class="form-group no-print">
                     <label>Exclusions & Notes (Prints below Customer Table)</label>
-                    <textarea id="quoteNotes" rows="15" style="text-align:left; font-weight:500; font-size:13px;" oninput="syncPrintHeader(); savePrices();">- Float valve chamber or top sumps
-- Flanges, nozzles, pipes, vortex, valves, electrode sensor, pumps and filter.
-- Scaffolding
-- Unloading and hoisting of materials.
+                    <textarea id="quoteNotes" rows="16" style="text-align:left; font-weight:500; font-size:13px;" oninput="syncPrintHeader(); savePrices();">- Float valve chamber or top sumps
+- flanges, nozzles, pipes, vortex, valves, electrode sensor, pumps and filter.
+- scaffolding
+- unloading and hoisting of materials.
 - HIRARC, permit application, medical test and site safety supervisor.
 
 Note:
@@ -516,14 +533,14 @@ Note:
 
 <div id="customerPrintView">
     
-    <div class="print-header">
-        <div class="header-left">
-            <img src="winko logo.png" alt="Winko Logo" style="width:140px; height:auto; object-fit:contain;">
-            <div class="header-text" style="margin-left: 15px;">
-                <h1 style="font-size:14pt; margin:0; font-weight:bold;">JUTARAMA INDUSTRIES (M) SDN BHD <span style="font-size:10pt; font-weight:normal;">(749861-V)</span></h1>
-                <p style="margin:2px 0; font-size:8.5pt;">No. 19, Jalan Mega 2/1, Kawasan Perindustrian Mega 2, 43500 Semenyih, Selangor, Malaysia.</p>
-                <p style="margin:2px 0; font-size:8.5pt;">Tel: (60)-8727 7540 &nbsp;&nbsp;&nbsp; Email: sales@winko.my &nbsp;&nbsp;&nbsp; Web: www.winko.my</p>
-            </div>
+    <div class="print-header" style="display:flex; justify-content:space-between; margin-bottom: 25px;">
+        <div class="header-left" style="display:flex; align-items:center; background:#475569; padding:10px 15px; color:white;">
+            <h1 style="margin:0; font-size:24pt; font-weight:900;">WINKO<sup style="font-size:10pt;">TM</sup></h1>
+        </div>
+        <div class="header-text" style="text-align:center; flex:1;">
+            <h2 style="margin:0 0 5px 0; font-size:14pt; font-weight:bold; color:#000;">JUTARAMA INDUSTRIES (M) SDN. BHD. <span style="font-size:11pt; font-weight:normal;">(749861-V)</span></h2>
+            <p style="margin:0; font-size:8.5pt; color:#000;">No. 19, Jalan Mega 2/1, Kawasan Perindustrian Mega 2, 43500 Semenyih, Selangor, Malaysia.</p>
+            <p style="margin:4px 0 0 0; font-size:8.5pt; color:#000;">Tel: (60)-8727 7540 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Email: sales@winko.my &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Web: www.winko.my</p>
         </div>
     </div>
 
@@ -532,8 +549,8 @@ Note:
             <table>
                 <tr><td>Customer</td><td>: <strong id="cpCustName"></strong></td></tr>
                 <tr><td>Address</td><td>: <span id="cpCustAddress"></span></td></tr>
-                <tr><td style="padding-top:10px;">Attention</td><td style="padding-top:10px;">: <span id="cpAttention"></span></td></tr>
-                <tr><td style="padding-top:10px;">Project</td><td style="padding-top:10px;">: <span id="cpProject"></span></td></tr>
+                <tr><td style="padding-top:15px;">Attention</td><td style="padding-top:15px;">: <span id="cpAttention"></span></td></tr>
+                <tr><td style="padding-top:15px;">Project</td><td style="padding-top:15px;">: <span id="cpProject"></span></td></tr>
             </table>
         </div>
         <div class="cp-meta-center">
@@ -548,28 +565,28 @@ Note:
     </div>
 
     <p style="font-size: 9pt; margin-bottom: 15px;">With reference to your enquiry, we are pleased to provide our quotation for the following tanks:-</p>
-    <p style="font-size: 9pt; font-weight: bold; text-decoration: underline; margin-bottom: 5px;">RE: SUPPLY, DELIVER AND INSTALL PRESSED STEEL TANK</p>
+    <p style="font-size: 9pt; font-weight: bold; text-decoration: underline; margin-bottom: 10px;">RE: SUPPLY, DELIVER AND INSTALL PRESSED STEEL TANK</p>
 
     <table class="cp-table">
         <thead>
             <tr>
-                <th style="width:5%;">Item</th>
-                <th style="width:55%;">Description</th>
-                <th style="width:13%;">Unit Price<br>(RM)</th>
+                <th style="width:6%;">Item</th>
+                <th style="width:50%;">Description</th>
+                <th style="width:14%;">Unit Price<br>(RM)</th>
                 <th style="width:10%;">Qty<br>(unit)</th>
-                <th style="width:17%;">Total Price<br>(RM)</th>
+                <th style="width:20%;">Total Price<br>(RM)</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td class="td-center" style="font-weight:bold; padding-top:15px;">1</td>
-                <td style="padding-top:15px; padding-bottom: 25px;">
+                <td style="padding-top:15px; padding-bottom: 25px; line-height:1.6;">
                     <strong>Supply and Install New <span id="cpMaterial"></span> Pressed Steel Tank Size: <span id="cpDims"></span></strong><br><br>
-                    Comply to <span id="cpStd"></span><br><br>
-                    a) Ladders: <span id="cpLadders"></span><br>
-                    b) Water Level Indicator: <span id="cpWLI"></span><br>
-                    c) Tank to be sit on existing I-Beam or RC plinths (to be provided by client)<br>
-                    d) Exclude flanges, nozzles, vortex inhibitor, pipe works valves and etc.
+                    Comply to <span id="cpStd"></span><br>
+                    <span style="display:inline-block; margin-top:8px;">a) Ladders: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="cpLadders"></span></span><br>
+                    <span>b) Water Level Ind.: &nbsp;&nbsp;<span id="cpWLI"></span></span><br>
+                    <span>c) Tank to be sit on existing I-Beam or RC plinths (to be provided by client)</span><br>
+                    <span>d) Exclude flanges, nozzles, vortex inhibitor, pipe works valves and etc..</span>
                 </td>
                 <td class="td-right" style="padding-top:15px;" id="cpUnitPrice"></td>
                 <td class="td-center" style="padding-top:15px;">1</td>
@@ -589,28 +606,40 @@ Note:
     </table>
 
     <div class="cp-exclusions">
-        <strong style="text-decoration: underline;">Exclusion</strong><br>
-        <div id="cpExclusionsText" style="margin-top: 5px; margin-left: 5px;"></div>
+        <strong style="text-decoration: underline;">Exclusion</strong>
+        <div id="cpExclusionsText" style="margin-top: 5px; margin-left: 10px;"></div>
     </div>
 
     <div class="cp-tnc">
         <div class="cp-tnc-title">TERMS & CONDITIONS :-</div>
-        <table style="margin-top:8px;">
-            <tr><td style="width:140px; font-weight:bold; vertical-align:top;">Quotation Validity:</td><td id="cpValidity"></td></tr>
-            <tr><td style="font-weight:bold; vertical-align:top; padding-top:8px;">Terms of Payment:</td><td id="cpPayment" style="padding-top:8px; border-bottom:1px solid #000;"></td></tr>
-            <tr><td style="font-weight:bold; vertical-align:top; padding-top:8px;">Delivery Lead Time:</td><td style="padding-top:8px;"><span id="cpLeadTime"></span></td></tr>
-            <tr><td style="font-weight:bold; vertical-align:top; padding-top:8px;">Delivery Location:</td><td style="padding-top:8px;"><span id="cpDeliveryTerm" style="border-bottom:1px solid #000;"></span></td></tr>
+        <table style="margin-top:10px;">
+            <tr>
+                <td style="width:130px; font-weight:bold; vertical-align:top;">Quotation Validity:</td>
+                <td id="cpValidity"></td>
+            </tr>
+            <tr>
+                <td style="font-weight:bold; vertical-align:top; padding-top:12px;">Terms of Payment:</td>
+                <td id="cpPayment" style="padding-top:12px; border-bottom:1px solid #000; line-height:1.8;"></td>
+            </tr>
+            <tr>
+                <td style="font-weight:bold; vertical-align:top; padding-top:12px;">Delivery Lead Time:</td>
+                <td style="padding-top:12px;"><span id="cpLeadTime"></span></td>
+            </tr>
+            <tr>
+                <td style="font-weight:bold; vertical-align:top; padding-top:12px;">Delivery Location:</td>
+                <td style="padding-top:12px;"><span id="cpDeliveryTerm" style="border-bottom:1px solid #000;"></span></td>
+            </tr>
         </table>
     </div>
 
-    <p style="font-size: 8.5pt; color: #1e293b; margin-top: 20px;">We trusted that our quotation meets with your expectations. Should you have any further queries, please do not hesitate to call on us. We thank you for the opportunity to quote, and remain.</p>
+    <p style="font-size: 8.5pt; color: #000; margin-top: 25px; margin-bottom: 30px;">We trusted that our quotation meets with your expectations. Should you have any further queries, please do not hesitate to call on us. We thank you for the opportunity to quote, and remain.</p>
     
     <div class="cp-signoff">
         <div class="cp-signoff-left">
             <p>Best Regards & Thank you.</p>
             <p style="font-weight:bold; margin-bottom: 50px;">JUTARAMA INDUSTRIES (M) SDN BHD</p>
-            <p style="font-weight:bold; text-decoration:underline;" id="cpSignName">LEE JL</p>
-            <p id="cpSignPhone">019-2215558</p>
+            <p style="font-weight:bold; text-decoration:underline;" id="cpSignName"></p>
+            <p id="cpSignPhone"></p>
         </div>
     </div>
 </div>
@@ -628,7 +657,7 @@ Note:
             
             if(!document.getElementById('quoteIdInput').value) {
                 const d = new Date();
-                document.getElementById('quoteIdInput').value = "QP-" + d.getFullYear().toString().substr(-2) + "-" + Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+                document.getElementById('quoteIdInput').value = "QP-" + d.getFullYear().toString().substr(-2) + "-00" + Math.floor(Math.random() * 9 + 1);
             }
             
             refreshMemoryDropdown();
@@ -642,19 +671,31 @@ Note:
         }
     }
 
-    // --- PRINT TOGGLE LOGIC ---
+    // --- PRINT TOGGLE LOGIC (FIXED) ---
     function printInternal() {
-        document.body.classList.remove('print-customer');
-        document.body.classList.add('print-internal');
-        window.print();
+        try {
+            document.body.className = 'print-internal';
+            syncPrintHeader();
+            setTimeout(() => {
+                window.print();
+            }, 200);
+        } catch(e) { alert("Internal Print Error: " + e.message); }
     }
     
     function printCustomer() {
-        document.body.classList.remove('print-internal');
-        document.body.classList.add('print-customer');
-        syncPrintHeader(); // Ensure custom fields are mapped
-        window.print();
+        try {
+            document.body.className = 'print-customer';
+            syncPrintHeader(); 
+            setTimeout(() => {
+                window.print();
+            }, 200);
+        } catch(e) { alert("Customer Print Error: " + e.message); }
     }
+
+    // Reset view after browser print dialog closes
+    window.addEventListener('afterprint', () => {
+        document.body.className = '';
+    });
 
     // --- TIME & UI LOGIC ---
     function updateClock() {
@@ -687,7 +728,7 @@ Note:
         }
     }
 
-    // --- FULL BOM STRUCTURE (BASE TEMPLATE WITH WEIGHTS) ---
+    // --- FULL BOM STRUCTURE ---
     const systemBaseStructure = [
         { category: "Panels", items: [
             {name: "Manhole Panel", def: 450, wt: 45}, 
@@ -897,7 +938,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProData'); // ensure clean state
+            localStorage.removeItem('winkoProData'); 
             
             document.getElementById('partChoice').value = 'no';
             togglePartitionDetails();
@@ -910,64 +951,67 @@ Note:
         }
     }
 
-    // --- SYNC PRINT METADATA ---
+    // --- SYNC PRINT METADATA (DEFENSIVE PROGRAMMING) ---
     function syncPrintHeader() {
-        // Internal
-        document.getElementById('metaQuoteId').innerText = document.getElementById('quoteIdInput').value || "N/A";
-        document.getElementById('metaProject').innerText = document.getElementById('projectName').value || "_____________________";
-        document.getElementById('metaStd').innerText = document.getElementById('stdChoice').value;
-        
-        let l = document.getElementById('length').value;
-        let w = document.getElementById('width').value;
-        let h = document.getElementById('height').value;
-        let u = document.getElementById('unitChoice').value === 'ft' ? 'ft' : 'm';
-        let dimsStr = `${l}${u} (L) x ${w}${u} (W) x ${h}${u} (H)`;
-        document.getElementById('metaDims').innerText = dimsStr;
-        
-        let matStr = document.getElementById('coatChoice').value;
-        document.getElementById('metaCoat').innerText = matStr;
-        
-        let partChoice = document.getElementById('partChoice').value;
-        let pQty = parseInt(document.getElementById('partQty').value) || 0;
-        let pLen = document.getElementById('partLen').value || 0;
-        let pHgt = document.getElementById('partHgt').value || 0;
-        let pType = document.getElementById('partType').value || 'Standard';
-        
-        let partDisplay = 'None';
-        if(partChoice === 'yes' && pQty > 0) { partDisplay = `${pQty}x ${pType} (${pLen}${u} x ${pHgt}${u})`; }
-        
-        document.getElementById('metaPart').innerText = partDisplay;
-        
-        // CUSTOMER PRINT SYNC
-        document.getElementById('cpCustName').innerText = document.getElementById('custCompany').value || document.getElementById('projectName').value;
-        document.getElementById('cpCustAddress').innerHTML = (document.getElementById('custAddr').value || '').replace(/\n/g, '<br>');
-        document.getElementById('cpAttention').innerText = document.getElementById('custAttn').value;
-        document.getElementById('cpProject').innerText = document.getElementById('projectName').value;
-        document.getElementById('cpRef').innerText = document.getElementById('quoteIdInput').value;
+        try {
+            // Internal Print Strings
+            document.getElementById('metaQuoteId').innerText = document.getElementById('quoteIdInput').value || "N/A";
+            document.getElementById('metaProject').innerText = document.getElementById('projectName').value || "_____________________";
+            document.getElementById('metaStd').innerText = document.getElementById('stdChoice').value || "";
+            
+            let l = document.getElementById('length').value || 0;
+            let w = document.getElementById('width').value || 0;
+            let h = document.getElementById('height').value || 0;
+            let u = document.getElementById('unitChoice').value === 'ft' ? 'ft' : 'm';
+            let dimsStr = `${l}${u} (L) x ${w}${u} (W) x ${h}${u} (H)`;
+            document.getElementById('metaDims').innerText = dimsStr;
+            
+            let matStr = document.getElementById('coatChoice').value || "";
+            document.getElementById('metaCoat').innerText = matStr;
+            
+            let partChoice = document.getElementById('partChoice').value || "no";
+            let pQty = parseInt(document.getElementById('partQty').value) || 0;
+            let pLen = document.getElementById('partLen').value || 0;
+            let pHgt = document.getElementById('partHgt').value || 0;
+            let pType = document.getElementById('partType').value || 'Standard';
+            
+            let partDisplay = 'None';
+            if(partChoice === 'yes' && pQty > 0) { partDisplay = `${pQty}x ${pType} (${pLen}${u} x ${pHgt}${u})`; }
+            
+            document.getElementById('metaPart').innerText = partDisplay;
+            
+            // CUSTOMER PRINT SYNC (Mapping to the ELCO layout variables)
+            document.getElementById('cpCustName').innerText = document.getElementById('custCompany').value || document.getElementById('projectName').value || "Client Name";
+            document.getElementById('cpCustAddress').innerHTML = (document.getElementById('custAddr').value || '').replace(/\n/g, '<br>');
+            document.getElementById('cpAttention').innerText = document.getElementById('custAttn').value || "";
+            document.getElementById('cpProject').innerText = document.getElementById('projectName').value || "";
+            document.getElementById('cpRef').innerText = document.getElementById('quoteIdInput').value || "";
 
-        document.getElementById('cpMaterial').innerText = matStr;
-        document.getElementById('cpDims').innerText = dimsStr;
-        document.getElementById('cpStd').innerText = document.getElementById('stdChoice').value;
+            document.getElementById('cpMaterial').innerText = matStr;
+            document.getElementById('cpDims').innerText = dimsStr;
+            document.getElementById('cpStd').innerText = document.getElementById('stdChoice').value || "";
 
-        let extLad = document.getElementById('extLadMat') ? document.getElementById('extLadMat').value : '';
-        let intLad = document.getElementById('intLadMat') ? document.getElementById('intLadMat').value : '';
-        document.getElementById('cpLadders').innerText = `Internal (${intLad}), External (${extLad})`;
+            // Safely grab dynamic select inputs if they exist in the DOM
+            let extLad = document.getElementById('extLadMat') ? document.getElementById('extLadMat').value : '';
+            let intLad = document.getElementById('intLadMat') ? document.getElementById('intLadMat').value : '';
+            document.getElementById('cpLadders').innerText = `${intLad} Internal Ladder, ${extLad} External Ladder`;
 
-        let wli = document.getElementById('wliType') ? document.getElementById('wliType').value : '';
-        document.getElementById('cpWLI').innerText = wli;
+            let wli = document.getElementById('wliType') ? document.getElementById('wliType').value : '';
+            document.getElementById('cpWLI').innerText = wli;
 
-        document.getElementById('cpExclusionsText').innerHTML = document.getElementById('quoteNotes').value.replace(/\n/g, '<br>');
-        
-        document.getElementById('cpValidity').innerText = document.getElementById('tcValidity').value;
-        
-        let payText = document.getElementById('tcPayment').value || '';
-        document.getElementById('cpPayment').innerHTML = payText.replace(/\n/g, '<br>');
-        
-        document.getElementById('cpDeliveryTerm').innerText = document.getElementById('tcDelivery').value;
-        document.getElementById('cpLeadTime').innerText = document.getElementById('tcLead').value;
+            document.getElementById('cpExclusionsText').innerHTML = (document.getElementById('quoteNotes').value || '').replace(/\n/g, '<br>');
+            
+            document.getElementById('cpValidity').innerText = document.getElementById('tcValidity').value || "";
+            
+            let payText = document.getElementById('tcPayment').value || '';
+            document.getElementById('cpPayment').innerHTML = payText.replace(/\n/g, '<br>');
+            
+            document.getElementById('cpDeliveryTerm').innerText = document.getElementById('tcDelivery').value || "";
+            document.getElementById('cpLeadTime').innerText = document.getElementById('tcLead').value || "";
 
-        document.getElementById('cpSignName').innerText = document.getElementById('signName').value;
-        document.getElementById('cpSignPhone').innerText = document.getElementById('signPhone').value;
+            document.getElementById('cpSignName').innerText = document.getElementById('signName').value || "";
+            document.getElementById('cpSignPhone').innerText = document.getElementById('signPhone').value || "";
+        } catch(e) { console.log("Sync Print Warning: ", e.message); }
     }
 
     // --- SAVE / LOAD TEMPORARY BROWSER DATA ---
@@ -1190,66 +1234,78 @@ Note:
         savePrices();
     }
 
-    // --- CSV EXPORT ---
+    // --- CSV EXPORT (BUG FIX FOR FIREFOX/CHROME BLOCKING) ---
     function exportCSV() {
-        let csv = "JUTARAMA INDUSTRIES SDN BHD\n";
-        csv += "OFFICIAL TECHNICAL QUOTATION\n\n";
-        
-        let qid = document.getElementById('quoteIdInput').value || "N/A";
-        let proj = document.getElementById('projectName').value || "Unnamed Project";
-        let d = new Date().toLocaleDateString('en-MY');
-        let dim = document.getElementById('metaDims').innerText;
-        let mat = document.getElementById('coatChoice').value;
-        
-        let partChoice = document.getElementById('partChoice').value;
-        let pQty = parseInt(document.getElementById('partQty').value) || 0;
-        let pType = document.getElementById('partType').value || 'Standard';
-        let pLen = document.getElementById('partLen').value || 0;
-        let pHgt = document.getElementById('partHgt').value || 0;
-        let u = document.getElementById('unitChoice').value === 'ft' ? 'ft' : 'm';
-        
-        let part = (partChoice === 'yes' && pQty > 0) ? `${pQty}x ${pType} (${pLen}${u} x ${pHgt}${u})` : 'None';
-        
-        csv += `"Quote No:","${qid}"\n`;
-        csv += `"Project / Client:","${proj}"\n`;
-        csv += `"Date:","${d}"\n`;
-        csv += `"Dimensions:","${dim}"\n`;
-        csv += `"Material:","${mat}"\n`;
-        csv += `"Partition:","${part}"\n\n`;
-
-        csv += "Category,Item Description,Qty,Unit Wt (kg),Unit Price (RM),Total (RM)\n";
-        
-        bomStructure.forEach((s, si) => { s.items.forEach((it, ii) => {
-            let id = `item_${si}_${ii}`;
-            if(!document.getElementById(`desc_${id}`)) return;
+        try {
+            // Added BOM marker \uFEFF to ensure Excel reads UTF-8 characters correctly
+            let csv = "\uFEFFWINKO INDUSTRIAL SDN BHD\n";
+            csv += "OFFICIAL TECHNICAL QUOTATION\n\n";
             
-            let label = document.getElementById(`desc_${id}`).value;
-            if(it.selectId && document.getElementById(it.selectId)) { label += " (" + document.getElementById(it.selectId).value + ")"; }
-            let q = document.getElementById(`qty_${id}`).value;
-            let w = document.getElementById(`wt_${id}`).value;
-            let p = document.getElementById(`price_${id}`).value;
-            let t = document.getElementById(`total_${id}`).innerText.replace(/,/g, '');
-            if(q > 0) csv += `"${s.category}","${label}",${q},${w},${p},${t}\n`;
-        })});
-        
-        csv += `\n`;
-        
-        let sub = document.getElementById('sumSubtotal_screen').innerText.replace(/,/g, '');
-        let disc = document.getElementById('sumDiscount_screen').innerText.replace(/,/g, '');
-        let sst = document.getElementById('sumSST_screen').innerText.replace(/,/g, '');
-        let grand = document.getElementById('grandTotal_screen').innerText.replace(/,/g, '');
-        
-        let wt = document.getElementById('sumWeight_screen').innerText.replace(' kg', '').replace(/,/g, '');
+            let qid = document.getElementById('quoteIdInput').value || "N/A";
+            let proj = document.getElementById('projectName').value || "Unnamed Project";
+            let d = new Date().toLocaleDateString('en-MY');
+            let dim = document.getElementById('metaDims').innerText;
+            let mat = document.getElementById('coatChoice').value;
+            
+            let partChoice = document.getElementById('partChoice').value;
+            let pQty = parseInt(document.getElementById('partQty').value) || 0;
+            let pType = document.getElementById('partType').value || 'Standard';
+            let pLen = document.getElementById('partLen').value || 0;
+            let pHgt = document.getElementById('partHgt').value || 0;
+            let u = document.getElementById('unitChoice').value === 'ft' ? 'ft' : 'm';
+            
+            let part = (partChoice === 'yes' && pQty > 0) ? `${pQty}x ${pType} (${pLen}${u} x ${pHgt}${u})` : 'None';
+            
+            csv += `"Quote No:","${qid}"\n`;
+            csv += `"Project / Client:","${proj.replace(/"/g, '""')}"\n`;
+            csv += `"Date:","${d}"\n`;
+            csv += `"Dimensions:","${dim}"\n`;
+            csv += `"Material:","${mat}"\n`;
+            csv += `"Partition:","${part}"\n\n`;
 
-        csv += `,,,,"Est. Total Weight (kg)",${wt}\n`;
-        csv += `,,,,"Subtotal (RM)",${sub}\n`;
-        csv += `,,,,"Discount (RM)",-${disc}\n`;
-        csv += `,,,,"SST Tax (RM)",${sst}\n`;
-        csv += `,,,,"GRAND TOTAL (RM)",${grand}\n`;
+            csv += "Category,Item Description,Qty,Unit Wt (kg),Unit Price (RM),Total (RM)\n";
+            
+            bomStructure.forEach((s, si) => { s.items.forEach((it, ii) => {
+                let id = `item_${si}_${ii}`;
+                if(!document.getElementById(`desc_${id}`)) return;
+                
+                let label = document.getElementById(`desc_${id}`).value.replace(/"/g, '""');
+                if(it.selectId && document.getElementById(it.selectId)) { label += " (" + document.getElementById(it.selectId).value + ")"; }
+                let q = document.getElementById(`qty_${id}`).value;
+                let w = document.getElementById(`wt_${id}`).value;
+                let p = document.getElementById(`price_${id}`).value;
+                let t = document.getElementById(`total_${id}`).innerText.replace(/,/g, '');
+                if(q > 0) csv += `"${s.category}","${label}",${q},${w},${p},${t}\n`;
+            })});
+            
+            csv += `\n`;
+            
+            let sub = document.getElementById('sumSubtotal_screen').innerText.replace(/,/g, '');
+            let disc = document.getElementById('sumDiscount_screen').innerText.replace(/,/g, '');
+            let sst = document.getElementById('sumSST_screen').innerText.replace(/,/g, '');
+            let grand = document.getElementById('grandTotal_screen').innerText.replace(/,/g, '');
+            let wt = document.getElementById('sumWeight_screen').innerText.replace(' kg', '').replace(/,/g, '');
 
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = `Jutarama_Quote_${qid}.csv`; a.click();
+            csv += `,,,,"Est. Total Weight (kg)",${wt}\n`;
+            csv += `,,,,"Subtotal (RM)",${sub}\n`;
+            csv += `,,,,"Discount (RM)",-${disc}\n`;
+            csv += `,,,,"SST Tax (RM)",${sst}\n`;
+            csv += `,,,,"GRAND TOTAL (RM)",${grand}\n`;
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a'); 
+            a.href = url; 
+            a.download = `Jutarama_Quote_${qid}.csv`; 
+            
+            // Bug Fix: Append to body to ensure it fires in all browsers
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+        } catch(e) {
+            alert("Error generating Excel file: " + e.message);
+        }
     }
 
     // Initialize Base Data
