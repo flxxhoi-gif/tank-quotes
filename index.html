@@ -23,6 +23,7 @@
         .login-card button:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(234, 88, 12, 0.3); }
         
         #mainContent, #adminContent { display: none; }
+        #customerPrintView { display: none; } /* Hidden on screen by default */
 
         /* --- DASHBOARD STYLES (SCREEN) --- */
         .container { max-width: 1550px; margin: auto; background: white; padding: 35px; border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.01); }
@@ -85,6 +86,7 @@
         .export-btn { background: #334155; } .export-btn:hover { background: #1e293b; box-shadow: 0 8px 15px -3px rgba(15,23,42,0.3);}
         .print-btn { background: #059669; } .print-btn:hover { background: #047857; box-shadow: 0 8px 15px -3px rgba(5,150,105,0.3);}
 
+        /* Drafting Visuals */
         .visual-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; justify-items: center; }
         .view-box { text-align: center; background: #fff; padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; width: 100%; max-width: 160px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);} 
         .view-title { font-size: 0.75em; font-weight: 800; margin-bottom: 8px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;}
@@ -112,39 +114,40 @@
         .admin-input.text-left { text-align: left; }
 
         .print-only { display: none; }
-        #customerPrintView { display: none; }
 
         /* ========================================================================== */
-        /* --- PROFESSIONAL PRINT STYLES (FLAWLESS INVOICE GRADE) --- */
+        /* --- PROFESSIONAL PRINT STYLES (DUAL MODE) --- */
         /* ========================================================================== */
         @media print {
             @page { size: A4; margin: 12mm 15mm; }
-            body { background: white; padding: 0; font-size: 9pt; color: #0f172a; font-family: Arial, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            body { background: white; padding: 0; font-size: 9pt; color: #0f172a; font-family: Arial, Helvetica, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            
             .no-print { display: none !important; }
             .print-only { display: block; }
-            
             .container { box-shadow: none; max-width: 100%; padding: 0; border: none; }
-            .app-layout { display: block; }
-            .col-left, .col-right { width: 100%; display: block; }
             
-            /* High-End Corporate Header */
-            .print-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #ea580c; padding-bottom: 15px; margin-bottom: 20px; }
-            .header-left { display: flex; align-items: center; gap: 20px; }
-            .header-left img { width: 130px; height: auto; object-fit: contain; }
-            .header-text h1 { margin: 0 0 5px 0; font-size: 15pt; color: #0f172a; font-weight: 800; letter-spacing: 0.5px; }
-            .header-text p { margin: 2px 0; font-size: 8.5pt; color: #475569; font-weight: 500;}
-            .header-right { text-align: right; }
-            .header-right h2 { margin: 0 0 8px 0; font-size: 26pt; color: #ea580c; font-weight: 800; letter-spacing: 2px;}
-            .header-right p { margin: 2px 0; font-size: 9.5pt; color: #1e293b; font-weight: 600;}
+            /* ------------------------------------------------ */
+            /* MODE 1: INTERNAL PRINT (Shows full BOM and Cost) */
+            /* ------------------------------------------------ */
+            body.print-internal #mainContent { display: block !important; }
+            body.print-internal #customerPrintView { display: none !important; }
+
+            body.print-internal .print-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #ea580c; padding-bottom: 15px; margin-bottom: 20px; }
+            body.print-internal .header-left { display: flex; align-items: center; gap: 20px; }
+            body.print-internal .header-left img { width: 130px; height: auto; object-fit: contain; }
+            body.print-internal .header-text h1 { margin: 0 0 5px 0; font-size: 15pt; color: #0f172a; font-weight: 800; letter-spacing: 0.5px; }
+            body.print-internal .header-text p { margin: 2px 0; font-size: 8.5pt; color: #475569; font-weight: 500;}
+            body.print-internal .header-right { text-align: right; }
+            body.print-internal .header-right h2 { margin: 0 0 8px 0; font-size: 26pt; color: #ea580c; font-weight: 800; letter-spacing: 2px;}
+            body.print-internal .header-right p { margin: 2px 0; font-size: 9.5pt; color: #1e293b; font-weight: 600;}
             
-            /* INTERNAL PRINT STYLES */
             body.print-internal .quote-meta { display: flex; gap: 15px; margin-bottom: 25px; }
             body.print-internal .meta-box { flex: 1; border: 1px solid #cbd5e1; padding: 10px 15px; border-radius: 6px; background: #f8fafc; }
             body.print-internal .meta-item { font-size: 8.5pt; margin-bottom: 5px; display: flex; }
             body.print-internal .meta-label { font-weight: 700; color: #64748b; width: 90px; text-transform: uppercase;}
             body.print-internal .meta-value { font-weight: 700; color: #0f172a; }
 
-            body.print-internal .section-title { margin-top: 20px !important; margin-bottom: 10px !important; background: transparent !important; border-left: none !important; border-bottom: 2px solid #0f172a !important; padding: 0 0 4px 0 !important; color: #0f172a !important; font-size: 11pt !important; text-transform: uppercase; letter-spacing: 1px; font-weight: 800;}
+            body.print-internal .section-title { margin-top: 15px !important; margin-bottom: 10px !important; background: transparent !important; border-left: none !important; border-bottom: 2px solid #0f172a !important; padding: 0 0 4px 0 !important; color: #0f172a !important; font-size: 11pt !important; text-transform: uppercase; letter-spacing: 1px; font-weight: 800;}
             
             body.print-internal table { font-size: 8pt; margin-bottom: 15px; border-collapse: collapse; width: 100%; border: 1px solid #cbd5e1; border-radius: 0;}
             body.print-internal tr { border-bottom: 1px solid #e2e8f0; page-break-inside: avoid; }
@@ -163,7 +166,7 @@
             body.print-internal .sum-row { border-bottom: 1px solid #cbd5e1 !important; margin-bottom: 5px; padding-bottom: 3px; color: #334155 !important; font-size: 8pt; font-weight: 700;}
             body.print-internal .sum-row.total { background: #0f172a !important; color: #ffffff !important; border: none !important; padding: 8px !important; font-size: 11pt; margin: 8px -15px -10px -15px; border-radius: 0 0 2px 2px;}
 
-            body.print-internal .tc-box { display: none; } /* Hide T&C on internal print to save space */
+            body.print-internal .tc-box { display: none; } /* Hide T&C to save space internally */
             
             body.print-internal .visual-container { max-width: 100%; display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin: 0 auto 15px auto; page-break-inside: avoid; clear: both;}
             body.print-internal .view-box { padding: 5px; border: 1px solid #cbd5e1 !important; background: #fff !important; border-radius: 4px; }
@@ -183,16 +186,12 @@
             body.print-internal .sig-line { border-bottom: 1px solid #0f172a; margin: 30px 0 5px 0; }
             body.print-internal .sig-box strong { color: #0f172a; font-size: 9pt; text-transform: uppercase;}
 
-            /* ======================================= */
-            /* CUSTOMER PRINT MODE OVERRIDES           */
-            /* ======================================= */
-            body.print-customer .app-layout { display: none !important; } /* Hide internal dashboard completely */
-            
-            body.print-customer #customerPrintView { 
-                display: block !important; 
-            }
+            /* ------------------------------------------------ */
+            /* MODE 2: CUSTOMER PRINT (Clean Formal Letter)     */
+            /* ------------------------------------------------ */
+            body.print-customer #mainContent { display: none !important; }
+            body.print-customer #customerPrintView { display: block !important; }
 
-            /* Formal Header Block */
             .cp-meta-layout { display: flex; justify-content: space-between; align-items: stretch; margin-bottom: 20px;}
             .cp-meta-left { width: 50%; font-size: 9pt;}
             .cp-meta-left table { width: 100%; border: none; margin: 0;}
@@ -213,14 +212,9 @@
             .cp-table td { border: 1px solid #000; padding: 8px; vertical-align: top; color: #000;}
             .cp-table .td-center { text-align: center;}
             .cp-table .td-right { text-align: right;}
-            .cp-table .col-item { width: 8%; }
-            .cp-table .col-desc { width: 52%; }
-            .cp-table .col-unit { width: 15%; }
-            .cp-table .col-qty { width: 10%; }
-            .cp-table .col-total { width: 15%; font-weight: bold;}
-
+            
             /* Customer T&C Block */
-            .cp-exclusions { border: 1px solid #000; padding: 10px; margin-bottom: 20px; background: #f8fafc !important; font-size: 8pt; line-height: 1.4;}
+            .cp-exclusions { border: 1px solid #000; padding: 10px; margin-bottom: 20px; background: #f8fafc !important; font-size: 8.5pt; line-height: 1.4;}
             .cp-tnc { font-size: 8.5pt; margin-bottom: 40px; }
             .cp-tnc-title { font-weight: bold; text-decoration: underline; margin-bottom: 5px; font-size: 9pt;}
             .cp-tnc table { width: 100%; border: none;}
@@ -373,9 +367,9 @@
                     <div class="form-group" style="grid-column: span 2;"><label>Customer Address</label><textarea id="custAddr" rows="2" placeholder="Street, City, Zip" oninput="syncPrintHeader(); savePrices();"></textarea></div>
                 </div>
                 <div class="config-grid no-print" style="margin-bottom: 15px; background: #f8fafc; padding:15px; border-radius:8px; border:1px solid #e2e8f0;">
-                    <div class="form-group"><label>Quotation Validity</label><input type="text" id="tcValidity" value="14 days, subject to ex-stock and our final confirmation" oninput="syncPrintHeader(); savePrices();"></div>
-                    <div class="form-group"><label>Delivery Lead-time</label><input type="text" id="tcLead" value="6 - 10 weeks from date of receive purchase order" oninput="syncPrintHeader(); savePrices();"></div>
-                    <div class="form-group" style="grid-column: span 2;"><label>Delivery Terms</label><input type="text" id="tcDelivery" value="Deliver to site, exclude unloading, materials handling at site and hoisting." oninput="syncPrintHeader(); savePrices();"></div>
+                    <div class="form-group"><label>Quotation Validity</label><input type="text" id="tcValidity" value="14 Days from the date of quotation, subject to stock availability and our confirmation." oninput="syncPrintHeader(); savePrices();"></div>
+                    <div class="form-group"><label>Delivery Lead-time</label><input type="text" id="tcLead" value="6-10 weeks from official confirmation order, non-refundable down payment received and all technical details in good order. (NO Retention sump and LAD will be entertained)" oninput="syncPrintHeader(); savePrices();"></div>
+                    <div class="form-group" style="grid-column: span 2;"><label>Delivery Location</label><input type="text" id="tcDelivery" value="Deliver to site exclude unloading, materials handling at site and hoisting." oninput="syncPrintHeader(); savePrices();"></div>
                     <div class="form-group" style="grid-column: span 2;"><label>Payment Terms</label><textarea id="tcPayment" rows="3" oninput="syncPrintHeader(); savePrices();">30% down payment upon confirmation of order
 50% payment before delivery
 20% after testing and commissioning (no retention)</textarea></div>
@@ -384,12 +378,24 @@
                 </div>
 
                 <div class="form-group no-print">
-                    <label>Exclusions (Prints below Customer Table)</label>
-                    <textarea id="quoteNotes" rows="6" style="text-align:left; font-weight:500; font-size:13px;" oninput="syncPrintHeader(); savePrices();">- Float valve chamber or top sumps
+                    <label>Exclusions & Notes (Prints below Customer Table)</label>
+                    <textarea id="quoteNotes" rows="15" style="text-align:left; font-weight:500; font-size:13px;" oninput="syncPrintHeader(); savePrices();">- Float valve chamber or top sumps
 - Flanges, nozzles, pipes, vortex, valves, electrode sensor, pumps and filter.
 - Scaffolding
 - Unloading and hoisting of materials.
-- HIRARC, permit application, medical test and site safety supervisor.</textarea>
+- HIRARC, permit application, medical test and site safety supervisor.
+
+Note:
+1. Tank design to sit on 1M Center to center RC tank support/Plinths with at least 500mm height and 200mm width. Design to be provided by others.
+2. RC plinths MUST be level with maximum tolerance of ± 3mm.
+3. Leak test should be done within 3 months from completion of tank installation to maintain the quality of foam tape.
+4. The customer shall be responsible for the security of materials at site after delivery. Missing item shall be replaced with additional charges.
+5. The customer should arrange manpower/equipment/machine to unload the materials from lorry and transfer/hoist to the RC plinths area.
+6. Is responsible of customer to make sure RC plinths are level before call for delivery and installation.
+7. For installation of Elevated tank, the customer shall provide, at its own expense, equipment to ensure workers' safety. Customer shall provide working at height equipment such as boom lift, hoisting crane, erection of scaffolding and platform and any other equipment deemed necessaries.
+8. Additional charges will be imposed for projects with excessive work site requirements. Customer shall pre-empt on all the excessive/additional work site requirements before request for quotation or confirming the order.
+9. Delivery and installation time: Monday to Saturday, 8am to 5pm. Additional charges will be imposed if requested to deliver or install tank out of above working hours or Public Holidays.
+10. Upon PO received, the delivery and installation of tank shall be done within 6 months. Any date extension will be subjected to price revision and storage charges.</textarea>
                 </div>
 
 
@@ -510,13 +516,24 @@
 
 <div id="customerPrintView">
     
+    <div class="print-header">
+        <div class="header-left">
+            <img src="winko logo.png" alt="Winko Logo" style="width:140px; height:auto; object-fit:contain;">
+            <div class="header-text" style="margin-left: 15px;">
+                <h1 style="font-size:14pt; margin:0; font-weight:bold;">JUTARAMA INDUSTRIES (M) SDN BHD <span style="font-size:10pt; font-weight:normal;">(749861-V)</span></h1>
+                <p style="margin:2px 0; font-size:8.5pt;">No. 19, Jalan Mega 2/1, Kawasan Perindustrian Mega 2, 43500 Semenyih, Selangor, Malaysia.</p>
+                <p style="margin:2px 0; font-size:8.5pt;">Tel: (60)-8727 7540 &nbsp;&nbsp;&nbsp; Email: sales@winko.my &nbsp;&nbsp;&nbsp; Web: www.winko.my</p>
+            </div>
+        </div>
+    </div>
+
     <div class="cp-meta-layout">
         <div class="cp-meta-left">
             <table>
                 <tr><td>Customer</td><td>: <strong id="cpCustName"></strong></td></tr>
                 <tr><td>Address</td><td>: <span id="cpCustAddress"></span></td></tr>
                 <tr><td style="padding-top:10px;">Attention</td><td style="padding-top:10px;">: <span id="cpAttention"></span></td></tr>
-                <tr><td>Project</td><td>: <span id="cpProject"></span></td></tr>
+                <tr><td style="padding-top:10px;">Project</td><td style="padding-top:10px;">: <span id="cpProject"></span></td></tr>
             </table>
         </div>
         <div class="cp-meta-center">
@@ -577,12 +594,12 @@
     </div>
 
     <div class="cp-tnc">
-        <div class="cp-tnc-title">Terms & Conditions:</div>
-        <table>
-            <tr><td>a) Quotation validity</td><td>: <span id="cpValidity" style="border-bottom: 1px solid #94a3b8; display:inline-block; width:100%;"></span></td></tr>
-            <tr><td>b) Payment term</td><td>: <span id="cpPayment" style="border-bottom: 1px solid #94a3b8; display:inline-block; width:100%; min-height:14px;"></span></td></tr>
-            <tr><td>c) Delivery Terms</td><td>: <span id="cpDeliveryTerm" style="border-bottom: 1px solid #94a3b8; display:inline-block; width:100%;"></span></td></tr>
-            <tr><td>d) Delivery Lead-time</td><td>: <span id="cpLeadTime" style="border-bottom: 1px solid #94a3b8; display:inline-block; width:100%;"></span></td></tr>
+        <div class="cp-tnc-title">TERMS & CONDITIONS :-</div>
+        <table style="margin-top:8px;">
+            <tr><td style="width:140px; font-weight:bold; vertical-align:top;">Quotation Validity:</td><td id="cpValidity"></td></tr>
+            <tr><td style="font-weight:bold; vertical-align:top; padding-top:8px;">Terms of Payment:</td><td id="cpPayment" style="padding-top:8px; border-bottom:1px solid #000;"></td></tr>
+            <tr><td style="font-weight:bold; vertical-align:top; padding-top:8px;">Delivery Lead Time:</td><td style="padding-top:8px;"><span id="cpLeadTime"></span></td></tr>
+            <tr><td style="font-weight:bold; vertical-align:top; padding-top:8px;">Delivery Location:</td><td style="padding-top:8px;"><span id="cpDeliveryTerm" style="border-bottom:1px solid #000;"></span></td></tr>
         </table>
     </div>
 
@@ -880,7 +897,7 @@
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProData'); 
+            localStorage.removeItem('winkoProData'); // ensure clean state
             
             document.getElementById('partChoice').value = 'no';
             togglePartitionDetails();
@@ -889,6 +906,7 @@
             buildBOMTable();
             document.getElementById('projectName').value = "";
             processTankData();
+            location.reload(); 
         }
     }
 
@@ -942,7 +960,6 @@
         
         document.getElementById('cpValidity').innerText = document.getElementById('tcValidity').value;
         
-        // Format payment terms to have a clean gap if multiline
         let payText = document.getElementById('tcPayment').value || '';
         document.getElementById('cpPayment').innerHTML = payText.replace(/\n/g, '<br>');
         
@@ -1006,7 +1023,7 @@
                     <span>${sec.category}</span>
                     <div class="no-print">
                         <button type="button" onclick="addCategoryRow(${sIdx})" style="padding:4px 8px; font-size:11px; background:#fff; border:1px solid #ea580c; color:#ea580c; border-radius:4px; cursor:pointer; font-weight:700;">+ Add Row</button>
-                        <button type="button" onclick="removeCategoryRow(${sIdx})" style="padding:4px 8px; font-size:11px; background:#fff; border:1px solid #e11d48; color:#e11d48; border-radius:4px; cursor:pointer; margin-left:6px; font-weight:700;">- Remove</button>
+                        <button type="button" onclick="removeCategoryRow(${sIdx})" style="padding:4px 8px; font-size:11px; background:#ffe4e6; border:1px solid #e11d48; color:#e11d48; border-radius:4px; cursor:pointer; margin-left:6px; font-weight:700;">- Remove</button>
                     </div>
                 </div>
             </td></tr>`;
