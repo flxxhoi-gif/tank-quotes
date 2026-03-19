@@ -164,8 +164,6 @@
             body.print-internal .summary-box { background: #f8fafc !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 4px; padding: 10px 15px !important; margin-top: 5px; width: 260px; float: right; page-break-inside: avoid; box-shadow: none;}
             body.print-internal .sum-row { border-bottom: 1px solid #cbd5e1 !important; margin-bottom: 5px; padding-bottom: 3px; color: #334155 !important; font-size: 8pt; font-weight: 700;}
             body.print-internal .sum-row.total { background: #0f172a !important; color: #ffffff !important; border: none !important; padding: 8px !important; font-size: 11pt; margin: 8px -15px -10px -15px; border-radius: 0 0 2px 2px;}
-
-            body.print-internal .tc-box { display: none; } 
             
             body.print-internal .visual-container { max-width: 100%; display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin: 0 auto 15px auto; page-break-inside: avoid; clear: both;}
             body.print-internal .view-box { padding: 5px; border: 1px solid #cbd5e1 !important; background: #fff !important; border-radius: 4px; }
@@ -186,7 +184,7 @@
             body.print-internal .sig-box strong { color: #0f172a; font-size: 9pt; text-transform: uppercase;}
 
             /* ------------------------------------------------ */
-            /* MODE 2: CUSTOMER PRINT (Clean Formal Letter)     */
+            /* MODE 2: CUSTOMER PRINT (2-Page Formal Letter)    */
             /* ------------------------------------------------ */
             body.print-customer #mainContent { display: none !important; }
             body.print-customer #customerPrintView { display: block !important; }
@@ -196,15 +194,15 @@
             .cp-header-right { width: 65%; padding-left: 20px;}
             
             .cp-meta-layout { display: flex; justify-content: space-between; align-items: stretch; margin-bottom: 20px;}
-            .cp-meta-left { width: 45%; font-size: 8.5pt;}
+            .cp-meta-left { width: 55%; font-size: 8.5pt;}
             .cp-meta-left table { width: 100%; border: none; margin: 0;}
             .cp-meta-left td { border: none; padding: 2px 5px 2px 0; vertical-align: top;}
             .cp-meta-left td:first-child { width: 70px; font-weight: normal; color: #000;}
             
-            .cp-meta-center { width: 20%; text-align: center; display: flex; align-items: center; justify-content: center;}
+            .cp-meta-center { width: 15%; text-align: center; display: flex; align-items: center; justify-content: center;}
             .cp-quotation-box { border: 2px solid #000; padding: 6px 15px; font-weight: bold; font-size: 10pt; letter-spacing: 1px;}
             
-            .cp-meta-right { width: 35%; font-size: 8.5pt; text-align: right;}
+            .cp-meta-right { width: 30%; font-size: 8.5pt; text-align: right;}
             .cp-meta-right table { width: 100%; border: none; margin: 0;}
             .cp-meta-right td { border: none; padding: 2px 0 2px 5px; vertical-align: top; text-align: left;}
             .cp-meta-right td:first-child { width: 60px; font-weight: normal; color: #000; text-align: right;}
@@ -216,8 +214,16 @@
             .cp-table .td-center { text-align: center;}
             .cp-table .td-right { text-align: right;}
             
-            /* Customer T&C Block */
-            .cp-exclusions { border: 1px solid #000; padding: 8px 12px; margin-bottom: 20px; background: #f8fafc !important; font-size: 8pt; line-height: 1.4; -webkit-print-color-adjust: exact; page-break-inside: avoid;}
+            /* Customer T&C Blocks */
+            .cp-short-exclusions { display: flex; align-items: stretch; margin-bottom: 20px; font-size: 8pt; line-height: 1.4; border: 1px solid #000;}
+            .cp-short-exclusions .label { background: #d1d5db !important; color: #000; padding: 8px 10px; font-weight: bold; border-right: 1px solid #000; -webkit-print-color-adjust: exact; width: 100px; text-align: center; display: flex; align-items: center; justify-content: center;}
+            .cp-short-exclusions .content { padding: 8px 12px; background: #fff; flex: 1;}
+
+            /* Force page break for full terms */
+            .page-break-section { page-break-before: always; padding-top: 10px; }
+            
+            .cp-full-terms { font-size: 8.5pt; line-height: 1.5; white-space: pre-wrap; margin-bottom: 30px; color: #000;}
+
             .cp-tnc { font-size: 8.5pt; margin-bottom: 30px; page-break-inside: avoid;}
             .cp-tnc-title { font-weight: bold; text-decoration: underline; margin-bottom: 5px; font-size: 9pt;}
             .cp-tnc table { width: 100%; border: none; border-collapse: collapse;}
@@ -383,24 +389,32 @@
                     <div class="form-group"><label>Attention (Person)</label><input type="text" id="custAttn" placeholder="e.g. Ms. Gooi" oninput="syncPrintHeader(); savePrices();"></div>
                     <div class="form-group" style="grid-column: span 2;"><label>Customer Address</label><textarea id="custAddr" rows="2" placeholder="Street, City, Zip" oninput="syncPrintHeader(); savePrices();"></textarea></div>
                 </div>
-                <div class="config-grid no-print" style="margin-bottom: 15px; background: #f8fafc; padding:15px; border-radius:8px; border:1px solid #e2e8f0;">
-                    <div class="form-group"><label>Quotation Validity</label><input type="text" id="tcValidity" value="14 Days from the date of quotation, subject to stock availability and our confirmation." oninput="syncPrintHeader(); savePrices();"></div>
-                    <div class="form-group"><label>Delivery Lead-time</label><input type="text" id="tcLead" value="6 - 10 weeks from official confirmation order, non-refundable down payment received and all technical details in good order. (NO Retention sump and LAD will be entertained)" oninput="syncPrintHeader(); savePrices();"></div>
-                    <div class="form-group" style="grid-column: span 2;"><label>Delivery Location</label><input type="text" id="tcDelivery" value="Deliver to site exclude unloading, materials handling at site and hoisting." oninput="syncPrintHeader(); savePrices();"></div>
-                    <div class="form-group" style="grid-column: span 2;"><label>Payment Terms</label><textarea id="tcPayment" rows="3" oninput="syncPrintHeader(); savePrices();">30% down payment upon confirmation of order
-50% payment before delivery
-20% after testing and commissioning (no retention)</textarea></div>
-                    <div class="form-group"><label>Sign-off Name</label><input type="text" id="signName" value="LEE JL" oninput="syncPrintHeader(); savePrices();"></div>
-                    <div class="form-group"><label>Sign-off Phone</label><input type="text" id="signPhone" value="019-2215558" oninput="syncPrintHeader(); savePrices();"></div>
+                
+                <div class="form-group no-print" style="margin-bottom: 15px;">
+                    <label>Short Exclusions (Prints in Box on Page 1)</label>
+                    <textarea id="shortExclusions" rows="5" style="text-align:left; font-weight:500; font-size:13px;" oninput="syncPrintHeader(); savePrices();">- Float valve chamber or top sumps
+- Flanges, nozzles, pipes, vortex, valves, electrode sensor, pumps and filter.
+- Scaffolding
+- Unloading and hoisting of materials.
+- HIRARC, permit application, medical test and site safety supervisor.</textarea>
                 </div>
+                
+                <div class="form-group no-print" style="margin-bottom: 15px;">
+                    <label>Full Document T&C (Prints on Page 2)</label>
+                    <textarea id="fullTermsNotes" rows="12" style="text-align:left; font-weight:500; font-size:13px;" oninput="syncPrintHeader(); savePrices();">Scope of Supply
+1. Standard tank accessories such as bolt, nut, washer, foam tape, air vent, 600x600mm access manhole, internal stays & brackets, internal & external ladder, water level indicator, subject to manufacturer's design and standard and item mentioned in quotation.
+2. Pipe hole opening at factory (Exclude flange). Pipe hole opening on site will be an additional charge.
 
-                <div class="form-group no-print">
-                    <label>Exclusions & Notes (Prints below Customer Table)</label>
-                    <textarea id="quoteNotes" rows="16" style="text-align:left; font-weight:500; font-size:13px;" oninput="syncPrintHeader(); savePrices();">- Float valve chamber or top sumps
-- flanges, nozzles, pipes, vortex, valves, electrode sensor, pumps and filter.
-- scaffolding
-- unloading and hoisting of materials.
-- HIRARC, permit application, medical test and site safety supervisor.
+Excluded from the Supply
+1. Float valve chamber or top sump.
+2. Flanges, nozzles, pipes, valves, vortex, electrode sensor, pumps and filter.
+3. RC works and RC plinths.
+4. Scaffolding & safety platform for installation.
+5. Unloading, shifting and hoisting of materials at site.
+6. Safety training courses, equipment and medical test require to install tank.
+7. Design calculation report (Subject to additional charges if request)
+8. Water tank cleaning after installation
+9. Water supply for testing
 
 Note:
 1. Tank design to sit on 1M Center to center RC tank support/Plinths with at least 500mm height and 200mm width. Design to be provided by others.
@@ -413,6 +427,17 @@ Note:
 8. Additional charges will be imposed for projects with excessive work site requirements. Customer shall pre-empt on all the excessive/additional work site requirements before request for quotation or confirming the order.
 9. Delivery and installation time: Monday to Saturday, 8am to 5pm. Additional charges will be imposed if requested to deliver or install tank out of above working hours or Public Holidays.
 10. Upon PO received, the delivery and installation of tank shall be done within 6 months. Any date extension will be subjected to price revision and storage charges.</textarea>
+                </div>
+
+                <div class="config-grid no-print" style="margin-bottom: 15px; background: #f8fafc; padding:15px; border-radius:8px; border:1px solid #e2e8f0;">
+                    <div class="form-group"><label>Quotation Validity</label><input type="text" id="tcValidity" value="14 Days from the date of quotation, subject to stock availability and our confirmation." oninput="syncPrintHeader(); savePrices();"></div>
+                    <div class="form-group"><label>Delivery Lead-time</label><input type="text" id="tcLead" value="6 - 10 weeks from official confirmation order, non-refundable down payment received and all technical details in good order. (NO Retention sump and LAD will be entertained)" oninput="syncPrintHeader(); savePrices();"></div>
+                    <div class="form-group" style="grid-column: span 2;"><label>Delivery Location</label><input type="text" id="tcDelivery" value="Deliver to site exclude unloading, materials handling at site and hoisting." oninput="syncPrintHeader(); savePrices();"></div>
+                    <div class="form-group" style="grid-column: span 2;"><label>Payment Terms</label><textarea id="tcPayment" rows="3" oninput="syncPrintHeader(); savePrices();">30% down payment upon confirmation of order
+50% payment before delivery
+20% after testing and commissioning (no retention)</textarea></div>
+                    <div class="form-group"><label>Sign-off Name</label><input type="text" id="signName" value="LEE JL" oninput="syncPrintHeader(); savePrices();"></div>
+                    <div class="form-group"><label>Sign-off Phone</label><input type="text" id="signPhone" value="019-2215558" oninput="syncPrintHeader(); savePrices();"></div>
                 </div>
 
 
@@ -448,16 +473,6 @@ Note:
                     <div class="sum-row"><span>Discount:</span> <span style="color: #fbbf24;">- RM <span id="sumDiscount_screen">0.00</span></span></div>
                     <div class="sum-row"><span>SST Tax:</span> <span>+ RM <span id="sumSST_screen">0.00</span></span></div>
                     <div class="sum-row total"><span>GRAND TOTAL:</span> <span>RM <span id="grandTotal_screen">0.00</span></span></div>
-                </div>
-
-                <div class="clearfix print-only" id="internalPrintFooter">
-                    <div class="summary-box">
-                        <div class="sum-row" id="sumWeight_print_row"><span id="sumWeight_print_label">Est. Total Wt:</span> <span style="font-weight:800; color:#0f172a;" id="sumWeight_print">0 kg</span></div>
-                        <div class="sum-row" id="sumSubtotal_print_row"><span>Subtotal:</span> <span>RM <span id="sumSubtotal_print">0.00</span></span></div>
-                        <div class="sum-row" id="sumDiscount_print_row"><span>Discount:</span> <span style="color: #b91c1c;">- RM <span id="sumDiscount_print">0.00</span></span></div>
-                        <div class="sum-row" id="sumSST_print_row"><span>SST Tax:</span> <span>+ RM <span id="sumSST_print">0.00</span></span></div>
-                        <div class="sum-row total"><span>GRAND TOTAL:</span> <span style="float:right;">RM <span id="grandTotal_print">0.00</span></span></div>
-                    </div>
                 </div>
 
                 <div class="section-title" style="margin-top:0;">Assembly Draft (Auto-calculated: <span id="totalPanelsCount" style="color:#ea580c;">0</span> panels)</div>
@@ -521,13 +536,6 @@ Note:
             </div>
         </div>
 
-        <div class="print-footer print-only" id="internalSig">
-            <div class="sig-box">
-                <p>Issued By:</p>
-                <div class="sig-line"></div>
-                <p><strong>JUTARAMA INDUSTRIES (M) SDN BHD</strong></p>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -605,41 +613,47 @@ Note:
         </tbody>
     </table>
 
-    <div class="cp-exclusions">
-        <strong style="text-decoration: underline;">Exclusion</strong>
-        <div id="cpExclusionsText" style="margin-top: 5px; margin-left: 10px;"></div>
+    <div class="cp-short-exclusions">
+        <div class="label">Exclusion</div>
+        <div class="content" id="cpShortExclusionsText"></div>
     </div>
 
-    <div class="cp-tnc">
-        <div class="cp-tnc-title">TERMS & CONDITIONS :-</div>
-        <table style="margin-top:10px;">
-            <tr>
-                <td style="width:130px; font-weight:bold; vertical-align:top;">Quotation Validity:</td>
-                <td id="cpValidity"></td>
-            </tr>
-            <tr>
-                <td style="font-weight:bold; vertical-align:top; padding-top:12px;">Terms of Payment:</td>
-                <td id="cpPayment" style="padding-top:12px; border-bottom:1px solid #000; line-height:1.8;"></td>
-            </tr>
-            <tr>
-                <td style="font-weight:bold; vertical-align:top; padding-top:12px;">Delivery Lead Time:</td>
-                <td style="padding-top:12px;"><span id="cpLeadTime"></span></td>
-            </tr>
-            <tr>
-                <td style="font-weight:bold; vertical-align:top; padding-top:12px;">Delivery Location:</td>
-                <td style="padding-top:12px;"><span id="cpDeliveryTerm" style="border-bottom:1px solid #000;"></span></td>
-            </tr>
-        </table>
-    </div>
 
-    <p style="font-size: 8.5pt; color: #000; margin-top: 25px; margin-bottom: 30px;">We trusted that our quotation meets with your expectations. Should you have any further queries, please do not hesitate to call on us. We thank you for the opportunity to quote, and remain.</p>
-    
-    <div class="cp-signoff">
-        <div class="cp-signoff-left">
-            <p>Best Regards & Thank you.</p>
-            <p style="font-weight:bold; margin-bottom: 50px;">JUTARAMA INDUSTRIES (M) SDN BHD</p>
-            <p style="font-weight:bold; text-decoration:underline;" id="cpSignName"></p>
-            <p id="cpSignPhone"></p>
+    <div class="page-break-section">
+        
+        <div class="cp-full-terms" id="cpFullTermsText"></div>
+
+        <div class="cp-tnc">
+            <div class="cp-tnc-title">TERMS & CONDITIONS :-</div>
+            <table style="margin-top:10px;">
+                <tr>
+                    <td style="width:130px; font-weight:bold; vertical-align:top;">Quotation Validity:</td>
+                    <td id="cpValidity"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold; vertical-align:top; padding-top:12px;">Terms of Payment:</td>
+                    <td id="cpPayment" style="padding-top:12px; border-bottom:1px solid #000; line-height:1.8;"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold; vertical-align:top; padding-top:12px;">Delivery Lead Time:</td>
+                    <td style="padding-top:12px;"><span id="cpLeadTime"></span></td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold; vertical-align:top; padding-top:12px;">Delivery Location:</td>
+                    <td style="padding-top:12px;"><span id="cpDeliveryTerm" style="border-bottom:1px solid #000;"></span></td>
+                </tr>
+            </table>
+        </div>
+
+        <p style="font-size: 8.5pt; color: #000; margin-top: 25px; margin-bottom: 30px;">We trusted that our quotation meets with your expectations. Should you have any further queries, please do not hesitate to call on us. We thank you for the opportunity to quote, and remain.</p>
+        
+        <div class="cp-signoff">
+            <div class="cp-signoff-left">
+                <p>Best Regards & Thank you.</p>
+                <p style="font-weight:bold; margin-bottom: 50px;">JUTARAMA INDUSTRIES (M) SDN BHD</p>
+                <p style="font-weight:bold; text-decoration:underline;" id="cpSignName"></p>
+                <p id="cpSignPhone"></p>
+            </div>
         </div>
     </div>
 </div>
@@ -728,7 +742,7 @@ Note:
         }
     }
 
-    // --- FULL BOM STRUCTURE ---
+    // --- FULL BOM STRUCTURE (BASE TEMPLATE WITH WEIGHTS) ---
     const systemBaseStructure = [
         { category: "Panels", items: [
             {name: "Manhole Panel", def: 450, wt: 45}, 
@@ -774,7 +788,7 @@ Note:
     let bomStructure = JSON.parse(JSON.stringify(systemBaseStructure));
     let customRowCounts = JSON.parse(localStorage.getItem('winkoCustomCounts')) || [0,0,0,0,0];
 
-    const configIDs = ['quoteIdInput', 'stdChoice','unitChoice','partChoice','coatChoice','length','width','height','partQty','partLen','partHgt','partType','discountPct','sstPct', 'quoteNotes', 'custCompany', 'custAttn', 'custAddr', 'tcValidity', 'tcLead', 'tcDelivery', 'tcPayment', 'signName', 'signPhone'];
+    const configIDs = ['quoteIdInput', 'stdChoice','unitChoice','partChoice','coatChoice','length','width','height','partQty','partLen','partHgt','partType','discountPct','sstPct', 'shortExclusions', 'fullTermsNotes', 'custCompany', 'custAttn', 'custAddr', 'tcValidity', 'tcLead', 'tcDelivery', 'tcPayment', 'signName', 'signPhone'];
 
     // --- ADMIN PANEL LOGIC ---
     function buildAdminTable() {
@@ -938,7 +952,9 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProData'); 
+            
+            // V3 CACHE BUSTER - Clears the old saved memory so it fetches the new layout properly
+            localStorage.removeItem('winkoProDataV3'); 
             
             document.getElementById('partChoice').value = 'no';
             togglePartitionDetails();
@@ -954,32 +970,6 @@ Note:
     // --- SYNC PRINT METADATA (DEFENSIVE PROGRAMMING) ---
     function syncPrintHeader() {
         try {
-            // Internal Print Strings
-            document.getElementById('metaQuoteId').innerText = document.getElementById('quoteIdInput').value || "N/A";
-            document.getElementById('metaProject').innerText = document.getElementById('projectName').value || "_____________________";
-            document.getElementById('metaStd').innerText = document.getElementById('stdChoice').value || "";
-            
-            let l = document.getElementById('length').value || 0;
-            let w = document.getElementById('width').value || 0;
-            let h = document.getElementById('height').value || 0;
-            let u = document.getElementById('unitChoice').value === 'ft' ? 'ft' : 'm';
-            let dimsStr = `${l}${u} (L) x ${w}${u} (W) x ${h}${u} (H)`;
-            document.getElementById('metaDims').innerText = dimsStr;
-            
-            let matStr = document.getElementById('coatChoice').value || "";
-            document.getElementById('metaCoat').innerText = matStr;
-            
-            let partChoice = document.getElementById('partChoice').value || "no";
-            let pQty = parseInt(document.getElementById('partQty').value) || 0;
-            let pLen = document.getElementById('partLen').value || 0;
-            let pHgt = document.getElementById('partHgt').value || 0;
-            let pType = document.getElementById('partType').value || 'Standard';
-            
-            let partDisplay = 'None';
-            if(partChoice === 'yes' && pQty > 0) { partDisplay = `${pQty}x ${pType} (${pLen}${u} x ${pHgt}${u})`; }
-            
-            document.getElementById('metaPart').innerText = partDisplay;
-            
             // CUSTOMER PRINT SYNC (Mapping to the ELCO layout variables)
             document.getElementById('cpCustName').innerText = document.getElementById('custCompany').value || document.getElementById('projectName').value || "Client Name";
             document.getElementById('cpCustAddress').innerHTML = (document.getElementById('custAddr').value || '').replace(/\n/g, '<br>');
@@ -987,7 +977,15 @@ Note:
             document.getElementById('cpProject').innerText = document.getElementById('projectName').value || "";
             document.getElementById('cpRef').innerText = document.getElementById('quoteIdInput').value || "";
 
+            let matStr = document.getElementById('coatChoice').value || "";
             document.getElementById('cpMaterial').innerText = matStr;
+            
+            let l = document.getElementById('length').value || 0;
+            let w = document.getElementById('width').value || 0;
+            let h = document.getElementById('height').value || 0;
+            let u = document.getElementById('unitChoice').value === 'ft' ? 'ft' : 'm';
+            let dimsStr = `${l}${u} (L) x ${w}${u} (W) x ${h}${u} (H)`;
+            
             document.getElementById('cpDims').innerText = dimsStr;
             document.getElementById('cpStd').innerText = document.getElementById('stdChoice').value || "";
 
@@ -999,7 +997,9 @@ Note:
             let wli = document.getElementById('wliType') ? document.getElementById('wliType').value : '';
             document.getElementById('cpWLI').innerText = wli;
 
-            document.getElementById('cpExclusionsText').innerHTML = (document.getElementById('quoteNotes').value || '').replace(/\n/g, '<br>');
+            // Update Both text boxes to the 2 pages
+            document.getElementById('cpShortExclusionsText').innerHTML = (document.getElementById('shortExclusions').value || '').replace(/\n/g, '<br>');
+            document.getElementById('cpFullTermsText').innerHTML = (document.getElementById('fullTermsNotes').value || '');
             
             document.getElementById('cpValidity').innerText = document.getElementById('tcValidity').value || "";
             
@@ -1029,11 +1029,11 @@ Note:
                 if(it.selectId && document.getElementById(it.selectId)) data[it.selectId] = document.getElementById(it.selectId).value; 
             });
         });
-        localStorage.setItem('winkoProData', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV3', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProData');
+        let savedData = localStorage.getItem('winkoProDataV3');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1067,7 +1067,7 @@ Note:
                     <span>${sec.category}</span>
                     <div class="no-print">
                         <button type="button" onclick="addCategoryRow(${sIdx})" style="padding:4px 8px; font-size:11px; background:#fff; border:1px solid #ea580c; color:#ea580c; border-radius:4px; cursor:pointer; font-weight:700;">+ Add Row</button>
-                        <button type="button" onclick="removeCategoryRow(${sIdx})" style="padding:4px 8px; font-size:11px; background:#ffe4e6; border:1px solid #e11d48; color:#e11d48; border-radius:4px; cursor:pointer; margin-left:6px; font-weight:700;">- Remove</button>
+                        <button type="button" onclick="removeCategoryRow(${sIdx})" style="padding:4px 8px; font-size:11px; background:#fff; border:1px solid #e11d48; color:#e11d48; border-radius:4px; cursor:pointer; margin-left:6px; font-weight:700;">- Remove</button>
                     </div>
                 </div>
             </td></tr>`;
@@ -1298,7 +1298,6 @@ Note:
             a.href = url; 
             a.download = `Jutarama_Quote_${qid}.csv`; 
             
-            // Bug Fix: Append to body to ensure it fires in all browsers
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
