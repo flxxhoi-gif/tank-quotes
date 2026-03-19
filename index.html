@@ -27,12 +27,10 @@
         /* --- DASHBOARD STYLES (SCREEN) --- */
         .container { max-width: 1550px; margin: auto; background: white; padding: 35px; border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.01); }
         
-        /* Modern App Header */
         .app-header-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 20px; }
         .app-header-bar h2 { color: #0f172a; margin: 0; font-weight: 800; font-size: 1.8em; letter-spacing: -0.5px;}
         .live-clock { font-size: 0.9em; color: #64748b; font-weight: 600; background: #f1f5f9; padding: 6px 12px; border-radius: 20px;}
         
-        /* Memory Bank Styles */
         .memory-panel { background: #fff7ed; border: 1px dashed #fed7aa; padding: 12px 20px; border-radius: 10px; display: flex; gap: 15px; align-items: center; margin-bottom: 25px; box-shadow: inset 0 2px 4px rgba(234,88,12,0.05); }
         .memory-panel select { flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #fdba74; font-weight: 600; color: #ea580c; outline: none;}
         .memory-panel select:focus { box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1); }
@@ -44,12 +42,10 @@
         .col-left { flex: 1.3; min-width: 500px; }
         .col-right { flex: 0.9; min-width: 400px; }
 
-        /* Modern Sections */
         .section-title { position: relative; font-weight: 800; margin-top: 20px; margin-bottom: 15px; color: #0f172a; font-size: 1.15em; padding: 10px 15px; background: #f8fafc; border-radius: 8px; border-left: 5px solid #ea580c; display: flex; align-items: center; justify-content: space-between;}
         .reset-btn { background: #94a3b8; color: white; border: none; padding: 6px 12px; font-size: 12px; border-radius: 6px; cursor: pointer; transition: 0.2s; font-weight: 600;}
         .reset-btn:hover { background: #64748b; }
         
-        /* Configuration Grids */
         .config-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px; }
         .dim-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; width: 100%; }
         .form-group { display: flex; flex-direction: column; margin-bottom: 5px;}
@@ -57,7 +53,6 @@
         .form-group input, .form-group select, .form-group textarea { padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; font-weight: 600; background: #fff; font-family: inherit; transition: border-color 0.2s, box-shadow 0.2s;}
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #ea580c; outline: none; box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1); }
         
-        /* Smooth Table Layout */
         table { width: 100%; border-collapse: separate; border-spacing: 0; margin-bottom: 20px; font-size: 0.9em; table-layout: fixed; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; }
         th { background: #f1f5f9; color: #475569; padding: 12px; text-align: center; border-bottom: 2px solid #e2e8f0; text-transform: uppercase; font-size: 0.8em; letter-spacing: 0.5px;}
         td { padding: 8px 10px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;}
@@ -90,14 +85,12 @@
         .export-btn { background: #334155; } .export-btn:hover { background: #1e293b; box-shadow: 0 8px 15px -3px rgba(15,23,42,0.3);}
         .print-btn { background: #059669; } .print-btn:hover { background: #047857; box-shadow: 0 8px 15px -3px rgba(5,150,105,0.3);}
 
-        /* Drafting Visuals */
         .visual-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; justify-items: center; }
         .view-box { text-align: center; background: #fff; padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; width: 100%; max-width: 160px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);} 
         .view-title { font-size: 0.75em; font-weight: 800; margin-bottom: 8px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;}
         .grid-draft { display: grid; gap: 1px; background: #94a3b8; border: 2px solid #475569; margin: 0 auto; max-width: 100%; border-radius: 2px; overflow: hidden;} 
         .panel { background: #e0f2fe; aspect-ratio: 1 / 1; }
 
-        /* Plinth CSS Shapes */
         .plinth-wrapper { display: flex; gap: 15px; margin-bottom: 25px; page-break-inside: avoid; }
         .plinth-card { flex: 1; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; background: #fff; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02);}
         .plinth-card h4 { margin: 0 0 12px 0; color: #0f172a; font-size: 0.9em; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px;}
@@ -119,13 +112,14 @@
         .admin-input.text-left { text-align: left; }
 
         .print-only { display: none; }
+        #customerPrintView { display: none; }
 
         /* ========================================================================== */
         /* --- PROFESSIONAL PRINT STYLES (FLAWLESS INVOICE GRADE) --- */
         /* ========================================================================== */
         @media print {
             @page { size: A4; margin: 12mm 15mm; }
-            body { background: white; padding: 0; font-size: 9pt; color: #0f172a; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            body { background: white; padding: 0; font-size: 9pt; color: #0f172a; font-family: Arial, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .no-print { display: none !important; }
             .print-only { display: block; }
             
@@ -134,99 +128,108 @@
             .col-left, .col-right { width: 100%; display: block; }
             
             /* High-End Corporate Header */
-            .print-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #ea580c; padding-bottom: 15px; margin-bottom: 25px; }
+            .print-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #ea580c; padding-bottom: 15px; margin-bottom: 20px; }
             .header-left { display: flex; align-items: center; gap: 20px; }
-            .header-left img { width: 140px; height: auto; object-fit: contain; }
+            .header-left img { width: 130px; height: auto; object-fit: contain; }
             .header-text h1 { margin: 0 0 5px 0; font-size: 15pt; color: #0f172a; font-weight: 800; letter-spacing: 0.5px; }
             .header-text p { margin: 2px 0; font-size: 8.5pt; color: #475569; font-weight: 500;}
             .header-right { text-align: right; }
             .header-right h2 { margin: 0 0 8px 0; font-size: 26pt; color: #ea580c; font-weight: 800; letter-spacing: 2px;}
             .header-right p { margin: 2px 0; font-size: 9.5pt; color: #1e293b; font-weight: 600;}
             
-            /* Invoice Metadata Matrix */
-            .quote-meta { display: flex; gap: 15px; margin-bottom: 25px; }
-            .meta-box { flex: 1; border: 1px solid #cbd5e1; padding: 10px 15px; border-radius: 6px; background: #f8fafc; }
-            .meta-item { font-size: 8.5pt; margin-bottom: 5px; display: flex; }
-            .meta-label { font-weight: 700; color: #64748b; width: 90px; text-transform: uppercase;}
-            .meta-value { font-weight: 700; color: #0f172a; }
+            /* INTERNAL PRINT STYLES */
+            body.print-internal .quote-meta { display: flex; gap: 15px; margin-bottom: 25px; }
+            body.print-internal .meta-box { flex: 1; border: 1px solid #cbd5e1; padding: 10px 15px; border-radius: 6px; background: #f8fafc; }
+            body.print-internal .meta-item { font-size: 8.5pt; margin-bottom: 5px; display: flex; }
+            body.print-internal .meta-label { font-weight: 700; color: #64748b; width: 90px; text-transform: uppercase;}
+            body.print-internal .meta-value { font-weight: 700; color: #0f172a; }
 
-            .section-title { margin-top: 20px !important; margin-bottom: 10px !important; background: transparent !important; border-left: none !important; border-bottom: 2px solid #0f172a !important; padding: 0 0 4px 0 !important; color: #0f172a !important; font-size: 11pt !important; text-transform: uppercase; letter-spacing: 1px; font-weight: 800;}
+            body.print-internal .section-title { margin-top: 20px !important; margin-bottom: 10px !important; background: transparent !important; border-left: none !important; border-bottom: 2px solid #0f172a !important; padding: 0 0 4px 0 !important; color: #0f172a !important; font-size: 11pt !important; text-transform: uppercase; letter-spacing: 1px; font-weight: 800;}
             
-            /* Print Table Design */
-            table { font-size: 8.5pt; margin-bottom: 15px; border-collapse: collapse; width: 100%; border: 1px solid #cbd5e1; border-radius: 0;}
-            tr { border-bottom: 1px solid #e2e8f0; page-break-inside: avoid; }
-            tr:nth-child(even):not(.section-header-row) { background-color: #f8fafc !important; }
-            th { background-color: #0f172a !important; color: #ffffff !important; padding: 8px 10px; border: 1px solid #0f172a; font-weight: 700; text-transform: uppercase;}
-            th.text-center { text-align: center; } th.text-right { text-align: right; }
-            td { border-right: 1px solid #e2e8f0; padding: 6px 10px; color: #0f172a;}
-            td:last-child { border-right: none; }
-            td.text-center { text-align: center; } td.text-right { text-align: right; font-weight: 700; color: #0f172a !important;}
-            .section-header { background-color: #e2e8f0 !important; font-weight: 800; color: #0f172a !important; border-bottom: 1px solid #cbd5e1 !important; padding: 6px 10px !important; text-transform: uppercase; font-size: 8pt; border-right: none;}
-            .col-item { background: transparent !important; font-weight: 600; width: 45%;}
-            .col-qty { width: 10%;} .col-wt { width: 15%;} .col-uprice { width: 15%;} .col-itotal { width: 15%;}
+            body.print-internal table { font-size: 8pt; margin-bottom: 15px; border-collapse: collapse; width: 100%; border: 1px solid #cbd5e1; border-radius: 0;}
+            body.print-internal tr { border-bottom: 1px solid #e2e8f0; page-break-inside: avoid; }
+            body.print-internal tr:nth-child(even):not(.section-header-row) { background-color: #f8fafc !important; }
+            body.print-internal th { background-color: #0f172a !important; color: #ffffff !important; padding: 6px 8px; border: 1px solid #0f172a; font-weight: 700; text-transform: uppercase;}
+            body.print-internal th.text-center { text-align: center; } body.print-internal th.text-right { text-align: right; }
+            body.print-internal td { border-right: 1px solid #e2e8f0; padding: 5px 8px; color: #0f172a;}
+            body.print-internal td:last-child { border-right: none; }
+            body.print-internal td.text-center { text-align: center; } body.print-internal td.text-right { text-align: right; font-weight: 700; color: #0f172a !important;}
+            body.print-internal .section-header { background-color: #e2e8f0 !important; font-weight: 800; color: #0f172a !important; border-bottom: 1px solid #cbd5e1 !important; padding: 5px 8px !important; text-transform: uppercase; font-size: 7.5pt; border-right: none;}
             
-            input, .desc-input, .bom-inline-select { border: none !important; background: transparent !important; color: #0f172a !important; box-shadow: none !important; font-weight: 600; padding: 0 !important; font-size: inherit; appearance: none; -webkit-appearance: none; width: auto;}
-            .bom-inline-select { margin-left: 4px; color: #475569 !important; font-weight: 700;}
+            body.print-internal input, body.print-internal .desc-input, body.print-internal .bom-inline-select { border: none !important; background: transparent !important; color: #0f172a !important; box-shadow: none !important; font-weight: 600; padding: 0 !important; font-size: inherit; appearance: none; -webkit-appearance: none; width: auto;}
+            body.print-internal .bom-inline-select { margin-left: 4px; color: #475569 !important; font-weight: 700;}
             
-            /* Professional Summary Box Aligned Right */
-            .clearfix::after { content: ""; clear: both; display: table; }
-            .summary-box { background: #f8fafc !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 4px; padding: 12px 15px !important; margin-top: 5px; width: 280px; float: right; page-break-inside: avoid; box-shadow: none;}
-            .sum-row { border-bottom: 1px solid #cbd5e1 !important; margin-bottom: 6px; padding-bottom: 4px; color: #334155 !important; font-size: 8.5pt; font-weight: 700;}
-            .sum-row.total { background: #0f172a !important; color: #ffffff !important; border: none !important; padding: 10px !important; font-size: 12pt; margin: 8px -15px -12px -15px; border-radius: 0 0 2px 2px;}
+            body.print-internal .summary-box { background: #f8fafc !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 4px; padding: 10px 15px !important; margin-top: 5px; width: 260px; float: right; page-break-inside: avoid; box-shadow: none;}
+            body.print-internal .sum-row { border-bottom: 1px solid #cbd5e1 !important; margin-bottom: 5px; padding-bottom: 3px; color: #334155 !important; font-size: 8pt; font-weight: 700;}
+            body.print-internal .sum-row.total { background: #0f172a !important; color: #ffffff !important; border: none !important; padding: 8px !important; font-size: 11pt; margin: 8px -15px -10px -15px; border-radius: 0 0 2px 2px;}
 
-            /* T&C Text Block */
-            .tc-box { margin-top: 5px; padding-right: 20px; font-size: 7pt; color: #334155; white-space: pre-wrap; width: calc(100% - 300px); float: left; line-height: 1.4; page-break-inside: auto;}
-            .tc-title { font-weight: 800; color: #0f172a; margin-bottom: 6px; font-size: 8.5pt; text-transform: uppercase; border-bottom: 1px solid #0f172a; padding-bottom: 2px; display: inline-block;}
-
-            .visual-container { max-width: 100%; display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin: 0 auto 15px auto; page-break-inside: avoid; clear: both;}
-            .view-box { padding: 5px; border: 1px solid #cbd5e1 !important; background: #fff !important; border-radius: 4px; }
-            .grid-draft { gap: 0.5px; border: 1px solid #0f172a !important; background: #fff !important;}
-            .panel { background: #e0f2fe !important; border: 0.5px solid #94a3b8 !important;}
-            .view-title { font-size: 6.5pt; margin-bottom: 3px; color: #0f172a !important; text-align: center; font-weight: 800;}
+            body.print-internal .tc-box { display: none; } /* Hide T&C on internal print to save space */
             
-            .plinth-wrapper { margin-top: 10px; }
-            .plinth-card { border: 1px solid #cbd5e1 !important; box-shadow: none; padding: 6px; border-radius: 4px; }
-            .plinth-card h4 { font-size: 7.5pt; color:#0f172a; font-weight: 800;}
-            .plinth-diagram { border: 1px solid #94a3b8 !important; background: #f8fafc !important; height: 50px; margin-bottom: 5px;}
-            .concrete-beam { border: 1px solid #475569 !important; }
+            body.print-internal .visual-container { max-width: 100%; display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin: 0 auto 15px auto; page-break-inside: avoid; clear: both;}
+            body.print-internal .view-box { padding: 5px; border: 1px solid #cbd5e1 !important; background: #fff !important; border-radius: 4px; }
+            body.print-internal .grid-draft { gap: 0.5px; border: 1px solid #0f172a !important; background: #fff !important;}
+            body.print-internal .panel { background: #e0f2fe !important; border: 0.5px solid #94a3b8 !important;}
+            body.print-internal .view-title { font-size: 6.5pt; margin-bottom: 3px; color: #0f172a !important; text-align: center; font-weight: 800;}
+            
+            body.print-internal .plinth-wrapper { margin-top: 10px; }
+            body.print-internal .plinth-card { border: 1px solid #cbd5e1 !important; box-shadow: none; padding: 6px; border-radius: 4px; }
+            body.print-internal .plinth-card h4 { font-size: 7.5pt; color:#0f172a; font-weight: 800;}
+            body.print-internal .plinth-diagram { border: 1px solid #94a3b8 !important; background: #f8fafc !important; height: 50px; margin-bottom: 5px;}
+            body.print-internal .concrete-beam { border: 1px solid #475569 !important; }
 
-            /* Legal Signature Footer */
-            .print-footer { display: flex; justify-content: space-between; margin-top: 40px; page-break-inside: avoid; clear: both; padding-top: 10px;}
-            .sig-box { width: 40%; text-align: left; }
-            .sig-box p { font-size: 8pt; margin: 0; color: #334155; }
-            .sig-line { border-bottom: 1px solid #0f172a; margin: 35px 0 5px 0; }
-            .sig-box strong { color: #0f172a; font-size: 9pt; text-transform: uppercase;}
+            body.print-internal .print-footer { display: flex; justify-content: space-between; margin-top: 30px; page-break-inside: avoid; clear: both; padding-top: 10px;}
+            body.print-internal .sig-box { width: 40%; text-align: left; }
+            body.print-internal .sig-box p { font-size: 8pt; margin: 0; color: #334155; }
+            body.print-internal .sig-line { border-bottom: 1px solid #0f172a; margin: 30px 0 5px 0; }
+            body.print-internal .sig-box strong { color: #0f172a; font-size: 9pt; text-transform: uppercase;}
 
             /* ======================================= */
             /* CUSTOMER PRINT MODE OVERRIDES           */
             /* ======================================= */
-            body.print-customer .col-wt,
-            body.print-customer .col-uprice,
-            body.print-customer .col-itotal {
-                display: none !important;
-            }
-            /* When prices hide, make Item Name huge, and Qty centered nicely */
-            body.print-customer .col-item {
-                width: 85% !important; border-right: 1px solid #e2e8f0 !important;
-            }
-            body.print-customer .col-qty {
-                width: 15% !important; border-right: none !important;
-            }
-            body.print-customer th.col-item { border-right: 1px solid white !important; }
+            body.print-customer .app-layout { display: none !important; } /* Hide internal dashboard completely */
             
-            body.print-customer #sumWeight_print_row,
-            body.print-customer #sumSubtotal_print_row,
-            body.print-customer #sumDiscount_print_row,
-            body.print-customer #sumSST_print_row {
-                display: none !important;
+            body.print-customer #customerPrintView { 
+                display: block !important; 
             }
+
+            /* Formal Header Block */
+            .cp-meta-layout { display: flex; justify-content: space-between; align-items: stretch; margin-bottom: 20px;}
+            .cp-meta-left { width: 50%; font-size: 9pt;}
+            .cp-meta-left table { width: 100%; border: none; margin: 0;}
+            .cp-meta-left td { border: none; padding: 2px 5px 2px 0; vertical-align: top;}
+            .cp-meta-left td:first-child { width: 70px; font-weight: normal; color: #475569;}
             
-            body.print-customer .summary-box {
-                border: none !important; padding: 0 !important; margin-top: 0 !important; width: 250px;
-            }
-            body.print-customer .sum-row.total {
-                margin: 0 !important; border-radius: 4px !important;
-            }
+            .cp-meta-center { width: 15%; text-align: center; display: flex; align-items: center; justify-content: center;}
+            .cp-quotation-box { border: 2px solid #0f172a; padding: 8px 15px; font-weight: bold; font-size: 10pt; letter-spacing: 1px;}
+            
+            .cp-meta-right { width: 30%; font-size: 9pt; text-align: right;}
+            .cp-meta-right table { width: 100%; border: none; margin: 0;}
+            .cp-meta-right td { border: none; padding: 2px 0 2px 5px; vertical-align: top; text-align: left;}
+            .cp-meta-right td:first-child { width: 60px; font-weight: normal; color: #475569; text-align: right;}
+
+            /* Formal Customer Table */
+            .cp-table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 20px; font-size: 9pt; border: 2px solid #000; }
+            .cp-table th { background: #d1d5db !important; color: #000 !important; border: 1px solid #000; padding: 8px; font-weight: bold; text-align: center;}
+            .cp-table td { border: 1px solid #000; padding: 8px; vertical-align: top; color: #000;}
+            .cp-table .td-center { text-align: center;}
+            .cp-table .td-right { text-align: right;}
+            .cp-table .col-item { width: 8%; }
+            .cp-table .col-desc { width: 52%; }
+            .cp-table .col-unit { width: 15%; }
+            .cp-table .col-qty { width: 10%; }
+            .cp-table .col-total { width: 15%; font-weight: bold;}
+
+            /* Customer T&C Block */
+            .cp-exclusions { border: 1px solid #000; padding: 10px; margin-bottom: 20px; background: #f8fafc !important; font-size: 8pt; line-height: 1.4;}
+            .cp-tnc { font-size: 8.5pt; margin-bottom: 40px; }
+            .cp-tnc-title { font-weight: bold; text-decoration: underline; margin-bottom: 5px; font-size: 9pt;}
+            .cp-tnc table { width: 100%; border: none;}
+            .cp-tnc td { border: none; padding: 3px 5px; vertical-align: top;}
+            .cp-tnc td:first-child { width: 150px; font-weight: bold; color: #334155;}
+
+            .cp-signoff { display: flex; justify-content: space-between; margin-top: 20px;}
+            .cp-signoff-left { width: 50%; }
+            .cp-signoff-left p { margin: 2px 0; font-size: 9pt;}
         }
     </style>
 </head>
@@ -283,25 +286,12 @@
                     <h1>JUTARAMA INDUSTRIES (M) SDN BHD</h1>
                     <p><strong>(749861-V)</strong></p>
                     <p>No. 19, Kawasan Perindustrian Mega 2,</p>
-                    <p>Jln Mega 2/1, 43500 Semenyih, Selangor</p>
+                    <p>Jln Mega 2/1, 43500 Semenyih, Selangor, Malaysia.</p>
+                    <p>Tel: (60)-8727 7540 &nbsp;|&nbsp; Email: sales@winko.my &nbsp;|&nbsp; Web: www.winko.my</p>
                 </div>
             </div>
             <div class="header-right">
                 <h2 id="docTypeTitle">INTERNAL QUOTATION</h2>
-                <p><strong>Quote No:</strong> <span id="metaQuoteId"></span></p>
-                <p><strong>Date:</strong> <span id="metaDate"></span></p>
-            </div>
-        </div>
-
-        <div class="quote-meta print-only">
-            <div class="meta-box">
-                <div class="meta-item"><span class="meta-label">Prepared For:</span> <span class="meta-value" id="metaProject">________________</span></div>
-                <div class="meta-item"><span class="meta-label">Standard:</span> <span class="meta-value" id="metaStd"></span></div>
-            </div>
-            <div class="meta-box">
-                <div class="meta-item"><span class="meta-label">Dimensions:</span> <span class="meta-value" id="metaDims"></span></div>
-                <div class="meta-item"><span class="meta-label">Material:</span> <span class="meta-value" id="metaCoat"></span></div>
-                <div class="meta-item"><span class="meta-label">Partition:</span> <span class="meta-value" id="metaPart"></span></div>
             </div>
         </div>
 
@@ -323,25 +313,25 @@
                 <div class="section-title no-print" style="margin-top:0;">1. Project Details</div>
                 <div class="config-grid no-print" style="margin-bottom: 15px;">
                     <div class="form-group">
-                        <label>Quote ID Number</label>
-                        <input type="text" id="quoteIdInput" placeholder="e.g. QT-2601" style="text-align: left;" oninput="syncPrintHeader(); savePrices();">
+                        <label>Quote Ref Number</label>
+                        <input type="text" id="quoteIdInput" placeholder="e.g. QP-26-008" style="text-align: left;" oninput="syncPrintHeader(); savePrices();">
                     </div>
                     <div class="form-group">
-                        <label>Project / Client Name (Required for Saving)</label>
-                        <input type="text" id="projectName" placeholder="e.g. Mega Water Project" style="text-align: left;" oninput="syncPrintHeader(); savePrices();">
+                        <label>Project Name (Required for Saving)</label>
+                        <input type="text" id="projectName" placeholder="e.g. Conod (Bukit Minyak)" style="text-align: left;" oninput="syncPrintHeader(); savePrices();">
                     </div>
                 </div>
                 
                 <div class="config-grid no-print">
                     <div class="form-group"><label>Standard</label>
-                        <select id="stdChoice" onchange="savePrices(); processTankData();"><option>SANS 10329:2020</option><option>SS 22: 1979</option><option>Other</option></select>
+                        <select id="stdChoice" onchange="savePrices(); processTankData();"><option>SANS 10329:2020 Approved by SIRIM & SPAN</option><option>SS 22: 1979</option><option>Other</option></select>
                     </div>
                     <div class="form-group"><label>Unit System</label>
                         <select id="unitChoice" onchange="updateLabels(); savePrices(); processTankData();"><option value="ft">Imperial (4'x4')</option><option value="m">Metric (1mx1m)</option></select>
                     </div>
                     <div class="form-group" style="grid-column: span 2;"><label>Tank Material / Finish</label>
                         <select id="coatChoice" onchange="savePrices(); processTankData();">
-                            <option>HDG (Galvanized)</option>
+                            <option>Hot Dipped Galvanised</option>
                             <option>Painted Steel</option>
                             <option>Stainless Steel (SS 304)</option>
                             <option>Stainless Steel (SS 316)</option>
@@ -373,13 +363,40 @@
                 
                 <div class="config-grid no-print" style="margin-top:5px;">
                     <div class="form-group"><label>Discount (%)</label><input type="number" id="discountPct" value="0" oninput="calcTotals(); savePrices();"></div>
-                    <div class="form-group"><label>SST Tax (%)</label><input type="number" id="sstPct" value="8" oninput="calcTotals(); savePrices();"></div>
+                    <div class="form-group"><label>SST Tax (%)</label><input type="number" id="sstPct" value="5" oninput="calcTotals(); savePrices();"></div>
                 </div>
 
-                <button class="action-btn no-print" onclick="processTankData()" style="margin-top: 10px; background: #0f172a;">⚙️ Calculate Engineering BOM</button>
+                <div class="section-title no-print">3. Quotation Formatting (Customer Print)</div>
+                <div class="config-grid no-print" style="margin-bottom: 10px;">
+                    <div class="form-group"><label>Customer Company</label><input type="text" id="custCompany" placeholder="e.g. ELCO Advance Engineering" oninput="syncPrintHeader(); savePrices();"></div>
+                    <div class="form-group"><label>Attention (Person)</label><input type="text" id="custAttn" placeholder="e.g. Ms. Gooi" oninput="syncPrintHeader(); savePrices();"></div>
+                    <div class="form-group" style="grid-column: span 2;"><label>Customer Address</label><textarea id="custAddr" rows="2" placeholder="Street, City, Zip" oninput="syncPrintHeader(); savePrices();"></textarea></div>
+                </div>
+                <div class="config-grid no-print" style="margin-bottom: 15px; background: #f8fafc; padding:15px; border-radius:8px; border:1px solid #e2e8f0;">
+                    <div class="form-group"><label>Quotation Validity</label><input type="text" id="tcValidity" value="14 days, subject to ex-stock and our final confirmation" oninput="syncPrintHeader(); savePrices();"></div>
+                    <div class="form-group"><label>Delivery Lead-time</label><input type="text" id="tcLead" value="6 - 10 weeks from date of receive purchase order" oninput="syncPrintHeader(); savePrices();"></div>
+                    <div class="form-group" style="grid-column: span 2;"><label>Delivery Terms</label><input type="text" id="tcDelivery" value="Deliver to site, exclude unloading, materials handling at site and hoisting." oninput="syncPrintHeader(); savePrices();"></div>
+                    <div class="form-group" style="grid-column: span 2;"><label>Payment Terms</label><textarea id="tcPayment" rows="3" oninput="syncPrintHeader(); savePrices();">30% down payment upon confirmation of order
+50% payment before delivery
+20% after testing and commissioning (no retention)</textarea></div>
+                    <div class="form-group"><label>Sign-off Name</label><input type="text" id="signName" value="LEE JL" oninput="syncPrintHeader(); savePrices();"></div>
+                    <div class="form-group"><label>Sign-off Phone</label><input type="text" id="signPhone" value="019-2215558" oninput="syncPrintHeader(); savePrices();"></div>
+                </div>
+
+                <div class="form-group no-print">
+                    <label>Exclusions (Prints below Customer Table)</label>
+                    <textarea id="quoteNotes" rows="6" style="text-align:left; font-weight:500; font-size:13px;" oninput="syncPrintHeader(); savePrices();">- Float valve chamber or top sumps
+- Flanges, nozzles, pipes, vortex, valves, electrode sensor, pumps and filter.
+- Scaffolding
+- Unloading and hoisting of materials.
+- HIRARC, permit application, medical test and site safety supervisor.</textarea>
+                </div>
+
+
+                <button class="action-btn no-print" onclick="processTankData()" style="margin-top: 25px; background: #0f172a;">⚙️ Calculate Internal BOM</button>
 
                 <div class="section-title">
-                    3. Bill of Materials Breakdown
+                    4. Internal Bill of Materials
                     <button class="reset-btn no-print" onclick="resetDefaultPrices()">↺ Reset Defaults</button>
                 </div>
                 
@@ -393,33 +410,6 @@
                     </tr></thead>
                     <tbody id="bomBody"></tbody>
                 </table>
-
-                <div class="section-title no-print">Terms & Conditions (Prints on PDF)</div>
-                <div class="form-group no-print">
-                    <textarea id="quoteNotes" rows="22" style="text-align:left; font-weight:500; font-size:13px;" oninput="syncPrintHeader(); savePrices();">Scope of Supply
-1. Standard tank accessories such as bolt, nut, washer, foam tape, air vent, 600x600mm access manhole, internal stays & brackets, internal & external ladder, water level indicator, subject to manufacturer's design and standard and item mentioned in quotation.
-2. Pipe hole opening at factory (Exclude flange). Pipe hole opening on site will be an additional charge.
-
-Excluded from the Supply
-1. Float valve chamber or top sump.
-2. Flanges, nozzles, pipes, valves, vortex, electrode sensor, pumps and filter.
-3. RC works and RC plinths.
-4. Scaffolding & safety platform for installation.
-5. Unloading, shifting and hoisting of materials at site.
-6. Safety training courses, equipment and medical test require to install tank.
-7. Design calculation report (Subject to additional charges if request).
-8. Water tank cleaning after installation.
-9. Water supply for testing.
-
-Note:
-1. Tank design to sit on 1M Center to center RC tank support/Plinths with at least 500mm height and 200mm width. Design to be provided by others.
-2. RC plinths MUST be level with maximum tolerance of ± 3mm.
-3. Leak test should be done within 3 months from completion of tank installation to maintain the quality of foam tape.
-4. The customer shall be responsible for the security of materials at site after delivery. Missing item shall be replaced with additional charges.
-5. The customer should arrange manpower/equipment/machine to unload the materials from lorry and transfer/hoist to the RC plinths area.
-6. Is responsible of customer to make sure RC plinths are level before call for delivery and installation.
-7. For installation of Elevated tank, the customer shall provide, at its own expense, equipment to ensure workers' safety. Customer shall provide working at height equipment such as boom lift, hoisting crane, erection of scaffolding and platform and any other equipment deemed necessaries.</textarea>
-                </div>
             </div>
 
             <div class="col-right">
@@ -437,11 +427,7 @@ Note:
                     <div class="sum-row total"><span>GRAND TOTAL:</span> <span>RM <span id="grandTotal_screen">0.00</span></span></div>
                 </div>
 
-                <div class="clearfix print-only">
-                    <div class="tc-box">
-                        <div class="tc-title">Terms & Conditions / Scope of Work</div>
-                        <div id="printNotesDisplay"></div>
-                    </div>
+                <div class="clearfix print-only" id="internalPrintFooter">
                     <div class="summary-box">
                         <div class="sum-row" id="sumWeight_print_row"><span id="sumWeight_print_label">Est. Total Wt:</span> <span style="font-weight:800; color:#0f172a;" id="sumWeight_print">0 kg</span></div>
                         <div class="sum-row" id="sumSubtotal_print_row"><span>Subtotal:</span> <span>RM <span id="sumSubtotal_print">0.00</span></span></div>
@@ -471,7 +457,7 @@ Note:
 
                 <div class="plinth-wrapper">
                     <div class="plinth-card">
-                        <h4>Type A (Parallel Plinths)</h4>
+                        <h4>Type A (Parallel)</h4>
                         <div class="plinth-diagram">
                             <div class="concrete-beam"></div>
                             <div class="concrete-beam"></div>
@@ -480,9 +466,8 @@ Note:
                         </div>
                         <p style="font-size: 0.75em; color: #475569; margin:0; font-weight: 500;" id="plinthAText">Standard continuous beams spaced at 1000mm C/C.</p>
                     </div>
-                    
                     <div class="plinth-card">
-                        <h4>Type B (Grid Plinths)</h4>
+                        <h4>Type B (Grid)</h4>
                         <div class="plinth-diagram">
                             <div class="concrete-beam"></div>
                             <div class="concrete-beam"></div>
@@ -496,7 +481,7 @@ Note:
 
                 <div class="btn-group no-print" style="margin-top: 30px;">
                     <button class="action-btn export-btn" onclick="exportCSV()">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2-2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                         Download Excel (CSV)
                     </button>
                 </div>
@@ -513,17 +498,102 @@ Note:
             </div>
         </div>
 
-        <div class="print-footer print-only">
+        <div class="print-footer print-only" id="internalSig">
             <div class="sig-box">
                 <p>Issued By:</p>
                 <div class="sig-line"></div>
-                <p><strong>JUTARAMA INDUSTRIES (M) SDN BHD</strong><br>Authorized Signature</p>
+                <p><strong>JUTARAMA INDUSTRIES (M) SDN BHD</strong></p>
             </div>
-            <div class="sig-box">
-                <p>Accepted By:</p>
-                <div class="sig-line"></div>
-                <p><strong>Client Signature / Company Stamp</strong><br>Date:</p>
-            </div>
+        </div>
+    </div>
+</div>
+
+<div id="customerPrintView">
+    
+    <div class="cp-meta-layout">
+        <div class="cp-meta-left">
+            <table>
+                <tr><td>Customer</td><td>: <strong id="cpCustName"></strong></td></tr>
+                <tr><td>Address</td><td>: <span id="cpCustAddress"></span></td></tr>
+                <tr><td style="padding-top:10px;">Attention</td><td style="padding-top:10px;">: <span id="cpAttention"></span></td></tr>
+                <tr><td>Project</td><td>: <span id="cpProject"></span></td></tr>
+            </table>
+        </div>
+        <div class="cp-meta-center">
+            <div class="cp-quotation-box">QUOTATION</div>
+        </div>
+        <div class="cp-meta-right">
+            <table>
+                <tr><td>Date</td><td>: <strong id="cpDate"></strong></td></tr>
+                <tr><td>Our Ref</td><td>: <strong id="cpRef"></strong></td></tr>
+            </table>
+        </div>
+    </div>
+
+    <p style="font-size: 9pt; margin-bottom: 15px;">With reference to your enquiry, we are pleased to provide our quotation for the following tanks:-</p>
+    <p style="font-size: 9pt; font-weight: bold; text-decoration: underline; margin-bottom: 5px;">RE: SUPPLY, DELIVER AND INSTALL PRESSED STEEL TANK</p>
+
+    <table class="cp-table">
+        <thead>
+            <tr>
+                <th style="width:5%;">Item</th>
+                <th style="width:55%;">Description</th>
+                <th style="width:13%;">Unit Price<br>(RM)</th>
+                <th style="width:10%;">Qty<br>(unit)</th>
+                <th style="width:17%;">Total Price<br>(RM)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="td-center" style="font-weight:bold; padding-top:15px;">1</td>
+                <td style="padding-top:15px; padding-bottom: 25px;">
+                    <strong>Supply and Install New <span id="cpMaterial"></span> Pressed Steel Tank Size: <span id="cpDims"></span></strong><br><br>
+                    Comply to <span id="cpStd"></span><br><br>
+                    a) Ladders: <span id="cpLadders"></span><br>
+                    b) Water Level Indicator: <span id="cpWLI"></span><br>
+                    c) Tank to be sit on existing I-Beam or RC plinths (to be provided by client)<br>
+                    d) Exclude flanges, nozzles, vortex inhibitor, pipe works valves and etc.
+                </td>
+                <td class="td-right" style="padding-top:15px;" id="cpUnitPrice"></td>
+                <td class="td-center" style="padding-top:15px;">1</td>
+                <td class="td-right" style="padding-top:15px;" id="cpTotalPrice"></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="border-right:none; border-bottom:none;"></td>
+                <td colspan="2" class="td-right" style="border-left:none; border-bottom:none;">SST <span id="cpSstPct"></span>%</td>
+                <td class="td-right" style="border-bottom:none;" id="cpSstAmt"></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="border:none;"></td>
+                <td colspan="2" style="border-left:none; border-top:none; border-bottom:none;"></td>
+                <td class="td-right" style="font-weight:bold; border-top: 1px solid black; border-bottom: 4px double black; padding-top:8px; padding-bottom:8px; font-size:10pt;" id="cpGrandTotal"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="cp-exclusions">
+        <strong style="text-decoration: underline;">Exclusion</strong><br>
+        <div id="cpExclusionsText" style="margin-top: 5px; margin-left: 5px;"></div>
+    </div>
+
+    <div class="cp-tnc">
+        <div class="cp-tnc-title">Terms & Conditions:</div>
+        <table>
+            <tr><td>a) Quotation validity</td><td>: <span id="cpValidity" style="border-bottom: 1px solid #94a3b8; display:inline-block; width:100%;"></span></td></tr>
+            <tr><td>b) Payment term</td><td>: <span id="cpPayment" style="border-bottom: 1px solid #94a3b8; display:inline-block; width:100%; min-height:14px;"></span></td></tr>
+            <tr><td>c) Delivery Terms</td><td>: <span id="cpDeliveryTerm" style="border-bottom: 1px solid #94a3b8; display:inline-block; width:100%;"></span></td></tr>
+            <tr><td>d) Delivery Lead-time</td><td>: <span id="cpLeadTime" style="border-bottom: 1px solid #94a3b8; display:inline-block; width:100%;"></span></td></tr>
+        </table>
+    </div>
+
+    <p style="font-size: 8.5pt; color: #1e293b; margin-top: 20px;">We trusted that our quotation meets with your expectations. Should you have any further queries, please do not hesitate to call on us. We thank you for the opportunity to quote, and remain.</p>
+    
+    <div class="cp-signoff">
+        <div class="cp-signoff-left">
+            <p>Best Regards & Thank you.</p>
+            <p style="font-weight:bold; margin-bottom: 50px;">JUTARAMA INDUSTRIES (M) SDN BHD</p>
+            <p style="font-weight:bold; text-decoration:underline;" id="cpSignName">LEE JL</p>
+            <p id="cpSignPhone">019-2215558</p>
         </div>
     </div>
 </div>
@@ -541,7 +611,7 @@ Note:
             
             if(!document.getElementById('quoteIdInput').value) {
                 const d = new Date();
-                document.getElementById('quoteIdInput').value = "QT-" + d.getFullYear() + (d.getMonth()+1).toString().padStart(2, '0') + Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+                document.getElementById('quoteIdInput').value = "QP-" + d.getFullYear().toString().substr(-2) + "-" + Math.floor(Math.random() * 1000).toString().padStart(3, '0');
             }
             
             refreshMemoryDropdown();
@@ -558,23 +628,22 @@ Note:
     // --- PRINT TOGGLE LOGIC ---
     function printInternal() {
         document.body.classList.remove('print-customer');
-        document.getElementById('docTypeTitle').innerText = "INTERNAL QUOTATION";
-        document.getElementById('sumWeight_print_row').style.display = "flex";
+        document.body.classList.add('print-internal');
         window.print();
     }
     
     function printCustomer() {
+        document.body.classList.remove('print-internal');
         document.body.classList.add('print-customer');
-        document.getElementById('docTypeTitle').innerText = "OFFICIAL QUOTATION";
-        document.getElementById('sumWeight_print_row').style.display = "none";
+        syncPrintHeader(); // Ensure custom fields are mapped
         window.print();
     }
 
     // --- TIME & UI LOGIC ---
     function updateClock() {
         const now = new Date();
-        const str = now.toLocaleDateString('en-MY');
-        document.querySelectorAll('#liveClock, #metaDate').forEach(el => {
+        const str = now.toLocaleDateString('en-MY').replace(/\//g, '-');
+        document.querySelectorAll('#liveClock, #metaDate, #cpDate').forEach(el => {
             if(el.id === 'liveClock') el.innerText = str + " " + now.toLocaleTimeString('en-MY');
             else el.innerText = str;
         });
@@ -647,7 +716,7 @@ Note:
     let bomStructure = JSON.parse(JSON.stringify(systemBaseStructure));
     let customRowCounts = JSON.parse(localStorage.getItem('winkoCustomCounts')) || [0,0,0,0,0];
 
-    const configIDs = ['quoteIdInput', 'stdChoice','unitChoice','partChoice','coatChoice','length','width','height','partQty','partLen','partHgt','partType','discountPct','sstPct', 'quoteNotes'];
+    const configIDs = ['quoteIdInput', 'stdChoice','unitChoice','partChoice','coatChoice','length','width','height','partQty','partLen','partHgt','partType','discountPct','sstPct', 'quoteNotes', 'custCompany', 'custAttn', 'custAddr', 'tcValidity', 'tcLead', 'tcDelivery', 'tcPayment', 'signName', 'signPhone'];
 
     // --- ADMIN PANEL LOGIC ---
     function buildAdminTable() {
@@ -825,6 +894,7 @@ Note:
 
     // --- SYNC PRINT METADATA ---
     function syncPrintHeader() {
+        // Internal
         document.getElementById('metaQuoteId').innerText = document.getElementById('quoteIdInput').value || "N/A";
         document.getElementById('metaProject').innerText = document.getElementById('projectName').value || "_____________________";
         document.getElementById('metaStd').innerText = document.getElementById('stdChoice').value;
@@ -833,9 +903,11 @@ Note:
         let w = document.getElementById('width').value;
         let h = document.getElementById('height').value;
         let u = document.getElementById('unitChoice').value === 'ft' ? 'ft' : 'm';
-        document.getElementById('metaDims').innerText = `${l}${u} (L) x ${w}${u} (W) x ${h}${u} (H)`;
+        let dimsStr = `${l}${u} (L) x ${w}${u} (W) x ${h}${u} (H)`;
+        document.getElementById('metaDims').innerText = dimsStr;
         
-        document.getElementById('metaCoat').innerText = document.getElementById('coatChoice').value;
+        let matStr = document.getElementById('coatChoice').value;
+        document.getElementById('metaCoat').innerText = matStr;
         
         let partChoice = document.getElementById('partChoice').value;
         let pQty = parseInt(document.getElementById('partQty').value) || 0;
@@ -844,15 +916,41 @@ Note:
         let pType = document.getElementById('partType').value || 'Standard';
         
         let partDisplay = 'None';
-        if(partChoice === 'yes' && pQty > 0) {
-            partDisplay = `${pQty}x ${pType} (${pLen}${u} x ${pHgt}${u})`;
-        }
+        if(partChoice === 'yes' && pQty > 0) { partDisplay = `${pQty}x ${pType} (${pLen}${u} x ${pHgt}${u})`; }
         
         document.getElementById('metaPart').innerText = partDisplay;
-        document.getElementById('sumPart').innerText = partDisplay;
+        
+        // CUSTOMER PRINT SYNC
+        document.getElementById('cpCustName').innerText = document.getElementById('custCompany').value || document.getElementById('projectName').value;
+        document.getElementById('cpCustAddress').innerHTML = (document.getElementById('custAddr').value || '').replace(/\n/g, '<br>');
+        document.getElementById('cpAttention').innerText = document.getElementById('custAttn').value;
+        document.getElementById('cpProject').innerText = document.getElementById('projectName').value;
+        document.getElementById('cpRef').innerText = document.getElementById('quoteIdInput').value;
 
-        let notes = document.getElementById('quoteNotes').value;
-        document.getElementById('printNotesDisplay').innerHTML = notes.replace(/\n/g, '<br>');
+        document.getElementById('cpMaterial').innerText = matStr;
+        document.getElementById('cpDims').innerText = dimsStr;
+        document.getElementById('cpStd').innerText = document.getElementById('stdChoice').value;
+
+        let extLad = document.getElementById('extLadMat') ? document.getElementById('extLadMat').value : '';
+        let intLad = document.getElementById('intLadMat') ? document.getElementById('intLadMat').value : '';
+        document.getElementById('cpLadders').innerText = `Internal (${intLad}), External (${extLad})`;
+
+        let wli = document.getElementById('wliType') ? document.getElementById('wliType').value : '';
+        document.getElementById('cpWLI').innerText = wli;
+
+        document.getElementById('cpExclusionsText').innerHTML = document.getElementById('quoteNotes').value.replace(/\n/g, '<br>');
+        
+        document.getElementById('cpValidity').innerText = document.getElementById('tcValidity').value;
+        
+        // Format payment terms to have a clean gap if multiline
+        let payText = document.getElementById('tcPayment').value || '';
+        document.getElementById('cpPayment').innerHTML = payText.replace(/\n/g, '<br>');
+        
+        document.getElementById('cpDeliveryTerm').innerText = document.getElementById('tcDelivery').value;
+        document.getElementById('cpLeadTime').innerText = document.getElementById('tcLead').value;
+
+        document.getElementById('cpSignName').innerText = document.getElementById('signName').value;
+        document.getElementById('cpSignPhone').innerText = document.getElementById('signPhone').value;
     }
 
     // --- SAVE / LOAD TEMPORARY BROWSER DATA ---
@@ -959,20 +1057,30 @@ Note:
 
         let disc = subtotal * ((parseFloat(document.getElementById('discountPct').value) || 0) / 100);
         let sst = (subtotal - disc) * ((parseFloat(document.getElementById('sstPct').value) || 0) / 100);
+        let grand = subtotal - disc + sst;
         
         document.getElementById('sumSubtotal_screen').innerText = subtotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
         document.getElementById('sumDiscount_screen').innerText = disc.toLocaleString('en-MY', {minimumFractionDigits: 2});
         document.getElementById('sumSST_screen').innerText = sst.toLocaleString('en-MY', {minimumFractionDigits: 2});
-        document.getElementById('grandTotal_screen').innerText = (subtotal - disc + sst).toLocaleString('en-MY', {minimumFractionDigits: 2});
+        document.getElementById('grandTotal_screen').innerText = grand.toLocaleString('en-MY', {minimumFractionDigits: 2});
 
         document.getElementById('sumSubtotal_print').innerText = subtotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
         document.getElementById('sumDiscount_print').innerText = disc.toLocaleString('en-MY', {minimumFractionDigits: 2});
         document.getElementById('sumSST_print').innerText = sst.toLocaleString('en-MY', {minimumFractionDigits: 2});
-        document.getElementById('grandTotal_print').innerText = (subtotal - disc + sst).toLocaleString('en-MY', {minimumFractionDigits: 2});
+        document.getElementById('grandTotal_print').innerText = grand.toLocaleString('en-MY', {minimumFractionDigits: 2});
         
         let weightStr = totalWeight.toLocaleString('en-MY', {maximumFractionDigits: 1}) + " kg";
         document.getElementById('sumWeight_screen').innerText = weightStr;
         document.getElementById('sumWeight_print').innerText = weightStr;
+
+        // Sync Customer Print Values
+        document.getElementById('cpSstPct').innerText = document.getElementById('sstPct').value || 0;
+        document.getElementById('cpSstAmt').innerText = sst.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        
+        let netTotal = subtotal - disc;
+        document.getElementById('cpUnitPrice').innerText = netTotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        document.getElementById('cpTotalPrice').innerText = netTotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        document.getElementById('cpGrandTotal').innerText = grand.toLocaleString('en-MY', {minimumFractionDigits: 2});
 
         syncPrintHeader(); 
     }
@@ -1015,8 +1123,6 @@ Note:
         const plinthLen = L_in;
         document.getElementById('plinthCalcText').innerText = `Recommendation: Require ${numPlinths} rows of concrete plinths, each ${plinthLen}${unitStr} long, spaced at ${spacingStr} C/C.`;
         
-        document.getElementById('plinthAText').innerText = `Standard continuous beams spaced at ${spacingStr} C/C.`;
-
         document.getElementById('sumStd').innerText = document.getElementById('stdChoice').value;
         document.getElementById('sumUnit').innerText = document.getElementById('unitChoice').options[document.getElementById('unitChoice').selectedIndex].text;
         document.getElementById('sumCoat').innerText = document.getElementById('coatChoice').value;
