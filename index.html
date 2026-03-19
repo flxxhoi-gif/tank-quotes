@@ -174,6 +174,19 @@
             .print-footer { display: flex; justify-content: space-between; margin-top: 50px; page-break-inside: avoid; clear: both; padding-top: 20px;}
             .sig-box { width: 35%; text-align: left; }
             .sig-line { border-bottom: 1px solid #0f172a; margin: 40px 0 8px 0; }
+
+            /* --- CUSTOMER PRINT OVERRIDES --- */
+            body.print-customer .col-wt,
+            body.print-customer .col-uprice,
+            body.print-customer .col-itotal {
+                display: none !important;
+            }
+            body.print-customer .col-item {
+                width: 80% !important;
+            }
+            body.print-customer .col-qty {
+                width: 20% !important;
+            }
         }
     </style>
 </head>
@@ -229,7 +242,7 @@
                 </div>
             </div>
             <div class="header-right">
-                <h2>QUOTATION</h2>
+                <h2 id="docTypeTitle">INTERNAL QUOTATION</h2>
                 <p><strong>Quote No:</strong> <span id="metaQuoteId"></span></p>
                 <p><strong>Date:</strong> <span id="metaDate"></span></p>
             </div>
@@ -268,23 +281,23 @@
                 <div class="config-grid no-print" style="margin-bottom: 15px;">
                     <div class="form-group">
                         <label>Quote ID Number</label>
-                        <input type="text" id="quoteIdInput" placeholder="e.g. QT-2601" style="text-align: left;" oninput="processTankData();">
+                        <input type="text" id="quoteIdInput" placeholder="e.g. QT-2601" style="text-align: left;" oninput="syncPrintHeader(); savePrices();">
                     </div>
                     <div class="form-group">
                         <label>Project / Client Name (Required for Saving)</label>
-                        <input type="text" id="projectName" placeholder="e.g. Mega Water Project" style="text-align: left;" oninput="processTankData();">
+                        <input type="text" id="projectName" placeholder="e.g. Mega Water Project" style="text-align: left;" oninput="syncPrintHeader(); savePrices();">
                     </div>
                 </div>
                 
                 <div class="config-grid no-print">
                     <div class="form-group"><label>Standard</label>
-                        <select id="stdChoice" onchange="processTankData()"><option>SANS 10329:2020</option><option>SS 22: 1979</option><option>Other</option></select>
+                        <select id="stdChoice" onchange="savePrices(); processTankData();"><option>SANS 10329:2020</option><option>SS 22: 1979</option><option>Other</option></select>
                     </div>
                     <div class="form-group"><label>Unit System</label>
-                        <select id="unitChoice" onchange="updateLabels(); processTankData();"><option value="ft">Imperial (4'x4')</option><option value="m">Metric (1mx1m)</option></select>
+                        <select id="unitChoice" onchange="updateLabels(); savePrices(); processTankData();"><option value="ft">Imperial (4'x4')</option><option value="m">Metric (1mx1m)</option></select>
                     </div>
-                    <div class="form-group"><label>Tank Material / Finish</label>
-                        <select id="coatChoice" onchange="processTankData()">
+                    <div class="form-group" style="grid-column: span 2;"><label>Tank Material / Finish</label>
+                        <select id="coatChoice" onchange="savePrices(); processTankData();">
                             <option>HDG (Galvanized)</option>
                             <option>Painted Steel</option>
                             <option>Stainless Steel (SS 304)</option>
@@ -329,11 +342,11 @@
                 
                 <table id="bomTable">
                     <thead><tr>
-                        <th>Item Description</th>
-                        <th class="text-center">Qty</th>
-                        <th class="text-center">Wt (kg)</th>
-                        <th class="text-right">Unit Price</th>
-                        <th class="text-right">Total</th>
+                        <th class="col-item text-left">Item Description</th>
+                        <th class="col-qty text-center">Qty</th>
+                        <th class="col-wt text-center">Wt (kg)</th>
+                        <th class="col-uprice text-right">Unit Price</th>
+                        <th class="col-itotal text-right">Total</th>
                     </tr></thead>
                     <tbody id="bomBody"></tbody>
                 </table>
@@ -422,7 +435,10 @@
                 <div class="btn-group no-print">
                     <button class="action-btn export-btn" style="background:#0f172a;" onclick="exportCSV()">📊 Download Excel (CSV)</button>
                 </div>
-                <button class="action-btn print-btn no-print" onclick="window.print()">🖨️ Print Formal Quotation (PDF)</button>
+                <div class="btn-group no-print" style="margin-top: 10px;">
+                    <button class="action-btn print-btn" style="background: #475569; margin-top: 0;" onclick="printInternal()">🖨️ Print Internal (Detailed)</button>
+                    <button class="action-btn print-btn" style="background: #059669; margin-top: 0;" onclick="printCustomer()">🖨️ Print Customer (Hide Prices)</button>
+                </div>
             </div>
         </div>
 
@@ -458,6 +474,19 @@
         } else {
             alert("Incorrect Password");
         }
+    }
+
+    // --- PRINT TOGGLE LOGIC ---
+    function printInternal() {
+        document.body.classList.remove('print-customer');
+        document.getElementById('docTypeTitle').innerText = "INTERNAL QUOTATION";
+        window.print();
+    }
+    
+    function printCustomer() {
+        document.body.classList.add('print-customer');
+        document.getElementById('docTypeTitle').innerText = "OFFICIAL QUOTATION";
+        window.print();
     }
 
     // --- TIME & UI LOGIC ---
@@ -820,10 +849,10 @@
 
                 html += `<tr>
                     <td class="col-item">${nameHtml}</td>
-                    <td class="col-input"><input type="number" value="0" id="qty_${id}" oninput="calcTotals(); savePrices();"></td>
-                    <td class="col-input"><input type="number" step="0.1" value="${(it.wt || 0)}" id="wt_${id}" oninput="calcTotals(); savePrices();"></td>
-                    <td class="col-input"><input type="number" step="0.01" value="${it.def.toFixed(2)}" id="price_${id}" oninput="calcTotals(); savePrices();"></td>
-                    <td class="col-total" id="total_${id}">0.00</td>
+                    <td class="col-input col-qty"><input type="number" value="0" id="qty_${id}" oninput="calcTotals(); savePrices();"></td>
+                    <td class="col-input col-wt"><input type="number" step="0.1" value="${(it.wt || 0)}" id="wt_${id}" oninput="calcTotals(); savePrices();"></td>
+                    <td class="col-input col-uprice"><input type="number" step="0.01" value="${it.def.toFixed(2)}" id="price_${id}" oninput="calcTotals(); savePrices();"></td>
+                    <td class="col-total col-itotal" id="total_${id}">0.00</td>
                 </tr>`;
             });
         });
@@ -962,7 +991,7 @@
         savePrices();
     }
 
-    // --- CSV EXPORT (MASSIVE UPGRADE) ---
+    // --- CSV EXPORT ---
     function exportCSV() {
         let csv = "JUTARAMA INDUSTRIES SDN BHD\n";
         csv += "OFFICIAL TECHNICAL QUOTATION\n\n";
@@ -1028,7 +1057,7 @@
     applyCustomRows();
     buildBOMTable();
     loadPrices();
-    togglePartitionDetails(); // Ensure clean state on load
+    togglePartitionDetails(); 
 </script>
 
 </body>
