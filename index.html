@@ -268,39 +268,38 @@
                 <div class="config-grid no-print" style="margin-bottom: 15px;">
                     <div class="form-group">
                         <label>Quote ID Number</label>
-                        <input type="text" id="quoteIdInput" placeholder="e.g. QT-2601" style="text-align: left;" oninput="syncPrintHeader(); savePrices();">
+                        <input type="text" id="quoteIdInput" placeholder="e.g. QT-2601" style="text-align: left;" oninput="processTankData();">
                     </div>
                     <div class="form-group">
                         <label>Project / Client Name (Required for Saving)</label>
-                        <input type="text" id="projectName" placeholder="e.g. Mega Water Project" style="text-align: left;" oninput="syncPrintHeader(); savePrices();">
+                        <input type="text" id="projectName" placeholder="e.g. Mega Water Project" style="text-align: left;" oninput="processTankData();">
                     </div>
                 </div>
                 
                 <div class="config-grid no-print">
                     <div class="form-group"><label>Standard</label>
-                        <select id="stdChoice" onchange="savePrices(); processTankData();"><option>SANS 10329:2020</option><option>SS 22: 1979</option><option>Other</option></select>
+                        <select id="stdChoice" onchange="processTankData()"><option>SANS 10329:2020</option><option>SS 22: 1979</option><option>Other</option></select>
                     </div>
                     <div class="form-group"><label>Unit System</label>
-                        <select id="unitChoice" onchange="updateLabels(); savePrices(); processTankData();"><option value="ft">Imperial (4'x4')</option><option value="m">Metric (1mx1m)</option></select>
+                        <select id="unitChoice" onchange="updateLabels(); processTankData();"><option value="ft">Imperial (4'x4')</option><option value="m">Metric (1mx1m)</option></select>
                     </div>
-                    <div class="form-group" style="grid-column: span 2;"><label>Tank Material / Finish</label>
-                        <select id="coatChoice" onchange="savePrices(); processTankData();">
+                    <div class="form-group"><label>Tank Material / Finish</label>
+                        <select id="coatChoice" onchange="processTankData()">
                             <option>HDG (Galvanized)</option>
                             <option>Painted Steel</option>
                             <option>Stainless Steel (SS 304)</option>
                             <option>Stainless Steel (SS 316)</option>
                         </select>
                     </div>
+                    <div class="form-group"><label>Partition Wall</label>
+                        <select id="partChoice" onchange="togglePartitionDetails(); processTankData();">
+                            <option value="no">No Partition</option>
+                            <option value="yes">Yes (Internal Wall)</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="section-title no-print">2. Tank & Partition Dimensions (<span class="unitLabel">Ft</span>)</div>
-                <div class="dim-grid no-print">
-                    <div class="form-group"><label>Tank Length</label><input type="number" id="length" value="12" oninput="processTankData(); savePrices();"></div>
-                    <div class="form-group"><label>Tank Width</label><input type="number" id="width" value="4" oninput="processTankData(); savePrices();"></div>
-                    <div class="form-group"><label>Tank Height</label><input type="number" id="height" value="4" oninput="processTankData(); savePrices();"></div>
-                </div>
-                
-                <div class="config-grid no-print" style="margin-top:-5px;">
+                <div class="config-grid no-print" id="partitionDetailsRow" style="display: none; margin-top:-5px;">
                     <div style="display:flex; gap:10px; grid-column: span 2; background: #fff7ed; padding: 10px; border: 1px dashed #fdba74; border-radius: 5px;">
                         <div class="form-group" style="flex:0.5;"><label>Part. Qty</label><input type="number" id="partQty" value="0" min="0" oninput="processTankData(); savePrices();"></div>
                         <div class="form-group" style="flex:1;"><label>Part. L/W (<span class="unitLabel">Ft</span>)</label><input type="number" id="partLen" value="0" oninput="processTankData(); savePrices();"></div>
@@ -309,7 +308,14 @@
                     </div>
                 </div>
 
-                <div class="config-grid no-print" style="margin-top:10px;">
+                <div class="section-title no-print">2. Tank Dimensions (<span class="unitLabel">Ft</span>)</div>
+                <div class="dim-grid no-print">
+                    <div class="form-group"><label>Tank Length</label><input type="number" id="length" value="12" oninput="processTankData(); savePrices();"></div>
+                    <div class="form-group"><label>Tank Width</label><input type="number" id="width" value="4" oninput="processTankData(); savePrices();"></div>
+                    <div class="form-group"><label>Tank Height</label><input type="number" id="height" value="4" oninput="processTankData(); savePrices();"></div>
+                </div>
+                
+                <div class="config-grid no-print" style="margin-top:-5px;">
                     <div class="form-group"><label>Discount (%)</label><input type="number" id="discountPct" value="0" oninput="calcTotals(); savePrices();"></div>
                     <div class="form-group"><label>SST Tax (%)</label><input type="number" id="sstPct" value="8" oninput="calcTotals(); savePrices();"></div>
                 </div>
@@ -470,7 +476,23 @@
         document.querySelectorAll('.unitLabel').forEach(el => el.innerText = unit);
     }
 
-    // --- FULL BOM STRUCTURE ---
+    function togglePartitionDetails() {
+        const partChoice = document.getElementById('partChoice').value;
+        const detailsRow = document.getElementById('partitionDetailsRow');
+        
+        if(partChoice === 'yes') {
+            detailsRow.style.display = 'grid';
+        } else {
+            detailsRow.style.display = 'none';
+            // Safety clear: if hidden, force values to 0 so they don't affect math
+            document.getElementById('partQty').value = 0;
+            document.getElementById('partLen').value = 0;
+            document.getElementById('partHgt').value = 0;
+            document.getElementById('partType').value = '';
+        }
+    }
+
+    // --- FULL BOM STRUCTURE (BASE TEMPLATE WITH WEIGHTS) ---
     const systemBaseStructure = [
         { category: "Panels", items: [
             {name: "Manhole Panel", def: 450, wt: 45}, 
@@ -516,7 +538,7 @@
     let bomStructure = JSON.parse(JSON.stringify(systemBaseStructure));
     let customRowCounts = JSON.parse(localStorage.getItem('winkoCustomCounts')) || [0,0,0,0,0];
 
-    const configIDs = ['quoteIdInput', 'stdChoice','unitChoice','coatChoice','length','width','height','partQty','partLen','partHgt','partType','discountPct','sstPct', 'quoteNotes'];
+    const configIDs = ['quoteIdInput', 'stdChoice','unitChoice','partChoice','coatChoice','length','width','height','partQty','partLen','partHgt','partType','discountPct','sstPct', 'quoteNotes'];
 
     // --- ADMIN PANEL LOGIC ---
     function buildAdminTable() {
@@ -638,6 +660,7 @@
                 }
             });
             updateLabels();
+            togglePartitionDetails();
             
             bomStructure.forEach((sec, sIdx) => {
                 sec.items.forEach((it, iIdx) => {
@@ -680,6 +703,11 @@
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
             localStorage.removeItem('jutaramaProData'); // clear temporary edits
+            
+            // reset partition view
+            document.getElementById('partChoice').value = 'no';
+            togglePartitionDetails();
+
             applyCustomRows();
             buildBOMTable();
             document.getElementById('projectName').value = "";
@@ -702,12 +730,17 @@
         document.getElementById('metaCoat').innerText = document.getElementById('coatChoice').value;
         
         // Dynamic Partition Meta Output
+        let partChoice = document.getElementById('partChoice').value;
         let pQty = parseInt(document.getElementById('partQty').value) || 0;
         let pLen = document.getElementById('partLen').value || 0;
         let pHgt = document.getElementById('partHgt').value || 0;
         let pType = document.getElementById('partType').value || 'Standard';
         
-        let partDisplay = pQty > 0 ? `${pQty}x ${pType} (${pLen}${u} x ${pHgt}${u})` : 'None';
+        let partDisplay = 'None';
+        if(partChoice === 'yes' && pQty > 0) {
+            partDisplay = `${pQty}x ${pType} (${pLen}${u} x ${pHgt}${u})`;
+        }
+        
         document.getElementById('metaPart').innerText = partDisplay;
         document.getElementById('sumPart').innerText = partDisplay;
 
@@ -743,6 +776,7 @@
                 }
             });
             updateLabels();
+            togglePartitionDetails();
             
             bomStructure.forEach((sec, sIdx) => {
                 sec.items.forEach((it, iIdx) => {
@@ -846,9 +880,17 @@
         const W_in = parseFloat(document.getElementById('width').value) || 0;
         const H_in = parseFloat(document.getElementById('height').value) || 0;
         
-        const pQty = parseInt(document.getElementById('partQty').value) || 0;
-        const pLen_in = parseFloat(document.getElementById('partLen').value) || 0;
-        const pHgt_in = parseFloat(document.getElementById('partHgt').value) || 0;
+        const partChoice = document.getElementById('partChoice').value;
+        let pQty = 0;
+        let pLen_in = 0;
+        let pHgt_in = 0;
+        
+        // Only grab partition sizes if "Yes" is selected
+        if(partChoice === 'yes') {
+            pQty = parseInt(document.getElementById('partQty').value) || 0;
+            pLen_in = parseFloat(document.getElementById('partLen').value) || 0;
+            pHgt_in = parseFloat(document.getElementById('partHgt').value) || 0;
+        }
 
         const unit = document.getElementById('unitChoice').value;
         const factor = unit === 'ft' ? 4 : 1;
@@ -877,7 +919,7 @@
         let roof = L * W, base = L * W, sides = ((L * 2) + (W * 2)) * H;
         
         // Add partition panels to sides total
-        if(pQty > 0) { sides += (pL * pH * pQty); }
+        if(partChoice === 'yes' && pQty > 0) { sides += (pL * pH * pQty); }
         let totalP = roof + base + sides;
 
         document.getElementById('totalPanelsCount').innerText = totalP;
@@ -931,13 +973,14 @@
         let dim = document.getElementById('metaDims').innerText;
         let mat = document.getElementById('coatChoice').value;
         
+        let partChoice = document.getElementById('partChoice').value;
         let pQty = parseInt(document.getElementById('partQty').value) || 0;
         let pType = document.getElementById('partType').value || 'Standard';
         let pLen = document.getElementById('partLen').value || 0;
         let pHgt = document.getElementById('partHgt').value || 0;
         let u = document.getElementById('unitChoice').value === 'ft' ? 'ft' : 'm';
         
-        let part = pQty > 0 ? `${pQty}x ${pType} (${pLen}${u} x ${pHgt}${u})` : 'None';
+        let part = (partChoice === 'yes' && pQty > 0) ? `${pQty}x ${pType} (${pLen}${u} x ${pHgt}${u})` : 'None';
         
         csv += `"Quote No:","${qid}"\n`;
         csv += `"Project / Client:","${proj}"\n`;
@@ -985,6 +1028,7 @@
     applyCustomRows();
     buildBOMTable();
     loadPrices();
+    togglePartitionDetails(); // Ensure clean state on load
 </script>
 
 </body>
