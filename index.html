@@ -113,7 +113,7 @@
         /* --- PROFESSIONAL PRINT STYLES --- */
         @media print {
             @page { size: A4; margin: 15mm; }
-            body { background: white; padding: 0; font-size: 9pt; color: #1e293b; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            body { background: white; padding: 0; font-size: 9.5pt; color: #1e293b; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .no-print { display: none !important; }
             .print-only { display: block; }
             
@@ -130,35 +130,35 @@
             .header-right h2 { margin: 0 0 8px 0; font-size: 24pt; color: #ea580c; font-weight: 300; letter-spacing: 2px;}
             .header-right p { margin: 2px 0; font-size: 10pt; color: #1e293b; }
             
-            .quote-meta { display: flex; gap: 20px; margin-bottom: 20px; }
-            .meta-box { flex: 1; border: 1px solid #cbd5e1; padding: 10px 15px; border-radius: 4px; background: #f8fafc; }
-            .meta-item { font-size: 9pt; margin-bottom: 6px; display: flex; }
+            .quote-meta { display: flex; gap: 20px; margin-bottom: 30px; }
+            .meta-box { flex: 1; border: 1px solid #cbd5e1; padding: 12px 15px; border-radius: 4px; background: #f8fafc; }
+            .meta-item { font-size: 9.5pt; margin-bottom: 6px; display: flex; }
             .meta-label { font-weight: 600; color: #64748b; width: 100px; }
             .meta-value { font-weight: 600; color: #0f172a; }
 
-            .section-title { margin-top: 15px !important; margin-bottom: 10px !important; background: transparent !important; border-left: none !important; border-bottom: 2px solid #e2e8f0 !important; padding: 0 0 5px 0 !important; color: #0f172a !important; font-size: 12pt !important; text-transform: uppercase; letter-spacing: 0.5px;}
+            .section-title { margin-top: 20px !important; margin-bottom: 12px !important; background: transparent !important; border-left: none !important; border-bottom: 2px solid #e2e8f0 !important; padding: 0 0 5px 0 !important; color: #0f172a !important; font-size: 12pt !important; text-transform: uppercase; letter-spacing: 0.5px;}
             
-            table { font-size: 8.5pt; margin-bottom: 15px; border-collapse: collapse; width: 100%; }
+            table { font-size: 9pt; margin-bottom: 20px; border-collapse: collapse; width: 100%; }
             tr { border-bottom: 1px solid #e2e8f0; page-break-inside: avoid; }
             tr:nth-child(even):not(.section-header-row) { background-color: #f8fafc !important; }
-            th { background-color: #ea580c !important; color: #ffffff !important; padding: 8px 10px; border: none; font-weight: 600; text-align: left;}
+            th { background-color: #ea580c !important; color: #ffffff !important; padding: 10px; border: none; font-weight: 600; text-align: left;}
             th.text-center { text-align: center; } th.text-right { text-align: right; }
-            td { border: none; padding: 6px 10px; color: #1e293b;}
+            td { border: none; padding: 8px 10px; color: #1e293b;}
             td.text-center { text-align: center; } td.text-right { text-align: right; font-weight: 700; color: #0f172a !important;}
-            .section-header { background-color: #e2e8f0 !important; font-weight: 700; color: #0f172a !important; border-bottom: none !important; padding: 6px 10px !important; text-transform: uppercase; font-size: 8pt;}
+            .section-header { background-color: #e2e8f0 !important; font-weight: 700; color: #0f172a !important; border-bottom: none !important; padding: 8px 10px !important; text-transform: uppercase; font-size: 8.5pt;}
             .col-item { background: transparent !important; font-weight: normal; }
             
             input, .desc-input, .bom-inline-select { border: none !important; background: transparent !important; color: #1e293b !important; box-shadow: none !important; font-weight: 500; padding: 0 !important; font-size: inherit; appearance: none; -webkit-appearance: none; width: auto;}
             .bom-inline-select { margin-left: 4px; color: #64748b !important;}
             
             .clearfix::after { content: ""; clear: both; display: table; }
-            .summary-box { background: #f8fafc !important; color: #0f172a !important; border: 1px solid #cbd5e1 !important; border-radius: 6px; padding: 12px 20px !important; margin-top: 10px; width: 340px; float: right; page-break-inside: avoid; box-shadow: none;}
-            .sum-row { border-bottom: 1px solid #e2e8f0 !important; margin-bottom: 6px; padding-bottom: 4px; color: #475569 !important; font-size: 9pt; font-weight: 500;}
-            .sum-row.total { background: #0f172a !important; color: #ffffff !important; border: none !important; padding: 10px !important; font-size: 12pt; margin: 10px -20px -12px -20px; border-radius: 0 0 5px 5px;}
+            .summary-box { background: #f8fafc !important; color: #0f172a !important; border: 1px solid #cbd5e1 !important; border-radius: 6px; padding: 15px 20px !important; margin-top: 10px; width: 340px; float: right; page-break-inside: avoid; box-shadow: none;}
+            .sum-row { border-bottom: 1px solid #e2e8f0 !important; margin-bottom: 8px; padding-bottom: 6px; color: #475569 !important; font-size: 9.5pt; font-weight: 500;}
+            .sum-row.total { background: #0f172a !important; color: #ffffff !important; border: none !important; padding: 12px !important; font-size: 13pt; margin: 10px -20px -15px -20px; border-radius: 0 0 5px 5px;}
 
             /* Adjusted TC Box to fit extensive text perfectly */
-            .tc-box { margin-top: 10px; padding-right: 20px; font-size: 7.5pt; color: #1e293b; white-space: pre-wrap; width: calc(100% - 360px); float: left; line-height: 1.4; page-break-inside: auto;}
-            .tc-title { font-weight: 700; color: #0f172a; margin-bottom: 6px; font-size: 9pt; text-transform: uppercase;}
+            .tc-box { margin-top: 10px; padding-right: 20px; font-size: 8pt; color: #1e293b; white-space: pre-wrap; width: calc(100% - 360px); float: left; line-height: 1.4; page-break-inside: auto;}
+            .tc-title { font-weight: 700; color: #0f172a; margin-bottom: 8px; font-size: 9.5pt; text-transform: uppercase;}
 
             .visual-container { max-width: 100%; display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin: 0 auto 15px auto; page-break-inside: avoid; clear: both;}
             .view-box { padding: 5px; border: 1px solid #e2e8f0 !important; background: #fff !important; }
@@ -166,7 +166,6 @@
             .panel { background: #bae6fd !important; border: 0.5px solid #94a3b8 !important;}
             .view-title { font-size: 7pt; margin-bottom: 3px; color: #000 !important; text-align: center; }
             
-            /* Plinth Print Layout */
             .plinth-wrapper { margin-top: 10px; }
             .plinth-card { border: 1px solid #0f172a !important; box-shadow: none; padding: 6px; }
             .plinth-diagram { border: 1px solid #0f172a !important; background: #fff !important; height: 60px; margin-bottom: 5px;}
@@ -756,15 +755,12 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('jutaramaProData'); 
             
-            document.getElementById('partChoice').value = 'no';
-            togglePartitionDetails();
-
-            applyCustomRows();
-            buildBOMTable();
-            document.getElementById('projectName').value = "";
-            processTankData();
+            // CHANGED KEY TO CLEAR CACHE PROPERLY
+            localStorage.removeItem('winkoProData'); 
+            
+            // Force a hard browser reload to inject the fresh HTML text
+            location.reload(); 
         }
     }
 
@@ -816,11 +812,14 @@ Note:
                 if(it.selectId && document.getElementById(it.selectId)) data[it.selectId] = document.getElementById(it.selectId).value; 
             });
         });
-        localStorage.setItem('jutaramaProData', JSON.stringify(data));
+        
+        // CHANGED KEY TO PREVENT GHOSTING
+        localStorage.setItem('winkoProData', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('jutaramaProData');
+        // CHANGED KEY TO PREVENT GHOSTING
+        let savedData = localStorage.getItem('winkoProData');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
