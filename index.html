@@ -156,7 +156,8 @@
             .sum-row { border-bottom: 1px solid #e2e8f0 !important; margin-bottom: 8px; padding-bottom: 6px; color: #475569 !important; font-size: 9.5pt; font-weight: 500;}
             .sum-row.total { background: #0f172a !important; color: #ffffff !important; border: none !important; padding: 12px !important; font-size: 13pt; margin: 10px -20px -15px -20px; border-radius: 0 0 5px 5px;}
 
-            .tc-box { margin-top: 10px; padding-right: 20px; font-size: 8.5pt; color: #475569; white-space: pre-wrap; width: calc(100% - 360px); float: left; line-height: 1.5;}
+            /* Adjusted TC Box to fit extensive text perfectly */
+            .tc-box { margin-top: 10px; padding-right: 20px; font-size: 8pt; color: #1e293b; white-space: pre-wrap; width: calc(100% - 360px); float: left; line-height: 1.4;}
             .tc-title { font-weight: 700; color: #0f172a; margin-bottom: 8px; font-size: 9.5pt; text-transform: uppercase;}
 
             .visual-container { max-width: 100%; display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin: 0 auto 20px auto; page-break-inside: avoid; clear: both;}
@@ -165,7 +166,6 @@
             .panel { background: #bae6fd !important; border: 0.5px solid #94a3b8 !important;}
             .view-title { font-size: 7pt; margin-bottom: 3px; color: #000 !important; text-align: center; }
             
-            /* Plinth Print Layout */
             .plinth-wrapper { margin-top: 15px; }
             .plinth-card { border: 1px solid #0f172a !important; box-shadow: none; padding: 8px; }
             .plinth-diagram { border: 1px solid #0f172a !important; background: #fff !important; }
@@ -175,7 +175,7 @@
             .sig-box { width: 35%; text-align: left; }
             .sig-line { border-bottom: 1px solid #0f172a; margin: 40px 0 8px 0; }
 
-            /* --- CUSTOMER PRINT OVERRIDES --- */
+            /* CUSTOMER PRINT OVERRIDES */
             body.print-customer .col-wt,
             body.print-customer .col-uprice,
             body.print-customer .col-itotal {
@@ -353,10 +353,29 @@
 
                 <div class="section-title no-print">Terms & Conditions (Prints on PDF)</div>
                 <div class="form-group no-print">
-                    <textarea id="quoteNotes" rows="5" style="text-align:left; font-weight:normal;" oninput="syncPrintHeader(); savePrices();">1. Excludes civil foundation and piping works.
-2. Lead Time: 4-6 weeks upon confirmation and deposit.
-3. Payment Terms: 50% Deposit, 50% before delivery.
-4. Validity: This quotation is valid for 30 days.</textarea>
+                    <textarea id="quoteNotes" rows="15" style="text-align:left; font-weight:normal;" oninput="syncPrintHeader(); savePrices();">[Scope of Supply]
+1. Standard tank accessories such as bolt, nut, washer, foam tape, air vent, 600x600mm access manhole, internal stays & brackets, internal & external ladder, water level indicator, subject to manufacturer's design and standard and item mentioned in quotation.
+2. Pipe hole opening at factory (Exclude flange). Pipe hole opening on site will be an additional charge.
+
+[Excluded from the Supply]
+1. Float valve chamber or top sump.
+2. Flanges, nozzles, pipes, valves, vortex, electrode sensor, pumps and filter.
+3. RC works and RC plinths.
+4. Scaffolding & safety platform for installation.
+5. Unloading, shifting and hoisting of materials at site.
+6. Safety training courses, equipment and medical test require to install tank.
+7. Design calculation report (Subject to additional charges if request).
+8. Water tank cleaning after installation.
+9. Water supply for testing.
+
+[Note]
+1. Tank design to sit on 1M Center to center RC tank support/Plinths with at least 500mm height and 200mm width. Design to be provided by others.
+2. RC plinths MUST be level with maximum tolerance of ± 3mm.
+3. Leak test should be done within 3 months from completion of tank installation to maintain the quality of foam tape.
+4. The customer shall be responsible for the security of materials at site after delivery. Missing item shall be replaced with additional charges.
+5. The customer should arrange manpower/equipment/machine to unload the materials from lorry and transfer/hoist to the RC plinths area.
+6. Is responsible of customer to make sure RC plinths are level before call for delivery and installation.
+7. For installation of Elevated tank, the customer shall provide, at its own expense, equipment to ensure workers' safety. Customer shall provide working at height equipment such as boom lift, hoisting crane, erection of scaffolding and platform and any other equipment deemed necessaries.</textarea>
                 </div>
             </div>
 
