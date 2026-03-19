@@ -14,12 +14,12 @@
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             z-index: 9999; color: white; text-align: center; font-family: 'Segoe UI', sans-serif;
         }
-        .login-card { background: white; padding: 40px; border-radius: 12px; color: #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 90%; max-width: 400px; }
+        .login-card { background: white; padding: 40px; border-radius: 12px; color: #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 90%; max-width: 400px; display: flex; flex-direction: column; align-items: center;}
         .login-card input { width: 100%; padding: 12px; margin: 20px 0; border: 2px solid #cbd5e1; border-radius: 6px; text-align: center; font-size: 18px; }
-        .login-card button { width: 100%; padding: 12px; background: #0284c7; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 15px;}
-        .login-card button:hover { background: #0369a1; }
+        .login-card button { width: 100%; padding: 12px; background: #ea580c; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 15px;}
+        .login-card button:hover { background: #c2410c; }
         
-        #mainContent { display: none; }
+        #mainContent, #adminContent { display: none; }
 
         /* --- DASHBOARD STYLES (SCREEN) --- */
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f1f5f9; padding: 15px; color: #334155; margin: 0; }
@@ -29,17 +29,17 @@
         .live-clock { font-size: 0.85em; color: #64748b; margin-bottom: 20px; font-weight: bold; display: flex; justify-content: space-between; align-items: center;}
         
         /* Memory Bank Styles */
-        .memory-panel { background: #e0f2fe; border: 1px solid #bae6fd; padding: 10px 15px; border-radius: 6px; display: flex; gap: 15px; align-items: center; margin-bottom: 20px; }
-        .memory-panel select { flex: 1; padding: 8px; border-radius: 4px; border: 1px solid #7dd3fc; font-weight: bold; color: #0369a1; }
+        .memory-panel { background: #fff7ed; border: 1px solid #fed7aa; padding: 10px 15px; border-radius: 6px; display: flex; gap: 15px; align-items: center; margin-bottom: 20px; }
+        .memory-panel select { flex: 1; padding: 8px; border-radius: 4px; border: 1px solid #fdba74; font-weight: bold; color: #ea580c; }
         .memory-btn { padding: 8px 15px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; color: white; transition: 0.2s;}
         .btn-save { background: #059669; } .btn-save:hover { background: #047857; }
         .btn-del { background: #e11d48; } .btn-del:hover { background: #be123c; }
 
         .app-layout { display: flex; gap: 25px; flex-wrap: wrap; width: 100%; }
-        .col-left { flex: 1.2; min-width: 450px; }
+        .col-left { flex: 1.2; min-width: 500px; }
         .col-right { flex: 1; min-width: 400px; }
 
-        .section-title { position: relative; font-weight: bold; margin-top: 15px; margin-bottom: 10px; color: #0f172a; font-size: 1.1em; border-bottom: 2px solid #e2e8f0; padding: 8px; background: #f8fafc; border-radius: 4px; border-left: 4px solid #0284c7;}
+        .section-title { position: relative; font-weight: bold; margin-top: 15px; margin-bottom: 10px; color: #0f172a; font-size: 1.1em; border-bottom: 2px solid #e2e8f0; padding: 8px; background: #f8fafc; border-radius: 4px; border-left: 4px solid #ea580c;}
         .reset-btn { position: absolute; right: 8px; top: 6px; background: #94a3b8; color: white; border: none; padding: 4px 8px; font-size: 12px; border-radius: 4px; cursor: pointer; transition: 0.2s;}
         .reset-btn:hover { background: #64748b; }
         
@@ -49,43 +49,64 @@
         .form-group { display: flex; flex-direction: column; margin-bottom: 8px;}
         .form-group label { font-size: 0.8em; font-weight: bold; color: #64748b; margin-bottom: 3px; }
         .form-group input, .form-group select, .form-group textarea { padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px; font-weight: bold; background: #fff; font-family: inherit;}
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #0284c7; outline: none; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #ea580c; outline: none; }
         
         /* Table Layout */
         table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 0.85em; table-layout: fixed; }
-        th { background: #e0f2fe; color: #0369a1; padding: 10px; text-align: center; border: 1px solid #cbd5e1; }
+        th { background: #ffedd5; color: #ea580c; padding: 10px; text-align: center; border: 1px solid #cbd5e1; }
         td { border: 1px solid #cbd5e1; padding: 6px; vertical-align: middle;}
-        .col-item { background: #f8fafc; font-weight: bold; width: 45%; color: #334155;}
-        .col-input { width: 15%; }
-        .col-total { text-align: right; font-weight: bold; width: 20%; background: #fff; color: #b91c1c;}
+        .col-item { background: #f8fafc; font-weight: bold; width: 40%; color: #334155;}
+        .col-input { width: 14%; }
+        .col-total { text-align: right; font-weight: bold; width: 18%; background: #fff; color: #b91c1c;}
         
-        .desc-input { flex: 1 1 120px; min-width: 80px; padding: 4px; border: 1px dashed transparent; background: transparent; font-weight: bold; font-family: inherit; font-size: 1em; color: #0f172a; transition: 0.2s; border-radius: 3px; }
-        .desc-input:focus, .desc-input:hover { border-color: #0284c7; background: #fff; outline: none; }
+        .desc-input { flex: 1 1 100px; min-width: 80px; padding: 4px; border: 1px dashed transparent; background: transparent; font-weight: bold; font-family: inherit; font-size: 1em; color: #0f172a; transition: 0.2s; border-radius: 3px; }
+        .desc-input:focus, .desc-input:hover { border-color: #ea580c; background: #fff; outline: none; }
 
-        .col-input input { width: 100%; padding: 5px; text-align: center; border: 1px dashed #0284c7; border-radius: 4px; background: #f0f9ff; font-weight: bold; color: #0f172a;}
-        .col-input input:focus { background: #fff; border: 1px solid #0284c7; outline: none; text-align: right;}
+        .col-input input { width: 100%; padding: 5px; text-align: center; border: 1px dashed #ea580c; border-radius: 4px; background: #fff7ed; font-weight: bold; color: #0f172a;}
+        .col-input input:focus { background: #fff; border: 1px solid #ea580c; outline: none; text-align: right;}
         
         .section-header { background: #f1f5f9; font-weight: bold; text-align: left; color: #475569; }
-        .bom-inline-select { flex: 0 0 auto; max-width: 125px; margin-left: 4px; padding: 2px 6px; border: 1px solid #94a3b8; border-radius: 3px; font-size: 0.85em; font-weight: bold; color: #0369a1; background: #fff; cursor: pointer;}
-        .bom-inline-select:focus { outline: none; border-color: #0284c7; }
+        .bom-inline-select { flex: 0 0 auto; max-width: 110px; margin-left: 4px; padding: 2px 6px; border: 1px solid #94a3b8; border-radius: 3px; font-size: 0.85em; font-weight: bold; color: #ea580c; background: #fff; cursor: pointer;}
+        .bom-inline-select:focus { outline: none; border-color: #ea580c; }
 
         .summary-box { background: #0f172a; color: white; padding: 15px; border-radius: 6px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);}
         .sum-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.95em; border-bottom: 1px dashed #334155; padding-bottom: 4px;}
         .sum-row.total { font-size: 1.6em; font-weight: bold; color: #fbbf24; border-bottom: none; border-top: 2px solid #475569; padding-top: 10px; margin-top: 10px;}
 
         .btn-group { display: flex; gap: 10px; margin-bottom: 15px; }
-        .action-btn { flex: 1; padding: 12px; background: #0284c7; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; transition: 0.2s;}
-        .action-btn:hover { background: #0369a1; transform: translateY(-1px);}
+        .action-btn { flex: 1; padding: 12px; background: #ea580c; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; transition: 0.2s;}
+        .action-btn:hover { background: #c2410c; transform: translateY(-1px);}
         .export-btn { background: #6366f1; }
         .export-btn:hover { background: #4f46e5; }
         .print-btn { background: #059669; margin-top: 10px; width: 100%;}
         .print-btn:hover { background: #047857; }
 
+        /* Drafting Visuals */
         .visual-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; justify-items: center; }
         .view-box { text-align: center; background: #fff; padding: 10px; border: 1px solid #e2e8f0; border-radius: 5px; width: 100%; max-width: 150px; } 
         .view-title { font-size: 0.7em; font-weight: bold; margin-bottom: 5px; color: #64748b; text-transform: uppercase; }
         .grid-draft { display: grid; gap: 1px; background: #334155; border: 1px solid #334155; margin: 0 auto; max-width: 100%; } 
         .panel { background: #bae6fd; aspect-ratio: 1 / 1; }
+
+        /* Plinth CSS Shapes */
+        .plinth-wrapper { display: flex; gap: 15px; margin-bottom: 20px; page-break-inside: avoid; }
+        .plinth-card { flex: 1; border: 1px solid #cbd5e1; border-radius: 5px; padding: 12px; background: #fff; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
+        .plinth-card h4 { margin: 0 0 10px 0; color: #0f172a; font-size: 0.85em; text-transform: uppercase; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px;}
+        .plinth-diagram { height: 90px; width: 100%; display: flex; justify-content: space-evenly; align-items: center; border: 1px solid #e2e8f0; background: #f8fafc; padding: 10px; margin-bottom: 10px; position: relative;}
+        .concrete-beam { background: repeating-linear-gradient(45deg, #cbd5e1, #cbd5e1 4px, #94a3b8 4px, #94a3b8 8px); height: 100%; width: 16px; border: 1px solid #64748b;}
+        .grid-beam-h { width: 100%; height: 16px; background: repeating-linear-gradient(45deg, #cbd5e1, #cbd5e1 4px, #94a3b8 4px, #94a3b8 8px); position: absolute; border: 1px solid #64748b; top: 50%; transform: translateY(-50%);}
+
+        /* --- ADMIN DASHBOARD STYLES --- */
+        .admin-header { background: #0f172a; color: white; padding: 20px; border-radius: 10px 10px 0 0; display: flex; justify-content: space-between; align-items: center;}
+        .admin-header h2 { color: white; border: none; margin: 0; padding: 0; }
+        .admin-btn { padding: 10px 20px; background: #e11d48; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        .admin-btn.save { background: #10b981; }
+        .admin-btn:hover { opacity: 0.9; }
+        .admin-container { background: #1e293b; padding: 20px; border-radius: 0 0 10px 10px; color: white;}
+        .admin-table { width: 100%; border-collapse: collapse; background: white; color: #0f172a; border-radius: 5px; overflow: hidden; }
+        .admin-table th { background: #334155; color: white; border-color: #475569; padding: 10px;}
+        .admin-table td { border-color: #e2e8f0; padding: 6px;}
+        .admin-input { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-weight: bold; text-align: center;}
 
         .print-only { display: none; }
 
@@ -100,12 +121,14 @@
             .app-layout { display: block; }
             .col-left, .col-right { width: 100%; display: block; }
             
-            /* High-End Split Header - Jutarama */
-            .print-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 3px solid #0f172a; padding-bottom: 15px; margin-bottom: 25px; }
-            .header-left h1 { margin: 0 0 5px 0; font-size: 18pt; color: #0f172a; letter-spacing: 0.5px; }
-            .header-left p { margin: 2px 0; font-size: 9pt; color: #475569; }
+            /* Print Header with Logo */
+            .print-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 3px solid #ea580c; padding-bottom: 15px; margin-bottom: 25px; }
+            .header-left { display: flex; align-items: center; gap: 20px; }
+            .header-left img { width: 130px; height: auto; object-fit: contain; }
+            .header-text h1 { margin: 0 0 5px 0; font-size: 16pt; color: #0f172a; letter-spacing: 0.5px; }
+            .header-text p { margin: 2px 0; font-size: 9pt; color: #475569; }
             .header-right { text-align: right; }
-            .header-right h2 { margin: 0 0 8px 0; font-size: 24pt; color: #0ea5e9; font-weight: 300; letter-spacing: 2px;}
+            .header-right h2 { margin: 0 0 8px 0; font-size: 24pt; color: #ea580c; font-weight: 300; letter-spacing: 2px;}
             .header-right p { margin: 2px 0; font-size: 10pt; color: #1e293b; }
             
             /* Clean Metadata Boxes */
@@ -117,13 +140,10 @@
 
             .section-title { margin-top: 20px !important; margin-bottom: 12px !important; background: transparent !important; border-left: none !important; border-bottom: 2px solid #e2e8f0 !important; padding: 0 0 5px 0 !important; color: #0f172a !important; font-size: 12pt !important; text-transform: uppercase; letter-spacing: 0.5px;}
             
-            /* Sleek Table Design with Zebra Striping */
             table { font-size: 9pt; margin-bottom: 20px; border-collapse: collapse; width: 100%; }
             tr { border-bottom: 1px solid #e2e8f0; page-break-inside: avoid; }
-            /* Striping for items, ignoring headers */
             tr:nth-child(even):not(.section-header-row) { background-color: #f8fafc !important; }
-            
-            th { background-color: #0f172a !important; color: #ffffff !important; padding: 10px; border: none; font-weight: 600; text-align: left;}
+            th { background-color: #ea580c !important; color: #ffffff !important; padding: 10px; border: none; font-weight: 600; text-align: left;}
             th.text-center { text-align: center; } th.text-right { text-align: right; }
             td { border: none; padding: 8px 10px; color: #1e293b;}
             td.text-center { text-align: center; } td.text-right { text-align: right; font-weight: 700; color: #0f172a !important;}
@@ -133,7 +153,6 @@
             input, .desc-input, .bom-inline-select { border: none !important; background: transparent !important; color: #1e293b !important; box-shadow: none !important; font-weight: 500; padding: 0 !important; font-size: inherit; appearance: none; -webkit-appearance: none; width: auto;}
             .bom-inline-select { margin-left: 4px; color: #64748b !important;}
             
-            /* Professional Summary Box perfectly aligned */
             .clearfix::after { content: ""; clear: both; display: table; }
             .summary-box { background: #f8fafc !important; color: #0f172a !important; border: 1px solid #cbd5e1 !important; border-radius: 6px; padding: 15px 20px !important; margin-top: 10px; width: 340px; float: right; page-break-inside: avoid; box-shadow: none;}
             .sum-row { border-bottom: 1px solid #e2e8f0 !important; margin-bottom: 8px; padding-bottom: 6px; color: #475569 !important; font-size: 9.5pt; font-weight: 500;}
@@ -148,7 +167,13 @@
             .panel { background: #bae6fd !important; border: 0.5px solid #94a3b8 !important;}
             .view-title { font-size: 7pt; margin-bottom: 3px; color: #000 !important; text-align: center; }
             
-            .print-footer { display: flex; justify-content: space-between; margin-top: 60px; page-break-inside: avoid; clear: both; padding-top: 20px;}
+            /* Plinth Print Layout */
+            .plinth-wrapper { margin-top: 15px; }
+            .plinth-card { border: 1px solid #0f172a !important; box-shadow: none; padding: 8px; }
+            .plinth-diagram { border: 1px solid #0f172a !important; background: #fff !important; }
+            .concrete-beam { border: 1px solid #000 !important; }
+
+            .print-footer { display: flex; justify-content: space-between; margin-top: 50px; page-break-inside: avoid; clear: both; padding-top: 20px;}
             .sig-box { width: 35%; text-align: left; }
             .sig-line { border-bottom: 1px solid #0f172a; margin: 40px 0 8px 0; }
         }
@@ -158,10 +183,37 @@
 
 <div id="securityOverlay">
     <div class="login-card">
-        <h1 style="margin-top:0; color:#0f172a;">WINKO INDUSTRIAL</h1>
-        <p style="color:#64748b;">Technical Quoting Gateway</p>
+        <img src="winko logo.png" alt="Winko Logo" style="max-width: 200px; margin-bottom: 15px;">
+        <p style="color:#64748b; margin-top: 0;">Technical Quoting Gateway</p>
         <input type="password" id="passInput" placeholder="Password" onkeypress="if(event.key==='Enter') checkPassword()">
         <button onclick="checkPassword()">Unlock Dashboard</button>
+        <p style="font-size: 11px; margin-top:15px; color:#94a3b8;">Admin Portal: Requires Master Password</p>
+    </div>
+</div>
+
+<div id="adminContent">
+    <div class="container" style="background: transparent; box-shadow: none; padding:0;">
+        <div class="admin-header">
+            <h2>⚙️ Master Inventory Control</h2>
+            <div>
+                <button class="admin-btn" onclick="location.reload()">🚪 Back to Login</button>
+                <button class="admin-btn save" onclick="saveAdminDefaults()" style="margin-left: 10px;">💾 Save Master Defaults</button>
+            </div>
+        </div>
+        <div class="admin-container">
+            <p style="margin-top:0; color: #94a3b8;">Warning: Changing these values will permanently update the starting template for all new quotations.</p>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th style="width:20%; text-align:left;">Category</th>
+                        <th style="width:40%; text-align:left;">Default Item Name</th>
+                        <th style="width:20%;">Default Wt (kg)</th>
+                        <th style="width:20%;">Default Price (RM)</th>
+                    </tr>
+                </thead>
+                <tbody id="adminBody"></tbody>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -170,10 +222,13 @@
         
         <div class="print-header print-only">
             <div class="header-left">
-                <h1>JUTARAMA INDUSTRIES (M) SDN BHD</h1>
-                <p><strong>(749861-V)</strong></p>
-                <p>No. 19, Kawasan Perindustrian Mega 2,</p>
-                <p>Jln Mega 2/1, 43500 Semenyih, Selangor</p>
+                <img src="winko logo.png" alt="Winko Logo">
+                <div class="header-text">
+                    <h1>JUTARAMA INDUSTRIES (M) SDN BHD</h1>
+                    <p><strong>(749861-V)</strong></p>
+                    <p>No. 19, Kawasan Perindustrian Mega 2,</p>
+                    <p>Jln Mega 2/1, 43500 Semenyih, Selangor</p>
+                </div>
             </div>
             <div class="header-right">
                 <h2>QUOTATION</h2>
@@ -200,12 +255,12 @@
         </div>
 
         <div class="memory-panel no-print">
-            <strong style="color: #0369a1;">💾 Project Memory Bank:</strong>
+            <strong style="color: #ea580c;">💾 Project Memory Bank:</strong>
             <select id="memoryDropdown">
                 <option value="">-- Load a Saved Project --</option>
             </select>
             <button class="memory-btn btn-save" onclick="loadFromMemory()">Load</button>
-            <button class="memory-btn btn-save" onclick="saveToMemory()" style="background: #0284c7;">Save Current</button>
+            <button class="memory-btn btn-save" onclick="saveToMemory()" style="background: #ea580c;">Save Current</button>
             <button class="memory-btn btn-del" onclick="deleteFromMemory()">Delete</button>
         </div>
 
@@ -289,7 +344,7 @@
                     <div class="sum-row"><span>Units:</span> <span id="sumUnit">-</span></div>
                     <div class="sum-row"><span>Material:</span> <span id="sumCoat">-</span></div>
                     <div class="sum-row"><span>Partition:</span> <span id="sumPart">-</span></div>
-                    <div class="sum-row" style="color:#0ea5e9;"><span>Est. Total Weight:</span> <span id="sumWeight_screen">0 kg</span></div>
+                    <div class="sum-row" style="color:#fdba74;"><span>Est. Total Weight:</span> <span id="sumWeight_screen">0 kg</span></div>
                     <hr style="border: 1px solid #334155; margin: 10px 0;">
                     <div class="sum-row"><span>Subtotal:</span> <span>RM <span id="sumSubtotal_screen">0.00</span></span></div>
                     <div class="sum-row"><span>Discount:</span> <span style="color: #fbbf24;">- RM <span id="sumDiscount_screen">0.00</span></span></div>
@@ -311,7 +366,7 @@
                     </div>
                 </div>
 
-                <div class="section-title" style="margin-top:0;">Assembly Draft (Auto-calculated: <span id="totalPanelsCount" style="color:#0284c7;">0</span> panels)</div>
+                <div class="section-title" style="margin-top:0;">Assembly Draft (Auto-calculated: <span id="totalPanelsCount" style="color:#ea580c;">0</span> panels)</div>
                 <div class="visual-container" id="visualsArea">
                     <div class="view-box"><div class="view-title">Top</div><div id="topGrid" class="grid-draft"></div></div>
                     <div class="view-box"><div class="view-title">Front</div><div id="frontGrid" class="grid-draft"></div></div>
@@ -321,8 +376,41 @@
                     <div class="view-box"><div class="view-title">Right</div><div id="rightGrid" class="grid-draft"></div></div>
                 </div>
 
+                <div class="section-title">Foundation Requirements (Concrete Plinths)</div>
+                
+                <div class="form-group no-print" style="margin-bottom: 15px;">
+                    <div style="padding: 10px; background: #fff7ed; border: 1px dashed #ea580c; border-radius: 4px; font-weight: bold; color: #ea580c; font-size: 0.9em; text-align: center;" id="plinthCalcText">
+                        Loading Recommendation...
+                    </div>
+                </div>
+
+                <div class="plinth-wrapper">
+                    <div class="plinth-card">
+                        <h4>Type A (Parallel Plinths)</h4>
+                        <div class="plinth-diagram">
+                            <div class="concrete-beam"></div>
+                            <div class="concrete-beam"></div>
+                            <div class="concrete-beam"></div>
+                            <div class="concrete-beam"></div>
+                        </div>
+                        <p style="font-size: 0.75em; color: #475569; margin:0;" id="plinthAText">Standard continuous beams spaced at 1000mm C/C.</p>
+                    </div>
+                    
+                    <div class="plinth-card">
+                        <h4>Type B (Grid Plinths)</h4>
+                        <div class="plinth-diagram">
+                            <div class="concrete-beam"></div>
+                            <div class="concrete-beam"></div>
+                            <div class="concrete-beam"></div>
+                            <div class="concrete-beam"></div>
+                            <div class="grid-beam-h"></div>
+                        </div>
+                        <p style="font-size: 0.75em; color: #475569; margin:0;" id="plinthBText">Cross-braced grid foundation for elevated slabs.</p>
+                    </div>
+                </div>
+
                 <div class="btn-group no-print">
-                    <button class="action-btn export-btn" onclick="exportCSV()">📊 Download CSV (Excel)</button>
+                    <button class="action-btn export-btn" style="background:#0f172a;" onclick="exportCSV()">📊 Download Excel (CSV)</button>
                 </div>
                 <button class="action-btn print-btn no-print" onclick="window.print()">🖨️ Print Formal Quotation (PDF)</button>
             </div>
@@ -338,12 +426,14 @@
 <script>
     // --- SECURITY LOGIC ---
     const SECRET_PASSWORD = "Winko2026";
+    const ADMIN_PASSWORD = "AdminMaster99";
+
     function checkPassword() {
-        if(document.getElementById('passInput').value === SECRET_PASSWORD) {
+        let pass = document.getElementById('passInput').value;
+        if(pass === SECRET_PASSWORD) {
             document.getElementById('securityOverlay').style.display='none';
             document.getElementById('mainContent').style.display='block';
             
-            // Auto-generate a Quote ID if empty
             if(!document.getElementById('quoteIdInput').value) {
                 const d = new Date();
                 document.getElementById('quoteIdInput').value = "QT-" + d.getFullYear() + (d.getMonth()+1).toString().padStart(2, '0') + Math.floor(Math.random() * 1000).toString().padStart(3, '0');
@@ -351,6 +441,10 @@
             
             refreshMemoryDropdown();
             processTankData(); 
+        } else if (pass === ADMIN_PASSWORD) {
+            document.getElementById('securityOverlay').style.display='none';
+            document.getElementById('adminContent').style.display='block';
+            buildAdminTable();
         } else {
             alert("Incorrect Password");
         }
@@ -360,8 +454,10 @@
     function updateClock() {
         const now = new Date();
         const str = now.toLocaleDateString('en-MY');
-        document.getElementById('liveClock').innerText = str + " " + now.toLocaleTimeString('en-MY');
-        document.getElementById('metaDate').innerText = str; 
+        document.querySelectorAll('#liveClock, #metaDate').forEach(el => {
+            if(el.id === 'liveClock') el.innerText = str + " " + now.toLocaleTimeString('en-MY');
+            else el.innerText = str;
+        });
     }
     setInterval(updateClock, 1000); updateClock();
 
@@ -370,8 +466,8 @@
         document.querySelectorAll('.unitLabel').forEach(el => el.innerText = unit);
     }
 
-    // --- FULL BOM STRUCTURE (BASE TEMPLATE) ---
-    const baseBomStructure = [
+    // --- FULL BOM STRUCTURE (BASE TEMPLATE WITH WEIGHTS) ---
+    const systemBaseStructure = [
         { category: "Panels", items: [
             {name: "Manhole Panel", def: 450, wt: 45}, 
             {name: "1.5mm Panel", def: 220, wt: 25}, 
@@ -400,14 +496,59 @@
         ]}
     ];
 
-    let bomStructure = JSON.parse(JSON.stringify(baseBomStructure));
+    // Load Admin Master Overrides (if any)
+    let masterDefaults = JSON.parse(localStorage.getItem('winkoMasterDefaults'));
+    if(masterDefaults) {
+        masterDefaults.forEach((sec, sIdx) => {
+            sec.items.forEach((it, iIdx) => {
+                if(systemBaseStructure[sIdx] && systemBaseStructure[sIdx].items[iIdx]) {
+                    systemBaseStructure[sIdx].items[iIdx].name = it.name;
+                    systemBaseStructure[sIdx].items[iIdx].def = it.def;
+                    systemBaseStructure[sIdx].items[iIdx].wt = it.wt;
+                }
+            });
+        });
+    }
+
+    let bomStructure = JSON.parse(JSON.stringify(systemBaseStructure));
     let customRowCounts = JSON.parse(localStorage.getItem('winkoCustomCounts')) || [0,0,0,0,0];
 
     const configIDs = ['quoteIdInput', 'stdChoice','unitChoice','partChoice','coatChoice','length','width','height','discountPct','sstPct', 'quoteNotes'];
 
+    // --- ADMIN PANEL LOGIC ---
+    function buildAdminTable() {
+        const tbody = document.getElementById('adminBody');
+        let html = '';
+        systemBaseStructure.forEach((sec, sIdx) => {
+            sec.items.forEach((it, iIdx) => {
+                html += `<tr>
+                    <td style="font-weight:bold; background:#f8fafc; text-align:left;">${sec.category}</td>
+                    <td><input type="text" class="admin-input" style="text-align:left;" id="adm_name_${sIdx}_${iIdx}" value="${it.name}"></td>
+                    <td><input type="number" step="0.1" class="admin-input" id="adm_wt_${sIdx}_${iIdx}" value="${it.wt || 0}"></td>
+                    <td><input type="number" step="0.01" class="admin-input" id="adm_price_${sIdx}_${iIdx}" value="${it.def.toFixed(2)}"></td>
+                </tr>`;
+            });
+        });
+        tbody.innerHTML = html;
+    }
+
+    function saveAdminDefaults() {
+        let newDefaults = JSON.parse(JSON.stringify(systemBaseStructure));
+        newDefaults.forEach((sec, sIdx) => {
+            sec.items.forEach((it, iIdx) => {
+                it.name = document.getElementById(`adm_name_${sIdx}_${iIdx}`).value;
+                it.wt = parseFloat(document.getElementById(`adm_wt_${sIdx}_${iIdx}`).value) || 0;
+                it.def = parseFloat(document.getElementById(`adm_price_${sIdx}_${iIdx}`).value) || 0;
+            });
+        });
+        localStorage.setItem('winkoMasterDefaults', JSON.stringify(newDefaults));
+        alert("Success! Master Defaults (Names, Weights, Prices) have been permanently updated.");
+        location.reload(); 
+    }
+
     // --- DYNAMIC CUSTOM ROW LOGIC ---
     function applyCustomRows() {
-        bomStructure = JSON.parse(JSON.stringify(baseBomStructure));
+        bomStructure = JSON.parse(JSON.stringify(systemBaseStructure));
         for(let i=0; i<customRowCounts.length; i++) {
             for(let j=0; j<customRowCounts[i]; j++) {
                 bomStructure[i].items.push({name: "Custom Added Item", def: 0, wt: 0});
@@ -457,10 +598,10 @@
         bomStructure.forEach((sec, sIdx) => {
             sec.items.forEach((it, iIdx) => {
                 let uId = `item_${sIdx}_${iIdx}`;
-                data[`desc_${uId}`] = document.getElementById(`desc_${uId}`).value;
-                data[`wt_${uId}`] = document.getElementById(`wt_${uId}`).value;
-                data[`price_${uId}`] = document.getElementById(`price_${uId}`).value;
-                data[`qty_${uId}`] = document.getElementById(`qty_${uId}`).value;
+                if(document.getElementById(`desc_${uId}`)) data[`desc_${uId}`] = document.getElementById(`desc_${uId}`).value;
+                if(document.getElementById(`wt_${uId}`)) data[`wt_${uId}`] = document.getElementById(`wt_${uId}`).value;
+                if(document.getElementById(`price_${uId}`)) data[`price_${uId}`] = document.getElementById(`price_${uId}`).value;
+                if(document.getElementById(`qty_${uId}`)) data[`qty_${uId}`] = document.getElementById(`qty_${uId}`).value;
                 if(it.selectId && document.getElementById(it.selectId)) data[it.selectId] = document.getElementById(it.selectId).value; 
             });
         });
@@ -498,11 +639,11 @@
             bomStructure.forEach((sec, sIdx) => {
                 sec.items.forEach((it, iIdx) => {
                     let uId = `item_${sIdx}_${iIdx}`;
-                    if(savedData[`desc_${uId}`]) document.getElementById(`desc_${uId}`).value = savedData[`desc_${uId}`]; 
-                    if(savedData[`wt_${uId}`]) document.getElementById(`wt_${uId}`).value = savedData[`wt_${uId}`]; 
-                    if(savedData[`price_${uId}`]) document.getElementById(`price_${uId}`).value = savedData[`price_${uId}`];
-                    if(savedData[`qty_${uId}`]) document.getElementById(`qty_${uId}`).value = savedData[`qty_${uId}`];
-                    if(it.selectId && savedData[it.selectId]) document.getElementById(it.selectId).value = savedData[it.selectId]; 
+                    if(savedData[`desc_${uId}`] && document.getElementById(`desc_${uId}`)) document.getElementById(`desc_${uId}`).value = savedData[`desc_${uId}`]; 
+                    if(savedData[`wt_${uId}`] && document.getElementById(`wt_${uId}`)) document.getElementById(`wt_${uId}`).value = savedData[`wt_${uId}`]; 
+                    if(savedData[`price_${uId}`] && document.getElementById(`price_${uId}`)) document.getElementById(`price_${uId}`).value = savedData[`price_${uId}`];
+                    if(savedData[`qty_${uId}`] && document.getElementById(`qty_${uId}`)) document.getElementById(`qty_${uId}`).value = savedData[`qty_${uId}`];
+                    if(it.selectId && savedData[it.selectId] && document.getElementById(it.selectId)) document.getElementById(it.selectId).value = savedData[it.selectId]; 
                 });
             });
             
@@ -532,9 +673,10 @@
     }
 
     function resetDefaultPrices() {
-        if(confirm("Reset the current board back to default template?")) {
+        if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
+            localStorage.removeItem('jutaramaProData'); // clear temporary edits
             applyCustomRows();
             buildBOMTable();
             document.getElementById('projectName').value = "";
@@ -609,10 +751,10 @@
         let html = '';
         bomStructure.forEach((sec, sIdx) => {
             html += `<tr class="section-header-row"><td colspan="5" class="section-header" style="padding:0;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:10px;">
                     <span>${sec.category}</span>
                     <div class="no-print">
-                        <button type="button" onclick="addCategoryRow(${sIdx})" style="padding:4px 8px; font-size:11px; background:#e0f2fe; border:1px solid #0284c7; color:#0284c7; border-radius:3px; cursor:pointer; font-weight:bold;">+ Add Item</button>
+                        <button type="button" onclick="addCategoryRow(${sIdx})" style="padding:4px 8px; font-size:11px; background:#ffedd5; border:1px solid #ea580c; color:#ea580c; border-radius:3px; cursor:pointer; font-weight:bold;">+ Add Item</button>
                         <button type="button" onclick="removeCategoryRow(${sIdx})" style="padding:4px 8px; font-size:11px; background:#ffe4e6; border:1px solid #e11d48; color:#e11d48; border-radius:3px; cursor:pointer; margin-left:6px; font-weight:bold;">- Remove</button>
                     </div>
                 </div>
@@ -691,11 +833,22 @@
         const L_in = parseFloat(document.getElementById('length').value) || 0;
         const W_in = parseFloat(document.getElementById('width').value) || 0;
         const H_in = parseFloat(document.getElementById('height').value) || 0;
-        const factor = document.getElementById('unitChoice').value === 'ft' ? 4 : 1;
+        
+        const unit = document.getElementById('unitChoice').value;
+        const factor = unit === 'ft' ? 4 : 1;
+        const unitStr = unit === 'ft' ? 'ft' : 'm';
+        const spacingStr = unit === 'ft' ? '4ft (1220mm)' : '1m (1000mm)';
         
         const L = Math.ceil(L_in / factor);
         const W = Math.ceil(W_in / factor);
         const H = Math.ceil(H_in / factor);
+
+        // Update Dynamic Plinth Text
+        const numPlinths = W + 1;
+        const plinthLen = L_in;
+        document.getElementById('plinthCalcText').innerText = `Recommendation: Require ${numPlinths} rows of concrete plinths, each ${plinthLen}${unitStr} long, spaced at ${spacingStr} C/C.`;
+        
+        document.getElementById('plinthAText').innerText = `Standard continuous beams spaced at ${spacingStr} C/C.`;
 
         document.getElementById('sumStd').innerText = document.getElementById('stdChoice').value;
         document.getElementById('sumUnit').innerText = document.getElementById('unitChoice').options[document.getElementById('unitChoice').selectedIndex].text;
@@ -749,8 +902,7 @@
 
     // --- CSV EXPORT (MASSIVE UPGRADE) ---
     function exportCSV() {
-        // Build the corporate header
-        let csv = "WINKO INDUSTRIAL SDN BHD\n";
+        let csv = "JUTARAMA INDUSTRIES SDN BHD\n";
         csv += "OFFICIAL TECHNICAL QUOTATION\n\n";
         
         let qid = document.getElementById('quoteIdInput').value || "N/A";
@@ -767,10 +919,8 @@
         csv += `"Material:","${mat}"\n`;
         csv += `"Partition:","${part}"\n\n`;
 
-        // Table Headers
         csv += "Category,Item Description,Qty,Unit Wt (kg),Unit Price (RM),Total (RM)\n";
         
-        // Table Data
         bomStructure.forEach((s, si) => { s.items.forEach((it, ii) => {
             let id = `item_${si}_${ii}`;
             if(!document.getElementById(`desc_${id}`)) return;
@@ -784,17 +934,15 @@
             if(q > 0) csv += `"${s.category}","${label}",${q},${w},${p},${t}\n`;
         })});
         
-        // Blank row before totals
         csv += `\n`;
         
-        // Grab totals
         let sub = document.getElementById('sumSubtotal_screen').innerText.replace(/,/g, '');
         let disc = document.getElementById('sumDiscount_screen').innerText.replace(/,/g, '');
         let sst = document.getElementById('sumSST_screen').innerText.replace(/,/g, '');
         let grand = document.getElementById('grandTotal_screen').innerText.replace(/,/g, '');
+        
         let wt = document.getElementById('sumWeight_screen').innerText.replace(' kg', '').replace(/,/g, '');
 
-        // Formatted Totals
         csv += `,,,,"Est. Total Weight (kg)",${wt}\n`;
         csv += `,,,,"Subtotal (RM)",${sub}\n`;
         csv += `,,,,"Discount (RM)",-${disc}\n`;
