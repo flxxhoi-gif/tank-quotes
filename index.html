@@ -7,7 +7,7 @@
     <style>
         /* --- MODERN RESET & TYPOGRAPHY --- */
         * { box-sizing: border-box; }
-        body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f8fafc; padding: 20px; color: #334155; margin: 0; line-height: 1.5; }
+        body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f1f5f9; padding: 20px; color: #334155; margin: 0; line-height: 1.5; }
         
         /* --- SECURITY OVERLAY --- */
         #securityOverlay {
@@ -25,36 +25,40 @@
         #mainContent, #adminContent { display: none; }
         #customerPrintView { display: none; } 
 
-        /* --- DASHBOARD STYLES (SCREEN) --- */
-        .container { max-width: 1550px; margin: auto; background: white; padding: 35px; border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.01); }
+        /* --- DASHBOARD STYLES (MODULAR UI) --- */
+        .container { max-width: 1550px; margin: auto; padding: 10px; }
         
-        .app-header-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 20px; }
-        .app-header-bar h2 { color: #0f172a; margin: 0; font-weight: 800; font-size: 1.8em; letter-spacing: -0.5px;}
-        .live-clock { font-size: 0.9em; color: #64748b; font-weight: 600; background: #f1f5f9; padding: 6px 12px; border-radius: 20px;}
+        .app-header-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #cbd5e1; padding-bottom: 15px; margin-bottom: 20px; }
+        .app-header-bar h2 { color: #0f172a; margin: 0; font-weight: 900; font-size: 1.8em; letter-spacing: -0.5px;}
+        .live-clock { font-size: 0.9em; color: #64748b; font-weight: 600; background: #e2e8f0; padding: 6px 12px; border-radius: 20px;}
         
-        .memory-panel { background: #fff7ed; border: 1px dashed #fed7aa; padding: 12px 20px; border-radius: 10px; display: flex; gap: 15px; align-items: center; margin-bottom: 25px; box-shadow: inset 0 2px 4px rgba(234,88,12,0.05); }
+        .memory-panel { background: #fff7ed; border: 1px dashed #fed7aa; padding: 12px 20px; border-radius: 10px; display: flex; gap: 15px; align-items: center; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(234,88,12,0.05); }
         .memory-panel select { flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #fdba74; font-weight: 600; color: #ea580c; outline: none;}
         .memory-panel select:focus { box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1); }
         .memory-btn { padding: 10px 18px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; color: white; transition: all 0.2s;}
         .btn-save { background: #10b981; } .btn-save:hover { background: #059669; transform: translateY(-1px);}
         .btn-del { background: #f43f5e; } .btn-del:hover { background: #e11d48; transform: translateY(-1px);}
 
-        .app-layout { display: flex; gap: 35px; flex-wrap: wrap; width: 100%; }
-        .col-left { flex: 1.3; min-width: 500px; }
-        .col-right { flex: 0.9; min-width: 400px; }
+        .app-layout { display: flex; gap: 25px; flex-wrap: wrap; width: 100%; align-items: flex-start;}
+        .col-left { flex: 1.4; min-width: 500px; display: flex; flex-direction: column; gap: 20px; }
+        .col-right { flex: 0.9; min-width: 400px; display: flex; flex-direction: column; gap: 20px; }
 
-        .section-title { position: relative; font-weight: 800; margin-top: 20px; margin-bottom: 15px; color: #0f172a; font-size: 1.15em; padding: 10px 15px; background: #f8fafc; border-radius: 8px; border-left: 5px solid #ea580c; display: flex; align-items: center; justify-content: space-between;}
+        /* UI Module Cards */
+        .module-card { background: #ffffff; border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        .card-header { font-size: 1.15em; font-weight: 800; color: #0f172a; margin-top: 0; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; }
+        .card-header span { color: #ea580c; margin-right: 6px; }
+
         .reset-btn { background: #94a3b8; color: white; border: none; padding: 6px 12px; font-size: 12px; border-radius: 6px; cursor: pointer; transition: 0.2s; font-weight: 600;}
         .reset-btn:hover { background: #64748b; }
         
-        .config-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px; }
-        .dim-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; width: 100%; }
+        .config-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 15px; }
+        .dim-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px; width: 100%; }
         .form-group { display: flex; flex-direction: column; margin-bottom: 5px;}
-        .form-group label { font-size: 0.85em; font-weight: 700; color: #64748b; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;}
-        .form-group input, .form-group select, .form-group textarea { padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; font-weight: 600; background: #fff; font-family: inherit; transition: border-color 0.2s, box-shadow 0.2s;}
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #ea580c; outline: none; box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1); }
+        .form-group label { font-size: 0.8em; font-weight: 700; color: #64748b; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;}
+        .form-group input, .form-group select, .form-group textarea { padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; font-weight: 600; background: #f8fafc; font-family: inherit; transition: all 0.2s;}
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #ea580c; background: #fff; outline: none; box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1); }
         
-        table { width: 100%; border-collapse: separate; border-spacing: 0; margin-bottom: 20px; font-size: 0.9em; table-layout: fixed; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0; margin-bottom: 10px; font-size: 0.9em; table-layout: fixed; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; }
         th { background: #f1f5f9; color: #475569; padding: 12px; text-align: center; border-bottom: 2px solid #e2e8f0; text-transform: uppercase; font-size: 0.8em; letter-spacing: 0.5px;}
         td { padding: 8px 10px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;}
         tr:last-child td { border-bottom: none; }
@@ -73,28 +77,29 @@
         .bom-inline-select { flex: 0 0 auto; max-width: 110px; margin-left: 4px; padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85em; font-weight: 600; color: #ea580c; background: #fff; cursor: pointer; transition: 0.2s;}
         .bom-inline-select:focus { outline: none; border-color: #ea580c; box-shadow: 0 0 0 2px rgba(234,88,12,0.1);}
 
-        .summary-box { background: linear-gradient(145deg, #0f172a, #1e293b); color: white; padding: 25px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 15px 25px -5px rgba(15,23,42,0.3);}
+        /* Floating Premium Summary Box */
+        .summary-box { background: linear-gradient(145deg, #0f172a, #1e293b); color: white; padding: 25px; border-radius: 12px; box-shadow: 0 15px 25px -5px rgba(15,23,42,0.3);}
         .sum-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 1em; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; color: #cbd5e1;}
         .sum-row span:last-child { font-weight: 600; color: white;}
         .sum-row.total { font-size: 1.8em; font-weight: 800; color: #fbbf24; border-bottom: none; border-top: 2px solid rgba(255,255,255,0.2); padding-top: 15px; margin-top: 15px;}
         .sum-row.total span:last-child { color: #fbbf24; }
 
-        .btn-group { display: flex; gap: 12px; margin-bottom: 15px; }
+        .btn-group { display: flex; gap: 12px; }
         .action-btn { flex: 1; padding: 14px; background: #ea580c; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 700; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;}
         .action-btn:hover { background: #c2410c; transform: translateY(-2px); box-shadow: 0 8px 15px -3px rgba(234,88,12,0.3);}
         .export-btn { background: #334155; } .export-btn:hover { background: #1e293b; box-shadow: 0 8px 15px -3px rgba(15,23,42,0.3);}
         .print-btn { background: #059669; } .print-btn:hover { background: #047857; box-shadow: 0 8px 15px -3px rgba(5,150,105,0.3);}
 
-        .visual-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; justify-items: center; }
-        .view-box { text-align: center; background: #fff; padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; width: 100%; max-width: 160px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);} 
+        .visual-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; justify-items: center; }
+        .view-box { text-align: center; background: #f8fafc; padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; width: 100%; max-width: 160px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);} 
         .view-title { font-size: 0.75em; font-weight: 800; margin-bottom: 8px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;}
         .grid-draft { display: grid; gap: 1px; background: #94a3b8; border: 2px solid #475569; margin: 0 auto; max-width: 100%; border-radius: 2px; overflow: hidden;} 
         .panel { background: #e0f2fe; aspect-ratio: 1 / 1; }
 
-        .plinth-wrapper { display: flex; gap: 15px; margin-bottom: 25px; page-break-inside: avoid; }
-        .plinth-card { flex: 1; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; background: #fff; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02);}
-        .plinth-card h4 { margin: 0 0 12px 0; color: #0f172a; font-size: 0.9em; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px;}
-        .plinth-diagram { height: 90px; width: 100%; display: flex; justify-content: space-evenly; align-items: center; border: 1px solid #cbd5e1; background: #f8fafc; padding: 10px; margin-bottom: 12px; position: relative; border-radius: 4px;}
+        .plinth-wrapper { display: flex; gap: 15px; page-break-inside: avoid; }
+        .plinth-card { flex: 1; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; background: #f8fafc; text-align: center; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);}
+        .plinth-card h4 { margin: 0 0 12px 0; color: #0f172a; font-size: 0.85em; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px;}
+        .plinth-diagram { height: 90px; width: 100%; display: flex; justify-content: space-evenly; align-items: center; border: 1px solid #cbd5e1; background: #fff; padding: 10px; margin-bottom: 12px; position: relative; border-radius: 4px;}
         .concrete-beam { background: repeating-linear-gradient(45deg, #cbd5e1, #cbd5e1 4px, #94a3b8 4px, #94a3b8 8px); height: 100%; width: 16px; border: 1px solid #475569; border-radius: 2px;}
         .grid-beam-h { width: 100%; height: 16px; background: repeating-linear-gradient(45deg, #cbd5e1, #cbd5e1 4px, #94a3b8 4px, #94a3b8 8px); position: absolute; border: 1px solid #475569; top: 50%; transform: translateY(-50%); border-radius: 2px;}
 
@@ -123,6 +128,8 @@
             .no-print { display: none !important; }
             .print-only { display: block; }
             .container { box-shadow: none; max-width: 100%; padding: 0; border: none; }
+            .module-card { border: none; padding: 0; margin: 0; box-shadow: none; }
+            .card-header { display: none; }
             
             /* ------------------------------------------------ */
             /* MODE 1: INTERNAL PRINT (Shows full BOM and Cost) */
@@ -144,8 +151,6 @@
             body.print-internal .meta-item { font-size: 8.5pt; margin-bottom: 5px; display: flex; }
             body.print-internal .meta-label { font-weight: 700; color: #64748b; width: 90px; text-transform: uppercase;}
             body.print-internal .meta-value { font-weight: 700; color: #0f172a; }
-
-            body.print-internal .section-title { margin-top: 15px !important; margin-bottom: 10px !important; background: transparent !important; border-left: none !important; border-bottom: 2px solid #0f172a !important; padding: 0 0 4px 0 !important; color: #0f172a !important; font-size: 11pt !important; text-transform: uppercase; letter-spacing: 1px; font-weight: 800;}
             
             body.print-internal table { font-size: 8pt; margin-bottom: 15px; border-collapse: collapse; width: 100%; border: 1px solid #cbd5e1; border-radius: 0;}
             body.print-internal tr { border-bottom: 1px solid #e2e8f0; page-break-inside: avoid; }
@@ -160,11 +165,11 @@
             body.print-internal input, body.print-internal .desc-input, body.print-internal .bom-inline-select { border: none !important; background: transparent !important; color: #0f172a !important; box-shadow: none !important; font-weight: 600; padding: 0 !important; font-size: inherit; appearance: none; -webkit-appearance: none; width: auto;}
             body.print-internal .bom-inline-select { margin-left: 4px; color: #475569 !important; font-weight: 700;}
             
-            body.print-internal .summary-box { background: #f8fafc !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 4px; padding: 10px 15px !important; margin-top: 5px; width: 260px; float: right; page-break-inside: avoid; box-shadow: none;}
+            body.print-internal .summary-box { background: #f8fafc !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 4px; padding: 10px 15px !important; margin-top: 15px; width: 260px; float: right; page-break-inside: avoid; box-shadow: none;}
             body.print-internal .sum-row { border-bottom: 1px solid #cbd5e1 !important; margin-bottom: 5px; padding-bottom: 3px; color: #334155 !important; font-size: 8pt; font-weight: 700;}
             body.print-internal .sum-row.total { background: #0f172a !important; color: #ffffff !important; border: none !important; padding: 8px !important; font-size: 11pt; margin: 8px -15px -10px -15px; border-radius: 0 0 2px 2px;}
             
-            body.print-internal .visual-container { max-width: 100%; display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin: 0 auto 15px auto; page-break-inside: avoid; clear: both;}
+            body.print-internal .visual-container { max-width: 100%; display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin: 20px auto 15px auto; page-break-inside: avoid; clear: both;}
             body.print-internal .view-box { padding: 5px; border: 1px solid #cbd5e1 !important; background: #fff !important; border-radius: 4px; }
             body.print-internal .grid-draft { gap: 0.5px; border: 1px solid #0f172a !important; background: #fff !important;}
             body.print-internal .panel { background: #e0f2fe !important; border: 0.5px solid #94a3b8 !important;}
@@ -183,7 +188,7 @@
             body.print-internal .sig-box strong { color: #0f172a; font-size: 9pt; text-transform: uppercase;}
 
             /* ------------------------------------------------ */
-            /* MODE 2: CUSTOMER PRINT (EXACT ELCO FORMAT)       */
+            /* MODE 2: CUSTOMER PRINT (2-Page Formal Letter)    */
             /* ------------------------------------------------ */
             body.print-customer #mainContent { display: none !important; }
             body.print-customer #customerPrintView { display: block !important; }
@@ -213,10 +218,15 @@
             .cp-table .td-center { text-align: center;}
             .cp-table .td-right { text-align: right;}
             
-            /* Exact Exclusions Layout */
+            /* Customer T&C Blocks */
             .cp-short-exclusions { display: flex; align-items: stretch; margin-bottom: 20px; font-size: 8pt; line-height: 1.4; border: 1px solid #000;}
             .cp-short-exclusions .label { background: #d1d5db !important; color: #000; padding: 8px 10px; font-weight: bold; border-right: 1px solid #000; -webkit-print-color-adjust: exact; width: 100px; text-align: center; display: flex; align-items: center; justify-content: center;}
             .cp-short-exclusions .content { padding: 8px 12px; background: #fff; flex: 1;}
+
+            /* Force page break for full terms */
+            .page-break-section { page-break-before: always; padding-top: 10px; }
+            
+            .cp-full-terms { font-size: 8.5pt; line-height: 1.5; white-space: pre-wrap; margin-bottom: 30px; color: #000;}
 
             .cp-tnc { font-size: 8.5pt; margin-bottom: 30px; page-break-inside: avoid;}
             .cp-tnc-title { font-weight: bold; text-decoration: underline; margin-bottom: 5px; font-size: 9pt;}
@@ -227,10 +237,6 @@
             .cp-signoff { display: flex; justify-content: space-between; margin-top: 15px; page-break-inside: avoid;}
             .cp-signoff-left { width: 50%; }
             .cp-signoff-left p { margin: 2px 0; font-size: 9pt;}
-            
-            /* Page Break for long terms */
-            .page-break-section { page-break-before: always; padding-top: 10px; }
-            .cp-full-terms { font-size: 8.5pt; line-height: 1.5; white-space: pre-wrap; margin-bottom: 30px; color: #000;}
         }
     </style>
 </head>
@@ -325,86 +331,82 @@
 
         <div class="app-layout">
             <div class="col-left">
-                <div class="section-title no-print" style="margin-top:0;">1. Project Details</div>
-                <div class="config-grid no-print" style="margin-bottom: 15px;">
+                
+                <div class="module-card no-print">
+                    <div class="card-header"><span>📋</span> 1. Project & Client Info</div>
+                    <div class="config-grid">
+                        <div class="form-group"><label>Quote Ref Number</label><input type="text" id="quoteIdInput" placeholder="e.g. QP-26-008" oninput="syncPrintHeader(); savePrices();"></div>
+                        <div class="form-group"><label>Project Name (Req. for Saving)</label><input type="text" id="projectName" placeholder="e.g. Conod (Bukit Minyak)" oninput="syncPrintHeader(); savePrices();"></div>
+                        <div class="form-group"><label>Customer Company</label><input type="text" id="custCompany" placeholder="e.g. ELCO Advance Engineering" oninput="syncPrintHeader(); savePrices();"></div>
+                        <div class="form-group"><label>Attention (Person)</label><input type="text" id="custAttn" placeholder="e.g. Ms. Gooi" oninput="syncPrintHeader(); savePrices();"></div>
+                        <div class="form-group" style="grid-column: span 2;"><label>Customer Address</label><textarea id="custAddr" rows="2" placeholder="Street, City, Zip" oninput="syncPrintHeader(); savePrices();"></textarea></div>
+                    </div>
+                </div>
+
+                <div class="module-card no-print">
+                    <div class="card-header"><span>📐</span> 2. Tank Engineering & Dimensions</div>
+                    <div class="config-grid">
+                        <div class="form-group"><label>Standard</label><select id="stdChoice" onchange="savePrices(); processTankData();"><option>SANS 10329:2020 Approved by SIRIM & SPAN</option><option>SS 22: 1979</option><option>Other</option></select></div>
+                        <div class="form-group"><label>Unit System</label><select id="unitChoice" onchange="updateLabels(); savePrices(); processTankData();"><option value="ft">Imperial (4'x4')</option><option value="m">Metric (1mx1m)</option></select></div>
+                        <div class="form-group"><label>Tank Material / Finish</label><select id="coatChoice" onchange="savePrices(); processTankData();"><option>Hot Dipped Galvanised</option><option>Painted Steel</option><option>Stainless Steel (SS 304)</option><option>Stainless Steel (SS 316)</option></select></div>
+                        <div class="form-group"><label>Partition Wall</label><select id="partChoice" onchange="togglePartitionDetails(); processTankData();"><option value="no">No Partition</option><option value="yes">Yes (Internal Wall)</option></select></div>
+                    </div>
+
+                    <div id="partitionDetailsRow" style="display: none; background: #fff7ed; padding: 15px; border: 1px dashed #fdba74; border-radius: 8px; margin-bottom: 15px;">
+                        <div style="display:flex; gap:15px;">
+                            <div class="form-group" style="flex:0.6;"><label>Part. Qty</label><input type="number" id="partQty" value="0" min="0" oninput="processTankData(); savePrices();"></div>
+                            <div class="form-group" style="flex:1;"><label>Part. L/W (<span class="unitLabel">Ft</span>)</label><input type="number" id="partLen" value="0" oninput="processTankData(); savePrices();"></div>
+                            <div class="form-group" style="flex:1;"><label>Part. Height (<span class="unitLabel">Ft</span>)</label><input type="number" id="partHgt" value="0" oninput="processTankData(); savePrices();"></div>
+                            <div class="form-group" style="flex:2;"><label>Partition Type</label><input type="text" id="partType" placeholder="e.g. Standard Divider" oninput="processTankData(); savePrices();"></div>
+                        </div>
+                    </div>
+
+                    <div class="dim-grid">
+                        <div class="form-group"><label>Tank Length</label><input type="number" id="length" value="12" oninput="processTankData(); savePrices();"></div>
+                        <div class="form-group"><label>Tank Width</label><input type="number" id="width" value="4" oninput="processTankData(); savePrices();"></div>
+                        <div class="form-group"><label>Tank Height</label><input type="number" id="height" value="4" oninput="processTankData(); savePrices();"></div>
+                    </div>
+                    
+                    <div class="dim-grid" style="background: #f8fafc; padding:15px; border-radius:6px; border:1px solid #e2e8f0; margin-bottom: 15px;">
+                        <div class="form-group"><label>Roof Thick.</label><input type="text" id="thickRoof" value="1.5mm" oninput="syncPrintHeader(); savePrices();"></div>
+                        <div class="form-group"><label>Wall Thick.</label><input type="text" id="thickWall" value="4.5mm" oninput="syncPrintHeader(); savePrices();"></div>
+                        <div class="form-group"><label>Base Thick.</label><input type="text" id="thickBase" value="4.5mm" oninput="syncPrintHeader(); savePrices();"></div>
+                    </div>
+
+                    <button class="action-btn" onclick="processTankData()" style="width:100%; background: #0f172a; margin-top: 10px;">⚙️ Calculate Internal BOM</button>
+                </div>
+                
+                <div class="module-card no-print">
+                    <div class="card-header"><span>💰</span> 3. Commercial Terms & Formatting</div>
+                    
+                    <div class="config-grid">
+                        <div class="form-group"><label>Discount (%)</label><input type="number" id="discountPct" value="0" oninput="calcTotals(); savePrices();"></div>
+                        <div class="form-group"><label>SST Tax (%)</label><input type="number" id="sstPct" value="5" oninput="calcTotals(); savePrices();"></div>
+                    </div>
+
+                    <div class="config-grid" style="background: #f8fafc; padding:15px; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:15px;">
+                        <div class="form-group" style="grid-column: span 2;"><label>Quotation Validity</label><input type="text" id="tcValidity" value="14 Days from the date of quotation, subject to stock availability and our confirmation." oninput="syncPrintHeader(); savePrices();"></div>
+                        <div class="form-group" style="grid-column: span 2;"><label>Delivery Lead-time</label><input type="text" id="tcLead" value="6 - 10 weeks from official confirmation order, non-refundable down payment received and all technical details in good order. (NO Retention sump and LAD will be entertained)" oninput="syncPrintHeader(); savePrices();"></div>
+                        <div class="form-group" style="grid-column: span 2;"><label>Delivery Location</label><input type="text" id="tcDelivery" value="Deliver to site exclude unloading, materials handling at site and hoisting." oninput="syncPrintHeader(); savePrices();"></div>
+                        <div class="form-group" style="grid-column: span 2;"><label>Payment Terms (Each line gets underlined on PDF)</label><textarea id="tcPayment" rows="3" oninput="syncPrintHeader(); savePrices();">30% down payment upon confirmation of order
+50% payment before delivery
+20% after testing and commissioning (no retention)</textarea></div>
+                        <div class="form-group"><label>Sign-off Name</label><input type="text" id="signName" value="LEE JL" oninput="syncPrintHeader(); savePrices();"></div>
+                        <div class="form-group"><label>Sign-off Phone</label><input type="text" id="signPhone" value="019-2215558" oninput="syncPrintHeader(); savePrices();"></div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label>Short Exclusions (Prints in Box on Page 1)</label>
+                        <textarea id="shortExclusions" rows="5" oninput="syncPrintHeader(); savePrices();">- Float valve chamber or top sumps
+- Flanges, nozzles, pipes, vortex, valves, electrode sensor, pumps and filter.
+- Scaffolding
+- Unloading and hoisting of materials.
+- HIRARC, permit application, medical test and site safety supervisor.</textarea>
+                    </div>
+                    
                     <div class="form-group">
-                        <label>Quote Ref Number</label>
-                        <input type="text" id="quoteIdInput" placeholder="e.g. QP-26-008" style="text-align: left;" oninput="syncPrintHeader(); savePrices();">
-                    </div>
-                    <div class="form-group">
-                        <label>Project Name (Required for Saving)</label>
-                        <input type="text" id="projectName" placeholder="e.g. Conod (Bukit Minyak)" style="text-align: left;" oninput="syncPrintHeader(); savePrices();">
-                    </div>
-                </div>
-                
-                <div class="config-grid no-print">
-                    <div class="form-group"><label>Standard</label>
-                        <select id="stdChoice" onchange="savePrices(); processTankData();"><option>SANS 10329:2020 Approved by SIRIM & SPAN</option><option>SS 22: 1979</option><option>Other</option></select>
-                    </div>
-                    <div class="form-group"><label>Unit System</label>
-                        <select id="unitChoice" onchange="updateLabels(); savePrices(); processTankData();"><option value="ft">Imperial (4'x4')</option><option value="m">Metric (1mx1m)</option></select>
-                    </div>
-                    <div class="form-group" style="grid-column: span 2;"><label>Tank Material / Finish</label>
-                        <select id="coatChoice" onchange="savePrices(); processTankData();">
-                            <option>Hot Dipped Galvanised</option>
-                            <option>Painted Steel</option>
-                            <option>Stainless Steel (SS 304)</option>
-                            <option>Stainless Steel (SS 316)</option>
-                        </select>
-                    </div>
-                    <div class="form-group"><label>Partition Wall</label>
-                        <select id="partChoice" onchange="togglePartitionDetails(); processTankData();">
-                            <option value="no">No Partition</option>
-                            <option value="yes">Yes (Internal Wall)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="config-grid no-print" id="partitionDetailsRow" style="display: none; margin-top:-5px;">
-                    <div style="display:flex; gap:15px; grid-column: span 2; background: #fff7ed; padding: 15px; border: 1px dashed #fdba74; border-radius: 8px;">
-                        <div class="form-group" style="flex:0.6;"><label>Part. Qty</label><input type="number" id="partQty" value="0" min="0" oninput="processTankData(); savePrices();"></div>
-                        <div class="form-group" style="flex:1;"><label>Part. L/W (<span class="unitLabel">Ft</span>)</label><input type="number" id="partLen" value="0" oninput="processTankData(); savePrices();"></div>
-                        <div class="form-group" style="flex:1;"><label>Part. Height (<span class="unitLabel">Ft</span>)</label><input type="number" id="partHgt" value="0" oninput="processTankData(); savePrices();"></div>
-                        <div class="form-group" style="flex:2;"><label>Partition Type</label><input type="text" id="partType" placeholder="e.g. Standard Divider" oninput="processTankData(); savePrices();"></div>
-                    </div>
-                </div>
-
-                <div class="section-title no-print">2. Tank Dimensions (<span class="unitLabel">Ft</span>)</div>
-                <div class="dim-grid no-print" style="margin-bottom: 10px;">
-                    <div class="form-group"><label>Tank Length</label><input type="number" id="length" value="12" oninput="processTankData(); savePrices();"></div>
-                    <div class="form-group"><label>Tank Width</label><input type="number" id="width" value="4" oninput="processTankData(); savePrices();"></div>
-                    <div class="form-group"><label>Tank Height</label><input type="number" id="height" value="4" oninput="processTankData(); savePrices();"></div>
-                </div>
-                <div class="dim-grid no-print" style="margin-bottom: 20px; background: #f8fafc; padding:10px; border-radius:6px; border:1px solid #e2e8f0;">
-                    <div class="form-group"><label>Roof Thick.</label><input type="text" id="thickRoof" value="1.5mm" oninput="syncPrintHeader(); savePrices();"></div>
-                    <div class="form-group"><label>Wall Thick.</label><input type="text" id="thickWall" value="4.5mm" oninput="syncPrintHeader(); savePrices();"></div>
-                    <div class="form-group"><label>Base Thick.</label><input type="text" id="thickBase" value="4.5mm" oninput="syncPrintHeader(); savePrices();"></div>
-                </div>
-                
-                <div class="config-grid no-print" style="margin-top:5px;">
-                    <div class="form-group"><label>Discount (%)</label><input type="number" id="discountPct" value="0" oninput="calcTotals(); savePrices();"></div>
-                    <div class="form-group"><label>SST Tax (%)</label><input type="number" id="sstPct" value="5" oninput="calcTotals(); savePrices();"></div>
-                </div>
-
-                <div class="section-title no-print">3. Quotation Formatting (Customer Print)</div>
-                <div class="config-grid no-print" style="margin-bottom: 10px;">
-                    <div class="form-group"><label>Customer Company</label><input type="text" id="custCompany" placeholder="e.g. ELCO Advance Engineering" oninput="syncPrintHeader(); savePrices();"></div>
-                    <div class="form-group"><label>Attention (Person)</label><input type="text" id="custAttn" placeholder="e.g. Ms. Gooi" oninput="syncPrintHeader(); savePrices();"></div>
-                    <div class="form-group" style="grid-column: span 2;"><label>Customer Address</label><textarea id="custAddr" rows="2" placeholder="Street, City, Zip" oninput="syncPrintHeader(); savePrices();"></textarea></div>
-                </div>
-                
-                <div class="form-group no-print" style="margin-bottom: 15px;">
-                    <label>Short Exclusions (Prints in Box on Page 1)</label>
-                    <textarea id="shortExclusions" rows="5" style="text-align:left; font-weight:500; font-size:13px;" oninput="syncPrintHeader(); savePrices();">- Float valve chamber or top sumps
-- Flanges, nozzles, pipes, voltex, valves, electrode sensor, pumps and filter.
-- scaffolding
-- unloading and hoisting of materials.
-- HIRARC, permit application, medical test and site safety supervisor</textarea>
-                </div>
-                
-                <div class="form-group no-print" style="margin-bottom: 15px;">
-                    <label>Full Document T&C (Prints on Page 2)</label>
-                    <textarea id="fullTermsNotes" rows="12" style="text-align:left; font-weight:500; font-size:13px;" oninput="syncPrintHeader(); savePrices();">Scope of Supply
+                        <label>Full Document T&C (Prints on Page 2)</label>
+                        <textarea id="fullTermsNotes" rows="12" oninput="syncPrintHeader(); savePrices();">Scope of Supply
 1. Standard tank accessories such as bolt, nut, washer, foam tape, air vent, 600x600mm access manhole, internal stays & brackets, internal & external ladder, water level indicator, subject to manufacturer's design and standard and item mentioned in quotation.
 2. Pipe hole opening at factory (Exclude flange). Pipe hole opening on site will be an additional charge.
 
@@ -430,130 +432,126 @@ Note:
 8. Additional charges will be imposed for projects with excessive work site requirements. Customer shall pre-empt on all the excessive/additional work site requirements before request for quotation or confirming the order.
 9. Delivery and installation time: Monday to Saturday, 8am to 5pm. Additional charges will be imposed if requested to deliver or install tank out of above working hours or Public Holidays.
 10. Upon PO received, the delivery and installation of tank shall be done within 6 months. Any date extension will be subjected to price revision and storage charges.</textarea>
+                    </div>
                 </div>
 
-                <div class="config-grid no-print" style="margin-bottom: 15px; background: #f8fafc; padding:15px; border-radius:8px; border:1px solid #e2e8f0;">
-                    <div class="form-group"><label>Quotation Validity</label><input type="text" id="tcValidity" value="14 days, subject to ex-stock and our final confirmation" oninput="syncPrintHeader(); savePrices();"></div>
-                    <div class="form-group"><label>Delivery Lead-time</label><input type="text" id="tcLead" value="6 - 10 weeks from date of receive purchase order, payment received and all technical details in good order." oninput="syncPrintHeader(); savePrices();"></div>
-                    <div class="form-group" style="grid-column: span 2;"><label>Delivery Location</label><input type="text" id="tcDelivery" value="Deliver to site, exclude unloading, materials handling at site and hoisting." oninput="syncPrintHeader(); savePrices();"></div>
-                    <div class="form-group" style="grid-column: span 2;"><label>Payment Terms</label><textarea id="tcPayment" rows="3" oninput="syncPrintHeader(); savePrices();">30% down payment upon confirmation of order
-50% payment before delivery
-20% after testing and commissioning (no retention)</textarea></div>
-                    <div class="form-group"><label>Sign-off Name</label><input type="text" id="signName" value="LEE JL" oninput="syncPrintHeader(); savePrices();"></div>
-                    <div class="form-group"><label>Sign-off Phone</label><input type="text" id="signPhone" value="019-2215558" oninput="syncPrintHeader(); savePrices();"></div>
+                <div class="module-card no-print">
+                    <div class="card-header">
+                        <div><span>⚙️</span> 4. Internal Bill of Materials</div>
+                        <button class="reset-btn" onclick="resetDefaultPrices()">↺ Reset Defaults</button>
+                    </div>
+                    <table id="bomTable">
+                        <thead><tr>
+                            <th class="col-item text-left">Item Description</th>
+                            <th class="col-qty text-center">Qty</th>
+                            <th class="col-wt text-center">Wt (kg)</th>
+                            <th class="col-uprice text-right">Unit Price</th>
+                            <th class="col-itotal text-right">Total</th>
+                        </tr></thead>
+                        <tbody id="bomBody"></tbody>
+                    </table>
                 </div>
 
-
-                <button class="action-btn no-print" onclick="processTankData()" style="margin-top: 25px; background: #0f172a;">⚙️ Calculate Internal BOM</button>
-
-                <div class="section-title">
-                    4. Internal Bill of Materials
-                    <button class="reset-btn no-print" onclick="resetDefaultPrices()">↺ Reset Defaults</button>
-                </div>
-                
-                <table id="bomTable">
-                    <thead><tr>
-                        <th class="col-item text-left">Item Description</th>
-                        <th class="col-qty text-center">Qty</th>
-                        <th class="col-wt text-center">Wt (kg)</th>
-                        <th class="col-uprice text-right">Unit Price</th>
-                        <th class="col-itotal text-right">Total</th>
-                    </tr></thead>
-                    <tbody id="bomBody"></tbody>
-                </table>
             </div>
 
             <div class="col-right">
                 
-                <div class="summary-box no-print">
-                    <div class="sum-row"><span>Standard:</span> <span id="sumStd">-</span></div>
-                    <div class="sum-row"><span>Units:</span> <span id="sumUnit">-</span></div>
-                    <div class="sum-row"><span>Material:</span> <span id="sumCoat">-</span></div>
-                    <div class="sum-row"><span>Partition:</span> <span id="sumPart">-</span></div>
-                    <div class="sum-row" style="color:#fdba74; font-weight:700;"><span>Est. Total Weight:</span> <span id="sumWeight_screen">0 kg</span></div>
-                    <hr style="border: 1px solid rgba(255,255,255,0.15); margin: 15px 0;">
-                    <div class="sum-row"><span>Subtotal:</span> <span>RM <span id="sumSubtotal_screen">0.00</span></span></div>
-                    <div class="sum-row"><span>Discount:</span> <span style="color: #fbbf24;">- RM <span id="sumDiscount_screen">0.00</span></span></div>
-                    <div class="sum-row"><span>SST Tax:</span> <span>+ RM <span id="sumSST_screen">0.00</span></span></div>
-                    <div class="sum-row total"><span>GRAND TOTAL:</span> <span>RM <span id="grandTotal_screen">0.00</span></span></div>
-                </div>
-
-                <div class="clearfix print-only" id="internalPrintFooter">
-                    <div class="summary-box">
-                        <div class="sum-row" id="sumWeight_print_row"><span id="sumWeight_print_label">Est. Total Wt:</span> <span style="font-weight:800; color:#0f172a;" id="sumWeight_print">0 kg</span></div>
-                        <div class="sum-row" id="sumSubtotal_print_row"><span>Subtotal:</span> <span>RM <span id="sumSubtotal_print">0.00</span></span></div>
-                        <div class="sum-row" id="sumDiscount_print_row"><span>Discount:</span> <span style="color: #b91c1c;">- RM <span id="sumDiscount_print">0.00</span></span></div>
-                        <div class="sum-row" id="sumSST_print_row"><span>SST Tax:</span> <span>+ RM <span id="sumSST_print">0.00</span></span></div>
-                        <div class="sum-row total"><span>GRAND TOTAL:</span> <span style="float:right;">RM <span id="grandTotal_print">0.00</span></span></div>
+                <div style="position: sticky; top: 20px;">
+                    <div class="summary-box no-print">
+                        <div class="sum-row"><span>Standard:</span> <span id="sumStd">-</span></div>
+                        <div class="sum-row"><span>Units:</span> <span id="sumUnit">-</span></div>
+                        <div class="sum-row"><span>Material:</span> <span id="sumCoat">-</span></div>
+                        <div class="sum-row"><span>Partition:</span> <span id="sumPart">-</span></div>
+                        <div class="sum-row" style="color:#fdba74; font-weight:700;"><span>Est. Total Weight:</span> <span id="sumWeight_screen">0 kg</span></div>
+                        <hr style="border: 1px solid rgba(255,255,255,0.15); margin: 15px 0;">
+                        <div class="sum-row"><span>Subtotal:</span> <span>RM <span id="sumSubtotal_screen">0.00</span></span></div>
+                        <div class="sum-row"><span>Discount:</span> <span style="color: #fbbf24;">- RM <span id="sumDiscount_screen">0.00</span></span></div>
+                        <div class="sum-row"><span>SST Tax:</span> <span>+ RM <span id="sumSST_screen">0.00</span></span></div>
+                        <div class="sum-row total"><span>GRAND TOTAL:</span> <span>RM <span id="grandTotal_screen">0.00</span></span></div>
                     </div>
-                </div>
 
-                <div class="section-title" style="margin-top:0;">Assembly Draft (Auto-calculated: <span id="totalPanelsCount" style="color:#ea580c;">0</span> panels)</div>
-                <div class="visual-container" id="visualsArea">
-                    <div class="view-box"><div class="view-title">Top</div><div id="topGrid" class="grid-draft"></div></div>
-                    <div class="view-box"><div class="view-title">Front</div><div id="frontGrid" class="grid-draft"></div></div>
-                    <div class="view-box"><div class="view-title">Left</div><div id="leftGrid" class="grid-draft"></div></div>
-                    <div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid" class="grid-draft"></div></div>
-                    <div class="view-box"><div class="view-title">Back</div><div id="backGrid" class="grid-draft"></div></div>
-                    <div class="view-box"><div class="view-title">Right</div><div id="rightGrid" class="grid-draft"></div></div>
-                </div>
-
-                <div class="section-title">Foundation Requirements (Concrete Plinths)</div>
-                
-                <div class="form-group no-print" style="margin-bottom: 15px;">
-                    <div style="padding: 12px; background: #fff7ed; border: 1px dashed #ea580c; border-radius: 6px; font-weight: 700; color: #ea580c; font-size: 0.9em; text-align: center;" id="plinthCalcText">
-                        Loading Recommendation...
+                    <div class="btn-group no-print" style="margin-bottom: 25px;">
+                        <button class="action-btn export-btn" onclick="exportCSV()">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2-2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            Export
+                        </button>
+                        <button class="action-btn print-btn" style="background: #334155;" onclick="printInternal()">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                            Internal
+                        </button>
+                        <button class="action-btn print-btn" onclick="printCustomer()">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                            Customer
+                        </button>
                     </div>
-                </div>
 
-                <div class="plinth-wrapper">
-                    <div class="plinth-card">
-                        <h4>Type A (Parallel)</h4>
-                        <div class="plinth-diagram">
-                            <div class="concrete-beam"></div>
-                            <div class="concrete-beam"></div>
-                            <div class="concrete-beam"></div>
-                            <div class="concrete-beam"></div>
+                    <div class="module-card no-print">
+                        <div class="card-header" style="font-size: 1em;">Assembly Draft (Auto: <span id="totalPanelsCount" style="color:#ea580c; margin-left:4px;">0</span> panels)</div>
+                        <div class="visual-container" id="visualsArea">
+                            <div class="view-box"><div class="view-title">Top</div><div id="topGrid" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Front</div><div id="frontGrid" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Left</div><div id="leftGrid" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Back</div><div id="backGrid" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Right</div><div id="rightGrid" class="grid-draft"></div></div>
                         </div>
-                        <p style="font-size: 0.75em; color: #475569; margin:0; font-weight: 500;" id="plinthAText">Standard continuous beams spaced at 1000mm C/C.</p>
                     </div>
-                    <div class="plinth-card">
-                        <h4>Type B (Grid)</h4>
-                        <div class="plinth-diagram">
-                            <div class="concrete-beam"></div>
-                            <div class="concrete-beam"></div>
-                            <div class="concrete-beam"></div>
-                            <div class="concrete-beam"></div>
-                            <div class="grid-beam-h"></div>
-                        </div>
-                        <p style="font-size: 0.75em; color: #475569; margin:0; font-weight: 500;" id="plinthBText">Cross-braced grid foundation for elevated slabs.</p>
-                    </div>
-                </div>
 
-                <div class="btn-group no-print" style="margin-top: 30px;">
-                    <button class="action-btn export-btn" onclick="exportCSV()">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2-2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                        Download Excel (CSV)
-                    </button>
-                </div>
-                <div class="btn-group no-print">
-                    <button class="action-btn print-btn" style="background: #334155;" onclick="printInternal()">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                        Print Internal
-                    </button>
-                    <button class="action-btn print-btn" onclick="printCustomer()">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                        Print Customer
-                    </button>
-                </div>
-            </div>
+                    <div class="module-card no-print" style="margin-bottom:0;">
+                        <div class="card-header" style="font-size: 1em;">Foundation Requirements</div>
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <div style="padding: 12px; background: #fff7ed; border: 1px dashed #ea580c; border-radius: 6px; font-weight: 700; color: #ea580c; font-size: 0.9em; text-align: center;" id="plinthCalcText">
+                                Loading Recommendation...
+                            </div>
+                        </div>
+                        <div class="plinth-wrapper" style="margin-bottom:0;">
+                            <div class="plinth-card">
+                                <h4>Type A (Parallel)</h4>
+                                <div class="plinth-diagram">
+                                    <div class="concrete-beam"></div>
+                                    <div class="concrete-beam"></div>
+                                    <div class="concrete-beam"></div>
+                                    <div class="concrete-beam"></div>
+                                </div>
+                                <p style="font-size: 0.75em; color: #475569; margin:0; font-weight: 500;" id="plinthAText">Standard continuous beams spaced at 1000mm C/C.</p>
+                            </div>
+                            <div class="plinth-card">
+                                <h4>Type B (Grid)</h4>
+                                <div class="plinth-diagram">
+                                    <div class="concrete-beam"></div>
+                                    <div class="concrete-beam"></div>
+                                    <div class="concrete-beam"></div>
+                                    <div class="concrete-beam"></div>
+                                    <div class="grid-beam-h"></div>
+                                </div>
+                                <p style="font-size: 0.75em; color: #475569; margin:0; font-weight: 500;" id="plinthBText">Cross-braced grid foundation for elevated slabs.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div> </div>
         </div>
 
-        <div class="print-footer print-only" id="internalSig">
-            <div class="sig-box">
-                <p>Issued By:</p>
-                <div class="sig-line"></div>
-                <p><strong>JUTARAMA INDUSTRIES (M) SDN BHD</strong></p>
+        <div class="clearfix print-only" id="internalPrintFooter">
+            <div class="summary-box">
+                <div class="sum-row" id="sumWeight_print_row"><span id="sumWeight_print_label">Est. Total Wt:</span> <span style="font-weight:800; color:#0f172a;" id="sumWeight_print">0 kg</span></div>
+                <div class="sum-row" id="sumSubtotal_print_row"><span>Subtotal:</span> <span>RM <span id="sumSubtotal_print">0.00</span></span></div>
+                <div class="sum-row" id="sumDiscount_print_row"><span>Discount:</span> <span style="color: #b91c1c;">- RM <span id="sumDiscount_print">0.00</span></span></div>
+                <div class="sum-row" id="sumSST_print_row"><span>SST Tax:</span> <span>+ RM <span id="sumSST_print">0.00</span></span></div>
+                <div class="sum-row total"><span>GRAND TOTAL:</span> <span style="float:right;">RM <span id="grandTotal_print">0.00</span></span></div>
+            </div>
+            
+            <div class="visual-container" style="margin-top:20px;">
+                <div class="view-box"><div class="view-title">Top</div><div id="topGrid_p" class="grid-draft"></div></div>
+                <div class="view-box"><div class="view-title">Front</div><div id="frontGrid_p" class="grid-draft"></div></div>
+                <div class="view-box"><div class="view-title">Left</div><div id="leftGrid_p" class="grid-draft"></div></div>
+            </div>
+            
+            <div class="print-footer" id="internalSig">
+                <div class="sig-box">
+                    <p>Issued By:</p>
+                    <div class="sig-line"></div>
+                    <p><strong>JUTARAMA INDUSTRIES (M) SDN BHD</strong></p>
+                </div>
             </div>
         </div>
     </div>
@@ -721,14 +719,20 @@ Note:
         }
     }
 
-    // --- PRINT TOGGLE LOGIC (FIXED) ---
+    // --- PRINT TOGGLE LOGIC ---
     function printInternal() {
         try {
             document.body.className = 'print-internal';
             syncPrintHeader();
-            setTimeout(() => {
-                window.print();
-            }, 200);
+            // Duplicate visuals for internal print footer
+            document.getElementById('topGrid_p').innerHTML = document.getElementById('topGrid').innerHTML;
+            document.getElementById('topGrid_p').style.gridTemplateColumns = document.getElementById('topGrid').style.gridTemplateColumns;
+            document.getElementById('frontGrid_p').innerHTML = document.getElementById('frontGrid').innerHTML;
+            document.getElementById('frontGrid_p').style.gridTemplateColumns = document.getElementById('frontGrid').style.gridTemplateColumns;
+            document.getElementById('leftGrid_p').innerHTML = document.getElementById('leftGrid').innerHTML;
+            document.getElementById('leftGrid_p').style.gridTemplateColumns = document.getElementById('leftGrid').style.gridTemplateColumns;
+            
+            setTimeout(() => { window.print(); }, 300);
         } catch(e) { alert("Internal Print Error: " + e.message); }
     }
     
@@ -736,16 +740,11 @@ Note:
         try {
             document.body.className = 'print-customer';
             syncPrintHeader(); 
-            setTimeout(() => {
-                window.print();
-            }, 200);
+            setTimeout(() => { window.print(); }, 300);
         } catch(e) { alert("Customer Print Error: " + e.message); }
     }
 
-    // Reset view after browser print dialog closes
-    window.addEventListener('afterprint', () => {
-        document.body.className = '';
-    });
+    window.addEventListener('afterprint', () => { document.body.className = ''; });
 
     // --- TIME & UI LOGIC ---
     function updateClock() {
@@ -766,19 +765,11 @@ Note:
     function togglePartitionDetails() {
         const partChoice = document.getElementById('partChoice').value;
         const detailsRow = document.getElementById('partitionDetailsRow');
-        
-        if(partChoice === 'yes') {
-            detailsRow.style.display = 'grid';
-        } else {
-            detailsRow.style.display = 'none';
-            document.getElementById('partQty').value = 0;
-            document.getElementById('partLen').value = 0;
-            document.getElementById('partHgt').value = 0;
-            document.getElementById('partType').value = '';
-        }
+        if(partChoice === 'yes') { detailsRow.style.display = 'flex'; } 
+        else { detailsRow.style.display = 'none'; document.getElementById('partQty').value = 0; }
     }
 
-    // --- FULL BOM STRUCTURE (ADDED DEDICATED PARTITION ROW) ---
+    // --- FULL BOM STRUCTURE ---
     const systemBaseStructure = [
         { category: "Panels", items: [
             {name: "Manhole Panel", def: 450, wt: 45}, 
@@ -960,7 +951,7 @@ Note:
                 });
             });
             
-            processTankData(); // Recalculate everything securely
+            processTankData(); 
         }
     }
 
@@ -980,9 +971,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            
-            // V6 CACHE BUSTER - Clears the old saved memory
-            localStorage.removeItem('winkoProDataV6'); 
+            localStorage.removeItem('winkoProDataV7'); 
             
             document.getElementById('partChoice').value = 'no';
             togglePartitionDetails();
@@ -995,7 +984,7 @@ Note:
         }
     }
 
-    // --- SYNC PRINT METADATA (DEFENSIVE PROGRAMMING) ---
+    // --- SYNC PRINT METADATA ---
     function syncPrintHeader() {
         try {
             // Internal Print Strings
@@ -1020,13 +1009,10 @@ Note:
             let pType = document.getElementById('partType').value || 'Standard';
             
             let partDisplay = 'None';
-            if(partChoice === 'yes' && pQty > 0) { 
-                partDisplay = `${pQty}x ${pType} (${pLen}${u} x ${pHgt}${u})`; 
-            }
-            
+            if(partChoice === 'yes' && pQty > 0) { partDisplay = `${pQty}x ${pType} (${pLen}${u} x ${pHgt}${u})`; }
             document.getElementById('metaPart').innerText = partDisplay;
             
-            // CUSTOMER PRINT SYNC
+            // CUSTOMER PRINT SYNC 
             document.getElementById('cpCustName').innerText = document.getElementById('custCompany').value || document.getElementById('projectName').value || "Client Name";
             document.getElementById('cpCustAddress').innerHTML = (document.getElementById('custAddr').value || '').replace(/\n/g, '<br>');
             document.getElementById('cpAttention').innerText = document.getElementById('custAttn').value || "";
@@ -1037,12 +1023,10 @@ Note:
             document.getElementById('cpDims').innerText = dimsStr;
             document.getElementById('cpStd').innerText = document.getElementById('stdChoice').value || "";
             
-            // Thickness
             document.getElementById('cpThickRoof').innerText = document.getElementById('thickRoof').value || "";
             document.getElementById('cpThickBase').innerText = document.getElementById('thickBase').value || "";
             document.getElementById('cpThickWall').innerText = document.getElementById('thickWall').value || "";
 
-            // Dynamic Partition Injector for Customer Print
             if(partChoice === 'yes' && pQty > 0) {
                 document.getElementById('cpPartRow').style.display = 'table-row';
                 document.getElementById('cpPartSection').innerText = partDisplay;
@@ -1050,10 +1034,8 @@ Note:
                 document.getElementById('cpPartRow').style.display = 'none';
             }
 
-            // Ladders extraction (from standard index 3_0 and 3_1)
             let extLadMat = document.getElementById('extLadMat') ? document.getElementById('extLadMat').value : 'External Ladder';
             let intLadMat = document.getElementById('intLadMat') ? document.getElementById('intLadMat').value : 'Internal Ladder';
-            
             let qtyExt = document.getElementById('qty_item_3_0') ? document.getElementById('qty_item_3_0').value : '0';
             let qtyInt = document.getElementById('qty_item_3_1') ? document.getElementById('qty_item_3_1').value : '0';
 
@@ -1067,9 +1049,8 @@ Note:
             document.getElementById('cpShortExclusionsText').innerHTML = (document.getElementById('shortExclusions').value || '').replace(/\n/g, '<br>');
             document.getElementById('cpFullTermsText').innerHTML = (document.getElementById('fullTermsNotes').value || '');
             
-            document.getElementById('cpValidity').innerText = document.getElementById('tcValidity').value || "";
+            document.getElementById('cpValidity').innerHTML = `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${document.getElementById('tcValidity').value || ""}</span>`;
             
-            // Apply line-by-line underlines for Payment formatting
             let payText = document.getElementById('tcPayment').value || '';
             let formattedPay = payText.split('\n').map(line => {
                 if(line.trim() === '') return '';
@@ -1077,15 +1058,14 @@ Note:
             }).join('');
             document.getElementById('cpPayment').innerHTML = formattedPay;
             
-            document.getElementById('cpDeliveryTerm').innerText = document.getElementById('tcDelivery').value || "";
-            document.getElementById('cpLeadTime').innerText = document.getElementById('tcLead').value || "";
+            document.getElementById('cpDeliveryTerm').innerHTML = `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${document.getElementById('tcDelivery').value || ""}</span>`;
+            document.getElementById('cpLeadTime').innerHTML = `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${document.getElementById('tcLead').value || ""}</span>`;
 
             document.getElementById('cpSignName').innerText = document.getElementById('signName').value || "";
             document.getElementById('cpSignPhone').innerText = document.getElementById('signPhone').value || "";
         } catch(e) { console.log("Sync Print Warning: ", e.message); }
     }
 
-    // --- SAVE / LOAD TEMPORARY BROWSER DATA ---
     function savePrices() {
         let data = {};
         configIDs.forEach(id => { if(document.getElementById(id)) data[id] = document.getElementById(id).value; });
@@ -1100,11 +1080,11 @@ Note:
                 if(it.selectId && document.getElementById(it.selectId)) data[it.selectId] = document.getElementById(it.selectId).value; 
             });
         });
-        localStorage.setItem('winkoProDataV6', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV7', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV6');
+        let savedData = localStorage.getItem('winkoProDataV7');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1128,7 +1108,6 @@ Note:
         }
     }
 
-    // --- BUILD & CALCULATE ---
     function buildBOMTable() {
         const tbody = document.getElementById('bomBody');
         let html = '';
@@ -1145,7 +1124,6 @@ Note:
             
             sec.items.forEach((it, iIdx) => {
                 const id = `item_${sIdx}_${iIdx}`;
-                
                 let nameHtml = `<div style="display:flex; align-items:center; flex-wrap:wrap; gap:4px;">
                                   <input type="text" id="desc_${id}" class="desc-input" value="${it.name}" onchange="savePrices()">`;
                 if(it.selectId) {
@@ -1205,7 +1183,6 @@ Note:
         document.getElementById('sumWeight_screen').innerText = weightStr;
         document.getElementById('sumWeight_print').innerText = weightStr;
 
-        // Sync Customer Print Values
         document.getElementById('cpSstPct').innerText = document.getElementById('sstPct').value || 0;
         document.getElementById('cpSstAmt').innerText = sst.toLocaleString('en-MY', {minimumFractionDigits: 2});
         
@@ -1250,7 +1227,6 @@ Note:
         const pL = Math.ceil(pLen_in / factor);
         const pH = Math.ceil(pHgt_in / factor);
 
-        // Update Dynamic Plinth Text
         const numPlinths = W + 1;
         const plinthLen = L_in;
         document.getElementById('plinthCalcText').innerText = `Recommendation: Require ${numPlinths} rows of concrete plinths, each ${plinthLen}${unitStr} long, spaced at ${spacingStr} C/C.`;
@@ -1284,14 +1260,14 @@ Note:
         if(document.getElementById('qty_item_0_3')) document.getElementById('qty_item_0_3').value = 0; 
         if(document.getElementById('qty_item_0_4')) document.getElementById('qty_item_0_4').value = base; 
         
-        // Populate dedicated Partition row (Item 5)
+        // Explicitly assign Partition panels to their own dedicated BOM row (Item 5 in Category 0)
         if(document.getElementById('qty_item_0_5')) document.getElementById('qty_item_0_5').value = partPanels; 
 
         // Truss
         if(document.getElementById('qty_item_1_3')) document.getElementById('qty_item_1_3').value = L_in; 
         if(document.getElementById('qty_item_1_4')) document.getElementById('qty_item_1_4').value = L_in; 
 
-        // Accessories
+        // Accessories scale with totalP
         if(document.getElementById('qty_item_3_0')) document.getElementById('qty_item_3_0').value = H_in; 
         if(document.getElementById('qty_item_3_1')) document.getElementById('qty_item_3_1').value = H_in; 
         if(document.getElementById('qty_item_3_2')) document.getElementById('qty_item_3_2').value = 1; 
@@ -1303,7 +1279,6 @@ Note:
         if(document.getElementById('qty_item_4_0') && (!document.getElementById('qty_item_4_0').value || document.getElementById('qty_item_4_0').value == "0")) document.getElementById('qty_item_4_0').value = 1;
         if(document.getElementById('qty_item_4_1') && (!document.getElementById('qty_item_4_1').value || document.getElementById('qty_item_4_1').value == "0")) document.getElementById('qty_item_4_1').value = 1;
 
-        // Drawings
         drawGrid('topGrid', L, W); drawGrid('bottomGrid', L, W);
         drawGrid('frontGrid', L, H); drawGrid('backGrid', L, H);
         drawGrid('leftGrid', W, H); drawGrid('rightGrid', W, H);
@@ -1312,7 +1287,6 @@ Note:
         savePrices();
     }
 
-    // --- CSV EXPORT (BUG FIX FOR FIREFOX/CHROME BLOCKING) ---
     function exportCSV() {
         try {
             let csv = "\uFEFFWINKO INDUSTRIAL SDN BHD\n";
@@ -1384,7 +1358,7 @@ Note:
         }
     }
 
-    // Initialize Base Data
+    // Initialize
     applyCustomRows();
     buildBOMTable();
     loadPrices();
