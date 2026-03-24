@@ -76,6 +76,7 @@
         .bom-inline-select { flex: 0 0 auto; max-width: 110px; margin-left: 4px; padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85em; font-weight: 600; color: #ea580c; background: #fff; cursor: pointer; transition: 0.2s;}
         .bom-inline-select:focus { outline: none; border-color: #ea580c; box-shadow: 0 0 0 2px rgba(234,88,12,0.1);}
 
+        /* Floating Premium Summary Box */
         .summary-box { background: linear-gradient(145deg, #0f172a, #1e293b); color: white; padding: 25px; border-radius: 12px; box-shadow: 0 15px 25px -5px rgba(15,23,42,0.3);}
         .sum-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 1em; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; color: #cbd5e1;}
         .sum-row span:last-child { font-weight: 600; color: white;}
@@ -133,6 +134,7 @@
             body.print-internal #mainContent { display: block !important; }
             body.print-internal #customerPrintView { display: none !important; }
 
+            /* Hide all input cards except the BOM table */
             body.print-internal .internal-hide { display: none !important; }
             
             body.print-internal .app-layout { display: block !important; }
@@ -182,9 +184,9 @@
             
             /* --- BULLETPROOF INTERNAL SUMMARY TABLE --- */
             body.print-internal #internalPrintFooter { display: block !important; margin-top: 20px; }
-            body.print-internal .summary-box { background: #fff !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 6px !important; padding: 15px !important; margin-top: 15px !important; width: 320px !important; float: right !important; box-shadow: none !important;}
+            body.print-internal .summary-box { background: #fff !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 6px !important; padding: 15px !important; margin-top: 15px !important; width: 340px !important; float: right !important; box-shadow: none !important;}
             
-            body.print-internal .summary-table { width: 100%; border-collapse: collapse; font-size: 9pt; }
+            body.print-internal .summary-table { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
             body.print-internal .summary-table td { padding: 5px 0; border: none; color: #0f172a; font-weight: 700; }
             body.print-internal .summary-table .border-top td { border-top: 1px solid #cbd5e1 !important; padding-top: 8px; margin-top: 4px; }
             body.print-internal .summary-table .border-bottom td { border-bottom: 1px solid #cbd5e1 !important; padding-bottom: 8px; margin-bottom: 4px; }
@@ -395,7 +397,8 @@
                 <div class="module-card internal-hide no-print">
                     <div class="card-header"><span>💰</span> 3. Commercial Terms & Formatting</div>
                     
-                    <div class="config-grid">
+                    <div class="dim-grid">
+                        <div class="form-group"><label>Mark-Up (%)</label><input type="number" id="markupPct" value="0" oninput="calcTotals(); savePrices();"></div>
                         <div class="form-group"><label>Discount (%)</label><input type="number" id="discountPct" value="0" oninput="calcTotals(); savePrices();"></div>
                         <div class="form-group"><label>SST Tax (%)</label><input type="number" id="sstPct" value="5" oninput="calcTotals(); savePrices();"></div>
                     </div>
@@ -461,8 +464,8 @@ Note:
                             <th class="col-item text-left">Item Description</th>
                             <th class="col-qty text-center">Qty</th>
                             <th class="col-wt text-center">Wt (kg)</th>
-                            <th class="col-uprice text-right">Unit Price</th>
-                            <th class="col-itotal text-right">Total</th>
+                            <th class="col-uprice text-right">Unit Cost</th>
+                            <th class="col-itotal text-right">Total Cost</th>
                         </tr></thead>
                         <tbody id="bomBody"></tbody>
                     </table>
@@ -481,7 +484,9 @@ Note:
                         <div class="sum-row" style="color:#38bdf8; font-weight:700;"><span>Est. Capacity:</span> <span id="sumCapacity_screen">0 L</span></div>
                         <div class="sum-row" style="color:#fdba74; font-weight:700;"><span>Est. Total Weight:</span> <span id="sumWeight_screen">0 kg</span></div>
                         <hr style="border: 1px solid rgba(255,255,255,0.15); margin: 15px 0;">
-                        <div class="sum-row"><span>Subtotal:</span> <span>RM <span id="sumSubtotal_screen">0.00</span></span></div>
+                        <div class="sum-row"><span>Base Cost:</span> <span>RM <span id="sumBaseCost_screen">0.00</span></span></div>
+                        <div class="sum-row" style="color: #34d399;"><span>Mark-Up:</span> <span>+ RM <span id="sumMarkup_screen">0.00</span></span></div>
+                        <div class="sum-row" style="font-weight:700;"><span>Gross Subtotal:</span> <span>RM <span id="sumSubtotal_screen">0.00</span></span></div>
                         <div class="sum-row"><span>Discount:</span> <span style="color: #fbbf24;">- RM <span id="sumDiscount_screen">0.00</span></span></div>
                         <div class="sum-row"><span>SST Tax:</span> <span>+ RM <span id="sumSST_screen">0.00</span></span></div>
                         <div class="sum-row total"><span>GRAND TOTAL:</span> <span>RM <span id="grandTotal_screen">0.00</span></span></div>
@@ -522,7 +527,9 @@ Note:
                 <table class="summary-table">
                     <tr><td style="text-align:left;">Est. Capacity:</td><td style="text-align:right;" id="sumCapacity_print">0 L</td></tr>
                     <tr><td style="text-align:left;">Est. Total Wt:</td><td style="text-align:right;" id="sumWeight_print">0 kg</td></tr>
-                    <tr class="border-top"><td style="text-align:left;">Subtotal:</td><td style="text-align:right;">RM <span id="sumSubtotal_print">0.00</span></td></tr>
+                    <tr class="border-top"><td style="text-align:left;">Base Cost:</td><td style="text-align:right;">RM <span id="sumBaseCost_print">0.00</span></td></tr>
+                    <tr><td style="text-align:left;">Mark-Up:</td><td style="text-align:right; color:#059669;">+ RM <span id="sumMarkup_print">0.00</span></td></tr>
+                    <tr><td style="text-align:left;">Gross Subtotal:</td><td style="text-align:right; font-weight:800;">RM <span id="sumSubtotal_print">0.00</span></td></tr>
                     <tr><td style="text-align:left;">Discount:</td><td style="text-align:right; color:#b91c1c;">- RM <span id="sumDiscount_print">0.00</span></td></tr>
                     <tr class="border-bottom"><td style="text-align:left;">SST Tax:</td><td style="text-align:right;">+ RM <span id="sumSST_print">0.00</span></td></tr>
                     <tr class="grand-total-row"><td style="text-align:left;">GRAND TOTAL:</td><td style="text-align:right;">RM <span id="grandTotal_print">0.00</span></td></tr>
@@ -717,7 +724,6 @@ Note:
             document.body.className = 'print-internal';
             syncPrintHeader();
             
-            // Duplicate ALL 6 drawings specifically for the internal print layout
             const grids = ['top', 'front', 'left', 'bottom', 'back', 'right'];
             grids.forEach(prefix => {
                 let source = document.getElementById(prefix + 'Grid');
@@ -815,7 +821,7 @@ Note:
     let bomStructure = JSON.parse(JSON.stringify(systemBaseStructure));
     let customRowCounts = JSON.parse(localStorage.getItem('winkoCustomCounts')) || [0,0,0,0,0];
 
-    const configIDs = ['quoteIdInput', 'stdChoice','unitChoice','partChoice','coatChoice','length','width','height', 'thickRoof', 'thickWall', 'thickBase', 'partQty','partLen','partHgt','partType','discountPct','sstPct', 'shortExclusions', 'fullTermsNotes', 'custCompany', 'custAttn', 'custAddr', 'tcValidity', 'tcLead', 'tcDelivery', 'tcPayment', 'signName', 'signPhone'];
+    const configIDs = ['quoteIdInput', 'stdChoice','unitChoice','partChoice','coatChoice','length','width','height', 'thickRoof', 'thickWall', 'thickBase', 'partQty','partLen','partHgt','partType','markupPct','discountPct','sstPct', 'shortExclusions', 'fullTermsNotes', 'custCompany', 'custAttn', 'custAddr', 'tcValidity', 'tcLead', 'tcDelivery', 'tcPayment', 'signName', 'signPhone'];
 
     // --- ADMIN PANEL LOGIC ---
     function buildAdminTable() {
@@ -968,7 +974,9 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV15'); // V15 CACHE BUSTER
+            
+            // V16 CACHE BUSTER - Wipes old UI cache
+            localStorage.removeItem('winkoProDataV16'); 
             
             if(document.getElementById('partChoice')) {
                 document.getElementById('partChoice').value = 'no';
@@ -1080,11 +1088,11 @@ Note:
                 if(it.selectId && document.getElementById(it.selectId)) data[it.selectId] = document.getElementById(it.selectId).value; 
             });
         });
-        localStorage.setItem('winkoProDataV15', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV16', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV15');
+        let savedData = localStorage.getItem('winkoProDataV16');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1148,7 +1156,7 @@ Note:
     }
 
     function calcTotals() {
-        let subtotal = 0;
+        let baseCost = 0;
         let totalWeight = 0;
 
         bomStructure.forEach((sec, sIdx) => {
@@ -1168,37 +1176,55 @@ Note:
                     const totalEl = document.getElementById(`total_${id}`);
                     if(totalEl) totalEl.innerText = total.toLocaleString('en-MY', {minimumFractionDigits:2});
                     
-                    subtotal += total;
+                    baseCost += total;
                     totalWeight += (q * w);
                 }
             });
         });
 
+        let markupInput = document.getElementById('markupPct');
         let discInput = document.getElementById('discountPct');
         let sstInput = document.getElementById('sstPct');
         
-        let disc = subtotal * ((parseFloat(discInput ? discInput.value : 0) || 0) / 100);
-        let sst = (subtotal - disc) * ((parseFloat(sstInput ? sstInput.value : 0) || 0) / 100);
-        let grand = subtotal - disc + sst;
+        let markupPct = parseFloat(markupInput ? markupInput.value : 0) || 0;
+        let markupAmt = baseCost * (markupPct / 100);
         
+        let subtotal = baseCost + markupAmt; // This is the Gross Selling Price
+        
+        let discPct = parseFloat(discInput ? discInput.value : 0) || 0;
+        let discAmt = subtotal * (discPct / 100);
+        
+        let netTotal = subtotal - discAmt;
+        
+        let sstPct = parseFloat(sstInput ? sstInput.value : 0) || 0;
+        let sstAmt = netTotal * (sstPct / 100);
+        
+        let grand = netTotal + sstAmt;
+        
+        // Output to Screen (Internal view)
+        if(document.getElementById('sumBaseCost_screen')) document.getElementById('sumBaseCost_screen').innerText = baseCost.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumMarkup_screen')) document.getElementById('sumMarkup_screen').innerText = markupAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
         if(document.getElementById('sumSubtotal_screen')) document.getElementById('sumSubtotal_screen').innerText = subtotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
-        if(document.getElementById('sumDiscount_screen')) document.getElementById('sumDiscount_screen').innerText = disc.toLocaleString('en-MY', {minimumFractionDigits: 2});
-        if(document.getElementById('sumSST_screen')) document.getElementById('sumSST_screen').innerText = sst.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumDiscount_screen')) document.getElementById('sumDiscount_screen').innerText = discAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumSST_screen')) document.getElementById('sumSST_screen').innerText = sstAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
         if(document.getElementById('grandTotal_screen')) document.getElementById('grandTotal_screen').innerText = grand.toLocaleString('en-MY', {minimumFractionDigits: 2});
 
+        // Output to Internal PDF
+        if(document.getElementById('sumBaseCost_print')) document.getElementById('sumBaseCost_print').innerText = baseCost.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumMarkup_print')) document.getElementById('sumMarkup_print').innerText = markupAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
         if(document.getElementById('sumSubtotal_print')) document.getElementById('sumSubtotal_print').innerText = subtotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
-        if(document.getElementById('sumDiscount_print')) document.getElementById('sumDiscount_print').innerText = disc.toLocaleString('en-MY', {minimumFractionDigits: 2});
-        if(document.getElementById('sumSST_print')) document.getElementById('sumSST_print').innerText = sst.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumDiscount_print')) document.getElementById('sumDiscount_print').innerText = discAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumSST_print')) document.getElementById('sumSST_print').innerText = sstAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
         if(document.getElementById('grandTotal_print')) document.getElementById('grandTotal_print').innerText = grand.toLocaleString('en-MY', {minimumFractionDigits: 2});
         
+        // Weight
         let weightStr = totalWeight.toLocaleString('en-MY', {maximumFractionDigits: 1}) + " kg";
         if(document.getElementById('sumWeight_screen')) document.getElementById('sumWeight_screen').innerText = weightStr;
         if(document.getElementById('sumWeight_print')) document.getElementById('sumWeight_print').innerText = weightStr;
 
-        if(document.getElementById('cpSstPct')) document.getElementById('cpSstPct').innerText = (sstInput ? sstInput.value : 0) || 0;
-        if(document.getElementById('cpSstAmt')) document.getElementById('cpSstAmt').innerText = sst.toLocaleString('en-MY', {minimumFractionDigits: 2});
-        
-        let netTotal = subtotal - disc;
+        // Output to CUSTOMER PDF (They ONLY see Net Total as Unit Price)
+        if(document.getElementById('cpSstPct')) document.getElementById('cpSstPct').innerText = sstPct || 0;
+        if(document.getElementById('cpSstAmt')) document.getElementById('cpSstAmt').innerText = sstAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
         if(document.getElementById('cpUnitPrice')) document.getElementById('cpUnitPrice').innerText = netTotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
         if(document.getElementById('cpTotalPrice')) document.getElementById('cpTotalPrice').innerText = netTotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
         if(document.getElementById('cpGrandTotal')) document.getElementById('cpGrandTotal').innerText = grand.toLocaleString('en-MY', {minimumFractionDigits: 2});
@@ -1355,6 +1381,8 @@ Note:
             
             csv += `\n`;
             
+            let base = document.getElementById('sumBaseCost_screen') ? document.getElementById('sumBaseCost_screen').innerText.replace(/,/g, '') : "0";
+            let markup = document.getElementById('sumMarkup_screen') ? document.getElementById('sumMarkup_screen').innerText.replace(/,/g, '') : "0";
             let sub = document.getElementById('sumSubtotal_screen') ? document.getElementById('sumSubtotal_screen').innerText.replace(/,/g, '') : "0";
             let disc = document.getElementById('sumDiscount_screen') ? document.getElementById('sumDiscount_screen').innerText.replace(/,/g, '') : "0";
             let sst = document.getElementById('sumSST_screen') ? document.getElementById('sumSST_screen').innerText.replace(/,/g, '') : "0";
@@ -1362,7 +1390,9 @@ Note:
             let wt = document.getElementById('sumWeight_screen') ? document.getElementById('sumWeight_screen').innerText.replace(' kg', '').replace(/,/g, '') : "0";
 
             csv += `,,,,"Est. Total Weight (kg)",${wt}\n`;
-            csv += `,,,,"Subtotal (RM)",${sub}\n`;
+            csv += `,,,,"Base Cost (RM)",${base}\n`;
+            csv += `,,,,"Mark-Up (RM)",+${markup}\n`;
+            csv += `,,,,"Gross Subtotal (RM)",${sub}\n`;
             csv += `,,,,"Discount (RM)",-${disc}\n`;
             csv += `,,,,"SST Tax (RM)",${sst}\n`;
             csv += `,,,,"GRAND TOTAL (RM)",${grand}\n`;
