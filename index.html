@@ -76,7 +76,6 @@
         .bom-inline-select { flex: 0 0 auto; max-width: 110px; margin-left: 4px; padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85em; font-weight: 600; color: #ea580c; background: #fff; cursor: pointer; transition: 0.2s;}
         .bom-inline-select:focus { outline: none; border-color: #ea580c; box-shadow: 0 0 0 2px rgba(234,88,12,0.1);}
 
-        /* Floating Premium Summary Box */
         .summary-box { background: linear-gradient(145deg, #0f172a, #1e293b); color: white; padding: 25px; border-radius: 12px; box-shadow: 0 15px 25px -5px rgba(15,23,42,0.3);}
         .sum-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 1em; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; color: #cbd5e1;}
         .sum-row span:last-child { font-weight: 600; color: white;}
@@ -134,7 +133,6 @@
             body.print-internal #mainContent { display: block !important; }
             body.print-internal #customerPrintView { display: none !important; }
 
-            /* Hide all input cards except the BOM table */
             body.print-internal .internal-hide { display: none !important; }
             
             body.print-internal .app-layout { display: block !important; }
@@ -720,10 +718,10 @@ Note:
             syncPrintHeader();
             
             // Duplicate ALL 6 drawings specifically for the internal print layout
-            const grids = ['topGrid', 'frontGrid', 'leftGrid', 'bottomGrid', 'backGrid', 'rightGrid'];
-            grids.forEach(id => {
-                let source = document.getElementById(id);
-                let target = document.getElementById(id + '_p');
+            const grids = ['top', 'front', 'left', 'bottom', 'back', 'right'];
+            grids.forEach(prefix => {
+                let source = document.getElementById(prefix + 'Grid');
+                let target = document.getElementById(prefix + 'Grid_p');
                 if(source && target) {
                     target.innerHTML = source.innerHTML;
                     target.style.gridTemplateColumns = source.style.gridTemplateColumns;
@@ -778,7 +776,7 @@ Note:
             {name: "3.0mm Panel", def: 280, wt: 45}, 
             {name: "4.5mm Panel", def: 350, wt: 65}, 
             {name: "Base Panel", def: 320, wt: 65},
-            {name: "Partition Panel", def: 280, wt: 45} 
+            {name: "Partition Panel", def: 280, wt: 45} // Explicit Partition Row
         ]},
         { category: "Cleat & Trusses", items: [
             {name: "Type A Cleat", def: 25, wt: 1}, {name: "Type B Cleat", def: 28, wt: 1.5}, {name: "Type C Cleat", def: 30, wt: 2},
@@ -970,7 +968,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV14'); // V14 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV15'); // V15 CACHE BUSTER
             
             if(document.getElementById('partChoice')) {
                 document.getElementById('partChoice').value = 'no';
@@ -1082,11 +1080,11 @@ Note:
                 if(it.selectId && document.getElementById(it.selectId)) data[it.selectId] = document.getElementById(it.selectId).value; 
             });
         });
-        localStorage.setItem('winkoProDataV14', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV15', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV14');
+        let savedData = localStorage.getItem('winkoProDataV15');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
