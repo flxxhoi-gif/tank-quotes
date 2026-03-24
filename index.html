@@ -93,6 +93,7 @@
         .visual-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; justify-items: center; margin-bottom: 15px; }
         .view-box { text-align: center; background: #f8fafc; padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; width: 100%; max-width: 160px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);} 
         .view-title { font-size: 0.75em; font-weight: 800; margin-bottom: 8px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;}
+        
         .grid-draft { display: grid; gap: 1px; background: #94a3b8; border: 2px solid #475569; margin: 0 auto; width: 100%; border-radius: 2px; overflow: hidden;} 
         .panel { background: #e0f2fe; padding-bottom: 100%; height: 0; box-sizing: border-box; }
 
@@ -175,7 +176,6 @@
             body.print-internal .col-uprice { width: 15% !important; }
             body.print-internal .col-itotal { width: 15% !important; }
             
-            /* --- BULLETPROOF INTERNAL SUMMARY TABLE --- */
             body.print-internal #internalPrintFooter { display: block !important; margin-top: 20px; }
             body.print-internal .summary-box { background: #fff !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 6px !important; padding: 10px !important; margin-top: 10px !important; width: 340px !important; float: right !important; box-shadow: none !important;}
             
@@ -185,7 +185,6 @@
             body.print-internal .summary-table .border-bottom td { border-bottom: 1px solid #cbd5e1 !important; padding-bottom: 6px; margin-bottom: 3px; }
             body.print-internal .summary-table .grand-total-row td { font-size: 12pt; padding-top: 8px; }
 
-            /* PERFECT 6-GRID DRAWINGS INTEGRATION */
             body.print-internal .visual-container { display: grid !important; grid-template-columns: repeat(6, 1fr) !important; gap: 5px !important; width: 100% !important; margin: 10px 0 !important; page-break-inside: avoid !important; clear: both !important;}
             body.print-internal .view-box { padding: 4px !important; border: 1px solid #cbd5e1 !important; background: #fff !important; border-radius: 4px !important; }
             body.print-internal .grid-draft { gap: 0.5px !important; border: 1px solid #0f172a !important; background: #fff !important; width: 100% !important;}
@@ -250,11 +249,11 @@
     </style>
     
     <script>
-        const currentVersion = "V29";
+        const currentVersion = "V30";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=28; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=29; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -373,6 +372,7 @@
                     </div>
 
                     <div class="tank-section-title">Tank 1 Specifications</div>
+                    <div class="form-group" style="margin-bottom: 10px;"><label>Tank 1 Reference Name (Prints on Customer Quote)</label><input type="text" id="tank1Name" value="Main Tank" oninput="syncPrintHeader(); savePrices();"></div>
                     <div class="dim-grid">
                         <div class="form-group"><label>Tank Length</label><input type="number" id="length" value="12" oninput="processTankData(); savePrices();"></div>
                         <div class="form-group"><label>Tank Width</label><input type="number" id="width" value="4" oninput="processTankData(); savePrices();"></div>
@@ -393,6 +393,7 @@
 
                     <div id="tank2Section" style="display: none; margin-top: 25px; border-top: 2px solid #cbd5e1; padding-top: 15px;">
                         <div class="tank-section-title" style="background:#fef3c7; border-left:4px solid #10b981;">Tank 2 Specifications</div>
+                        <div class="form-group" style="margin-bottom: 10px;"><label>Tank 2 Reference Name (Prints on Customer Quote)</label><input type="text" id="tank2Name" value="Suction Tank" oninput="syncPrintHeader(); savePrices();"></div>
                         <div class="dim-grid">
                             <div class="form-group"><label>Tank Length</label><input type="number" id="length2" value="8" oninput="processTankData(); savePrices();"></div>
                             <div class="form-group"><label>Tank Width</label><input type="number" id="width2" value="4" oninput="processTankData(); savePrices();"></div>
@@ -682,6 +683,7 @@ Note:
             <tr id="cpTank1Row">
                 <td class="td-center" style="font-weight:bold; padding-top:8px;">1</td>
                 <td style="padding-top:8px; padding-bottom: 8px; line-height:1.4;">
+                    <div id="cpTank1Label" style="font-weight:900; font-size:10pt; color:#ea580c; margin-bottom:3px; text-transform:uppercase;">MAIN TANK</div>
                     <strong>Supply and Install New <span id="cpMaterial"></span> Pressed Steel Tank Size: <span id="cpDims"></span></strong><br>
                     Comply to <span id="cpStd"></span><br>
                     <table style="border:none; width:100%; font-size:8.5pt; margin-top:2px;">
@@ -713,6 +715,7 @@ Note:
             <tr id="cpTank2Row" style="display:none;">
                 <td class="td-center" style="font-weight:bold; padding-top:8px;">2</td>
                 <td style="padding-top:8px; padding-bottom: 8px; line-height:1.4;">
+                    <div id="cpTank2Label" style="font-weight:900; font-size:10pt; color:#ea580c; margin-bottom:3px; text-transform:uppercase;">SUCTION TANK</div>
                     <strong>Supply and Install New <span id="cpMaterial2"></span> Pressed Steel Tank Size: <span id="cpDims2"></span></strong><br>
                     Comply to <span id="cpStd2"></span><br>
                     <table style="border:none; width:100%; font-size:8.5pt; margin-top:2px;">
@@ -934,7 +937,7 @@ Note:
         }
     }
 
-    // --- FULL BOM STRUCTURE (UPGRADED VERSION 29 EXACT TIER MAPPING) ---
+    // --- FULL BOM STRUCTURE ---
     const systemBaseStructure = [
         { category: "Panels", items: [
             {name: "Manhole Panel", def: 450, wt: 45}, 
@@ -983,7 +986,7 @@ Note:
     let bomStructure = JSON.parse(JSON.stringify(systemBaseStructure));
     let customRowCounts = JSON.parse(localStorage.getItem('winkoCustomCounts')) || [0,0,0,0,0];
 
-    const configIDs = ['quoteIdInput', 'numTanks', 'stdChoice','unitChoice','coatChoice',
+    const configIDs = ['quoteIdInput', 'tank1Name', 'tank2Name', 'numTanks', 'stdChoice','unitChoice','coatChoice',
                        'length','width','height', 'partChoice', 'partQty','partLen','partHgt','partType',
                        'length2','width2','height2', 'partChoice2', 'partQty2','partLen2','partHgt2','partType2',
                        'thickRoof', 'thickWallL1', 'thickWallL2', 'thickWallL3', 'thickWallL4', 'thickBase', 'markupPct','discountPct','sstPct', 
@@ -1175,7 +1178,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV29'); // V29 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV30'); // V30 CACHE BUSTER
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1296,6 +1299,10 @@ Note:
             let cpDims1 = document.getElementById('cpDims');
             if(cpDims1) cpDims1.innerText = `${l1}${u} (L) x ${w1}${u} (W) x ${h1}${u} (H)`;
             
+            let t1NameEl = document.getElementById('tank1Name');
+            let cpTank1Label = document.getElementById('cpTank1Label');
+            if(cpTank1Label) cpTank1Label.innerText = (t1NameEl && t1NameEl.value) ? t1NameEl.value : "MAIN TANK";
+
             let cpStd1 = document.getElementById('cpStd'); if(cpStd1) cpStd1.innerText = (sInput && sInput.value) ? sInput.value : "";
             
             let tRoof = document.getElementById('thickRoof'); let valRoof = (tRoof && tRoof.value) ? tRoof.value : "";
@@ -1341,6 +1348,10 @@ Note:
                 let elW2 = document.getElementById('width2'); let w2 = (elW2 && elW2.value) ? elW2.value : 0;
                 let elH2 = document.getElementById('height2'); let h2 = (elH2 && elH2.value) ? elH2.value : 0;
                 
+                let t2NameEl = document.getElementById('tank2Name');
+                let cpTank2Label = document.getElementById('cpTank2Label');
+                if(cpTank2Label) cpTank2Label.innerText = (t2NameEl && t2NameEl.value) ? t2NameEl.value : "SUCTION TANK";
+
                 let cpDims2 = document.getElementById('cpDims2'); if(cpDims2) cpDims2.innerText = `${l2}${u} (L) x ${w2}${u} (W) x ${h2}${u} (H)`;
                 
                 let cpStd2 = document.getElementById('cpStd2'); if(cpStd2) cpStd2.innerText = (sInput && sInput.value) ? sInput.value : "";
@@ -1441,11 +1452,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV29', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV30', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV29');
+        let savedData = localStorage.getItem('winkoProDataV30');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
