@@ -249,11 +249,11 @@
     </style>
     
     <script>
-        const currentVersion = "V30";
+        const currentVersion = "V31";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=29; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=30; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -364,15 +364,14 @@
                 <div class="module-card internal-hide no-print">
                     <div class="card-header"><span>📐</span> 2. Tank Engineering & Dimensions</div>
                     <div class="config-grid">
-                        <div class="form-group"><label>Standard</label><select id="stdChoice" onchange="savePrices(); processTankData();"><option>SANS 10329:2020 Approved by SIRIM & SPAN</option><option>SS 22: 1979</option><option>Other</option></select></div>
+                        <div class="form-group"><label>Tank 1 Standard</label><select id="stdChoice" onchange="savePrices(); processTankData();"><option>SANS 10329:2020 Approved by SIRIM & SPAN</option><option>SS 22: 1979</option><option>Other</option></select></div>
                         <div class="form-group"><label>Unit System</label><select id="unitChoice" onchange="updateLabels(); savePrices(); processTankData();"><option value="ft">Imperial (4'x4')</option><option value="m">Metric (1mx1m)</option></select></div>
-                        <div class="form-group" style="grid-column: span 2;"><label>Tank Material / Finish</label><select id="coatChoice" onchange="savePrices(); processTankData();"><option>Hot Dipped Galvanised</option><option>Painted Steel</option><option>Stainless Steel (SS 304)</option><option>Stainless Steel (SS 316)</option></select></div>
+                        <div class="form-group" style="grid-column: span 2;"><label>Tank 1 Material / Finish</label><select id="coatChoice" onchange="savePrices(); processTankData();"><option>Hot Dipped Galvanised</option><option>Painted Steel</option><option>Stainless Steel (SS 304)</option><option>Stainless Steel (SS 316)</option></select></div>
                         
                         <div class="form-group" style="grid-column: span 2;"><label style="color:#2563eb;">Number of Tanks in Project</label><select id="numTanks" onchange="toggleTank2(); processTankData(); savePrices();" style="border: 2px solid #93c5fd;"><option value="1">1 Tank Configuration</option><option value="2">2 Tank Configurations (e.g. Main + Suction)</option></select></div>
                     </div>
 
                     <div class="tank-section-title">Tank 1 Specifications</div>
-                    <div class="form-group" style="margin-bottom: 10px;"><label>Tank 1 Reference Name (Prints on Customer Quote)</label><input type="text" id="tank1Name" value="Main Tank" oninput="syncPrintHeader(); savePrices();"></div>
                     <div class="dim-grid">
                         <div class="form-group"><label>Tank Length</label><input type="number" id="length" value="12" oninput="processTankData(); savePrices();"></div>
                         <div class="form-group"><label>Tank Width</label><input type="number" id="width" value="4" oninput="processTankData(); savePrices();"></div>
@@ -393,7 +392,10 @@
 
                     <div id="tank2Section" style="display: none; margin-top: 25px; border-top: 2px solid #cbd5e1; padding-top: 15px;">
                         <div class="tank-section-title" style="background:#fef3c7; border-left:4px solid #10b981;">Tank 2 Specifications</div>
-                        <div class="form-group" style="margin-bottom: 10px;"><label>Tank 2 Reference Name (Prints on Customer Quote)</label><input type="text" id="tank2Name" value="Suction Tank" oninput="syncPrintHeader(); savePrices();"></div>
+                        <div class="config-grid" style="margin-bottom:15px;">
+                            <div class="form-group"><label>Tank 2 Standard</label><select id="stdChoice2" onchange="savePrices(); processTankData();"><option>SANS 10329:2020 Approved by SIRIM & SPAN</option><option>SS 22: 1979</option><option>Other</option></select></div>
+                            <div class="form-group"><label>Tank 2 Material / Finish</label><select id="coatChoice2" onchange="savePrices(); processTankData();"><option>Hot Dipped Galvanised</option><option>Painted Steel</option><option>Stainless Steel (SS 304)</option><option>Stainless Steel (SS 316)</option></select></div>
+                        </div>
                         <div class="dim-grid">
                             <div class="form-group"><label>Tank Length</label><input type="number" id="length2" value="8" oninput="processTankData(); savePrices();"></div>
                             <div class="form-group"><label>Tank Width</label><input type="number" id="width2" value="4" oninput="processTankData(); savePrices();"></div>
@@ -683,7 +685,6 @@ Note:
             <tr id="cpTank1Row">
                 <td class="td-center" style="font-weight:bold; padding-top:8px;">1</td>
                 <td style="padding-top:8px; padding-bottom: 8px; line-height:1.4;">
-                    <div id="cpTank1Label" style="font-weight:900; font-size:10pt; color:#ea580c; margin-bottom:3px; text-transform:uppercase;">MAIN TANK</div>
                     <strong>Supply and Install New <span id="cpMaterial"></span> Pressed Steel Tank Size: <span id="cpDims"></span></strong><br>
                     Comply to <span id="cpStd"></span><br>
                     <table style="border:none; width:100%; font-size:8.5pt; margin-top:2px;">
@@ -715,7 +716,6 @@ Note:
             <tr id="cpTank2Row" style="display:none;">
                 <td class="td-center" style="font-weight:bold; padding-top:8px;">2</td>
                 <td style="padding-top:8px; padding-bottom: 8px; line-height:1.4;">
-                    <div id="cpTank2Label" style="font-weight:900; font-size:10pt; color:#ea580c; margin-bottom:3px; text-transform:uppercase;">SUCTION TANK</div>
                     <strong>Supply and Install New <span id="cpMaterial2"></span> Pressed Steel Tank Size: <span id="cpDims2"></span></strong><br>
                     Comply to <span id="cpStd2"></span><br>
                     <table style="border:none; width:100%; font-size:8.5pt; margin-top:2px;">
@@ -937,7 +937,7 @@ Note:
         }
     }
 
-    // --- FULL BOM STRUCTURE ---
+    // --- FULL BOM STRUCTURE (UPGRADED VERSION 29 EXACT TIER MAPPING) ---
     const systemBaseStructure = [
         { category: "Panels", items: [
             {name: "Manhole Panel", def: 450, wt: 45}, 
@@ -986,7 +986,7 @@ Note:
     let bomStructure = JSON.parse(JSON.stringify(systemBaseStructure));
     let customRowCounts = JSON.parse(localStorage.getItem('winkoCustomCounts')) || [0,0,0,0,0];
 
-    const configIDs = ['quoteIdInput', 'tank1Name', 'tank2Name', 'numTanks', 'stdChoice','unitChoice','coatChoice',
+    const configIDs = ['quoteIdInput', 'numTanks', 'stdChoice','stdChoice2','unitChoice','coatChoice','coatChoice2',
                        'length','width','height', 'partChoice', 'partQty','partLen','partHgt','partType',
                        'length2','width2','height2', 'partChoice2', 'partQty2','partLen2','partHgt2','partType2',
                        'thickRoof', 'thickWallL1', 'thickWallL2', 'thickWallL3', 'thickWallL4', 'thickBase', 'markupPct','discountPct','sstPct', 
@@ -1178,7 +1178,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV30'); // V30 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV31'); // V31 CACHE BUSTER
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1294,15 +1294,10 @@ Note:
             if(cpRef) cpRef.innerText = (qInput && qInput.value) ? qInput.value : "";
 
             let cpMat1 = document.getElementById('cpMaterial'); if(cpMat1) cpMat1.innerText = matStr;
-            let cpMat2 = document.getElementById('cpMaterial2'); if(cpMat2) cpMat2.innerText = matStr;
             
             let cpDims1 = document.getElementById('cpDims');
             if(cpDims1) cpDims1.innerText = `${l1}${u} (L) x ${w1}${u} (W) x ${h1}${u} (H)`;
             
-            let t1NameEl = document.getElementById('tank1Name');
-            let cpTank1Label = document.getElementById('cpTank1Label');
-            if(cpTank1Label) cpTank1Label.innerText = (t1NameEl && t1NameEl.value) ? t1NameEl.value : "MAIN TANK";
-
             let cpStd1 = document.getElementById('cpStd'); if(cpStd1) cpStd1.innerText = (sInput && sInput.value) ? sInput.value : "";
             
             let tRoof = document.getElementById('thickRoof'); let valRoof = (tRoof && tRoof.value) ? tRoof.value : "";
@@ -1341,20 +1336,22 @@ Note:
             let wliQtyEl = document.getElementById('qty_item_3_2'); let wliQty = (wliQtyEl && wliQtyEl.value) ? wliQtyEl.value : '0';
             let cpWLI = document.getElementById('cpWLI'); if(cpWLI) cpWLI.innerText = `${wliType} - ${wliQty} sets`;
 
-            // TANK 2 DATA SYNC
+            // TANK 2 DATA SYNC (If Applicable)
             if(numTanks === "2") {
                 let cpTank2Row = document.getElementById('cpTank2Row'); if(cpTank2Row) cpTank2Row.style.display = 'table-row';
                 let elL2 = document.getElementById('length2'); let l2 = (elL2 && elL2.value) ? elL2.value : 0;
                 let elW2 = document.getElementById('width2'); let w2 = (elW2 && elW2.value) ? elW2.value : 0;
                 let elH2 = document.getElementById('height2'); let h2 = (elH2 && elH2.value) ? elH2.value : 0;
-                
-                let t2NameEl = document.getElementById('tank2Name');
-                let cpTank2Label = document.getElementById('cpTank2Label');
-                if(cpTank2Label) cpTank2Label.innerText = (t2NameEl && t2NameEl.value) ? t2NameEl.value : "SUCTION TANK";
+
+                let coatChoice2 = document.getElementById('coatChoice2');
+                let matStr2 = (coatChoice2 && coatChoice2.value) ? coatChoice2.value : matStr;
+                let cpMat2 = document.getElementById('cpMaterial2'); if(cpMat2) cpMat2.innerText = matStr2;
 
                 let cpDims2 = document.getElementById('cpDims2'); if(cpDims2) cpDims2.innerText = `${l2}${u} (L) x ${w2}${u} (W) x ${h2}${u} (H)`;
                 
-                let cpStd2 = document.getElementById('cpStd2'); if(cpStd2) cpStd2.innerText = (sInput && sInput.value) ? sInput.value : "";
+                let sInput2 = document.getElementById('stdChoice2');
+                let cpStd2 = document.getElementById('cpStd2'); if(cpStd2) cpStd2.innerText = (sInput2 && sInput2.value) ? sInput2.value : "";
+                
                 let cpTRoof2 = document.getElementById('cpThickRoof2'); if(cpTRoof2) cpTRoof2.innerText = valRoof;
                 let cpTBase2 = document.getElementById('cpThickBase2'); if(cpTBase2) cpTBase2.innerText = valBase;
                 let cpTWall2 = document.getElementById('cpThickWall2'); if(cpTWall2) cpTWall2.innerText = wallStr;
@@ -1452,11 +1449,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV30', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV31', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV30');
+        let savedData = localStorage.getItem('winkoProDataV31');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1806,6 +1803,7 @@ Note:
         let capPrint = document.getElementById('sumCapacity_print');
         if(capPrint && capScreen) capPrint.innerText = capScreen.innerText;
 
+        // COMBINED BOM UPDATES
         let combinedTotalP = totalP1 + totalP2;
         let tpCount = document.getElementById('totalPanelsCount');
         if(tpCount) tpCount.innerText = combinedTotalP;
@@ -1899,6 +1897,14 @@ Note:
             let cChoice = document.getElementById('coatChoice');
             let mat = (cChoice && cChoice.value) ? cChoice.value : "";
             
+            let cChoice2 = document.getElementById('coatChoice2');
+            let mat2 = (cChoice2 && cChoice2.value) ? cChoice2.value : "";
+            
+            let ntEl = document.getElementById('numTanks');
+            let numTanks = (ntEl && ntEl.value) ? parseInt(ntEl.value) : 1;
+            
+            if(numTanks === 2 && mat2) mat += ` | Tank 2: ${mat2}`;
+            
             let pChoice = document.getElementById('partChoice');
             let partChoice = (pChoice && pChoice.value) ? pChoice.value : 'no';
             
@@ -1947,9 +1953,6 @@ Note:
                 
                 if(q > 0) csv += `"${s.category}","${label}",${q},${w},${p},${t}\n`;
             })});
-            
-            let ntEl = document.getElementById('numTanks');
-            let numTanks = (ntEl && ntEl.value) ? parseInt(ntEl.value) : 1;
             
             if(numTanks === 2) {
                 csv += `\nTANK 2 BILL OF MATERIALS\n`;
