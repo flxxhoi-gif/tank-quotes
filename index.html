@@ -111,9 +111,9 @@
         .admin-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.2);}
         .admin-container { background: #1e293b; padding: 30px; border-radius: 0 0 12px 12px; color: white;}
         .admin-table { width: 100%; border-collapse: collapse; background: white; color: #0f172a; border-radius: 8px; overflow: hidden; box-shadow: 0 10px 15px rgba(0,0,0,0.3);}
-        .admin-table th { background: #334155; color: white; border-color: #475569; padding: 15px; font-size: 0.9em; text-transform: uppercase; letter-spacing: 0.5px;}
-        .admin-table td { border-color: #e2e8f0; padding: 10px;}
-        .admin-input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-weight: bold; text-align: center;}
+        .admin-table th { background: #334155; color: white; border-color: #475569; padding: 12px; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.5px;}
+        .admin-table td { border-color: #e2e8f0; padding: 8px;}
+        .admin-input { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-weight: bold; text-align: center;}
         .admin-input.text-left { text-align: left; }
 
         .print-only { display: none; }
@@ -128,6 +128,8 @@
             .no-print { display: none !important; }
             .print-only { display: block; }
             .container { box-shadow: none; max-width: 100%; padding: 0; border: none; }
+            .module-card { border: none; padding: 0; margin: 0; box-shadow: none; }
+            .card-header { display: none; }
             
             /* ------------------------------------------------ */
             /* MODE 1: INTERNAL PRINT (Shows full BOM and Cost) */
@@ -143,12 +145,11 @@
             body.print-internal .app-layout { display: block !important; }
             body.print-internal .col-left { width: 100% !important; display: block !important; }
             
-            /* Hide the right column entirely, rely on internalPrintFooter */
             body.print-internal .col-right { display: none !important; }
             
             body.print-internal .module-card { border: none !important; padding: 0 !important; margin-bottom: 20px !important; box-shadow: none !important; }
             body.print-internal .card-header { display: block !important; border-bottom: 2px solid #0f172a !important; margin-bottom: 10px !important; font-size: 11pt !important; color: #0f172a !important; text-transform: uppercase; padding: 0 0 5px 0 !important; }
-            body.print-internal .card-header span { display: none !important; } /* Hide emojis */
+            body.print-internal .card-header span { display: none !important; } 
 
             body.print-internal .print-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #ea580c; padding-bottom: 15px; margin-bottom: 20px; }
             body.print-internal .header-left { display: flex; align-items: center; gap: 20px; }
@@ -165,7 +166,6 @@
             body.print-internal .meta-label { font-weight: 700; color: #64748b; width: 90px; text-transform: uppercase;}
             body.print-internal .meta-value { font-weight: 700; color: #0f172a; }
 
-            /* Fix Internal Table */
             body.print-internal table { font-size: 8pt; margin-bottom: 15px; border-collapse: collapse; width: 100%; border: 1px solid #cbd5e1; border-radius: 0;}
             body.print-internal tr { border-bottom: 1px solid #e2e8f0; page-break-inside: avoid; }
             body.print-internal tr:nth-child(even):not(.section-header-row) { background-color: #f8fafc !important; }
@@ -179,13 +179,12 @@
             body.print-internal input, body.print-internal .desc-input, body.print-internal .bom-inline-select { border: none !important; background: transparent !important; color: #0f172a !important; box-shadow: none !important; font-weight: 600; padding: 0 !important; font-size: inherit; appearance: none; -webkit-appearance: none; width: auto;}
             body.print-internal .bom-inline-select { margin-left: 4px; color: #475569 !important; font-weight: 700;}
             
-            /* Internal Summary Footer */
             body.print-internal #internalPrintFooter { display: block !important; margin-top: 20px; }
             body.print-internal .summary-box { background: #f8fafc !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 4px; padding: 10px 15px !important; margin-top: 5px; width: 260px; float: right; page-break-inside: avoid; box-shadow: none;}
             body.print-internal .sum-row { border-bottom: 1px solid #cbd5e1 !important; margin-bottom: 5px; padding-bottom: 3px; color: #334155 !important; font-size: 8pt; font-weight: 700;}
             body.print-internal .sum-row.total { background: #0f172a !important; color: #ffffff !important; border: none !important; padding: 8px !important; font-size: 11pt; margin: 8px -15px -10px -15px; border-radius: 0 0 2px 2px;}
             
-            body.print-internal .visual-container { max-width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0 15px 0; page-break-inside: avoid; clear: both; width: 60%;}
+            body.print-internal .visual-container { max-width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin: 20px 0 15px 0; page-break-inside: avoid; clear: both; width: 60%;}
             body.print-internal .view-box { padding: 5px; border: 1px solid #cbd5e1 !important; background: #fff !important; border-radius: 4px; }
             body.print-internal .grid-draft { gap: 0.5px; border: 1px solid #0f172a !important; background: #fff !important;}
             body.print-internal .panel { background: #e0f2fe !important; border: 0.5px solid #94a3b8 !important;}
@@ -221,19 +220,16 @@
             .cp-meta-right td { border: none; padding: 2px 0 2px 5px; vertical-align: top; text-align: left;}
             .cp-meta-right td:first-child { width: 60px; font-weight: normal; color: #000; text-align: right;}
 
-            /* Formal Customer Table */
             .cp-table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 15px; font-size: 9pt; border: 2px solid #000; }
             .cp-table th { background: #d1d5db !important; color: #000 !important; border: 1px solid #000; padding: 6px; font-weight: bold; text-align: center; -webkit-print-color-adjust: exact;}
             .cp-table td { border: 1px solid #000; padding: 6px; vertical-align: top; color: #000;}
             .cp-table .td-center { text-align: center;}
             .cp-table .td-right { text-align: right;}
             
-            /* Customer T&C Blocks */
             .cp-short-exclusions { display: flex; align-items: stretch; margin-bottom: 20px; font-size: 8pt; line-height: 1.4; border: 1px solid #000;}
             .cp-short-exclusions .label { background: #d1d5db !important; color: #000; padding: 8px 10px; font-weight: bold; border-right: 1px solid #000; -webkit-print-color-adjust: exact; width: 100px; text-align: center; display: flex; align-items: center; justify-content: center;}
             .cp-short-exclusions .content { padding: 8px 12px; background: #fff; flex: 1;}
 
-            /* Force page break for full terms */
             .page-break-section { page-break-before: always; padding-top: 10px; }
             
             .cp-full-terms { font-size: 8.5pt; line-height: 1.5; white-space: pre-wrap; margin-bottom: 30px; color: #000;}
@@ -272,14 +268,16 @@
             </div>
         </div>
         <div class="admin-container">
-            <p style="margin-top:0; color: #94a3b8; font-weight: 500;">Warning: Changing these values will permanently update the starting template for all new quotations.</p>
+            <p style="margin-top:0; color: #94a3b8; font-weight: 500;">Set accurate market data. The system automatically selects Metric or Imperial depending on the user's unit choice.</p>
             <table class="admin-table">
                 <thead>
                     <tr>
                         <th style="width:20%; text-align:left;">Category</th>
-                        <th style="width:40%; text-align:left;">Default Item Name</th>
-                        <th style="width:20%;">Default Wt (kg)</th>
-                        <th style="width:20%;">Default Price (RM)</th>
+                        <th style="width:25%; text-align:left;">Default Item Name</th>
+                        <th style="width:13%;">Metric Wt (kg)</th>
+                        <th style="width:13%;">Metric RM</th>
+                        <th style="width:13%;">Imp (4') Wt</th>
+                        <th style="width:13%;">Imp (4') RM</th>
                     </tr>
                 </thead>
                 <tbody id="adminBody"></tbody>
@@ -294,36 +292,6 @@
         <div class="app-header-bar no-print">
             <h2>Winko Configurator</h2>
             <div class="live-clock">System Time: <span id="liveClock">Loading...</span></div>
-        </div>
-
-        <div class="print-header print-only">
-            <div class="header-left">
-                <img src="winko logo.png" alt="Winko Logo">
-                <div class="header-text">
-                    <h1>JUTARAMA INDUSTRIES (M) SDN BHD</h1>
-                    <p><strong>(749861-V)</strong></p>
-                    <p>No. 19, Kawasan Perindustrian Mega 2,</p>
-                    <p>Jln Mega 2/1, 43500 Semenyih, Selangor, Malaysia.</p>
-                    <p>Tel: (60)-8727 7540 &nbsp;|&nbsp; Email: sales@winko.my &nbsp;|&nbsp; Web: www.winko.my</p>
-                </div>
-            </div>
-            <div class="header-right">
-                <h2 id="docTypeTitle">INTERNAL QUOTATION</h2>
-                <p><strong>Quote No:</strong> <span id="metaQuoteId"></span></p>
-                <p><strong>Date:</strong> <span id="metaDate"></span></p>
-            </div>
-        </div>
-
-        <div class="quote-meta print-only">
-            <div class="meta-box">
-                <div class="meta-item"><span class="meta-label">Prepared For:</span> <span class="meta-value" id="metaProject">________________</span></div>
-                <div class="meta-item"><span class="meta-label">Standard:</span> <span class="meta-value" id="metaStd"></span></div>
-            </div>
-            <div class="meta-box">
-                <div class="meta-item"><span class="meta-label">Dimensions:</span> <span class="meta-value" id="metaDims"></span></div>
-                <div class="meta-item"><span class="meta-label">Material:</span> <span class="meta-value" id="metaCoat"></span></div>
-                <div class="meta-item"><span class="meta-label">Partition:</span> <span class="meta-value" id="metaPart"></span></div>
-            </div>
         </div>
 
         <div class="memory-panel no-print">
@@ -357,8 +325,8 @@
                     <div class="card-header"><span>📐</span> 2. Tank Engineering & Dimensions</div>
                     <div class="config-grid">
                         <div class="form-group"><label>Standard</label><select id="stdChoice" onchange="savePrices(); processTankData();"><option>SANS 10329:2020 Approved by SIRIM & SPAN</option><option>SS 22: 1979</option><option>Other</option></select></div>
-                        <div class="form-group"><label>Unit System</label><select id="unitChoice" onchange="updateLabels(); savePrices(); processTankData();"><option value="ft">Imperial (4'x4')</option><option value="m">Metric (1mx1m)</option></select></div>
-                        <div class="form-group"><label>Tank Material / Finish</label><select id="coatChoice" onchange="savePrices(); processTankData();"><option>Hot Dipped Galvanised</option><option>Painted Steel</option><option>Stainless Steel (SS 304)</option><option>Stainless Steel (SS 316)</option></select></div>
+                        <div class="form-group"><label>Unit System</label><select id="unitChoice" onchange="updateLabels(); processTankData();"><option value="ft">Imperial (4'x4')</option><option value="m">Metric (1mx1m)</option></select></div>
+                        <div class="form-group" style="grid-column: span 2;"><label>Tank Material / Finish</label><select id="coatChoice" onchange="savePrices(); processTankData();"><option>Hot Dipped Galvanised</option><option>Painted Steel</option><option>Stainless Steel (SS 304)</option><option>Stainless Steel (SS 316)</option></select></div>
                         <div class="form-group"><label>Partition Wall</label><select id="partChoice" onchange="togglePartitionDetails(); processTankData();"><option value="no">No Partition</option><option value="yes">Yes (Internal Wall)</option></select></div>
                     </div>
 
@@ -734,7 +702,6 @@ Note:
         try {
             document.body.className = 'print-internal';
             syncPrintHeader();
-            // Duplicate visuals for internal print footer
             document.getElementById('topGrid_p').innerHTML = document.getElementById('topGrid').innerHTML;
             document.getElementById('topGrid_p').style.gridTemplateColumns = document.getElementById('topGrid').style.gridTemplateColumns;
             document.getElementById('frontGrid_p').innerHTML = document.getElementById('frontGrid').innerHTML;
@@ -779,34 +746,40 @@ Note:
         else { detailsRow.style.display = 'none'; document.getElementById('partQty').value = 0; }
     }
 
-    // --- FULL BOM STRUCTURE ---
+    // --- DUAL MARKET PRICING SYSTEM (METRIC VS IMPERIAL) ---
     const systemBaseStructure = [
         { category: "Panels", items: [
-            {name: "Manhole Panel", def: 450, wt: 45}, 
-            {name: "1.5mm Panel", def: 220, wt: 25}, 
-            {name: "3.0mm Panel", def: 280, wt: 45}, 
-            {name: "4.5mm Panel", def: 350, wt: 65}, 
-            {name: "Base Panel", def: 320, wt: 65},
-            {name: "Partition Panel", def: 280, wt: 45} // Explicit Partition Row
+            {name: "Manhole Panel", wt_m: 50, def_m: 420, wt_ft: 75, def_ft: 600}, 
+            {name: "1.5mm Panel", wt_m: 24, def_m: 180, wt_ft: 35, def_ft: 260}, 
+            {name: "3.0mm Panel", wt_m: 42, def_m: 260, wt_ft: 62, def_ft: 380}, 
+            {name: "4.5mm Panel", wt_m: 58, def_m: 340, wt_ft: 85, def_ft: 490}, 
+            {name: "Base Panel", wt_m: 62, def_m: 380, wt_ft: 90, def_ft: 540},
+            {name: "Partition Panel", wt_m: 42, def_m: 260, wt_ft: 62, def_ft: 380}
         ]},
         { category: "Cleat & Trusses", items: [
-            {name: "Type A Cleat", def: 25, wt: 1}, {name: "Type B Cleat", def: 28, wt: 1.5}, {name: "Type C Cleat", def: 30, wt: 2},
-            {name: "Ø1\" Pipe", def: 12, wt: 1.5}, {name: "2\" x 2\" angle", def: 15, wt: 2}
+            {name: "Type A Cleat", wt_m: 1.2, def_m: 22, wt_ft: 1.2, def_ft: 22}, 
+            {name: "Type B Cleat", wt_m: 1.6, def_m: 28, wt_ft: 1.6, def_ft: 28}, 
+            {name: "Type C Cleat", wt_m: 2.2, def_m: 35, wt_ft: 2.2, def_ft: 35},
+            {name: "Ø1\" Pipe", wt_m: 1.5, def_m: 15, wt_ft: 2.0, def_ft: 20}, 
+            {name: "2\" x 2\" angle", wt_m: 2.0, def_m: 22, wt_ft: 3.0, def_ft: 32}
         ]},
         { category: "Angle Stay", items: [
-            {name: "44 1/4\"", def: 45, wt: 5}, {name: "67\"", def: 65, wt: 8}, {name: "11' 3\"", def: 95, wt: 15}, {name: "15' 8.5\"", def: 125, wt: 20}
+            {name: "44 1/4\"", wt_m: 4, def_m: 40, wt_ft: 4, def_ft: 40}, 
+            {name: "67\"", wt_m: 6, def_m: 60, wt_ft: 6, def_ft: 60}, 
+            {name: "11' 3\"", wt_m: 12, def_m: 110, wt_ft: 12, def_ft: 110}, 
+            {name: "15' 8.5\"", wt_m: 18, def_m: 180, wt_ft: 18, def_ft: 180}
         ]},
         { category: "Accessories", items: [
-            {name: "Ext. Ladder", def: 55, wt: 2, selectId: "extLadMat", options: ["HDG", "SS 304", "SS 316"]}, 
-            {name: "Int. Ladder", def: 75, wt: 2, selectId: "intLadMat", options: ["HDG", "SS 304", "SS 316"]}, 
-            {name: "Water Level Indicator", def: 220, wt: 3, selectId: "wliType", options: ["Ball Float", "Tube Type"]}, 
-            {name: "Air Vent", def: 85, wt: 2, selectId: "ventType", options: ["HDG Steel", "ABS Plastic"]},
-            {name: "Mastic Sealant (Rolls)", def: 38, wt: 0.5}, 
-            {name: "Bolt & Nut Sets", def: 1.60, wt: 0.1}
+            {name: "Ext. Ladder", wt_m: 5, def_m: 85, wt_ft: 5, def_ft: 85, selectId: "extLadMat", options: ["HDG", "SS 304", "SS 316"]}, 
+            {name: "Int. Ladder", wt_m: 5, def_m: 95, wt_ft: 5, def_ft: 95, selectId: "intLadMat", options: ["HDG", "SS 304", "SS 316"]}, 
+            {name: "Water Level Indicator", wt_m: 4, def_m: 250, wt_ft: 4, def_ft: 250, selectId: "wliType", options: ["Ball Float", "Tube Type"]}, 
+            {name: "Air Vent", wt_m: 2, def_m: 85, wt_ft: 2, def_ft: 85, selectId: "ventType", options: ["HDG Steel", "ABS Plastic"]},
+            {name: "Mastic Sealant (Rolls)", wt_m: 1, def_m: 35, wt_ft: 1, def_ft: 35}, 
+            {name: "Bolt & Nut Sets", wt_m: 0.15, def_m: 1.80, wt_ft: 0.15, def_ft: 1.80}
         ]},
         { category: "Services", items: [
-            {name: "Installation & Labor", def: 3500, wt: 0}, 
-            {name: "Transport", def: 850, wt: 0}
+            {name: "Installation & Labor", wt_m: 0, def_m: 3500, wt_ft: 0, def_ft: 3500}, 
+            {name: "Transport", wt_m: 0, def_m: 850, wt_ft: 0, def_ft: 850}
         ]}
     ];
 
@@ -816,8 +789,10 @@ Note:
             sec.items.forEach((it, iIdx) => {
                 if(systemBaseStructure[sIdx] && systemBaseStructure[sIdx].items[iIdx]) {
                     systemBaseStructure[sIdx].items[iIdx].name = it.name;
-                    systemBaseStructure[sIdx].items[iIdx].def = it.def;
-                    systemBaseStructure[sIdx].items[iIdx].wt = it.wt;
+                    systemBaseStructure[sIdx].items[iIdx].wt_m = it.wt_m;
+                    systemBaseStructure[sIdx].items[iIdx].def_m = it.def_m;
+                    systemBaseStructure[sIdx].items[iIdx].wt_ft = it.wt_ft;
+                    systemBaseStructure[sIdx].items[iIdx].def_ft = it.def_ft;
                 }
             });
         });
@@ -828,7 +803,7 @@ Note:
 
     const configIDs = ['quoteIdInput', 'stdChoice','unitChoice','partChoice','coatChoice','length','width','height', 'thickRoof', 'thickWall', 'thickBase', 'partQty','partLen','partHgt','partType','discountPct','sstPct', 'shortExclusions', 'fullTermsNotes', 'custCompany', 'custAttn', 'custAddr', 'tcValidity', 'tcLead', 'tcDelivery', 'tcPayment', 'signName', 'signPhone'];
 
-    // --- ADMIN PANEL LOGIC ---
+    // --- ADMIN PANEL LOGIC (DUAL DB) ---
     function buildAdminTable() {
         const tbody = document.getElementById('adminBody');
         let html = '';
@@ -837,8 +812,10 @@ Note:
                 html += `<tr>
                     <td style="font-weight:800; background:#f1f5f9; text-align:left;">${sec.category}</td>
                     <td><input type="text" class="admin-input text-left" id="adm_name_${sIdx}_${iIdx}" value="${it.name}"></td>
-                    <td><input type="number" step="0.1" class="admin-input" id="adm_wt_${sIdx}_${iIdx}" value="${it.wt || 0}"></td>
-                    <td><input type="number" step="0.01" class="admin-input" id="adm_price_${sIdx}_${iIdx}" value="${it.def.toFixed(2)}"></td>
+                    <td><input type="number" step="0.1" class="admin-input" id="adm_wtm_${sIdx}_${iIdx}" value="${it.wt_m || 0}"></td>
+                    <td><input type="number" step="0.01" class="admin-input" id="adm_pricem_${sIdx}_${iIdx}" value="${(it.def_m || 0).toFixed(2)}"></td>
+                    <td><input type="number" step="0.1" class="admin-input" id="adm_wtft_${sIdx}_${iIdx}" value="${it.wt_ft || 0}"></td>
+                    <td><input type="number" step="0.01" class="admin-input" id="adm_priceft_${sIdx}_${iIdx}" value="${(it.def_ft || 0).toFixed(2)}"></td>
                 </tr>`;
             });
         });
@@ -850,21 +827,22 @@ Note:
         newDefaults.forEach((sec, sIdx) => {
             sec.items.forEach((it, iIdx) => {
                 it.name = document.getElementById(`adm_name_${sIdx}_${iIdx}`).value;
-                it.wt = parseFloat(document.getElementById(`adm_wt_${sIdx}_${iIdx}`).value) || 0;
-                it.def = parseFloat(document.getElementById(`adm_price_${sIdx}_${iIdx}`).value) || 0;
+                it.wt_m = parseFloat(document.getElementById(`adm_wtm_${sIdx}_${iIdx}`).value) || 0;
+                it.def_m = parseFloat(document.getElementById(`adm_pricem_${sIdx}_${iIdx}`).value) || 0;
+                it.wt_ft = parseFloat(document.getElementById(`adm_wtft_${sIdx}_${iIdx}`).value) || 0;
+                it.def_ft = parseFloat(document.getElementById(`adm_priceft_${sIdx}_${iIdx}`).value) || 0;
             });
         });
         localStorage.setItem('winkoMasterDefaults', JSON.stringify(newDefaults));
-        alert("Success! Master Defaults have been permanently updated.");
+        alert("Success! Master Defaults have been permanently updated for both Metric and Imperial.");
         location.reload(); 
     }
 
-    // --- DYNAMIC CUSTOM ROW LOGIC ---
     function applyCustomRows() {
         bomStructure = JSON.parse(JSON.stringify(systemBaseStructure));
         for(let i=0; i<customRowCounts.length; i++) {
             for(let j=0; j<customRowCounts[i]; j++) {
-                bomStructure[i].items.push({name: "Custom Added Item", def: 0, wt: 0});
+                bomStructure[i].items.push({name: "Custom Added Item", def_m: 0, wt_m: 0, def_ft: 0, wt_ft: 0});
             }
         }
     }
@@ -889,7 +867,6 @@ Note:
         }
     }
 
-    // --- MEMORY BANK LOGIC ---
     function refreshMemoryDropdown() {
         let memory = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {};
         let sel = document.getElementById('memoryDropdown');
@@ -981,7 +958,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV8'); // V8 Cache Buster
+            localStorage.removeItem('winkoProDataV9'); 
             
             document.getElementById('partChoice').value = 'no';
             togglePartitionDetails();
@@ -994,10 +971,8 @@ Note:
         }
     }
 
-    // --- SYNC PRINT METADATA (DEFENSIVE PROGRAMMING) ---
     function syncPrintHeader() {
         try {
-            // Internal Print Strings
             document.getElementById('metaQuoteId').innerText = document.getElementById('quoteIdInput').value || "N/A";
             document.getElementById('metaProject').innerText = document.getElementById('projectName').value || "_____________________";
             document.getElementById('metaStd').innerText = document.getElementById('stdChoice').value || "";
@@ -1022,7 +997,6 @@ Note:
             if(partChoice === 'yes' && pQty > 0) { partDisplay = `${pQty}x ${pType} (${pLen}${u} x ${pHgt}${u})`; }
             document.getElementById('metaPart').innerText = partDisplay;
             
-            // CUSTOMER PRINT SYNC 
             document.getElementById('cpCustName').innerText = document.getElementById('custCompany').value || document.getElementById('projectName').value || "Client Name";
             document.getElementById('cpCustAddress').innerHTML = (document.getElementById('custAddr').value || '').replace(/\n/g, '<br>');
             document.getElementById('cpAttention').innerText = document.getElementById('custAttn').value || "";
@@ -1049,12 +1023,12 @@ Note:
             let qtyExt = document.getElementById('qty_item_3_0') ? document.getElementById('qty_item_3_0').value : '0';
             let qtyInt = document.getElementById('qty_item_3_1') ? document.getElementById('qty_item_3_1').value : '0';
 
-            document.getElementById('cpLaddersInt').innerText = `${intLadMat} Internal Ladder - ${qtyInt} sets`;
-            document.getElementById('cpLaddersExt').innerText = `${extLadMat} External Ladder with safety cage - ${qtyExt} sets`;
+            document.getElementById('cpLaddersInt').innerText = `${qtyInt} sets ${intLadMat}`;
+            document.getElementById('cpLaddersExt').innerText = `${qtyExt} sets ${extLadMat} w/ safety cage`;
 
             let wliType = document.getElementById('wliType') ? document.getElementById('wliType').value : 'Water Level Indicator';
             let wliQty = document.getElementById('qty_item_3_2') ? document.getElementById('qty_item_3_2').value : '0';
-            document.getElementById('cpWLI').innerText = `${wliType} - ${wliQty} sets`;
+            document.getElementById('cpWLI').innerText = `${wliQty} sets ${wliType}`;
 
             document.getElementById('cpShortExclusionsText').innerHTML = (document.getElementById('shortExclusions').value || '').replace(/\n/g, '<br>');
             document.getElementById('cpFullTermsText').innerHTML = (document.getElementById('fullTermsNotes').value || '');
@@ -1090,11 +1064,11 @@ Note:
                 if(it.selectId && document.getElementById(it.selectId)) data[it.selectId] = document.getElementById(it.selectId).value; 
             });
         });
-        localStorage.setItem('winkoProDataV8', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV9', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV8');
+        let savedData = localStorage.getItem('winkoProDataV9');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1121,6 +1095,10 @@ Note:
     function buildBOMTable() {
         const tbody = document.getElementById('bomBody');
         let html = '';
+        
+        // Ensure accurate unit base selection on build
+        let isImperial = document.getElementById('unitChoice').value === 'ft';
+
         bomStructure.forEach((sec, sIdx) => {
             html += `<tr class="section-header-row"><td colspan="5" class="section-header" style="padding:0;">
                 <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px;">
@@ -1143,11 +1121,15 @@ Note:
                 }
                 nameHtml += `</div>`;
 
+                // Fetch proper default based on unit
+                let curWt = isImperial ? it.wt_ft : it.wt_m;
+                let curDef = isImperial ? it.def_ft : it.def_m;
+
                 html += `<tr>
                     <td class="col-item">${nameHtml}</td>
                     <td class="col-input col-qty"><input type="number" value="0" id="qty_${id}" oninput="calcTotals(); savePrices();"></td>
-                    <td class="col-input col-wt"><input type="number" step="0.1" value="${(it.wt || 0)}" id="wt_${id}" oninput="calcTotals(); savePrices();"></td>
-                    <td class="col-input col-uprice"><input type="number" step="0.01" value="${it.def.toFixed(2)}" id="price_${id}" oninput="calcTotals(); savePrices();"></td>
+                    <td class="col-input col-wt"><input type="number" step="0.1" value="${curWt}" id="wt_${id}" oninput="calcTotals(); savePrices();"></td>
+                    <td class="col-input col-uprice"><input type="number" step="0.01" value="${curDef.toFixed(2)}" id="price_${id}" oninput="calcTotals(); savePrices();"></td>
                     <td class="col-total col-itotal" id="total_${id}">0.00</td>
                 </tr>`;
             });
@@ -1204,31 +1186,34 @@ Note:
         syncPrintHeader(); 
     }
 
-    function drawGrid(id, c, r) {
-        const g = document.getElementById(id); g.style.gridTemplateColumns = `repeat(${c}, 1fr)`; g.innerHTML = '';
-        for(let i=0; i<(c*r); i++) g.innerHTML += '<div class="panel"></div>';
-    }
-
     function processTankData() {
         const L_in = parseFloat(document.getElementById('length').value) || 0;
         const W_in = parseFloat(document.getElementById('width').value) || 0;
         const H_in = parseFloat(document.getElementById('height').value) || 0;
         
         const partChoice = document.getElementById('partChoice').value;
-        let pQty = 0;
-        let pLen_in = 0;
-        let pHgt_in = 0;
-        
+        let pQty = 0; let pLen_in = 0; let pHgt_in = 0;
         if(partChoice === 'yes') {
             pQty = parseInt(document.getElementById('partQty').value) || 0;
             pLen_in = parseFloat(document.getElementById('partLen').value) || 0;
             pHgt_in = parseFloat(document.getElementById('partHgt').value) || 0;
         }
 
-        const unit = document.getElementById('unitChoice').value;
-        const factor = unit === 'ft' ? 4 : 1;
-        const unitStr = unit === 'ft' ? 'ft' : 'm';
-        const spacingStr = unit === 'ft' ? '4ft (1220mm)' : '1m (1000mm)';
+        const isImperial = document.getElementById('unitChoice').value === 'ft';
+        const factor = isImperial ? 4 : 1;
+        const unitStr = isImperial ? 'ft' : 'm';
+        const spacingStr = isImperial ? '4ft (1220mm)' : '1m (1000mm)';
+        
+        // AUTO-UPDATE PRICES/WEIGHTS BASED ON UNIT
+        bomStructure.forEach((sec, sIdx) => {
+            sec.items.forEach((it, iIdx) => {
+                const id = `item_${sIdx}_${iIdx}`;
+                if(document.getElementById(`price_${id}`) && document.getElementById(`wt_${id}`)) {
+                    document.getElementById(`wt_${id}`).value = isImperial ? it.wt_ft : it.wt_m;
+                    document.getElementById(`price_${id}`).value = (isImperial ? it.def_ft : it.def_m).toFixed(2);
+                }
+            });
+        });
         
         const L = Math.ceil(L_in / factor);
         const W = Math.ceil(W_in / factor);
@@ -1245,6 +1230,7 @@ Note:
         document.getElementById('sumUnit').innerText = document.getElementById('unitChoice').options[document.getElementById('unitChoice').selectedIndex].text;
         document.getElementById('sumCoat').innerText = document.getElementById('coatChoice').value;
 
+        // Math
         let roof = L * W;
         let base = L * W;
         let sides = ((L * 2) + (W * 2)) * H; 
@@ -1267,8 +1253,6 @@ Note:
         if(document.getElementById('qty_item_0_2')) document.getElementById('qty_item_0_2').value = sides; 
         if(document.getElementById('qty_item_0_3')) document.getElementById('qty_item_0_3').value = 0; 
         if(document.getElementById('qty_item_0_4')) document.getElementById('qty_item_0_4').value = base; 
-        
-        // Populate dedicated Partition row (Item 5)
         if(document.getElementById('qty_item_0_5')) document.getElementById('qty_item_0_5').value = partPanels; 
 
         if(document.getElementById('qty_item_1_3')) document.getElementById('qty_item_1_3').value = L_in; 
@@ -1283,10 +1267,6 @@ Note:
 
         if(document.getElementById('qty_item_4_0') && (!document.getElementById('qty_item_4_0').value || document.getElementById('qty_item_4_0').value == "0")) document.getElementById('qty_item_4_0').value = 1;
         if(document.getElementById('qty_item_4_1') && (!document.getElementById('qty_item_4_1').value || document.getElementById('qty_item_4_1').value == "0")) document.getElementById('qty_item_4_1').value = 1;
-
-        drawGrid('topGrid', L, W); drawGrid('bottomGrid', L, W);
-        drawGrid('frontGrid', L, H); drawGrid('backGrid', L, H);
-        drawGrid('leftGrid', W, H); drawGrid('rightGrid', W, H);
 
         calcTotals();
         savePrices();
@@ -1363,7 +1343,7 @@ Note:
         }
     }
 
-    // Initialize Base Data
+    // Initialize
     applyCustomRows();
     buildBOMTable();
     loadPrices();
