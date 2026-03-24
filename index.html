@@ -76,7 +76,6 @@
         .bom-inline-select { flex: 0 0 auto; max-width: 110px; margin-left: 4px; padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85em; font-weight: 600; color: #ea580c; background: #fff; cursor: pointer; transition: 0.2s;}
         .bom-inline-select:focus { outline: none; border-color: #ea580c; box-shadow: 0 0 0 2px rgba(234,88,12,0.1);}
 
-        /* Floating Premium Summary Box */
         .summary-box { background: linear-gradient(145deg, #0f172a, #1e293b); color: white; padding: 25px; border-radius: 12px; box-shadow: 0 15px 25px -5px rgba(15,23,42,0.3);}
         .sum-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 1em; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; color: #cbd5e1;}
         .sum-row span:last-child { font-weight: 600; color: white;}
@@ -140,7 +139,7 @@
             /* Allow layout to stack naturally */
             body.print-internal .app-layout { display: block !important; }
             body.print-internal .col-left { width: 100% !important; display: block !important; }
-            body.print-internal .col-right { display: none !important; } /* Hidden, we use internalPrintFooter */
+            body.print-internal .col-right { display: none !important; } 
             
             body.print-internal .module-card { border: none !important; padding: 0 !important; margin-bottom: 20px !important; box-shadow: none !important; }
             
@@ -171,7 +170,8 @@
             body.print-internal th { background-color: #0f172a !important; color: #ffffff !important; padding: 6px 8px; border: 1px solid #0f172a; font-weight: 700; text-transform: uppercase;}
             body.print-internal td { border-right: 1px solid #e2e8f0; padding: 5px 8px; color: #0f172a;}
             body.print-internal td:last-child { border-right: none; }
-            body.print-internal .section-header { background-color: #e2e8f0 !important; font-weight: 800; color: #0f172a !important; border-bottom: 1px solid #cbd5e1 !important; padding: 5px 8px !important; text-transform: uppercase; font-size: 7.5pt;}
+            body.print-internal td.text-center { text-align: center; } body.print-internal td.text-right { text-align: right; font-weight: 700; color: #0f172a !important;}
+            body.print-internal .section-header { background-color: #e2e8f0 !important; font-weight: 800; color: #0f172a !important; border-bottom: 1px solid #cbd5e1 !important; padding: 5px 8px !important; text-transform: uppercase; font-size: 7.5pt; border-right: none;}
             
             /* Flatten Inputs */
             body.print-internal input, body.print-internal .desc-input, body.print-internal .bom-inline-select { border: none !important; background: transparent !important; color: #0f172a !important; box-shadow: none !important; font-weight: 600; padding: 0 !important; font-size: inherit; appearance: none; -webkit-appearance: none; width: auto;}
@@ -193,12 +193,12 @@
             body.print-internal .sum-row { border-bottom: 1px solid #cbd5e1 !important; margin-bottom: 6px !important; padding-bottom: 4px !important; color: #334155 !important; font-size: 8.5pt !important; font-weight: 700 !important;}
             body.print-internal .sum-row.total { background: #0f172a !important; color: #ffffff !important; border: none !important; padding: 10px !important; font-size: 12pt !important; margin: 10px -15px -15px -15px !important; border-radius: 0 0 4px 4px !important;}
             
-            /* Drawings Integration */
+            /* Drawings Integration - Expanded to full width */
             body.print-internal .visual-container { display: flex !important; justify-content: space-between !important; width: 100% !important; margin: 20px 0 15px 0; page-break-inside: avoid; clear: both;}
-            body.print-internal .view-box { padding: 5px; border: 1px solid #cbd5e1 !important; background: #fff !important; border-radius: 4px; flex: 1; margin: 0 5px; }
-            body.print-internal .grid-draft { gap: 0.5px; border: 1px solid #0f172a !important; background: #fff !important;}
+            body.print-internal .view-box { padding: 10px; border: 1px solid #cbd5e1 !important; background: #fff !important; border-radius: 4px; flex: 1; margin: 0 5px;}
+            body.print-internal .grid-draft { gap: 1px; border: 1px solid #0f172a !important; background: #fff !important; max-width: 100%; display: inline-grid;}
             body.print-internal .panel { background: #e0f2fe !important; border: 0.5px solid #94a3b8 !important;}
-            body.print-internal .view-title { font-size: 7pt; margin-bottom: 3px; color: #0f172a !important; text-align: center; font-weight: 800;}
+            body.print-internal .view-title { font-size: 7.5pt; margin-bottom: 5px; color: #0f172a !important; text-align: center; font-weight: 800;}
 
             body.print-internal .print-footer { display: flex; justify-content: space-between; margin-top: 30px; page-break-inside: avoid; clear: both; padding-top: 10px;}
             body.print-internal .sig-box { width: 40%; text-align: left; }
@@ -715,7 +715,6 @@ Note:
             document.body.className = 'print-internal';
             syncPrintHeader();
             
-            // Duplicate drawings specifically for the internal print layout
             let topG = document.getElementById('topGrid_p');
             if(topG) {
                 topG.innerHTML = document.getElementById('topGrid').innerHTML;
@@ -780,7 +779,7 @@ Note:
             {name: "3.0mm Panel", def: 280, wt: 45}, 
             {name: "4.5mm Panel", def: 350, wt: 65}, 
             {name: "Base Panel", def: 320, wt: 65},
-            {name: "Partition Panel", def: 280, wt: 45} // Explicit Partition Row
+            {name: "Partition Panel", def: 280, wt: 45} 
         ]},
         { category: "Cleat & Trusses", items: [
             {name: "Type A Cleat", def: 25, wt: 1}, {name: "Type B Cleat", def: 28, wt: 1.5}, {name: "Type C Cleat", def: 30, wt: 2},
@@ -973,8 +972,8 @@ Note:
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
             
-            // V11 CACHE BUSTER - Wipes old broken math memory
-            localStorage.removeItem('winkoProDataV11'); 
+            // V12 CACHE BUSTER - Hard wipes old UI cache
+            localStorage.removeItem('winkoProDataV12'); 
             
             if(document.getElementById('partChoice')) {
                 document.getElementById('partChoice').value = 'no';
@@ -1086,11 +1085,11 @@ Note:
                 if(it.selectId && document.getElementById(it.selectId)) data[it.selectId] = document.getElementById(it.selectId).value; 
             });
         });
-        localStorage.setItem('winkoProDataV11', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV12', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV11');
+        let savedData = localStorage.getItem('winkoProDataV12');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1265,7 +1264,6 @@ Note:
         if(document.getElementById('sumUnit')) document.getElementById('sumUnit').innerText = document.getElementById('unitChoice').options[document.getElementById('unitChoice').selectedIndex].text;
         if(document.getElementById('sumCoat')) document.getElementById('sumCoat').innerText = document.getElementById('coatChoice').value;
 
-        // ACCURATE ISOLATED MATH
         let roof = L * W;
         let base = L * W;
         let sides = ((L * 2) + (W * 2)) * H; 
@@ -1299,7 +1297,7 @@ Note:
         if(document.getElementById('qty_item_3_2')) document.getElementById('qty_item_3_2').value = 1; 
         if(document.getElementById('qty_item_3_3')) document.getElementById('qty_item_3_3').value = 1; 
 
-        // ACCURATE ACCESSORY MATH BASED ON UNIT (1m vs 4ft)
+        // ACCURATE ACCESSORY MATH (1m vs 4ft)
         let isImperial = (unit === 'ft');
         let sealantPerimeter = isImperial ? 4.88 : 4.0;
         let boltsPerPanel = isImperial ? 16 : 12;
