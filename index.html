@@ -41,7 +41,7 @@
 
         .app-layout { display: flex; gap: 25px; flex-wrap: wrap; width: 100%; align-items: flex-start;}
         .col-left { flex: 1.4; min-width: 500px; display: flex; flex-direction: column; gap: 20px; }
-        .col-right { flex: 0.9; min-width: 400px; display: flex; flex-direction: column; gap: 20px; }
+        .col-right { flex: 0.9; min-width: 400px; display: flex; flex-direction: column; gap: 20px; position: sticky; top: 20px; }
 
         /* UI Module Cards */
         .module-card { background: #ffffff; border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
@@ -128,14 +128,27 @@
             .no-print { display: none !important; }
             .print-only { display: block; }
             .container { box-shadow: none; max-width: 100%; padding: 0; border: none; }
-            .module-card { border: none; padding: 0; margin: 0; box-shadow: none; }
-            .card-header { display: none; }
             
             /* ------------------------------------------------ */
             /* MODE 1: INTERNAL PRINT (Shows full BOM and Cost) */
             /* ------------------------------------------------ */
             body.print-internal #mainContent { display: block !important; }
             body.print-internal #customerPrintView { display: none !important; }
+
+            /* Flatten UI for clean Internal Document */
+            body.print-internal .app-header-bar,
+            body.print-internal .memory-panel,
+            body.print-internal .btn-group { display: none !important; }
+            
+            body.print-internal .app-layout { display: block !important; }
+            body.print-internal .col-left { width: 100% !important; display: block !important; }
+            
+            /* Hide the right column entirely, rely on internalPrintFooter */
+            body.print-internal .col-right { display: none !important; }
+            
+            body.print-internal .module-card { border: none !important; padding: 0 !important; margin-bottom: 20px !important; box-shadow: none !important; }
+            body.print-internal .card-header { display: block !important; border-bottom: 2px solid #0f172a !important; margin-bottom: 10px !important; font-size: 11pt !important; color: #0f172a !important; text-transform: uppercase; padding: 0 0 5px 0 !important; }
+            body.print-internal .card-header span { display: none !important; } /* Hide emojis */
 
             body.print-internal .print-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #ea580c; padding-bottom: 15px; margin-bottom: 20px; }
             body.print-internal .header-left { display: flex; align-items: center; gap: 20px; }
@@ -151,7 +164,8 @@
             body.print-internal .meta-item { font-size: 8.5pt; margin-bottom: 5px; display: flex; }
             body.print-internal .meta-label { font-weight: 700; color: #64748b; width: 90px; text-transform: uppercase;}
             body.print-internal .meta-value { font-weight: 700; color: #0f172a; }
-            
+
+            /* Fix Internal Table */
             body.print-internal table { font-size: 8pt; margin-bottom: 15px; border-collapse: collapse; width: 100%; border: 1px solid #cbd5e1; border-radius: 0;}
             body.print-internal tr { border-bottom: 1px solid #e2e8f0; page-break-inside: avoid; }
             body.print-internal tr:nth-child(even):not(.section-header-row) { background-color: #f8fafc !important; }
@@ -165,22 +179,18 @@
             body.print-internal input, body.print-internal .desc-input, body.print-internal .bom-inline-select { border: none !important; background: transparent !important; color: #0f172a !important; box-shadow: none !important; font-weight: 600; padding: 0 !important; font-size: inherit; appearance: none; -webkit-appearance: none; width: auto;}
             body.print-internal .bom-inline-select { margin-left: 4px; color: #475569 !important; font-weight: 700;}
             
-            body.print-internal .summary-box { background: #f8fafc !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 4px; padding: 10px 15px !important; margin-top: 15px; width: 260px; float: right; page-break-inside: avoid; box-shadow: none;}
+            /* Internal Summary Footer */
+            body.print-internal #internalPrintFooter { display: block !important; margin-top: 20px; }
+            body.print-internal .summary-box { background: #f8fafc !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 4px; padding: 10px 15px !important; margin-top: 5px; width: 260px; float: right; page-break-inside: avoid; box-shadow: none;}
             body.print-internal .sum-row { border-bottom: 1px solid #cbd5e1 !important; margin-bottom: 5px; padding-bottom: 3px; color: #334155 !important; font-size: 8pt; font-weight: 700;}
             body.print-internal .sum-row.total { background: #0f172a !important; color: #ffffff !important; border: none !important; padding: 8px !important; font-size: 11pt; margin: 8px -15px -10px -15px; border-radius: 0 0 2px 2px;}
             
-            body.print-internal .visual-container { max-width: 100%; display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin: 20px auto 15px auto; page-break-inside: avoid; clear: both;}
+            body.print-internal .visual-container { max-width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0 15px 0; page-break-inside: avoid; clear: both; width: 60%;}
             body.print-internal .view-box { padding: 5px; border: 1px solid #cbd5e1 !important; background: #fff !important; border-radius: 4px; }
             body.print-internal .grid-draft { gap: 0.5px; border: 1px solid #0f172a !important; background: #fff !important;}
             body.print-internal .panel { background: #e0f2fe !important; border: 0.5px solid #94a3b8 !important;}
             body.print-internal .view-title { font-size: 6.5pt; margin-bottom: 3px; color: #0f172a !important; text-align: center; font-weight: 800;}
             
-            body.print-internal .plinth-wrapper { margin-top: 10px; }
-            body.print-internal .plinth-card { border: 1px solid #cbd5e1 !important; box-shadow: none; padding: 6px; border-radius: 4px; }
-            body.print-internal .plinth-card h4 { font-size: 7.5pt; color:#0f172a; font-weight: 800;}
-            body.print-internal .plinth-diagram { border: 1px solid #94a3b8 !important; background: #f8fafc !important; height: 50px; margin-bottom: 5px;}
-            body.print-internal .concrete-beam { border: 1px solid #475569 !important; }
-
             body.print-internal .print-footer { display: flex; justify-content: space-between; margin-top: 30px; page-break-inside: avoid; clear: both; padding-top: 10px;}
             body.print-internal .sig-box { width: 40%; text-align: left; }
             body.print-internal .sig-box p { font-size: 8pt; margin: 0; color: #334155; }
@@ -971,7 +981,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV7'); 
+            localStorage.removeItem('winkoProDataV8'); // V8 Cache Buster
             
             document.getElementById('partChoice').value = 'no';
             togglePartitionDetails();
@@ -984,7 +994,7 @@ Note:
         }
     }
 
-    // --- SYNC PRINT METADATA ---
+    // --- SYNC PRINT METADATA (DEFENSIVE PROGRAMMING) ---
     function syncPrintHeader() {
         try {
             // Internal Print Strings
@@ -1080,11 +1090,11 @@ Note:
                 if(it.selectId && document.getElementById(it.selectId)) data[it.selectId] = document.getElementById(it.selectId).value; 
             });
         });
-        localStorage.setItem('winkoProDataV7', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV8', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV7');
+        let savedData = localStorage.getItem('winkoProDataV8');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1235,19 +1245,17 @@ Note:
         document.getElementById('sumUnit').innerText = document.getElementById('unitChoice').options[document.getElementById('unitChoice').selectedIndex].text;
         document.getElementById('sumCoat').innerText = document.getElementById('coatChoice').value;
 
-        // --- MATH FIX: STRICT ISOLATION ---
         let roof = L * W;
         let base = L * W;
-        let sides = ((L * 2) + (W * 2)) * H; // WALLS ONLY
+        let sides = ((L * 2) + (W * 2)) * H; 
         
         let partPanels = 0;
-        if(partChoice === 'yes' && pQty > 0) { partPanels = (pL * pH * pQty); } // PARTITION ONLY
+        if(partChoice === 'yes' && pQty > 0) { partPanels = (pL * pH * pQty); } 
         
         let totalP = roof + base + sides + partPanels;
 
         document.getElementById('totalPanelsCount').innerText = totalP;
 
-        // Auto-fill Logic
         let manholeInput = document.getElementById('qty_item_0_0'); 
         if(manholeInput) {
             let manholeQty = parseInt(manholeInput.value) || 0;
@@ -1260,14 +1268,12 @@ Note:
         if(document.getElementById('qty_item_0_3')) document.getElementById('qty_item_0_3').value = 0; 
         if(document.getElementById('qty_item_0_4')) document.getElementById('qty_item_0_4').value = base; 
         
-        // Explicitly assign Partition panels to their own dedicated BOM row (Item 5 in Category 0)
+        // Populate dedicated Partition row (Item 5)
         if(document.getElementById('qty_item_0_5')) document.getElementById('qty_item_0_5').value = partPanels; 
 
-        // Truss
         if(document.getElementById('qty_item_1_3')) document.getElementById('qty_item_1_3').value = L_in; 
         if(document.getElementById('qty_item_1_4')) document.getElementById('qty_item_1_4').value = L_in; 
 
-        // Accessories scale with totalP
         if(document.getElementById('qty_item_3_0')) document.getElementById('qty_item_3_0').value = H_in; 
         if(document.getElementById('qty_item_3_1')) document.getElementById('qty_item_3_1').value = H_in; 
         if(document.getElementById('qty_item_3_2')) document.getElementById('qty_item_3_2').value = 1; 
@@ -1275,7 +1281,6 @@ Note:
         if(document.getElementById('qty_item_3_4')) document.getElementById('qty_item_3_4').value = Math.ceil((totalP * 4.2) / 15); 
         if(document.getElementById('qty_item_3_5')) document.getElementById('qty_item_3_5').value = Math.ceil(totalP * 16 * 1.05); 
 
-        // Services
         if(document.getElementById('qty_item_4_0') && (!document.getElementById('qty_item_4_0').value || document.getElementById('qty_item_4_0').value == "0")) document.getElementById('qty_item_4_0').value = 1;
         if(document.getElementById('qty_item_4_1') && (!document.getElementById('qty_item_4_1').value || document.getElementById('qty_item_4_1').value == "0")) document.getElementById('qty_item_4_1').value = 1;
 
@@ -1358,7 +1363,7 @@ Note:
         }
     }
 
-    // Initialize
+    // Initialize Base Data
     applyCustomRows();
     buildBOMTable();
     loadPrices();
