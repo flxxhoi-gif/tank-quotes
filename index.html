@@ -7,7 +7,7 @@
     <style>
         /* --- MODERN RESET & TYPOGRAPHY --- */
         * { box-sizing: border-box; }
-        body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f8fafc; padding: 20px; color: #334155; margin: 0; line-height: 1.5; }
+        body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f1f5f9; padding: 20px; color: #334155; margin: 0; line-height: 1.5; }
         
         /* --- SECURITY OVERLAY --- */
         #securityOverlay {
@@ -98,7 +98,7 @@
         .plinth-wrapper { display: flex; gap: 15px; page-break-inside: avoid; }
         .plinth-card { flex: 1; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; background: #f8fafc; text-align: center; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);}
         .plinth-card h4 { margin: 0 0 12px 0; color: #0f172a; font-size: 0.85em; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px;}
-        .plinth-diagram { height: 90px; width: 100%; display: flex; justify-content: space-evenly; align-items: center; border: 1px solid #cbd5e1; background: #fff; padding: 10px; margin-bottom: 12px; position: relative; border-radius: 4px;}
+        .plinth-diagram { height: 90px; width: 100%; display: flex; justify-content: space-evenly; align-items: center; border: 1px solid #cbd5e1; background: #f8fafc; padding: 10px; margin-bottom: 12px; position: relative; border-radius: 4px;}
         .concrete-beam { background: repeating-linear-gradient(45deg, #cbd5e1, #cbd5e1 4px, #94a3b8 4px, #94a3b8 8px); height: 100%; width: 16px; border: 1px solid #475569; border-radius: 2px;}
         .grid-beam-h { width: 100%; height: 16px; background: repeating-linear-gradient(45deg, #cbd5e1, #cbd5e1 4px, #94a3b8 4px, #94a3b8 8px); position: absolute; border: 1px solid #475569; top: 50%; transform: translateY(-50%); border-radius: 2px;}
 
@@ -134,14 +134,21 @@
             body.print-internal #mainContent { display: block !important; }
             body.print-internal #customerPrintView { display: none !important; }
 
-            /* Restore Flex side-by-side for internal print */
-            body.print-internal .app-layout { display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; gap: 20px !important; align-items: flex-start !important; }
-            body.print-internal .col-left { flex: 1.5 !important; display: block !important; min-width: 0 !important; }
-            body.print-internal .col-right { flex: 1 !important; display: block !important; position: static !important; min-width: 0 !important;}
+            /* Hide all input cards except the BOM table */
+            body.print-internal .internal-hide { display: none !important; }
+            
+            /* Allow layout to stack naturally */
+            body.print-internal .app-layout { display: block !important; }
+            body.print-internal .col-left { width: 100% !important; display: block !important; }
+            body.print-internal .col-right { display: none !important; } /* Hidden, we use internalPrintFooter */
             
             body.print-internal .module-card { border: none !important; padding: 0 !important; margin-bottom: 20px !important; box-shadow: none !important; }
-            body.print-internal .card-header { display: none !important; } 
+            
+            /* Make the BOM Table Title look clean */
+            body.print-internal .card-header { display: block !important; border-bottom: 2px solid #0f172a !important; margin-bottom: 10px !important; font-size: 12pt !important; color: #0f172a !important; text-transform: uppercase; padding: 0 0 5px 0 !important; background: transparent !important;}
+            body.print-internal .card-header span, body.print-internal .card-header button { display: none !important; }
 
+            /* Header Metadata */
             body.print-internal .print-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #ea580c; padding-bottom: 15px; margin-bottom: 20px; }
             body.print-internal .header-left { display: flex; align-items: center; gap: 20px; }
             body.print-internal .header-left img { width: 130px; height: auto; object-fit: contain; }
@@ -156,32 +163,43 @@
             body.print-internal .meta-item { font-size: 8.5pt; margin-bottom: 5px; display: flex; }
             body.print-internal .meta-label { font-weight: 700; color: #64748b; width: 90px; text-transform: uppercase;}
             body.print-internal .meta-value { font-weight: 700; color: #0f172a; }
-
-            body.print-internal .section-title { margin-top: 15px !important; margin-bottom: 10px !important; background: transparent !important; border-left: none !important; border-bottom: 2px solid #0f172a !important; padding: 0 0 4px 0 !important; color: #0f172a !important; font-size: 11pt !important; text-transform: uppercase; letter-spacing: 1px; font-weight: 800;}
             
-            body.print-internal table { font-size: 8pt; margin-bottom: 15px; border-collapse: collapse; width: 100%; border: 1px solid #cbd5e1; border-radius: 0;}
+            /* Internal BOM Table Formatting */
+            body.print-internal table { font-size: 8.5pt; margin-bottom: 15px; border-collapse: collapse; width: 100%; border: 1px solid #cbd5e1; border-radius: 0;}
             body.print-internal tr { border-bottom: 1px solid #e2e8f0; page-break-inside: avoid; }
             body.print-internal tr:nth-child(even):not(.section-header-row) { background-color: #f8fafc !important; }
             body.print-internal th { background-color: #0f172a !important; color: #ffffff !important; padding: 6px 8px; border: 1px solid #0f172a; font-weight: 700; text-transform: uppercase;}
-            body.print-internal th.text-center { text-align: center; } body.print-internal th.text-right { text-align: right; }
             body.print-internal td { border-right: 1px solid #e2e8f0; padding: 5px 8px; color: #0f172a;}
             body.print-internal td:last-child { border-right: none; }
-            body.print-internal td.text-center { text-align: center; } body.print-internal td.text-right { text-align: right; font-weight: 700; color: #0f172a !important;}
-            body.print-internal .section-header { background-color: #e2e8f0 !important; font-weight: 800; color: #0f172a !important; border-bottom: 1px solid #cbd5e1 !important; padding: 5px 8px !important; text-transform: uppercase; font-size: 7.5pt; border-right: none;}
+            body.print-internal .section-header { background-color: #e2e8f0 !important; font-weight: 800; color: #0f172a !important; border-bottom: 1px solid #cbd5e1 !important; padding: 5px 8px !important; text-transform: uppercase; font-size: 7.5pt;}
             
+            /* Flatten Inputs */
             body.print-internal input, body.print-internal .desc-input, body.print-internal .bom-inline-select { border: none !important; background: transparent !important; color: #0f172a !important; box-shadow: none !important; font-weight: 600; padding: 0 !important; font-size: inherit; appearance: none; -webkit-appearance: none; width: auto;}
+            body.print-internal input.desc-input { width: 100% !important; text-align: left !important; }
+            body.print-internal input[type="number"] { width: 100% !important; text-align: center !important; }
+            body.print-internal .col-uprice input { text-align: right !important; }
             body.print-internal .bom-inline-select { margin-left: 4px; color: #475569 !important; font-weight: 700;}
-            
-            body.print-internal .summary-box { background: #f8fafc !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 4px; padding: 10px 15px !important; margin-top: 5px; width: 100%; box-shadow: none;}
-            body.print-internal .sum-row { border-bottom: 1px solid #cbd5e1 !important; margin-bottom: 5px; padding-bottom: 3px; color: #334155 !important; font-size: 8pt; font-weight: 700;}
-            body.print-internal .sum-row.total { background: #0f172a !important; color: #ffffff !important; border: none !important; padding: 8px !important; font-size: 11pt; margin: 8px -15px -10px -15px; border-radius: 0 0 2px 2px;}
 
-            body.print-internal .visual-container { max-width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin: 20px auto 15px auto; page-break-inside: avoid; clear: both;}
-            body.print-internal .view-box { padding: 5px; border: 1px solid #cbd5e1 !important; background: #fff !important; border-radius: 4px; }
+            /* Column Widths */
+            body.print-internal .col-item { width: 45% !important; }
+            body.print-internal .col-qty { width: 10% !important; }
+            body.print-internal .col-wt { width: 15% !important; }
+            body.print-internal .col-uprice { width: 15% !important; }
+            body.print-internal .col-itotal { width: 15% !important; }
+            
+            /* Clean Summary Box */
+            body.print-internal #internalPrintFooter { display: block !important; margin-top: 20px; }
+            body.print-internal .summary-box { background: #fff !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 6px !important; padding: 15px !important; margin-top: 15px !important; width: 320px !important; float: right !important; box-shadow: none !important;}
+            body.print-internal .sum-row { border-bottom: 1px solid #cbd5e1 !important; margin-bottom: 6px !important; padding-bottom: 4px !important; color: #334155 !important; font-size: 8.5pt !important; font-weight: 700 !important;}
+            body.print-internal .sum-row.total { background: #0f172a !important; color: #ffffff !important; border: none !important; padding: 10px !important; font-size: 12pt !important; margin: 10px -15px -15px -15px !important; border-radius: 0 0 4px 4px !important;}
+            
+            /* Drawings Integration */
+            body.print-internal .visual-container { display: flex !important; justify-content: space-between !important; width: 100% !important; margin: 20px 0 15px 0; page-break-inside: avoid; clear: both;}
+            body.print-internal .view-box { padding: 5px; border: 1px solid #cbd5e1 !important; background: #fff !important; border-radius: 4px; flex: 1; margin: 0 5px; }
             body.print-internal .grid-draft { gap: 0.5px; border: 1px solid #0f172a !important; background: #fff !important;}
             body.print-internal .panel { background: #e0f2fe !important; border: 0.5px solid #94a3b8 !important;}
-            body.print-internal .view-title { font-size: 6.5pt; margin-bottom: 3px; color: #0f172a !important; text-align: center; font-weight: 800;}
-            
+            body.print-internal .view-title { font-size: 7pt; margin-bottom: 3px; color: #0f172a !important; text-align: center; font-weight: 800;}
+
             body.print-internal .print-footer { display: flex; justify-content: space-between; margin-top: 30px; page-break-inside: avoid; clear: both; padding-top: 10px;}
             body.print-internal .sig-box { width: 40%; text-align: left; }
             body.print-internal .sig-box p { font-size: 8pt; margin: 0; color: #334155; }
@@ -333,7 +351,7 @@
         <div class="app-layout">
             <div class="col-left">
                 
-                <div class="module-card no-print">
+                <div class="module-card internal-hide no-print">
                     <div class="card-header"><span>📋</span> 1. Project & Client Info</div>
                     <div class="config-grid">
                         <div class="form-group"><label>Quote Ref Number</label><input type="text" id="quoteIdInput" placeholder="e.g. QP-26-008" oninput="syncPrintHeader(); savePrices();"></div>
@@ -344,7 +362,7 @@
                     </div>
                 </div>
 
-                <div class="module-card no-print">
+                <div class="module-card internal-hide no-print">
                     <div class="card-header"><span>📐</span> 2. Tank Engineering & Dimensions</div>
                     <div class="config-grid">
                         <div class="form-group"><label>Standard</label><select id="stdChoice" onchange="savePrices(); processTankData();"><option>SANS 10329:2020 Approved by SIRIM & SPAN</option><option>SS 22: 1979</option><option>Other</option></select></div>
@@ -377,7 +395,7 @@
                     <button class="action-btn" onclick="processTankData()" style="width:100%; background: #0f172a; margin-top: 10px;">⚙️ Calculate Internal BOM</button>
                 </div>
                 
-                <div class="module-card no-print">
+                <div class="module-card internal-hide no-print">
                     <div class="card-header"><span>💰</span> 3. Commercial Terms & Formatting</div>
                     
                     <div class="config-grid">
@@ -436,10 +454,10 @@ Note:
                     </div>
                 </div>
 
-                <div class="module-card no-print">
+                <div class="module-card">
                     <div class="card-header">
-                        <div><span>⚙️</span> 4. Internal Bill of Materials</div>
-                        <button class="reset-btn" onclick="resetDefaultPrices()">↺ Reset Defaults</button>
+                        <div><span>⚙️</span> INTERNAL BILL OF MATERIALS</div>
+                        <button class="reset-btn no-print" onclick="resetDefaultPrices()">↺ Reset Defaults</button>
                     </div>
                     <table id="bomTable">
                         <thead><tr>
@@ -512,15 +530,15 @@ Note:
                 <div class="sum-row total"><span>GRAND TOTAL:</span> <span style="float:right;">RM <span id="grandTotal_print">0.00</span></span></div>
             </div>
             
-            <div class="visual-container" style="margin-top:20px; width:60%; margin-bottom: 20px;">
-                <div class="view-box"><div class="view-title">Top</div><div id="topGrid_p" class="grid-draft"></div></div>
-                <div class="view-box"><div class="view-title">Front</div><div id="frontGrid_p" class="grid-draft"></div></div>
-                <div class="view-box"><div class="view-title">Left</div><div id="leftGrid_p" class="grid-draft"></div></div>
+            <div class="visual-container">
+                <div class="view-box"><div class="view-title">Top Draft</div><div id="topGrid_p" class="grid-draft"></div></div>
+                <div class="view-box"><div class="view-title">Front Draft</div><div id="frontGrid_p" class="grid-draft"></div></div>
+                <div class="view-box"><div class="view-title">Left Draft</div><div id="leftGrid_p" class="grid-draft"></div></div>
             </div>
             
             <div class="print-footer" id="internalSig">
                 <div class="sig-box">
-                    <p>Issued By:</p>
+                    <p>Prepared By:</p>
                     <div class="sig-line"></div>
                     <p><strong>JUTARAMA INDUSTRIES (M) SDN BHD</strong></p>
                 </div>
@@ -696,7 +714,8 @@ Note:
         try {
             document.body.className = 'print-internal';
             syncPrintHeader();
-            // Duplicate visuals for internal print footer
+            
+            // Duplicate drawings specifically for the internal print layout
             let topG = document.getElementById('topGrid_p');
             if(topG) {
                 topG.innerHTML = document.getElementById('topGrid').innerHTML;
@@ -954,8 +973,8 @@ Note:
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
             
-            // V10 CACHE BUSTER - Wipes old broken math memory
-            localStorage.removeItem('winkoProDataV10'); 
+            // V11 CACHE BUSTER - Wipes old broken math memory
+            localStorage.removeItem('winkoProDataV11'); 
             
             if(document.getElementById('partChoice')) {
                 document.getElementById('partChoice').value = 'no';
@@ -1067,11 +1086,11 @@ Note:
                 if(it.selectId && document.getElementById(it.selectId)) data[it.selectId] = document.getElementById(it.selectId).value; 
             });
         });
-        localStorage.setItem('winkoProDataV10', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV11', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV10');
+        let savedData = localStorage.getItem('winkoProDataV11');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1120,7 +1139,6 @@ Note:
                 }
                 nameHtml += `</div>`;
 
-                // Safe fallback for weight if it was missing from old cache
                 let safeWt = it.wt !== undefined && it.wt !== null ? it.wt : 0;
 
                 html += `<tr>
@@ -1135,7 +1153,6 @@ Note:
         tbody.innerHTML = html;
     }
 
-    // --- MATH FIX ---
     function calcTotals() {
         let subtotal = 0;
         let totalWeight = 0;
@@ -1151,7 +1168,7 @@ Note:
                     const q = parseFloat(qtyEl.value) || 0;
                     const p = parseFloat(priceEl.value) || 0;
                     let w = parseFloat(wtEl.value);
-                    if(isNaN(w)) w = 0; // Hard fix for NaN weight bug
+                    if(isNaN(w)) w = 0; 
                     
                     const total = q * p;
                     const totalEl = document.getElementById(`total_${id}`);
@@ -1210,12 +1227,11 @@ Note:
         const H_in = parseFloat(document.getElementById('height').value) || 0;
         const unit = document.getElementById('unitChoice').value;
         
-        // Accurate Capacity Calculation
         let volLiters = 0;
         if(unit === 'ft') { volLiters = L_in * W_in * H_in * 28.3168; }
         if(unit === 'm') { volLiters = L_in * W_in * H_in * 1000; }
-        let effLiters = volLiters * 0.9; // 10% freeboard
-        let effGals = effLiters * 0.219969; // UK Gallons
+        let effLiters = volLiters * 0.9; 
+        let effGals = effLiters * 0.219969; 
         
         let capScreen = document.getElementById('sumCapacity_screen');
         if(capScreen) capScreen.innerText = effLiters.toLocaleString('en-MY', {maximumFractionDigits: 0}) + " L (" + effGals.toLocaleString('en-MY', {maximumFractionDigits: 0}) + " Gal)";
@@ -1273,7 +1289,6 @@ Note:
         if(document.getElementById('qty_item_0_3')) document.getElementById('qty_item_0_3').value = 0; 
         if(document.getElementById('qty_item_0_4')) document.getElementById('qty_item_0_4').value = base; 
         
-        // Populate dedicated Partition row (Item 5)
         if(document.getElementById('qty_item_0_5')) document.getElementById('qty_item_0_5').value = partPanels; 
 
         if(document.getElementById('qty_item_1_3')) document.getElementById('qty_item_1_3').value = L_in; 
@@ -1341,10 +1356,7 @@ Note:
                 let q = document.getElementById(`qty_${id}`).value;
                 let w = document.getElementById(`wt_${id}`).value;
                 let p = document.getElementById(`price_${id}`).value;
-                
-                let totalEl = document.getElementById(`total_${id}`);
-                let t = totalEl ? totalEl.innerText.replace(/,/g, '') : "0";
-                
+                let t = document.getElementById(`total_${id}`).innerText.replace(/,/g, '');
                 if(q > 0) csv += `"${s.category}","${label}",${q},${w},${p},${t}\n`;
             })});
             
@@ -1377,12 +1389,10 @@ Note:
         }
     }
 
-    // Initialize
     applyCustomRows();
     buildBOMTable();
     loadPrices();
     togglePartitionDetails(); 
-    // Force a safe recalculation on load
     processTankData();
 </script>
 
