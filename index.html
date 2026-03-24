@@ -7,7 +7,7 @@
     <style>
         /* --- MODERN RESET & TYPOGRAPHY --- */
         * { box-sizing: border-box; }
-        body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f1f5f9; padding: 20px; color: #334155; margin: 0; line-height: 1.5; }
+        body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f8fafc; padding: 20px; color: #334155; margin: 0; line-height: 1.5; }
         
         /* --- SECURITY OVERLAY --- */
         #securityOverlay {
@@ -76,6 +76,7 @@
         .bom-inline-select { flex: 0 0 auto; max-width: 110px; margin-left: 4px; padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85em; font-weight: 600; color: #ea580c; background: #fff; cursor: pointer; transition: 0.2s;}
         .bom-inline-select:focus { outline: none; border-color: #ea580c; box-shadow: 0 0 0 2px rgba(234,88,12,0.1);}
 
+        /* Floating Premium Summary Box */
         .summary-box { background: linear-gradient(145deg, #0f172a, #1e293b); color: white; padding: 25px; border-radius: 12px; box-shadow: 0 15px 25px -5px rgba(15,23,42,0.3);}
         .sum-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 1em; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; color: #cbd5e1;}
         .sum-row span:last-child { font-weight: 600; color: white;}
@@ -91,13 +92,15 @@
         .visual-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; justify-items: center; }
         .view-box { text-align: center; background: #f8fafc; padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; width: 100%; max-width: 160px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);} 
         .view-title { font-size: 0.75em; font-weight: 800; margin-bottom: 8px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;}
-        .grid-draft { display: grid; gap: 1px; background: #94a3b8; border: 2px solid #475569; margin: 0 auto; max-width: 100%; border-radius: 2px; overflow: hidden;} 
-        .panel { background: #e0f2fe; aspect-ratio: 1 / 1; }
+        
+        /* BULLETPROOF GRID CSS */
+        .grid-draft { display: grid; gap: 1px; background: #94a3b8; border: 2px solid #475569; margin: 0 auto; width: 100%; border-radius: 2px; overflow: hidden;} 
+        .panel { background: #e0f2fe; padding-bottom: 100%; height: 0; box-sizing: border-box; }
 
         .plinth-wrapper { display: flex; gap: 15px; page-break-inside: avoid; }
         .plinth-card { flex: 1; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; background: #f8fafc; text-align: center; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);}
         .plinth-card h4 { margin: 0 0 12px 0; color: #0f172a; font-size: 0.85em; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px;}
-        .plinth-diagram { height: 90px; width: 100%; display: flex; justify-content: space-evenly; align-items: center; border: 1px solid #cbd5e1; background: #f8fafc; padding: 10px; margin-bottom: 12px; position: relative; border-radius: 4px;}
+        .plinth-diagram { height: 90px; width: 100%; display: flex; justify-content: space-evenly; align-items: center; border: 1px solid #cbd5e1; background: #fff; padding: 10px; margin-bottom: 12px; position: relative; border-radius: 4px;}
         .concrete-beam { background: repeating-linear-gradient(45deg, #cbd5e1, #cbd5e1 4px, #94a3b8 4px, #94a3b8 8px); height: 100%; width: 16px; border: 1px solid #475569; border-radius: 2px;}
         .grid-beam-h { width: 100%; height: 16px; background: repeating-linear-gradient(45deg, #cbd5e1, #cbd5e1 4px, #94a3b8 4px, #94a3b8 8px); position: absolute; border: 1px solid #475569; top: 50%; transform: translateY(-50%); border-radius: 2px;}
 
@@ -136,18 +139,15 @@
             /* Hide all input cards except the BOM table */
             body.print-internal .internal-hide { display: none !important; }
             
-            /* Allow layout to stack naturally */
             body.print-internal .app-layout { display: block !important; }
             body.print-internal .col-left { width: 100% !important; display: block !important; }
             body.print-internal .col-right { display: none !important; } 
             
             body.print-internal .module-card { border: none !important; padding: 0 !important; margin-bottom: 20px !important; box-shadow: none !important; }
             
-            /* Make the BOM Table Title look clean */
             body.print-internal .card-header { display: block !important; border-bottom: 2px solid #0f172a !important; margin-bottom: 10px !important; font-size: 12pt !important; color: #0f172a !important; text-transform: uppercase; padding: 0 0 5px 0 !important; background: transparent !important;}
             body.print-internal .card-header span, body.print-internal .card-header button { display: none !important; }
 
-            /* Header Metadata */
             body.print-internal .print-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #ea580c; padding-bottom: 15px; margin-bottom: 20px; }
             body.print-internal .header-left { display: flex; align-items: center; gap: 20px; }
             body.print-internal .header-left img { width: 130px; height: auto; object-fit: contain; }
@@ -163,7 +163,6 @@
             body.print-internal .meta-label { font-weight: 700; color: #64748b; width: 90px; text-transform: uppercase;}
             body.print-internal .meta-value { font-weight: 700; color: #0f172a; }
             
-            /* Internal BOM Table Formatting */
             body.print-internal table { font-size: 8.5pt; margin-bottom: 15px; border-collapse: collapse; width: 100%; border: 1px solid #cbd5e1; border-radius: 0;}
             body.print-internal tr { border-bottom: 1px solid #e2e8f0; page-break-inside: avoid; }
             body.print-internal tr:nth-child(even):not(.section-header-row) { background-color: #f8fafc !important; }
@@ -173,32 +172,34 @@
             body.print-internal td.text-center { text-align: center; } body.print-internal td.text-right { text-align: right; font-weight: 700; color: #0f172a !important;}
             body.print-internal .section-header { background-color: #e2e8f0 !important; font-weight: 800; color: #0f172a !important; border-bottom: 1px solid #cbd5e1 !important; padding: 5px 8px !important; text-transform: uppercase; font-size: 7.5pt; border-right: none;}
             
-            /* Flatten Inputs */
             body.print-internal input, body.print-internal .desc-input, body.print-internal .bom-inline-select { border: none !important; background: transparent !important; color: #0f172a !important; box-shadow: none !important; font-weight: 600; padding: 0 !important; font-size: inherit; appearance: none; -webkit-appearance: none; width: auto;}
             body.print-internal input.desc-input { width: 100% !important; text-align: left !important; }
             body.print-internal input[type="number"] { width: 100% !important; text-align: center !important; }
             body.print-internal .col-uprice input { text-align: right !important; }
             body.print-internal .bom-inline-select { margin-left: 4px; color: #475569 !important; font-weight: 700;}
 
-            /* Column Widths */
             body.print-internal .col-item { width: 45% !important; }
             body.print-internal .col-qty { width: 10% !important; }
             body.print-internal .col-wt { width: 15% !important; }
             body.print-internal .col-uprice { width: 15% !important; }
             body.print-internal .col-itotal { width: 15% !important; }
             
-            /* Clean Summary Box */
+            /* --- BULLETPROOF INTERNAL SUMMARY TABLE --- */
             body.print-internal #internalPrintFooter { display: block !important; margin-top: 20px; }
             body.print-internal .summary-box { background: #fff !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 6px !important; padding: 15px !important; margin-top: 15px !important; width: 320px !important; float: right !important; box-shadow: none !important;}
-            body.print-internal .sum-row { border-bottom: 1px solid #cbd5e1 !important; margin-bottom: 6px !important; padding-bottom: 4px !important; color: #334155 !important; font-size: 8.5pt !important; font-weight: 700 !important;}
-            body.print-internal .sum-row.total { background: #0f172a !important; color: #ffffff !important; border: none !important; padding: 10px !important; font-size: 12pt !important; margin: 10px -15px -15px -15px !important; border-radius: 0 0 4px 4px !important;}
             
-            /* Drawings Integration - Expanded to full width */
+            body.print-internal .summary-table { width: 100%; border-collapse: collapse; font-size: 9pt; }
+            body.print-internal .summary-table td { padding: 5px 0; border: none; color: #0f172a; font-weight: 700; }
+            body.print-internal .summary-table .border-top td { border-top: 1px solid #cbd5e1 !important; padding-top: 8px; margin-top: 4px; }
+            body.print-internal .summary-table .border-bottom td { border-bottom: 1px solid #cbd5e1 !important; padding-bottom: 8px; margin-bottom: 4px; }
+            body.print-internal .summary-table .grand-total-row td { font-size: 13pt; padding-top: 10px; }
+
+            /* Drawings Integration */
             body.print-internal .visual-container { display: flex !important; justify-content: space-between !important; width: 100% !important; margin: 20px 0 15px 0; page-break-inside: avoid; clear: both;}
-            body.print-internal .view-box { padding: 10px; border: 1px solid #cbd5e1 !important; background: #fff !important; border-radius: 4px; flex: 1; margin: 0 5px;}
-            body.print-internal .grid-draft { gap: 1px; border: 1px solid #0f172a !important; background: #fff !important; max-width: 100%; display: inline-grid;}
-            body.print-internal .panel { background: #e0f2fe !important; border: 0.5px solid #94a3b8 !important;}
-            body.print-internal .view-title { font-size: 7.5pt; margin-bottom: 5px; color: #0f172a !important; text-align: center; font-weight: 800;}
+            body.print-internal .view-box { padding: 5px; border: 1px solid #cbd5e1 !important; background: #fff !important; border-radius: 4px; flex: 1; margin: 0 10px; }
+            body.print-internal .grid-draft { gap: 0.5px; border: 1px solid #0f172a !important; background: #fff !important; width: 100%;}
+            body.print-internal .panel { background: #e0f2fe !important; border: 0.5px solid #94a3b8 !important; padding-bottom: 100%; height: 0; box-sizing: border-box;}
+            body.print-internal .view-title { font-size: 7.5pt; margin-bottom: 5px; color: #0f172a !important; text-align: center; font-weight: 800; text-transform: uppercase;}
 
             body.print-internal .print-footer { display: flex; justify-content: space-between; margin-top: 30px; page-break-inside: avoid; clear: both; padding-top: 10px;}
             body.print-internal .sig-box { width: 40%; text-align: left; }
@@ -242,7 +243,6 @@
             .cp-short-exclusions .label { background: #d1d5db !important; color: #000; padding: 8px 10px; font-weight: bold; border-right: 1px solid #000; -webkit-print-color-adjust: exact; width: 100px; text-align: center; display: flex; align-items: center; justify-content: center;}
             .cp-short-exclusions .content { padding: 8px 12px; background: #fff; flex: 1;}
 
-            /* Force page break for full terms */
             .page-break-section { page-break-before: always; padding-top: 10px; }
             
             .cp-full-terms { font-size: 8.5pt; line-height: 1.5; white-space: pre-wrap; margin-bottom: 30px; color: #000;}
@@ -522,12 +522,14 @@ Note:
 
         <div class="clearfix print-only" id="internalPrintFooter">
             <div class="summary-box">
-                <div class="sum-row" id="sumCapacity_print_row"><span>Est. Capacity:</span> <span style="font-weight:800; color:#0f172a;" id="sumCapacity_print">0 L</span></div>
-                <div class="sum-row" id="sumWeight_print_row"><span id="sumWeight_print_label">Est. Total Wt:</span> <span style="font-weight:800; color:#0f172a;" id="sumWeight_print">0 kg</span></div>
-                <div class="sum-row" id="sumSubtotal_print_row"><span>Subtotal:</span> <span>RM <span id="sumSubtotal_print">0.00</span></span></div>
-                <div class="sum-row" id="sumDiscount_print_row"><span>Discount:</span> <span style="color: #b91c1c;">- RM <span id="sumDiscount_print">0.00</span></span></div>
-                <div class="sum-row" id="sumSST_print_row"><span>SST Tax:</span> <span>+ RM <span id="sumSST_print">0.00</span></span></div>
-                <div class="sum-row total"><span>GRAND TOTAL:</span> <span style="float:right;">RM <span id="grandTotal_print">0.00</span></span></div>
+                <table class="summary-table">
+                    <tr><td style="text-align:left;">Est. Capacity:</td><td style="text-align:right;" id="sumCapacity_print">0 L</td></tr>
+                    <tr><td style="text-align:left;">Est. Total Wt:</td><td style="text-align:right;" id="sumWeight_print">0 kg</td></tr>
+                    <tr class="border-top"><td style="text-align:left;">Subtotal:</td><td style="text-align:right;">RM <span id="sumSubtotal_print">0.00</span></td></tr>
+                    <tr><td style="text-align:left;">Discount:</td><td style="text-align:right; color:#b91c1c;">- RM <span id="sumDiscount_print">0.00</span></td></tr>
+                    <tr class="border-bottom"><td style="text-align:left;">SST Tax:</td><td style="text-align:right;">+ RM <span id="sumSST_print">0.00</span></td></tr>
+                    <tr class="grand-total-row"><td style="text-align:left;">GRAND TOTAL:</td><td style="text-align:right;">RM <span id="grandTotal_print">0.00</span></td></tr>
+                </table>
             </div>
             
             <div class="visual-container">
@@ -714,23 +716,6 @@ Note:
         try {
             document.body.className = 'print-internal';
             syncPrintHeader();
-            
-            let topG = document.getElementById('topGrid_p');
-            if(topG) {
-                topG.innerHTML = document.getElementById('topGrid').innerHTML;
-                topG.style.gridTemplateColumns = document.getElementById('topGrid').style.gridTemplateColumns;
-            }
-            let frontG = document.getElementById('frontGrid_p');
-            if(frontG) {
-                frontG.innerHTML = document.getElementById('frontGrid').innerHTML;
-                frontG.style.gridTemplateColumns = document.getElementById('frontGrid').style.gridTemplateColumns;
-            }
-            let leftG = document.getElementById('leftGrid_p');
-            if(leftG) {
-                leftG.innerHTML = document.getElementById('leftGrid').innerHTML;
-                leftG.style.gridTemplateColumns = document.getElementById('leftGrid').style.gridTemplateColumns;
-            }
-            
             setTimeout(() => { window.print(); }, 300);
         } catch(e) { alert("Internal Print Error: " + e.message); }
     }
@@ -779,7 +764,7 @@ Note:
             {name: "3.0mm Panel", def: 280, wt: 45}, 
             {name: "4.5mm Panel", def: 350, wt: 65}, 
             {name: "Base Panel", def: 320, wt: 65},
-            {name: "Partition Panel", def: 280, wt: 45} 
+            {name: "Partition Panel", def: 280, wt: 45} // Explicit Partition Row
         ]},
         { category: "Cleat & Trusses", items: [
             {name: "Type A Cleat", def: 25, wt: 1}, {name: "Type B Cleat", def: 28, wt: 1.5}, {name: "Type C Cleat", def: 30, wt: 2},
@@ -972,8 +957,8 @@ Note:
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
             
-            // V12 CACHE BUSTER - Hard wipes old UI cache
-            localStorage.removeItem('winkoProDataV12'); 
+            // V13 CACHE BUSTER - Hard wipes old broken UI cache
+            localStorage.removeItem('winkoProDataV13'); 
             
             if(document.getElementById('partChoice')) {
                 document.getElementById('partChoice').value = 'no';
@@ -1085,11 +1070,11 @@ Note:
                 if(it.selectId && document.getElementById(it.selectId)) data[it.selectId] = document.getElementById(it.selectId).value; 
             });
         });
-        localStorage.setItem('winkoProDataV12', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV13', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV12');
+        let savedData = localStorage.getItem('winkoProDataV13');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1138,7 +1123,7 @@ Note:
                 }
                 nameHtml += `</div>`;
 
-                let safeWt = it.wt !== undefined && it.wt !== null ? it.wt : 0;
+                let safeWt = it.wt !== undefined && it.wt !== null && !isNaN(it.wt) ? it.wt : 0;
 
                 html += `<tr>
                     <td class="col-item">${nameHtml}</td>
@@ -1213,10 +1198,18 @@ Note:
 
     function drawGrid(id, c, r) {
         const g = document.getElementById(id); 
+        const gp = document.getElementById(id + '_p'); 
+        
+        let html = '';
+        for(let i=0; i<(c*r); i++) html += '<div class="panel"></div>';
+        
         if(g) {
             g.style.gridTemplateColumns = `repeat(${c}, 1fr)`; 
-            g.innerHTML = '';
-            for(let i=0; i<(c*r); i++) g.innerHTML += '<div class="panel"></div>';
+            g.innerHTML = html;
+        }
+        if(gp) {
+            gp.style.gridTemplateColumns = `repeat(${c}, 1fr)`; 
+            gp.innerHTML = html;
         }
     }
 
@@ -1230,10 +1223,9 @@ Note:
         if(unit === 'ft') { volLiters = L_in * W_in * H_in * 28.3168; }
         if(unit === 'm') { volLiters = L_in * W_in * H_in * 1000; }
         let effLiters = volLiters * 0.9; 
-        let effGals = effLiters * 0.219969; 
         
         let capScreen = document.getElementById('sumCapacity_screen');
-        if(capScreen) capScreen.innerText = effLiters.toLocaleString('en-MY', {maximumFractionDigits: 0}) + " L (" + effGals.toLocaleString('en-MY', {maximumFractionDigits: 0}) + " Gal)";
+        if(capScreen) capScreen.innerText = effLiters.toLocaleString('en-MY', {maximumFractionDigits: 0}) + " L";
         
         let capPrint = document.getElementById('sumCapacity_print');
         if(capPrint && capScreen) capPrint.innerText = capScreen.innerText;
@@ -1264,6 +1256,7 @@ Note:
         if(document.getElementById('sumUnit')) document.getElementById('sumUnit').innerText = document.getElementById('unitChoice').options[document.getElementById('unitChoice').selectedIndex].text;
         if(document.getElementById('sumCoat')) document.getElementById('sumCoat').innerText = document.getElementById('coatChoice').value;
 
+        // ACCURATE ISOLATED MATH
         let roof = L * W;
         let base = L * W;
         let sides = ((L * 2) + (W * 2)) * H; 
@@ -1287,6 +1280,7 @@ Note:
         if(document.getElementById('qty_item_0_3')) document.getElementById('qty_item_0_3').value = 0; 
         if(document.getElementById('qty_item_0_4')) document.getElementById('qty_item_0_4').value = base; 
         
+        // Populate dedicated Partition row (Item 5)
         if(document.getElementById('qty_item_0_5')) document.getElementById('qty_item_0_5').value = partPanels; 
 
         if(document.getElementById('qty_item_1_3')) document.getElementById('qty_item_1_3').value = L_in; 
@@ -1297,7 +1291,7 @@ Note:
         if(document.getElementById('qty_item_3_2')) document.getElementById('qty_item_3_2').value = 1; 
         if(document.getElementById('qty_item_3_3')) document.getElementById('qty_item_3_3').value = 1; 
 
-        // ACCURATE ACCESSORY MATH (1m vs 4ft)
+        // ACCURATE ACCESSORY MATH BASED ON UNIT (1m vs 4ft)
         let isImperial = (unit === 'ft');
         let sealantPerimeter = isImperial ? 4.88 : 4.0;
         let boltsPerPanel = isImperial ? 16 : 12;
@@ -1360,11 +1354,11 @@ Note:
             
             csv += `\n`;
             
-            let sub = document.getElementById('sumSubtotal_screen') ? document.getElementById('sumSubtotal_screen').innerText.replace(/,/g, '') : "0";
-            let disc = document.getElementById('sumDiscount_screen') ? document.getElementById('sumDiscount_screen').innerText.replace(/,/g, '') : "0";
-            let sst = document.getElementById('sumSST_screen') ? document.getElementById('sumSST_screen').innerText.replace(/,/g, '') : "0";
-            let grand = document.getElementById('grandTotal_screen') ? document.getElementById('grandTotal_screen').innerText.replace(/,/g, '') : "0";
-            let wt = document.getElementById('sumWeight_screen') ? document.getElementById('sumWeight_screen').innerText.replace(' kg', '').replace(/,/g, '') : "0";
+            let sub = document.getElementById('sumSubtotal_screen').innerText.replace(/,/g, '');
+            let disc = document.getElementById('sumDiscount_screen').innerText.replace(/,/g, '');
+            let sst = document.getElementById('sumSST_screen').innerText.replace(/,/g, '');
+            let grand = document.getElementById('grandTotal_screen').innerText.replace(/,/g, '');
+            let wt = document.getElementById('sumWeight_screen').innerText.replace(' kg', '').replace(/,/g, '');
 
             csv += `,,,,"Est. Total Weight (kg)",${wt}\n`;
             csv += `,,,,"Subtotal (RM)",${sub}\n`;
@@ -1387,11 +1381,14 @@ Note:
         }
     }
 
+    // Initialize
     applyCustomRows();
     buildBOMTable();
     loadPrices();
     togglePartitionDetails(); 
-    processTankData();
+    
+    // Force final recalculation on script load to ensure no 0.00 bugs
+    setTimeout(() => { processTankData(); }, 100);
 </script>
 
 </body>
