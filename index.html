@@ -92,15 +92,13 @@
         .visual-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; justify-items: center; }
         .view-box { text-align: center; background: #f8fafc; padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; width: 100%; max-width: 160px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);} 
         .view-title { font-size: 0.75em; font-weight: 800; margin-bottom: 8px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;}
-        
-        /* BULLETPROOF GRID CSS */
         .grid-draft { display: grid; gap: 1px; background: #94a3b8; border: 2px solid #475569; margin: 0 auto; width: 100%; border-radius: 2px; overflow: hidden;} 
         .panel { background: #e0f2fe; padding-bottom: 100%; height: 0; box-sizing: border-box; }
 
         .plinth-wrapper { display: flex; gap: 15px; page-break-inside: avoid; }
         .plinth-card { flex: 1; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; background: #f8fafc; text-align: center; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);}
         .plinth-card h4 { margin: 0 0 12px 0; color: #0f172a; font-size: 0.85em; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px;}
-        .plinth-diagram { height: 90px; width: 100%; display: flex; justify-content: space-evenly; align-items: center; border: 1px solid #cbd5e1; background: #fff; padding: 10px; margin-bottom: 12px; position: relative; border-radius: 4px;}
+        .plinth-diagram { height: 90px; width: 100%; display: flex; justify-content: space-evenly; align-items: center; border: 1px solid #cbd5e1; background: #f8fafc; padding: 10px; margin-bottom: 12px; position: relative; border-radius: 4px;}
         .concrete-beam { background: repeating-linear-gradient(45deg, #cbd5e1, #cbd5e1 4px, #94a3b8 4px, #94a3b8 8px); height: 100%; width: 16px; border: 1px solid #475569; border-radius: 2px;}
         .grid-beam-h { width: 100%; height: 16px; background: repeating-linear-gradient(45deg, #cbd5e1, #cbd5e1 4px, #94a3b8 4px, #94a3b8 8px); position: absolute; border: 1px solid #475569; top: 50%; transform: translateY(-50%); border-radius: 2px;}
 
@@ -194,12 +192,12 @@
             body.print-internal .summary-table .border-bottom td { border-bottom: 1px solid #cbd5e1 !important; padding-bottom: 8px; margin-bottom: 4px; }
             body.print-internal .summary-table .grand-total-row td { font-size: 13pt; padding-top: 10px; }
 
-            /* Drawings Integration */
-            body.print-internal .visual-container { display: flex !important; justify-content: space-between !important; width: 100% !important; margin: 20px 0 15px 0; page-break-inside: avoid; clear: both;}
-            body.print-internal .view-box { padding: 5px; border: 1px solid #cbd5e1 !important; background: #fff !important; border-radius: 4px; flex: 1; margin: 0 10px; }
-            body.print-internal .grid-draft { gap: 0.5px; border: 1px solid #0f172a !important; background: #fff !important; width: 100%;}
-            body.print-internal .panel { background: #e0f2fe !important; border: 0.5px solid #94a3b8 !important; padding-bottom: 100%; height: 0; box-sizing: border-box;}
-            body.print-internal .view-title { font-size: 7.5pt; margin-bottom: 5px; color: #0f172a !important; text-align: center; font-weight: 800; text-transform: uppercase;}
+            /* PERFECT 6-GRID DRAWINGS INTEGRATION */
+            body.print-internal .visual-container { display: grid !important; grid-template-columns: repeat(6, 1fr) !important; gap: 5px !important; width: 100% !important; margin: 20px 0 15px 0 !important; page-break-inside: avoid !important; clear: both !important;}
+            body.print-internal .view-box { padding: 5px !important; border: 1px solid #cbd5e1 !important; background: #fff !important; border-radius: 4px !important; }
+            body.print-internal .grid-draft { gap: 0.5px !important; border: 1px solid #0f172a !important; background: #fff !important; width: 100% !important;}
+            body.print-internal .panel { background: #e0f2fe !important; border: 0.5px solid #94a3b8 !important; padding-bottom: 100% !important; height: 0 !important; box-sizing: border-box !important;}
+            body.print-internal .view-title { font-size: 6pt !important; margin-bottom: 3px !important; color: #0f172a !important; text-align: center !important; font-weight: 800 !important; text-transform: uppercase !important;}
 
             body.print-internal .print-footer { display: flex; justify-content: space-between; margin-top: 30px; page-break-inside: avoid; clear: both; padding-top: 10px;}
             body.print-internal .sig-box { width: 40%; text-align: left; }
@@ -243,6 +241,7 @@
             .cp-short-exclusions .label { background: #d1d5db !important; color: #000; padding: 8px 10px; font-weight: bold; border-right: 1px solid #000; -webkit-print-color-adjust: exact; width: 100px; text-align: center; display: flex; align-items: center; justify-content: center;}
             .cp-short-exclusions .content { padding: 8px 12px; background: #fff; flex: 1;}
 
+            /* Force page break for full terms */
             .page-break-section { page-break-before: always; padding-top: 10px; }
             
             .cp-full-terms { font-size: 8.5pt; line-height: 1.5; white-space: pre-wrap; margin-bottom: 30px; color: #000;}
@@ -533,9 +532,12 @@ Note:
             </div>
             
             <div class="visual-container">
-                <div class="view-box"><div class="view-title">Top Draft</div><div id="topGrid_p" class="grid-draft"></div></div>
-                <div class="view-box"><div class="view-title">Front Draft</div><div id="frontGrid_p" class="grid-draft"></div></div>
-                <div class="view-box"><div class="view-title">Left Draft</div><div id="leftGrid_p" class="grid-draft"></div></div>
+                <div class="view-box"><div class="view-title">Top</div><div id="topGrid_p" class="grid-draft"></div></div>
+                <div class="view-box"><div class="view-title">Front</div><div id="frontGrid_p" class="grid-draft"></div></div>
+                <div class="view-box"><div class="view-title">Left</div><div id="leftGrid_p" class="grid-draft"></div></div>
+                <div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid_p" class="grid-draft"></div></div>
+                <div class="view-box"><div class="view-title">Back</div><div id="backGrid_p" class="grid-draft"></div></div>
+                <div class="view-box"><div class="view-title">Right</div><div id="rightGrid_p" class="grid-draft"></div></div>
             </div>
             
             <div class="print-footer" id="internalSig">
@@ -716,6 +718,18 @@ Note:
         try {
             document.body.className = 'print-internal';
             syncPrintHeader();
+            
+            // Duplicate ALL 6 drawings specifically for the internal print layout
+            const grids = ['topGrid', 'frontGrid', 'leftGrid', 'bottomGrid', 'backGrid', 'rightGrid'];
+            grids.forEach(id => {
+                let source = document.getElementById(id);
+                let target = document.getElementById(id + '_p');
+                if(source && target) {
+                    target.innerHTML = source.innerHTML;
+                    target.style.gridTemplateColumns = source.style.gridTemplateColumns;
+                }
+            });
+            
             setTimeout(() => { window.print(); }, 300);
         } catch(e) { alert("Internal Print Error: " + e.message); }
     }
@@ -764,7 +778,7 @@ Note:
             {name: "3.0mm Panel", def: 280, wt: 45}, 
             {name: "4.5mm Panel", def: 350, wt: 65}, 
             {name: "Base Panel", def: 320, wt: 65},
-            {name: "Partition Panel", def: 280, wt: 45} // Explicit Partition Row
+            {name: "Partition Panel", def: 280, wt: 45} 
         ]},
         { category: "Cleat & Trusses", items: [
             {name: "Type A Cleat", def: 25, wt: 1}, {name: "Type B Cleat", def: 28, wt: 1.5}, {name: "Type C Cleat", def: 30, wt: 2},
@@ -956,9 +970,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            
-            // V13 CACHE BUSTER - Hard wipes old broken UI cache
-            localStorage.removeItem('winkoProDataV13'); 
+            localStorage.removeItem('winkoProDataV14'); // V14 CACHE BUSTER
             
             if(document.getElementById('partChoice')) {
                 document.getElementById('partChoice').value = 'no';
@@ -1070,11 +1082,11 @@ Note:
                 if(it.selectId && document.getElementById(it.selectId)) data[it.selectId] = document.getElementById(it.selectId).value; 
             });
         });
-        localStorage.setItem('winkoProDataV13', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV14', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV13');
+        let savedData = localStorage.getItem('winkoProDataV14');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1198,18 +1210,10 @@ Note:
 
     function drawGrid(id, c, r) {
         const g = document.getElementById(id); 
-        const gp = document.getElementById(id + '_p'); 
-        
-        let html = '';
-        for(let i=0; i<(c*r); i++) html += '<div class="panel"></div>';
-        
         if(g) {
             g.style.gridTemplateColumns = `repeat(${c}, 1fr)`; 
-            g.innerHTML = html;
-        }
-        if(gp) {
-            gp.style.gridTemplateColumns = `repeat(${c}, 1fr)`; 
-            gp.innerHTML = html;
+            g.innerHTML = '';
+            for(let i=0; i<(c*r); i++) g.innerHTML += '<div class="panel"></div>';
         }
     }
 
@@ -1280,7 +1284,6 @@ Note:
         if(document.getElementById('qty_item_0_3')) document.getElementById('qty_item_0_3').value = 0; 
         if(document.getElementById('qty_item_0_4')) document.getElementById('qty_item_0_4').value = base; 
         
-        // Populate dedicated Partition row (Item 5)
         if(document.getElementById('qty_item_0_5')) document.getElementById('qty_item_0_5').value = partPanels; 
 
         if(document.getElementById('qty_item_1_3')) document.getElementById('qty_item_1_3').value = L_in; 
@@ -1354,11 +1357,11 @@ Note:
             
             csv += `\n`;
             
-            let sub = document.getElementById('sumSubtotal_screen').innerText.replace(/,/g, '');
-            let disc = document.getElementById('sumDiscount_screen').innerText.replace(/,/g, '');
-            let sst = document.getElementById('sumSST_screen').innerText.replace(/,/g, '');
-            let grand = document.getElementById('grandTotal_screen').innerText.replace(/,/g, '');
-            let wt = document.getElementById('sumWeight_screen').innerText.replace(' kg', '').replace(/,/g, '');
+            let sub = document.getElementById('sumSubtotal_screen') ? document.getElementById('sumSubtotal_screen').innerText.replace(/,/g, '') : "0";
+            let disc = document.getElementById('sumDiscount_screen') ? document.getElementById('sumDiscount_screen').innerText.replace(/,/g, '') : "0";
+            let sst = document.getElementById('sumSST_screen') ? document.getElementById('sumSST_screen').innerText.replace(/,/g, '') : "0";
+            let grand = document.getElementById('grandTotal_screen') ? document.getElementById('grandTotal_screen').innerText.replace(/,/g, '') : "0";
+            let wt = document.getElementById('sumWeight_screen') ? document.getElementById('sumWeight_screen').innerText.replace(' kg', '').replace(/,/g, '') : "0";
 
             csv += `,,,,"Est. Total Weight (kg)",${wt}\n`;
             csv += `,,,,"Subtotal (RM)",${sub}\n`;
@@ -1387,7 +1390,7 @@ Note:
     loadPrices();
     togglePartitionDetails(); 
     
-    // Force final recalculation on script load to ensure no 0.00 bugs
+    // Force final recalculation on script load
     setTimeout(() => { processTankData(); }, 100);
 </script>
 
