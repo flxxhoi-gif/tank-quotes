@@ -196,7 +196,7 @@
             body.print-internal .view-title { font-size: 6pt !important; margin-bottom: 3px !important; color: #0f172a !important; text-align: center !important; font-weight: 800 !important; text-transform: uppercase !important;}
             body.print-internal .tank-section-title { font-size: 8pt !important; margin-bottom: 5px !important; margin-top: 15px !important; color: #0f172a !important;}
 
-            body.print-internal .print-footer { display: flex; justify-content: space-between; margin-top: 20px; page-break-inside: avoid; clear: both; padding-top: 10px;}
+            body.print-internal .print-footer { display: flex; justify-content: space-between; margin-top: 30px; page-break-inside: avoid; clear: both; padding-top: 10px;}
             body.print-internal .sig-box { width: 40%; text-align: left; }
             body.print-internal .sig-box p { font-size: 8pt; margin: 0; color: #334155; }
             body.print-internal .sig-line { border-bottom: 1px solid #0f172a; margin: 30px 0 5px 0; }
@@ -255,12 +255,12 @@
     </style>
     
     <script>
-        const currentVersion = "V21";
+        const currentVersion = "V22";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             // Wipe out ALL old buggy temporary cache keys, ensuring blank slate for new variables
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=20; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=21; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -337,6 +337,7 @@
             <div class="meta-box">
                 <div class="meta-item"><span class="meta-label">Dimensions:</span> <span class="meta-value" id="metaDims"></span></div>
                 <div class="meta-item"><span class="meta-label">Material:</span> <span class="meta-value" id="metaCoat"></span></div>
+                <div class="meta-item"><span class="meta-label">Partition:</span> <span class="meta-value" id="metaPart"></span></div>
             </div>
         </div>
 
@@ -512,6 +513,7 @@ Note:
                         <div class="sum-row"><span>Standard:</span> <span id="sumStd">-</span></div>
                         <div class="sum-row"><span>Units:</span> <span id="sumUnit">-</span></div>
                         <div class="sum-row"><span>Material:</span> <span id="sumCoat">-</span></div>
+                        <div class="sum-row"><span>Partition:</span> <span id="sumPart">-</span></div>
                         <div class="sum-row" style="color:#38bdf8; font-weight:700;"><span>Est. Capacity:</span> <span id="sumCapacity_screen">0 L</span></div>
                         <div class="sum-row" style="color:#fdba74; font-weight:700;"><span>Est. Total Weight:</span> <span id="sumWeight_screen">0 kg</span></div>
                         <hr style="border: 1px solid rgba(255,255,255,0.15); margin: 15px 0;">
@@ -619,7 +621,7 @@ Note:
             <img src="winko logo.png" alt="Winko Logo" style="width:140px; height:auto; object-fit:contain;">
         </div>
         <div class="header-text" style="flex:1;">
-            <h2 style="margin:0 0 5px 0; font-size:16pt; font-weight:800; color:#0f172a;">JUTARAMA INDUSTRIES (M) SDN. BHD. <span style="font-size:12pt; font-weight:normal;">(749861-V)</span></h2>
+            <h2 style="margin:0 0 5px 0; font-size:16pt; font-weight:800; color:#0f172a;">JUTARAMA INDUSTRIES (M) SDN. BHD. <span style="font-size:11pt; font-weight:normal;">(749861-V)</span></h2>
             <p style="margin:2px 0; font-size:9pt; color:#475569;">No. 19, Jalan Mega 2/1, Kawasan Perindustrian Mega 2, 43500 Semenyih, Selangor, Malaysia.</p>
             <p style="margin:2px 0; font-size:9pt; color:#475569;">Tel: (60)-8727 7540 &nbsp;&nbsp;|&nbsp;&nbsp; Email: sales@winko.my &nbsp;&nbsp;|&nbsp;&nbsp; Web: www.winko.my</p>
         </div>
@@ -1049,7 +1051,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV21'); 
+            localStorage.removeItem('winkoProDataV22'); 
             
             if(document.getElementById('partChoice')) document.getElementById('partChoice').value = 'no';
             if(document.getElementById('numTanks')) document.getElementById('numTanks').value = '1';
@@ -1183,11 +1185,11 @@ Note:
                 if(it.selectId && document.getElementById(it.selectId)) data[it.selectId] = document.getElementById(it.selectId).value; 
             });
         });
-        localStorage.setItem('winkoProDataV21', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV22', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV21');
+        let savedData = localStorage.getItem('winkoProDataV22');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
