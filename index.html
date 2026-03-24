@@ -24,6 +24,7 @@
         
         #mainContent, #adminContent { display: none; }
         #customerPrintView { display: none; } 
+        .print-only { display: none; }
 
         /* --- DASHBOARD STYLES (SCREEN) --- */
         .container { max-width: 1550px; margin: auto; padding: 10px; }
@@ -92,6 +93,8 @@
         .visual-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; justify-items: center; }
         .view-box { text-align: center; background: #f8fafc; padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; width: 100%; max-width: 160px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);} 
         .view-title { font-size: 0.75em; font-weight: 800; margin-bottom: 8px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;}
+        
+        /* BULLETPROOF GRID CSS */
         .grid-draft { display: grid; gap: 1px; background: #94a3b8; border: 2px solid #475569; margin: 0 auto; width: 100%; border-radius: 2px; overflow: hidden;} 
         .panel { background: #e0f2fe; padding-bottom: 100%; height: 0; box-sizing: border-box; }
 
@@ -115,8 +118,6 @@
         .admin-input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-weight: bold; text-align: center;}
         .admin-input.text-left { text-align: left; }
 
-        .print-only { display: none; }
-
         /* ========================================================================== */
         /* --- PROFESSIONAL PRINT STYLES (DUAL MODE) --- */
         /* ========================================================================== */
@@ -125,7 +126,7 @@
             body { background: white; padding: 0; font-size: 9pt; color: #0f172a; font-family: Arial, Helvetica, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             
             .no-print { display: none !important; }
-            .print-only { display: block; }
+            .print-only { display: block !important; }
             .container { box-shadow: none; max-width: 100%; padding: 0; border: none; }
             
             /* ------------------------------------------------ */
@@ -134,17 +135,17 @@
             body.print-internal #mainContent { display: block !important; }
             body.print-internal #customerPrintView { display: none !important; }
 
-            body.print-internal .internal-hide { display: none !important; }
-            
+            /* Hide configuration cards */
             body.print-internal .app-layout { display: block !important; }
-            body.print-internal .col-left { width: 100% !important; display: block !important; }
-            body.print-internal .col-right { display: none !important; } 
+            body.print-internal .col-left { display: block !important; width: 100% !important; }
+            body.print-internal .col-left > .module-card:not(#bomCard) { display: none !important; } /* Hide cards 1-3 */
+            body.print-internal .col-right { display: none !important; } /* Hide screen right col */
             
-            body.print-internal .module-card { border: none !important; padding: 0 !important; margin-bottom: 20px !important; box-shadow: none !important; }
-            
-            body.print-internal .card-header { display: block !important; border-bottom: 2px solid #0f172a !important; margin-bottom: 10px !important; font-size: 12pt !important; color: #0f172a !important; text-transform: uppercase; padding: 0 0 5px 0 !important; background: transparent !important;}
-            body.print-internal .card-header span, body.print-internal .card-header button { display: none !important; }
+            body.print-internal #bomCard { border: none !important; padding: 0 !important; margin-bottom: 20px !important; box-shadow: none !important; }
+            body.print-internal .bom-title { font-size: 12pt !important; border-bottom: 2px solid #0f172a !important; margin-bottom: 10px !important; font-weight: 800 !important; color: #0f172a !important; text-transform: uppercase !important; padding: 0 0 5px 0 !important; }
+            body.print-internal .bom-title span, body.print-internal .bom-title button { display: none !important; }
 
+            /* Header Metadata */
             body.print-internal .print-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #ea580c; padding-bottom: 15px; margin-bottom: 20px; }
             body.print-internal .header-left { display: flex; align-items: center; gap: 20px; }
             body.print-internal .header-left img { width: 130px; height: auto; object-fit: contain; }
@@ -160,6 +161,7 @@
             body.print-internal .meta-label { font-weight: 700; color: #64748b; width: 90px; text-transform: uppercase;}
             body.print-internal .meta-value { font-weight: 700; color: #0f172a; }
             
+            /* Internal BOM Table Formatting */
             body.print-internal table { font-size: 8.5pt; margin-bottom: 15px; border-collapse: collapse; width: 100%; border: 1px solid #cbd5e1; border-radius: 0;}
             body.print-internal tr { border-bottom: 1px solid #e2e8f0; page-break-inside: avoid; }
             body.print-internal tr:nth-child(even):not(.section-header-row) { background-color: #f8fafc !important; }
@@ -169,12 +171,14 @@
             body.print-internal td.text-center { text-align: center; } body.print-internal td.text-right { text-align: right; font-weight: 700; color: #0f172a !important;}
             body.print-internal .section-header { background-color: #e2e8f0 !important; font-weight: 800; color: #0f172a !important; border-bottom: 1px solid #cbd5e1 !important; padding: 5px 8px !important; text-transform: uppercase; font-size: 7.5pt; border-right: none;}
             
+            /* Flatten Inputs */
             body.print-internal input, body.print-internal .desc-input, body.print-internal .bom-inline-select { border: none !important; background: transparent !important; color: #0f172a !important; box-shadow: none !important; font-weight: 600; padding: 0 !important; font-size: inherit; appearance: none; -webkit-appearance: none; width: auto;}
             body.print-internal input.desc-input { width: 100% !important; text-align: left !important; }
             body.print-internal input[type="number"] { width: 100% !important; text-align: center !important; }
             body.print-internal .col-uprice input { text-align: right !important; }
             body.print-internal .bom-inline-select { margin-left: 4px; color: #475569 !important; font-weight: 700;}
 
+            /* Column Widths */
             body.print-internal .col-item { width: 45% !important; }
             body.print-internal .col-qty { width: 10% !important; }
             body.print-internal .col-wt { width: 15% !important; }
@@ -195,7 +199,7 @@
             body.print-internal .visual-container { display: grid !important; grid-template-columns: repeat(6, 1fr) !important; gap: 5px !important; width: 100% !important; margin: 20px 0 15px 0 !important; page-break-inside: avoid !important; clear: both !important;}
             body.print-internal .view-box { padding: 5px !important; border: 1px solid #cbd5e1 !important; background: #fff !important; border-radius: 4px !important; }
             body.print-internal .grid-draft { gap: 0.5px !important; border: 1px solid #0f172a !important; background: #fff !important; width: 100% !important;}
-            body.print-internal .panel { background: #e0f2fe !important; border: 0.5px !important; padding-bottom: 100% !important; height: 0 !important; box-sizing: border-box !important;}
+            body.print-internal .panel { background: #e0f2fe !important; border: 0.5px solid #94a3b8 !important; padding-bottom: 100% !important; height: 0 !important; box-sizing: border-box !important;}
             body.print-internal .view-title { font-size: 6pt !important; margin-bottom: 3px !important; color: #0f172a !important; text-align: center !important; font-weight: 800 !important; text-transform: uppercase !important;}
 
             body.print-internal .print-footer { display: flex; justify-content: space-between; margin-top: 30px; page-break-inside: avoid; clear: both; padding-top: 10px;}
@@ -258,11 +262,15 @@
     </style>
     
     <script>
-        const currentVersion = "V14";
+        const currentVersion = "V20";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
+            // Wipe out ALL old buggy temporary cache keys, ensuring blank slate for new variables
             localStorage.removeItem("winkoProData");
-            localStorage.removeItem("winkoProDataV13"); // wipe old version cache
+            localStorage.removeItem("winkoProDataV16");
+            localStorage.removeItem("winkoProDataV17");
+            localStorage.removeItem("winkoProDataV18");
+            localStorage.removeItem("winkoProDataV19");
             window.location.reload(true);
         }
     </script>
@@ -359,7 +367,7 @@
         <div class="app-layout">
             <div class="col-left">
                 
-                <div class="module-card internal-hide no-print">
+                <div class="module-card no-print">
                     <div class="card-header"><span>📋</span> 1. Project & Client Info</div>
                     <div class="config-grid">
                         <div class="form-group"><label>Quote Ref Number</label><input type="text" id="quoteIdInput" placeholder="e.g. QP-26-008" oninput="syncPrintHeader(); savePrices();"></div>
@@ -370,7 +378,7 @@
                     </div>
                 </div>
 
-                <div class="module-card internal-hide no-print">
+                <div class="module-card no-print">
                     <div class="card-header"><span>📐</span> 2. Tank Engineering & Dimensions</div>
                     <div class="config-grid">
                         <div class="form-group"><label>Standard</label><select id="stdChoice" onchange="savePrices(); processTankData();"><option>SANS 10329:2020 Approved by SIRIM & SPAN</option><option>SS 22: 1979</option><option>Other</option></select></div>
@@ -403,7 +411,7 @@
                     <button class="action-btn" onclick="processTankData()" style="width:100%; background: #0f172a; margin-top: 10px;">⚙️ Calculate Internal BOM</button>
                 </div>
                 
-                <div class="module-card internal-hide no-print">
+                <div class="module-card no-print">
                     <div class="card-header"><span>💰</span> 3. Commercial Terms & Formatting</div>
                     
                     <div class="dim-grid" style="background: #ecfdf5; padding:15px; border-radius:8px; border:2px solid #10b981; margin-bottom:15px;">
@@ -463,8 +471,8 @@ Note:
                     </div>
                 </div>
 
-                <div class="module-card">
-                    <div class="card-header">
+                <div class="module-card" id="bomCard">
+                    <div class="card-header bom-title">
                         <div><span>⚙️</span> INTERNAL BILL OF MATERIALS</div>
                         <button class="reset-btn no-print" onclick="resetDefaultPrices()">↺ Reset Defaults</button>
                     </div>
@@ -482,10 +490,10 @@ Note:
 
             </div>
 
-            <div class="col-right">
+            <div class="col-right no-print">
                 
                 <div style="position: sticky; top: 20px;">
-                    <div class="summary-box no-print">
+                    <div class="summary-box">
                         <div class="sum-row"><span>Standard:</span> <span id="sumStd">-</span></div>
                         <div class="sum-row"><span>Units:</span> <span id="sumUnit">-</span></div>
                         <div class="sum-row"><span>Material:</span> <span id="sumCoat">-</span></div>
@@ -501,7 +509,7 @@ Note:
                         <div class="sum-row total"><span>GRAND TOTAL:</span> <span>RM <span id="grandTotal_screen">0.00</span></span></div>
                     </div>
 
-                    <div class="btn-group no-print" style="margin-bottom: 25px;">
+                    <div class="btn-group" style="margin-bottom: 25px;">
                         <button class="action-btn export-btn" onclick="exportCSV()">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2-2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                             Export
@@ -516,9 +524,9 @@ Note:
                         </button>
                     </div>
 
-                    <div class="module-card no-print">
+                    <div class="module-card">
                         <div class="card-header" style="font-size: 1em;">Assembly Draft (Auto: <span id="totalPanelsCount" style="color:#ea580c; margin-left:4px;">0</span> panels)</div>
-                        <div class="visual-container" id="visualsArea">
+                        <div class="visual-container">
                             <div class="view-box"><div class="view-title">Top</div><div id="topGrid" class="grid-draft"></div></div>
                             <div class="view-box"><div class="view-title">Front</div><div id="frontGrid" class="grid-draft"></div></div>
                             <div class="view-box"><div class="view-title">Left</div><div id="leftGrid" class="grid-draft"></div></div>
@@ -531,7 +539,7 @@ Note:
                 </div> </div>
         </div>
 
-        <div class="clearfix print-only" id="internalPrintFooter">
+        <div id="internalPrintFooter" class="print-only">
             <div class="summary-box">
                 <table class="summary-table">
                     <tr><td style="text-align:left;">Est. Capacity:</td><td style="text-align:right;" id="sumCapacity_print">0 L</td></tr>
@@ -727,35 +735,30 @@ Note:
         }
     }
 
-    // --- PRINT TOGGLE LOGIC ---
+    // --- PRINT TOGGLE LOGIC (FIXED) ---
     function printInternal() {
         try {
             document.body.className = 'print-internal';
             syncPrintHeader();
-            
-            const grids = ['top', 'front', 'left', 'bottom', 'back', 'right'];
-            grids.forEach(prefix => {
-                let source = document.getElementById(prefix + 'Grid');
-                let target = document.getElementById(prefix + 'Grid_p');
-                if(source && target) {
-                    target.innerHTML = source.innerHTML;
-                    target.style.gridTemplateColumns = source.style.gridTemplateColumns;
-                }
-            });
-            
-            setTimeout(() => { window.print(); }, 300);
-        } catch(e) { alert("Internal Print Error: " + e.message); }
+            window.print();
+        } catch(e) { 
+            alert("Internal Print Error: " + e.message); 
+        } finally {
+            document.body.className = '';
+        }
     }
     
     function printCustomer() {
         try {
             document.body.className = 'print-customer';
             syncPrintHeader(); 
-            setTimeout(() => { window.print(); }, 300);
-        } catch(e) { alert("Customer Print Error: " + e.message); }
+            window.print();
+        } catch(e) { 
+            alert("Customer Print Error: " + e.message); 
+        } finally {
+            document.body.className = '';
+        }
     }
-
-    window.addEventListener('afterprint', () => { document.body.className = ''; });
 
     // --- TIME & UI LOGIC ---
     function updateClock() {
@@ -983,7 +986,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV14'); 
+            localStorage.removeItem('winkoProDataV20'); // V20 CACHE BUSTER
             
             if(document.getElementById('partChoice')) {
                 document.getElementById('partChoice').value = 'no';
@@ -1095,11 +1098,11 @@ Note:
                 if(it.selectId && document.getElementById(it.selectId)) data[it.selectId] = document.getElementById(it.selectId).value; 
             });
         });
-        localStorage.setItem('winkoProDataV14', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV20', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV14');
+        let savedData = localStorage.getItem('winkoProDataV20');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1241,10 +1244,20 @@ Note:
 
     function drawGrid(id, c, r) {
         const g = document.getElementById(id); 
+        const gp = document.getElementById(id + '_p'); 
+        
+        let html = '';
+        for(let i=0; i<(c*r); i++) html += '<div class="panel"></div>';
+        
+        // Draw to screen instantly
         if(g) {
             g.style.gridTemplateColumns = `repeat(${c}, 1fr)`; 
-            g.innerHTML = '';
-            for(let i=0; i<(c*r); i++) g.innerHTML += '<div class="panel"></div>';
+            g.innerHTML = html;
+        }
+        // Draw to PDF invisible section instantly
+        if(gp) {
+            gp.style.gridTemplateColumns = `repeat(${c}, 1fr)`; 
+            gp.innerHTML = html;
         }
     }
 
