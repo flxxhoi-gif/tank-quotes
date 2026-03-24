@@ -137,7 +137,9 @@
             body.print-internal .col-left { width: 100% !important; display: block !important; }
             body.print-internal .col-right { display: none !important; } 
             
-            body.print-internal .module-card { border: none !important; padding: 0 !important; margin-bottom: 15px !important; box-shadow: none !important; }
+            /* Show BOM Cards on internal print */
+            body.print-internal .col-left > .module-card:not(#bomCard):not(#bomCard2) { display: none !important; }
+            body.print-internal #bomCard, body.print-internal #bomCard2 { border: none !important; padding: 0 !important; margin-bottom: 20px !important; box-shadow: none !important; }
             
             body.print-internal .card-header { display: block !important; border-bottom: 2px solid #0f172a !important; margin-bottom: 8px !important; font-size: 11pt !important; color: #0f172a !important; text-transform: uppercase; padding: 0 0 5px 0 !important; background: transparent !important;}
             body.print-internal .card-header span, body.print-internal .card-header button { display: none !important; }
@@ -255,12 +257,12 @@
     </style>
     
     <script>
-        const currentVersion = "V23";
+        const currentVersion = "V24";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             // Wipe out ALL old buggy temporary cache keys, ensuring blank slate for new variables
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=22; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=23; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -337,7 +339,6 @@
             <div class="meta-box">
                 <div class="meta-item"><span class="meta-label">Dimensions:</span> <span class="meta-value" id="metaDims"></span></div>
                 <div class="meta-item"><span class="meta-label">Material:</span> <span class="meta-value" id="metaCoat"></span></div>
-                <div class="meta-item"><span class="meta-label">Partition:</span> <span class="meta-value" id="metaPart"></span></div>
             </div>
         </div>
 
@@ -487,9 +488,9 @@ Note:
                     </div>
                 </div>
 
-                <div class="module-card">
-                    <div class="card-header">
-                        <div><span>⚙️</span> INTERNAL BILL OF MATERIALS</div>
+                <div class="module-card" id="bomCard">
+                    <div class="card-header bom-title">
+                        <div><span>⚙️</span> INTERNAL BOM <span id="bomTitle1" style="color:#1e293b;"></span></div>
                         <button class="reset-btn no-print" onclick="resetDefaultPrices()">↺ Reset Defaults</button>
                     </div>
                     <table id="bomTable">
@@ -501,6 +502,22 @@ Note:
                             <th class="col-itotal text-right">Total Cost</th>
                         </tr></thead>
                         <tbody id="bomBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="module-card" id="bomCard2" style="display:none;">
+                    <div class="card-header bom-title">
+                        <div><span>⚙️</span> INTERNAL BOM - TANK 2</div>
+                    </div>
+                    <table id="bomTable2">
+                        <thead><tr>
+                            <th class="col-item text-left">Item Description</th>
+                            <th class="col-qty text-center">Qty</th>
+                            <th class="col-wt text-center">Wt (kg)</th>
+                            <th class="col-uprice text-right">Unit Cost</th>
+                            <th class="col-itotal text-right">Total Cost</th>
+                        </tr></thead>
+                        <tbody id="bomBody2"></tbody>
                     </table>
                 </div>
 
@@ -859,11 +876,15 @@ Note:
             document.getElementById('tank2VisualsCard').style.display = 'block';
             document.getElementById('tank2VisualsPrint').style.display = 'block';
             document.getElementById('cpNumTanks').innerText = "1 LOT"; 
+            document.getElementById('bomCard2').style.display = 'block'; 
+            document.getElementById('bomTitle1').innerText = "- TANK 1"; 
         } else {
             document.getElementById('tank2Section').style.display = 'none';
             document.getElementById('tank2VisualsCard').style.display = 'none';
             document.getElementById('tank2VisualsPrint').style.display = 'none';
             document.getElementById('cpNumTanks').innerText = "1";
+            document.getElementById('bomCard2').style.display = 'none'; 
+            document.getElementById('bomTitle1').innerText = ""; 
         }
         togglePartitionDetails();
     }
@@ -1012,11 +1033,19 @@ Note:
         bomStructure.forEach((sec, sIdx) => {
             sec.items.forEach((it, iIdx) => {
                 let uId = `item_${sIdx}_${iIdx}`;
+                // T1
                 if(document.getElementById(`desc_${uId}`)) data[`desc_${uId}`] = document.getElementById(`desc_${uId}`).value;
                 if(document.getElementById(`wt_${uId}`)) data[`wt_${uId}`] = document.getElementById(`wt_${uId}`).value;
                 if(document.getElementById(`price_${uId}`)) data[`price_${uId}`] = document.getElementById(`price_${uId}`).value;
                 if(document.getElementById(`qty_${uId}`)) data[`qty_${uId}`] = document.getElementById(`qty_${uId}`).value;
                 if(it.selectId && document.getElementById(it.selectId)) data[it.selectId] = document.getElementById(it.selectId).value; 
+                
+                // T2
+                if(document.getElementById(`desc2_${uId}`)) data[`desc2_${uId}`] = document.getElementById(`desc2_${uId}`).value;
+                if(document.getElementById(`wt2_${uId}`)) data[`wt2_${uId}`] = document.getElementById(`wt2_${uId}`).value;
+                if(document.getElementById(`price2_${uId}`)) data[`price2_${uId}`] = document.getElementById(`price2_${uId}`).value;
+                if(document.getElementById(`qty2_${uId}`)) data[`qty2_${uId}`] = document.getElementById(`qty2_${uId}`).value;
+                if(it.selectId && document.getElementById(`sel2_${it.selectId}`)) data[`sel2_${it.selectId}`] = document.getElementById(`sel2_${it.selectId}`).value; 
             });
         });
 
@@ -1054,11 +1083,19 @@ Note:
             bomStructure.forEach((sec, sIdx) => {
                 sec.items.forEach((it, iIdx) => {
                     let uId = `item_${sIdx}_${iIdx}`;
+                    // T1
                     if(savedData[`desc_${uId}`] && document.getElementById(`desc_${uId}`)) document.getElementById(`desc_${uId}`).value = savedData[`desc_${uId}`]; 
                     if(savedData[`wt_${uId}`] && document.getElementById(`wt_${uId}`)) document.getElementById(`wt_${uId}`).value = savedData[`wt_${uId}`]; 
                     if(savedData[`price_${uId}`] && document.getElementById(`price_${uId}`)) document.getElementById(`price_${uId}`).value = savedData[`price_${uId}`];
                     if(savedData[`qty_${uId}`] && document.getElementById(`qty_${uId}`)) document.getElementById(`qty_${uId}`).value = savedData[`qty_${uId}`];
                     if(it.selectId && savedData[it.selectId] && document.getElementById(it.selectId)) document.getElementById(it.selectId).value = savedData[it.selectId]; 
+                    
+                    // T2
+                    if(savedData[`desc2_${uId}`] && document.getElementById(`desc2_${uId}`)) document.getElementById(`desc2_${uId}`).value = savedData[`desc2_${uId}`]; 
+                    if(savedData[`wt2_${uId}`] && document.getElementById(`wt2_${uId}`)) document.getElementById(`wt2_${uId}`).value = savedData[`wt2_${uId}`]; 
+                    if(savedData[`price2_${uId}`] && document.getElementById(`price2_${uId}`)) document.getElementById(`price2_${uId}`).value = savedData[`price2_${uId}`];
+                    if(savedData[`qty2_${uId}`] && document.getElementById(`qty2_${uId}`)) document.getElementById(`qty2_${uId}`).value = savedData[`qty2_${uId}`];
+                    if(it.selectId && savedData[`sel2_${it.selectId}`] && document.getElementById(`sel2_${it.selectId}`)) document.getElementById(`sel2_${it.selectId}`).value = savedData[`sel2_${it.selectId}`]; 
                 });
             });
             
@@ -1082,7 +1119,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV23'); 
+            localStorage.removeItem('winkoProDataV24'); 
             
             if(document.getElementById('partChoice')) document.getElementById('partChoice').value = 'no';
             if(document.getElementById('numTanks')) document.getElementById('numTanks').value = '1';
@@ -1234,18 +1271,26 @@ Note:
         bomStructure.forEach((sec, sIdx) => {
             sec.items.forEach((it, iIdx) => {
                 let uId = `item_${sIdx}_${iIdx}`;
+                // T1
                 if(document.getElementById(`desc_${uId}`)) data[`desc_${uId}`] = document.getElementById(`desc_${uId}`).value;
                 if(document.getElementById(`wt_${uId}`)) data[`wt_${uId}`] = document.getElementById(`wt_${uId}`).value;
                 if(document.getElementById(`price_${uId}`)) data[`price_${uId}`] = document.getElementById(`price_${uId}`).value;
                 if(document.getElementById(`qty_${uId}`)) data[`qty_${uId}`] = document.getElementById(`qty_${uId}`).value;
                 if(it.selectId && document.getElementById(it.selectId)) data[it.selectId] = document.getElementById(it.selectId).value; 
+                
+                // T2
+                if(document.getElementById(`desc2_${uId}`)) data[`desc2_${uId}`] = document.getElementById(`desc2_${uId}`).value;
+                if(document.getElementById(`wt2_${uId}`)) data[`wt2_${uId}`] = document.getElementById(`wt2_${uId}`).value;
+                if(document.getElementById(`price2_${uId}`)) data[`price2_${uId}`] = document.getElementById(`price2_${uId}`).value;
+                if(document.getElementById(`qty2_${uId}`)) data[`qty2_${uId}`] = document.getElementById(`qty2_${uId}`).value;
+                if(it.selectId && document.getElementById(`sel2_${it.selectId}`)) data[`sel2_${it.selectId}`] = document.getElementById(`sel2_${it.selectId}`).value; 
             });
         });
-        localStorage.setItem('winkoProDataV23', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV24', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV23');
+        let savedData = localStorage.getItem('winkoProDataV24');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1259,11 +1304,19 @@ Note:
             bomStructure.forEach((sec, sIdx) => {
                 sec.items.forEach((it, iIdx) => {
                     let uId = `item_${sIdx}_${iIdx}`;
+                    // T1
                     if(savedData[`desc_${uId}`] && document.getElementById(`desc_${uId}`)) document.getElementById(`desc_${uId}`).value = savedData[`desc_${uId}`]; 
                     if(savedData[`wt_${uId}`] && document.getElementById(`wt_${uId}`)) document.getElementById(`wt_${uId}`).value = savedData[`wt_${uId}`]; 
                     if(savedData[`price_${uId}`] && document.getElementById(`price_${uId}`)) document.getElementById(`price_${uId}`).value = savedData[`price_${uId}`];
                     if(savedData[`qty_${uId}`] && document.getElementById(`qty_${uId}`)) document.getElementById(`qty_${uId}`).value = savedData[`qty_${uId}`];
                     if(it.selectId && savedData[it.selectId] && document.getElementById(it.selectId)) document.getElementById(it.selectId).value = savedData[it.selectId]; 
+                    
+                    // T2
+                    if(savedData[`desc2_${uId}`] && document.getElementById(`desc2_${uId}`)) document.getElementById(`desc2_${uId}`).value = savedData[`desc2_${uId}`]; 
+                    if(savedData[`wt2_${uId}`] && document.getElementById(`wt2_${uId}`)) document.getElementById(`wt2_${uId}`).value = savedData[`wt2_${uId}`]; 
+                    if(savedData[`price2_${uId}`] && document.getElementById(`price2_${uId}`)) document.getElementById(`price2_${uId}`).value = savedData[`price2_${uId}`];
+                    if(savedData[`qty2_${uId}`] && document.getElementById(`qty2_${uId}`)) document.getElementById(`qty2_${uId}`).value = savedData[`qty2_${uId}`];
+                    if(it.selectId && savedData[`sel2_${it.selectId}`] && document.getElementById(`sel2_${it.selectId}`)) document.getElementById(`sel2_${it.selectId}`).value = savedData[`sel2_${it.selectId}`]; 
                 });
             });
         }
@@ -1271,9 +1324,12 @@ Note:
 
     function buildBOMTable() {
         const tbody = document.getElementById('bomBody');
+        const tbody2 = document.getElementById('bomBody2');
         let html = '';
+        let html2 = '';
+        
         bomStructure.forEach((sec, sIdx) => {
-            html += `<tr class="section-header-row"><td colspan="5" class="section-header" style="padding:0;">
+            let secHeader1 = `<tr class="section-header-row"><td colspan="5" class="section-header" style="padding:0;">
                 <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px;">
                     <span>${sec.category}</span>
                     <div class="no-print">
@@ -1282,9 +1338,19 @@ Note:
                     </div>
                 </div>
             </td></tr>`;
+            html += secHeader1;
+            
+            let secHeader2 = `<tr class="section-header-row"><td colspan="5" class="section-header" style="padding:8px 12px;">
+                <span>${sec.category}</span>
+            </td></tr>`;
+            html2 += secHeader2;
             
             sec.items.forEach((it, iIdx) => {
                 const id = `item_${sIdx}_${iIdx}`;
+                
+                let safeWt = it.wt !== undefined && it.wt !== null && !isNaN(it.wt) ? it.wt : 0;
+
+                // TANK 1 ROW HTML
                 let nameHtml = `<div style="display:flex; align-items:center; flex-wrap:wrap; gap:4px;">
                                   <input type="text" id="desc_${id}" class="desc-input" value="${it.name}" onchange="savePrices()">`;
                 if(it.selectId) {
@@ -1294,8 +1360,6 @@ Note:
                 }
                 nameHtml += `</div>`;
 
-                let safeWt = it.wt !== undefined && it.wt !== null && !isNaN(it.wt) ? it.wt : 0;
-
                 html += `<tr>
                     <td class="col-item">${nameHtml}</td>
                     <td class="col-input col-qty"><input type="number" value="0" id="qty_${id}" oninput="calcTotals(); savePrices();"></td>
@@ -1303,34 +1367,69 @@ Note:
                     <td class="col-input col-uprice"><input type="number" step="0.01" value="${it.def.toFixed(2)}" id="price_${id}" oninput="calcTotals(); savePrices();"></td>
                     <td class="col-total col-itotal" id="total_${id}">0.00</td>
                 </tr>`;
+
+                // TANK 2 ROW HTML
+                let nameHtml2 = `<div style="display:flex; align-items:center; flex-wrap:wrap; gap:4px;">
+                                  <input type="text" id="desc2_${id}" class="desc-input" value="${it.name}" onchange="savePrices()">`;
+                if(it.selectId) {
+                    nameHtml2 += ` <select id="sel2_${it.selectId}" class="bom-inline-select" onchange="savePrices()">` +
+                                it.options.map(o => `<option value="${o}">${o}</option>`).join('') +
+                                `</select>`;
+                }
+                nameHtml2 += `</div>`;
+
+                html2 += `<tr>
+                    <td class="col-item">${nameHtml2}</td>
+                    <td class="col-input col-qty"><input type="number" value="0" id="qty2_${id}" oninput="calcTotals(); savePrices();"></td>
+                    <td class="col-input col-wt"><input type="number" step="0.1" value="${safeWt}" id="wt2_${id}" oninput="calcTotals(); savePrices();"></td>
+                    <td class="col-input col-uprice"><input type="number" step="0.01" value="${it.def.toFixed(2)}" id="price2_${id}" oninput="calcTotals(); savePrices();"></td>
+                    <td class="col-total col-itotal" id="total2_${id}">0.00</td>
+                </tr>`;
             });
         });
         tbody.innerHTML = html;
+        if(tbody2) tbody2.innerHTML = html2;
     }
 
     function calcTotals() {
         let baseCost = 0;
         let totalWeight = 0;
+        let numTanks = parseInt(document.getElementById('numTanks').value) || 1;
 
         bomStructure.forEach((sec, sIdx) => {
             sec.items.forEach((it, iIdx) => {
                 const id = `item_${sIdx}_${iIdx}`;
-                const qtyEl = document.getElementById(`qty_${id}`);
-                const priceEl = document.getElementById(`price_${id}`);
-                const wtEl = document.getElementById(`wt_${id}`);
                 
-                if(qtyEl && priceEl && wtEl) {
-                    const q = parseFloat(qtyEl.value) || 0;
-                    const p = parseFloat(priceEl.value) || 0;
-                    let w = parseFloat(wtEl.value);
-                    if(isNaN(w)) w = 0; 
-                    
+                // Tank 1 Math
+                const qtyEl1 = document.getElementById(`qty_${id}`);
+                const priceEl1 = document.getElementById(`price_${id}`);
+                const wtEl1 = document.getElementById(`wt_${id}`);
+                if(qtyEl1 && priceEl1 && wtEl1) {
+                    const q = parseFloat(qtyEl1.value) || 0;
+                    const p = parseFloat(priceEl1.value) || 0;
+                    let w = parseFloat(wtEl1.value); if(isNaN(w)) w = 0; 
                     const total = q * p;
                     const totalEl = document.getElementById(`total_${id}`);
                     if(totalEl) totalEl.innerText = total.toLocaleString('en-MY', {minimumFractionDigits:2});
-                    
                     baseCost += total;
                     totalWeight += (q * w);
+                }
+
+                // Tank 2 Math
+                if (numTanks === 2) {
+                    const qtyEl2 = document.getElementById(`qty2_${id}`);
+                    const priceEl2 = document.getElementById(`price2_${id}`);
+                    const wtEl2 = document.getElementById(`wt2_${id}`);
+                    if(qtyEl2 && priceEl2 && wtEl2) {
+                        const q2 = parseFloat(qtyEl2.value) || 0;
+                        const p2 = parseFloat(priceEl2.value) || 0;
+                        let w2 = parseFloat(wtEl2.value); if(isNaN(w2)) w2 = 0; 
+                        const total2 = q2 * p2;
+                        const totalEl2 = document.getElementById(`total2_${id}`);
+                        if(totalEl2) totalEl2.innerText = total2.toLocaleString('en-MY', {minimumFractionDigits:2});
+                        baseCost += total2;
+                        totalWeight += (q2 * w2);
+                    }
                 }
             });
         });
@@ -1341,17 +1440,14 @@ Note:
         
         let markupPct = parseFloat(markupInput ? markupInput.value : 0) || 0;
         let markupAmt = baseCost * (markupPct / 100);
-        
         let subtotal = baseCost + markupAmt; 
         
         let discPct = parseFloat(discInput ? discInput.value : 0) || 0;
         let discAmt = subtotal * (discPct / 100);
-        
         let netTotal = subtotal - discAmt;
         
         let sstPct = parseFloat(sstInput ? sstInput.value : 0) || 0;
         let sstAmt = netTotal * (sstPct / 100);
-        
         let grand = netTotal + sstAmt;
         
         // Output to Screen (Internal view)
@@ -1364,7 +1460,7 @@ Note:
 
         // Output to Internal PDF
         if(document.getElementById('sumBaseCost_print')) document.getElementById('sumBaseCost_print').innerText = baseCost.toLocaleString('en-MY', {minimumFractionDigits: 2});
-        if(document.getElementById('sumMarkup_print')) document.getElementById('sumMarkup_print').innerText = markupAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumMarkup_print')) document.getElementById('sumMarkup_printinnerText = markupAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
         if(document.getElementById('sumSubtotal_print')) document.getElementById('sumSubtotal_print').innerText = subtotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
         if(document.getElementById('sumDiscount_print')) document.getElementById('sumDiscount_print').innerText = discAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
         if(document.getElementById('sumSST_print')) document.getElementById('sumSST_print').innerText = sstAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
@@ -1376,7 +1472,6 @@ Note:
         if(document.getElementById('sumWeight_print')) document.getElementById('sumWeight_print').innerText = weightStr;
 
         // Output to CUSTOMER PDF (Split Cost if 2 Tanks)
-        let numTanks = document.getElementById('numTanks').value;
         let t1 = window.currentTotalP1 || 1;
         let t2 = window.currentTotalP2 || 0;
         let totalPanels = t1 + t2;
@@ -1385,7 +1480,7 @@ Note:
         let price1 = netTotal;
         let price2 = 0;
         
-        if (numTanks === "2" && t2 > 0) {
+        if (numTanks === 2 && t2 > 0) {
             price1 = netTotal * (t1 / totalPanels);
             price2 = netTotal * (t2 / totalPanels);
             
@@ -1480,6 +1575,12 @@ Note:
             drawGrid('topGrid2', L2, W2); drawGrid('bottomGrid2', L2, W2);
             drawGrid('frontGrid2', L2, H2); drawGrid('backGrid2', L2, H2);
             drawGrid('leftGrid2', W2, H2); drawGrid('rightGrid2', W2, H2);
+        } else {
+            // Wipe Tank 2 BOM inputs if user switched back to 1 Tank
+            if(document.getElementById('qty2_item_0_0')) {
+                 const t2Inputs = document.querySelectorAll('[id^="qty2_"]');
+                 t2Inputs.forEach(inp => inp.value = 0);
+            }
         }
         window.currentTotalP2 = (numTanks === 2) ? totalP2 : 0;
 
@@ -1496,36 +1597,62 @@ Note:
 
         let manholeInput = document.getElementById('qty_item_0_0'); 
         if(manholeInput) {
-            manholeInput.value = numTanks; 
-            if(document.getElementById('qty_item_0_1')) document.getElementById('qty_item_0_1').value = Math.max(0, (roof1 + roof2) - numTanks); 
+            manholeInput.value = 1; 
+            if(document.getElementById('qty_item_0_1')) document.getElementById('qty_item_0_1').value = Math.max(0, roof1 - 1); 
         }
 
-        if(document.getElementById('qty_item_0_2')) document.getElementById('qty_item_0_2').value = sides1 + sides2; 
+        if(document.getElementById('qty_item_0_2')) document.getElementById('qty_item_0_2').value = sides1; 
         if(document.getElementById('qty_item_0_3')) document.getElementById('qty_item_0_3').value = 0; 
-        if(document.getElementById('qty_item_0_4')) document.getElementById('qty_item_0_4').value = base1 + base2; 
-        if(document.getElementById('qty_item_0_5')) document.getElementById('qty_item_0_5').value = partPanels1 + partPanels2; 
+        if(document.getElementById('qty_item_0_4')) document.getElementById('qty_item_0_4').value = base1; 
+        if(document.getElementById('qty_item_0_5')) document.getElementById('qty_item_0_5').value = partPanels1; 
 
-        if(document.getElementById('qty_item_1_3')) document.getElementById('qty_item_1_3').value = L1_in + L2_in; 
-        if(document.getElementById('qty_item_1_4')) document.getElementById('qty_item_1_4').value = L1_in + L2_in; 
+        if(document.getElementById('qty_item_1_3')) document.getElementById('qty_item_1_3').value = L1_in; 
+        if(document.getElementById('qty_item_1_4')) document.getElementById('qty_item_1_4').value = L1_in; 
 
-        if(document.getElementById('qty_item_3_0')) document.getElementById('qty_item_3_0').value = H1_in + H2_in; 
-        if(document.getElementById('qty_item_3_1')) document.getElementById('qty_item_3_1').value = H1_in + H2_in; 
-        if(document.getElementById('qty_item_3_2')) document.getElementById('qty_item_3_2').value = numTanks; 
-        if(document.getElementById('qty_item_3_3')) document.getElementById('qty_item_3_3').value = numTanks; 
+        if(document.getElementById('qty_item_3_0')) document.getElementById('qty_item_3_0').value = H1_in; 
+        if(document.getElementById('qty_item_3_1')) document.getElementById('qty_item_3_1').value = H1_in; 
+        if(document.getElementById('qty_item_3_2')) document.getElementById('qty_item_3_2').value = 1; 
+        if(document.getElementById('qty_item_3_3')) document.getElementById('qty_item_3_3').value = 1; 
 
-        // ACCURATE ACCESSORY MATH BASED ON UNIT (1m vs 4ft)
         let isImperial = (unit === 'ft');
         let sealantPerimeter = isImperial ? 4.88 : 4.0;
         let boltsPerPanel = isImperial ? 16 : 12;
         
-        if(document.getElementById('qty_item_3_4')) document.getElementById('qty_item_3_4').value = Math.ceil((combinedTotalP * sealantPerimeter) / 15); 
-        if(document.getElementById('qty_item_3_5')) document.getElementById('qty_item_3_5').value = Math.ceil(combinedTotalP * boltsPerPanel * 1.05); 
+        if(document.getElementById('qty_item_3_4')) document.getElementById('qty_item_3_4').value = Math.ceil((totalP1 * sealantPerimeter) / 15); 
+        if(document.getElementById('qty_item_3_5')) document.getElementById('qty_item_3_5').value = Math.ceil(totalP1 * boltsPerPanel * 1.05); 
 
-        // Base Services defaults
         if(document.getElementById('qty_item_4_0') && (!document.getElementById('qty_item_4_0').value || document.getElementById('qty_item_4_0').value == "0")) document.getElementById('qty_item_4_0').value = 1;
         if(document.getElementById('qty_item_4_1') && (!document.getElementById('qty_item_4_1').value || document.getElementById('qty_item_4_1').value == "0")) document.getElementById('qty_item_4_1').value = 1;
 
-        // Primary Drawings (Tank 1)
+        // TANK 2 BOM
+        if(numTanks === 2) {
+            let manholeInput2 = document.getElementById('qty2_item_0_0'); 
+            if(manholeInput2) {
+                manholeInput2.value = 1; 
+                if(document.getElementById('qty2_item_0_1')) document.getElementById('qty2_item_0_1').value = Math.max(0, roof2 - 1); 
+            }
+
+            if(document.getElementById('qty2_item_0_2')) document.getElementById('qty2_item_0_2').value = sides2; 
+            if(document.getElementById('qty2_item_0_3')) document.getElementById('qty2_item_0_3').value = 0; 
+            if(document.getElementById('qty2_item_0_4')) document.getElementById('qty2_item_0_4').value = base2; 
+            if(document.getElementById('qty2_item_0_5')) document.getElementById('qty2_item_0_5').value = partPanels2; 
+
+            if(document.getElementById('qty2_item_1_3')) document.getElementById('qty2_item_1_3').value = L2_in; 
+            if(document.getElementById('qty2_item_1_4')) document.getElementById('qty2_item_1_4').value = L2_in; 
+
+            if(document.getElementById('qty2_item_3_0')) document.getElementById('qty2_item_3_0').value = H2_in; 
+            if(document.getElementById('qty2_item_3_1')) document.getElementById('qty2_item_3_1').value = H2_in; 
+            if(document.getElementById('qty2_item_3_2')) document.getElementById('qty2_item_3_2').value = 1; 
+            if(document.getElementById('qty2_item_3_3')) document.getElementById('qty2_item_3_3').value = 1; 
+
+            if(document.getElementById('qty2_item_3_4')) document.getElementById('qty2_item_3_4').value = Math.ceil((totalP2 * sealantPerimeter) / 15); 
+            if(document.getElementById('qty2_item_3_5')) document.getElementById('qty2_item_3_5').value = Math.ceil(totalP2 * boltsPerPanel * 1.05); 
+
+            // Services remain 0 on Tank 2 unless overridden
+            if(document.getElementById('qty2_item_4_0') && !document.getElementById('qty2_item_4_0').value) document.getElementById('qty2_item_4_0').value = 0;
+            if(document.getElementById('qty2_item_4_1') && !document.getElementById('qty2_item_4_1').value) document.getElementById('qty2_item_4_1').value = 0;
+        }
+
         drawGrid('topGrid', L1, W1); drawGrid('bottomGrid', L1, W1);
         drawGrid('frontGrid', L1, H1); drawGrid('backGrid', L1, H1);
         drawGrid('leftGrid', W1, H1); drawGrid('rightGrid', W1, H1);
@@ -1545,13 +1672,24 @@ Note:
             let dim = document.getElementById('metaDims').innerText;
             let mat = document.getElementById('coatChoice').value;
             
+            let partChoice = document.getElementById('partChoice').value;
+            let pQty = parseInt(document.getElementById('partQty').value) || 0;
+            let pType = document.getElementById('partType').value || 'Standard';
+            let pLen = document.getElementById('partLen').value || 0;
+            let pHgt = document.getElementById('partHgt').value || 0;
+            let u = document.getElementById('unitChoice').value === 'ft' ? 'ft' : 'm';
+            
+            let part = (partChoice === 'yes' && pQty > 0) ? `${pQty}x ${pType} (${pLen}${u} x ${pHgt}${u})` : 'None';
+            
             csv += `"Quote No:","${qid}"\n`;
             csv += `"Project / Client:","${proj.replace(/"/g, '""')}"\n`;
             csv += `"Date:","${d}"\n`;
             csv += `"Dimensions:","${dim}"\n`;
-            csv += `"Material:","${mat}"\n\n`;
+            csv += `"Material:","${mat}"\n`;
+            csv += `"Partition (Tank 1):","${part}"\n\n`;
 
-            csv += "Category,Item Description,Qty,Unit Wt (kg),Unit Cost (RM),Total Cost (RM)\n";
+            csv += "TANK 1 BILL OF MATERIALS\n";
+            csv += "Category,Item Description,Qty,Unit Wt (kg),Unit Price (RM),Total (RM)\n";
             
             bomStructure.forEach((s, si) => { s.items.forEach((it, ii) => {
                 let id = `item_${si}_${ii}`;
@@ -1566,6 +1704,24 @@ Note:
                 if(q > 0) csv += `"${s.category}","${label}",${q},${w},${p},${t}\n`;
             })});
             
+            let numTanks = parseInt(document.getElementById('numTanks').value) || 1;
+            if(numTanks === 2) {
+                csv += `\nTANK 2 BILL OF MATERIALS\n`;
+                csv += "Category,Item Description,Qty,Unit Wt (kg),Unit Price (RM),Total (RM)\n";
+                bomStructure.forEach((s, si) => { s.items.forEach((it, ii) => {
+                    let id = `item_${si}_${ii}`;
+                    if(!document.getElementById(`desc2_${id}`)) return;
+                    
+                    let label = document.getElementById(`desc2_${id}`).value.replace(/"/g, '""');
+                    if(it.selectId && document.getElementById(`sel2_${it.selectId}`)) { label += " (" + document.getElementById(`sel2_${it.selectId}`).value + ")"; }
+                    let q = document.getElementById(`qty2_${id}`).value;
+                    let w = document.getElementById(`wt2_${id}`).value;
+                    let p = document.getElementById(`price2_${id}`).value;
+                    let t = document.getElementById(`total2_${id}`).innerText.replace(/,/g, '');
+                    if(q > 0) csv += `"${s.category}","${label}",${q},${w},${p},${t}\n`;
+                })});
+            }
+
             csv += `\n`;
             
             let base = document.getElementById('sumBaseCost_screen') ? document.getElementById('sumBaseCost_screen').innerText.replace(/,/g, '') : "0";
