@@ -76,7 +76,6 @@
         .bom-inline-select { flex: 0 0 auto; max-width: 110px; margin-left: 4px; padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85em; font-weight: 600; color: #ea580c; background: #fff; cursor: pointer; transition: 0.2s;}
         .bom-inline-select:focus { outline: none; border-color: #ea580c; box-shadow: 0 0 0 2px rgba(234,88,12,0.1);}
 
-        /* Floating Premium Summary Box */
         .summary-box { background: linear-gradient(145deg, #0f172a, #1e293b); color: white; padding: 25px; border-radius: 12px; box-shadow: 0 15px 25px -5px rgba(15,23,42,0.3);}
         .sum-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 1em; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; color: #cbd5e1;}
         .sum-row span:last-child { font-weight: 600; color: white;}
@@ -92,6 +91,8 @@
         .visual-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; justify-items: center; }
         .view-box { text-align: center; background: #f8fafc; padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; width: 100%; max-width: 160px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);} 
         .view-title { font-size: 0.75em; font-weight: 800; margin-bottom: 8px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;}
+        
+        /* BULLETPROOF GRID CSS */
         .grid-draft { display: grid; gap: 1px; background: #94a3b8; border: 2px solid #475569; margin: 0 auto; width: 100%; border-radius: 2px; overflow: hidden;} 
         .panel { background: #e0f2fe; padding-bottom: 100%; height: 0; box-sizing: border-box; }
 
@@ -181,6 +182,7 @@
             body.print-internal .col-uprice { width: 15% !important; }
             body.print-internal .col-itotal { width: 15% !important; }
             
+            /* --- BULLETPROOF INTERNAL SUMMARY TABLE --- */
             body.print-internal #internalPrintFooter { display: block !important; margin-top: 20px; }
             body.print-internal .summary-box { background: #fff !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 6px !important; padding: 15px !important; margin-top: 15px !important; width: 340px !important; float: right !important; box-shadow: none !important;}
             
@@ -190,6 +192,7 @@
             body.print-internal .summary-table .border-bottom td { border-bottom: 1px solid #cbd5e1 !important; padding-bottom: 8px; margin-bottom: 4px; }
             body.print-internal .summary-table .grand-total-row td { font-size: 13pt; padding-top: 10px; }
 
+            /* PERFECT 6-GRID DRAWINGS INTEGRATION */
             body.print-internal .visual-container { display: grid !important; grid-template-columns: repeat(6, 1fr) !important; gap: 5px !important; width: 100% !important; margin: 20px 0 15px 0 !important; page-break-inside: avoid !important; clear: both !important;}
             body.print-internal .view-box { padding: 5px !important; border: 1px solid #cbd5e1 !important; background: #fff !important; border-radius: 4px !important; }
             body.print-internal .grid-draft { gap: 0.5px !important; border: 1px solid #0f172a !important; background: #fff !important; width: 100% !important;}
@@ -255,13 +258,11 @@
     </style>
     
     <script>
-        const currentVersion = "V19";
+        const currentVersion = "V14";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            localStorage.removeItem("winkoProDataV16");
-            localStorage.removeItem("winkoProDataV17");
-            localStorage.removeItem("winkoProDataV18");
+            localStorage.removeItem("winkoProDataV13"); // wipe old version cache
             window.location.reload(true);
         }
     </script>
@@ -515,6 +516,18 @@ Note:
                         </button>
                     </div>
 
+                    <div class="module-card no-print">
+                        <div class="card-header" style="font-size: 1em;">Assembly Draft (Auto: <span id="totalPanelsCount" style="color:#ea580c; margin-left:4px;">0</span> panels)</div>
+                        <div class="visual-container" id="visualsArea">
+                            <div class="view-box"><div class="view-title">Top</div><div id="topGrid" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Front</div><div id="frontGrid" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Left</div><div id="leftGrid" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Back</div><div id="backGrid" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Right</div><div id="rightGrid" class="grid-draft"></div></div>
+                        </div>
+                    </div>
+
                 </div> </div>
         </div>
 
@@ -554,14 +567,14 @@ Note:
 
 <div id="customerPrintView">
     
-    <div class="print-header" style="display:flex; align-items:center; border-bottom: 4px solid #ea580c; padding-bottom: 15px; margin-bottom: 25px;">
-        <div class="header-left" style="margin-right: 20px;">
-            <img src="winko logo.png" alt="Winko Logo" style="width:140px; height:auto; object-fit:contain;">
+    <div class="print-header" style="display:flex; justify-content:space-between; margin-bottom: 25px;">
+        <div class="header-left" style="display:flex; align-items:center; background:#475569; padding:10px 15px; color:white; width:30%;">
+            <h1 style="margin:0; font-size:30pt; font-weight:900;">WINKO<sup style="font-size:10pt;">TM</sup></h1>
         </div>
-        <div class="header-text" style="flex:1;">
-            <h2 style="margin:0 0 5px 0; font-size:16pt; font-weight:800; color:#0f172a;">JUTARAMA INDUSTRIES (M) SDN. BHD. <span style="font-size:11pt; font-weight:normal;">(749861-V)</span></h2>
-            <p style="margin:2px 0; font-size:9pt; color:#475569;">No. 19, Jalan Mega 2/1, Kawasan Perindustrian Mega 2, 43500 Semenyih, Selangor, Malaysia.</p>
-            <p style="margin:2px 0; font-size:9pt; color:#475569;">Tel: (60)-8727 7540 &nbsp;&nbsp;|&nbsp;&nbsp; Email: sales@winko.my &nbsp;&nbsp;|&nbsp;&nbsp; Web: www.winko.my</p>
+        <div class="header-text" style="text-align:center; flex:1; padding-top:10px;">
+            <h2 style="margin:0 0 8px 0; font-size:16pt; font-weight:bold; color:#000;">JUTARAMA INDUSTRIES (M) SDN. BHD. <span style="font-size:12pt; font-weight:normal;">(749861-V)</span></h2>
+            <p style="margin:0; font-size:9.5pt; color:#000;">No. 19, Jalan Mega 2/1, Kawasan Perindustrian Mega 2, 43500 Semenyih, Selangor, Malaysia.</p>
+            <p style="margin:6px 0 0 0; font-size:9.5pt; color:#000;">Tel: (60)-8727 7540 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Email: sales@winko.my &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Web: www.winko.my</p>
         </div>
     </div>
 
@@ -970,7 +983,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV19'); 
+            localStorage.removeItem('winkoProDataV14'); 
             
             if(document.getElementById('partChoice')) {
                 document.getElementById('partChoice').value = 'no';
@@ -1082,11 +1095,11 @@ Note:
                 if(it.selectId && document.getElementById(it.selectId)) data[it.selectId] = document.getElementById(it.selectId).value; 
             });
         });
-        localStorage.setItem('winkoProDataV19', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV14', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV19');
+        let savedData = localStorage.getItem('winkoProDataV14');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
