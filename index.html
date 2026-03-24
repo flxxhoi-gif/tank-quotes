@@ -93,7 +93,6 @@
         .visual-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; justify-items: center; margin-bottom: 15px; }
         .view-box { text-align: center; background: #f8fafc; padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; width: 100%; max-width: 160px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);} 
         .view-title { font-size: 0.75em; font-weight: 800; margin-bottom: 8px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;}
-        
         .grid-draft { display: grid; gap: 1px; background: #94a3b8; border: 2px solid #475569; margin: 0 auto; width: 100%; border-radius: 2px; overflow: hidden;} 
         .panel { background: #e0f2fe; padding-bottom: 100%; height: 0; box-sizing: border-box; }
 
@@ -143,8 +142,8 @@
             body.print-internal .print-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #ea580c; padding-bottom: 10px; margin-bottom: 15px; }
             body.print-internal .header-left { display: flex; align-items: center; gap: 20px; }
             body.print-internal .header-left img { width: 120px; height: auto; object-fit: contain; }
-            body.print-internal .header-text h1 { margin: 0 0 5px 0; font-size: 15pt; color: #0f172a; font-weight: 800; letter-spacing: 0.5px; }
-            body.print-internal .header-text p { margin: 2px 0; font-size: 8.5pt; color: #475569; font-weight: 500;}
+            body.print-internal .header-text h1 { margin: 0 0 5px 0; font-size: 14pt; color: #0f172a; font-weight: 800; letter-spacing: 0.5px; }
+            body.print-internal .header-text p { margin: 2px 0; font-size: 8pt; color: #475569; font-weight: 500;}
             body.print-internal .header-right { text-align: right; }
             body.print-internal .header-right h2 { margin: 0 0 5px 0; font-size: 22pt; color: #ea580c; font-weight: 800; letter-spacing: 1px;}
             body.print-internal .header-right p { margin: 2px 0; font-size: 9pt; color: #1e293b; font-weight: 600;}
@@ -178,19 +177,18 @@
             
             /* --- BULLETPROOF INTERNAL SUMMARY TABLE --- */
             body.print-internal #internalPrintFooter { display: block !important; margin-top: 20px; }
-            body.print-internal .summary-box { background: #fff !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 6px !important; padding: 15px !important; margin-top: 15px !important; width: 340px !important; float: right !important; box-shadow: none !important;}
+            body.print-internal .summary-box { background: #fff !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 6px !important; padding: 10px !important; margin-top: 10px !important; width: 340px !important; float: right !important; box-shadow: none !important;}
             
             body.print-internal .summary-table { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
             body.print-internal .summary-table td { padding: 4px 0; border: none; color: #0f172a; font-weight: 700; }
             body.print-internal .summary-table .border-top td { border-top: 1px solid #cbd5e1 !important; padding-top: 6px; margin-top: 3px; }
             body.print-internal .summary-table .border-bottom td { border-bottom: 1px solid #cbd5e1 !important; padding-bottom: 6px; margin-bottom: 3px; }
-            body.print-internal .summary-table .grand-total-row td { font-size: 13pt; padding-top: 10px; }
+            body.print-internal .summary-table .grand-total-row td { font-size: 12pt; padding-top: 8px; }
 
-            /* --- BULLETPROOF DRAWINGS --- */
+            /* PERFECT 6-GRID DRAWINGS INTEGRATION */
             body.print-internal .visual-container { display: grid !important; grid-template-columns: repeat(6, 1fr) !important; gap: 5px !important; width: 100% !important; margin: 10px 0 !important; page-break-inside: avoid !important; clear: both !important;}
             body.print-internal .view-box { padding: 4px !important; border: 1px solid #cbd5e1 !important; background: #fff !important; border-radius: 4px !important; }
             body.print-internal .grid-draft { gap: 0.5px !important; border: 1px solid #0f172a !important; background: #fff !important; width: 100% !important;}
-            /* Min-height prevents browser PDF squishing bug */
             body.print-internal .panel { background: #e0f2fe !important; border: 0.5px solid #94a3b8 !important; min-height: 12px !important; box-sizing: border-box !important;}
             body.print-internal .view-title { font-size: 6pt !important; margin-bottom: 3px !important; color: #0f172a !important; text-align: center !important; font-weight: 800 !important; text-transform: uppercase !important;}
             body.print-internal .tank-section-title { font-size: 8pt !important; margin-bottom: 5px !important; margin-top: 10px !important; color: #0f172a !important; font-weight: bold;}
@@ -252,11 +250,11 @@
     </style>
     
     <script>
-        const currentVersion = "V28";
+        const currentVersion = "V29";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=27; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=28; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -417,14 +415,14 @@
                     <div class="tank-section-title" style="margin-top: 25px; border-left:4px solid #ea580c;">Global Panel Thicknesses</div>
                     <div style="background: #f8fafc; padding:15px; border-radius:6px; border:1px solid #e2e8f0; margin-bottom: 15px;">
                         <div class="dim-grid" style="margin-bottom: 0;">
-                            <div class="form-group"><label>Roof Thick.</label><input type="text" id="thickRoof" value="1.5mm" oninput="syncPrintHeader(); savePrices();"></div>
-                            <div class="form-group"><label>Base Thick.</label><input type="text" id="thickBase" value="4.5mm" oninput="syncPrintHeader(); savePrices();"></div>
-                            <div class="form-group"><label>Wall L1 Thick.</label><input type="text" id="thickWallL1" value="4.5mm" oninput="syncPrintHeader(); savePrices();"></div>
+                            <div class="form-group"><label>Roof Thick.</label><input type="text" id="thickRoof" value="1.5mm" oninput="syncPrintHeader(); processTankData(); savePrices();"></div>
+                            <div class="form-group"><label>Base Thick.</label><input type="text" id="thickBase" value="4.5mm" oninput="syncPrintHeader(); processTankData(); savePrices();"></div>
+                            <div class="form-group"><label>Wall L1 Thick.</label><input type="text" id="thickWallL1" value="4.5mm" oninput="syncPrintHeader(); processTankData(); savePrices();"></div>
                         </div>
                         <div class="dim-grid" style="margin-top: 15px; margin-bottom: 0;">
-                            <div class="form-group"><label>Wall L2 Thick.</label><input type="text" id="thickWallL2" value="4.5mm" oninput="syncPrintHeader(); savePrices();"></div>
-                            <div class="form-group"><label>Wall L3 Thick.</label><input type="text" id="thickWallL3" value="4.5mm" oninput="syncPrintHeader(); savePrices();"></div>
-                            <div class="form-group"><label>Wall L4 Thick.</label><input type="text" id="thickWallL4" value="4.5mm" oninput="syncPrintHeader(); savePrices();"></div>
+                            <div class="form-group"><label>Wall L2 Thick.</label><input type="text" id="thickWallL2" value="3.0mm" oninput="syncPrintHeader(); processTankData(); savePrices();"></div>
+                            <div class="form-group"><label>Wall L3 Thick.</label><input type="text" id="thickWallL3" value="3.0mm" oninput="syncPrintHeader(); processTankData(); savePrices();"></div>
+                            <div class="form-group"><label>Wall L4 Thick.</label><input type="text" id="thickWallL4" value="1.5mm" oninput="syncPrintHeader(); processTankData(); savePrices();"></div>
                         </div>
                     </div>
 
@@ -833,6 +831,16 @@ Note:
         try {
             document.body.className = 'print-internal';
             syncPrintHeader();
+            
+            const grids = ['top', 'front', 'left', 'bottom', 'back', 'right'];
+            grids.forEach(prefix => {
+                let s1 = document.getElementById(prefix + 'Grid'); let t1 = document.getElementById(prefix + 'Grid_p');
+                if(s1 && t1) { t1.innerHTML = s1.innerHTML; t1.style.gridTemplateColumns = s1.style.gridTemplateColumns; }
+                
+                let s2 = document.getElementById(prefix + 'Grid2'); let t2 = document.getElementById(prefix + 'Grid2_p');
+                if(s2 && t2) { t2.innerHTML = s2.innerHTML; t2.style.gridTemplateColumns = s2.style.gridTemplateColumns; }
+            });
+            
             setTimeout(() => { window.print(); }, 300);
         } catch(e) { alert("Internal Print Error: " + e.message); }
     }
@@ -926,14 +934,16 @@ Note:
         }
     }
 
-    // --- FULL BOM STRUCTURE ---
+    // --- FULL BOM STRUCTURE (UPGRADED VERSION 29 EXACT TIER MAPPING) ---
     const systemBaseStructure = [
         { category: "Panels", items: [
             {name: "Manhole Panel", def: 450, wt: 45}, 
-            {name: "1.5mm Panel", def: 220, wt: 25}, 
-            {name: "3.0mm Panel", def: 280, wt: 45}, 
-            {name: "4.5mm Panel", def: 350, wt: 65}, 
-            {name: "Base Panel", def: 320, wt: 65},
+            {name: "Roof Panel", def: 220, wt: 25}, 
+            {name: "Base Panel", def: 350, wt: 65}, 
+            {name: "Wall Panel (L1)", def: 350, wt: 65}, 
+            {name: "Wall Panel (L2)", def: 280, wt: 45},
+            {name: "Wall Panel (L3)", def: 220, wt: 25},
+            {name: "Wall Panel (L4)", def: 220, wt: 25},
             {name: "Partition Panel", def: 280, wt: 45}
         ]},
         { category: "Cleat & Trusses", items: [
@@ -1165,7 +1175,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV28'); 
+            localStorage.removeItem('winkoProDataV29'); // V29 CACHE BUSTER
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1198,7 +1208,6 @@ Note:
             let sInput = document.getElementById('stdChoice');
             if(metaS) metaS.innerText = (sInput && sInput.value) ? sInput.value : "";
             
-            // Centralized Summary Box Updates (The Fix for screen displaying "-")
             let sumStd = document.getElementById('sumStd');
             if(sumStd && sInput) sumStd.innerText = sInput.value || "-";
 
@@ -1432,11 +1441,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV28', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV29', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV28');
+        let savedData = localStorage.getItem('winkoProDataV29');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1655,7 +1664,6 @@ Note:
         
         let html = '';
         for(let i=0; i<(c*r); i++) {
-            // Using inline styling to strictly force PDF printers to render the square
             html += '<div class="panel" style="aspect-ratio: 1/1; min-height: 15px; border: 0.5px solid #94a3b8; background: #e0f2fe; box-sizing: border-box;"></div>';
         }
         
@@ -1688,7 +1696,7 @@ Note:
         let volLiters1 = (unit === 'ft') ? (L1_in * W1_in * H1_in * 28.3168) : (L1_in * W1_in * H1_in * 1000);
         let effLiters1 = volLiters1 * 0.9; 
 
-        let pc1El = document.getElementById('partChoice');
+        const pc1El = document.getElementById('partChoice');
         const partChoice1 = (pc1El && pc1El.value) ? pc1El.value : 'no';
         let pQty1 = 0; let pLen_in1 = 0; let pHgt_in1 = 0;
         if(partChoice1 === 'yes') {
@@ -1703,15 +1711,35 @@ Note:
         const pL1 = Math.ceil(pLen_in1 / factor);
         const pH1 = Math.ceil(pHgt_in1 / factor);
 
-        let roof1 = L1 * W1; let base1 = L1 * W1; let sides1 = ((L1 * 2) + (W1 * 2)) * H1; 
+        // --- NEW ALGORITHM: TIERED WALL CALCULATION ---
+        let roof1 = L1 * W1; 
+        let base1 = L1 * W1; 
+        let perim1 = (L1 + W1) * 2;
+        let sides1 = perim1 * H1; 
         let partPanels1 = (partChoice1 === 'yes' && pQty1 > 0) ? (pL1 * pH1 * pQty1) : 0;
         let totalP1 = roof1 + base1 + sides1 + partPanels1;
         window.currentTotalP1 = totalP1;
 
+        // Dynamic BOM Descriptions Updates based on Inputs
+        let tRoof = document.getElementById('thickRoof') ? document.getElementById('thickRoof').value : "1.5mm";
+        let tBase = document.getElementById('thickBase') ? document.getElementById('thickBase').value : "4.5mm";
+        let tL1 = document.getElementById('thickWallL1') ? document.getElementById('thickWallL1').value : "4.5mm";
+        let tL2 = document.getElementById('thickWallL2') ? document.getElementById('thickWallL2').value : "3.0mm";
+        let tL3 = document.getElementById('thickWallL3') ? document.getElementById('thickWallL3').value : "3.0mm";
+        let tL4 = document.getElementById('thickWallL4') ? document.getElementById('thickWallL4').value : "1.5mm";
+
+        let updateDesc = (prefix, id, val) => { let el = document.getElementById(prefix + id); if(el) el.value = val; };
+        updateDesc('desc_', 'item_0_1', tRoof + " Roof Panel");
+        updateDesc('desc_', 'item_0_2', tBase + " Base Panel");
+        updateDesc('desc_', 'item_0_3', tL1 + " Wall Panel (L1)");
+        updateDesc('desc_', 'item_0_4', tL2 + " Wall Panel (L2)");
+        updateDesc('desc_', 'item_0_5', tL3 + " Wall Panel (L3)");
+        updateDesc('desc_', 'item_0_6', tL4 + " Wall Panel (L4)");
+
         // TANK 2 DATA
         let volLiters2 = 0, effLiters2 = 0;
-        let roof2 = 0, base2 = 0, sides2 = 0, partPanels2 = 0, totalP2 = 0;
-        let H2_in = 0, L2_in = 0;
+        let roof2 = 0, base2 = 0, perim2 = 0, sides2 = 0, partPanels2 = 0, totalP2 = 0;
+        let H2_in = 0, L2_in = 0, L2 = 0, W2 = 0, H2 = 0;
 
         if (numTanks === 2) {
             let l2El = document.getElementById('length2'); L2_in = (l2El && l2El.value) ? parseFloat(l2El.value) : 0;
@@ -1730,15 +1758,22 @@ Note:
                 let ph2El = document.getElementById('partHgt2'); pHgt_in2 = (ph2El && ph2El.value) ? parseFloat(ph2El.value) : 0;
             }
 
-            const L2 = Math.ceil(L2_in / factor);
-            const W2 = Math.ceil(W2_in / factor);
-            const H2 = Math.ceil(H2_in / factor);
+            L2 = Math.ceil(L2_in / factor);
+            W2 = Math.ceil(W2_in / factor);
+            H2 = Math.ceil(H2_in / factor);
             const pL2 = Math.ceil(pLen_in2 / factor);
             const pH2 = Math.ceil(pHgt_in2 / factor);
 
-            roof2 = L2 * W2; base2 = L2 * W2; sides2 = ((L2 * 2) + (W2 * 2)) * H2; 
+            roof2 = L2 * W2; base2 = L2 * W2; perim2 = (L2 + W2) * 2; sides2 = perim2 * H2; 
             partPanels2 = (partChoice2 === 'yes' && pQty2 > 0) ? (pL2 * pH2 * pQty2) : 0;
             totalP2 = roof2 + base2 + sides2 + partPanels2;
+
+            updateDesc('desc2_', 'item_0_1', tRoof + " Roof Panel");
+            updateDesc('desc2_', 'item_0_2', tBase + " Base Panel");
+            updateDesc('desc2_', 'item_0_3', tL1 + " Wall Panel (L1)");
+            updateDesc('desc2_', 'item_0_4', tL2 + " Wall Panel (L2)");
+            updateDesc('desc2_', 'item_0_5', tL3 + " Wall Panel (L3)");
+            updateDesc('desc2_', 'item_0_6', tL4 + " Wall Panel (L4)");
 
             drawGrid('topGrid2', L2, W2); drawGrid('bottomGrid2', L2, W2);
             drawGrid('frontGrid2', L2, H2); drawGrid('backGrid2', L2, H2);
@@ -1760,67 +1795,63 @@ Note:
         let capPrint = document.getElementById('sumCapacity_print');
         if(capPrint && capScreen) capPrint.innerText = capScreen.innerText;
 
-        // COMBINED BOM UPDATES
         let combinedTotalP = totalP1 + totalP2;
         let tpCount = document.getElementById('totalPanelsCount');
         if(tpCount) tpCount.innerText = combinedTotalP;
 
-        let manholeInput = document.getElementById('qty_item_0_0'); 
-        if(manholeInput) {
-            manholeInput.value = 1; 
-            let roof1Inp = document.getElementById('qty_item_0_1');
-            if(roof1Inp) roof1Inp.value = Math.max(0, roof1 - 1); 
-        }
+        // --- EXACT QTY INJECTIONS TANK 1 ---
+        let setQ = (prefix, id, val) => { let el = document.getElementById(prefix + id); if(el) el.value = val; };
+        
+        setQ('qty_', 'item_0_0', 1); // Manhole
+        setQ('qty_', 'item_0_1', Math.max(0, roof1 - 1)); // Roof
+        setQ('qty_', 'item_0_2', base1); // Base
+        setQ('qty_', 'item_0_3', H1 >= 1 ? perim1 : 0); // Wall L1
+        setQ('qty_', 'item_0_4', H1 >= 2 ? perim1 : 0); // Wall L2
+        setQ('qty_', 'item_0_5', H1 >= 3 ? perim1 : 0); // Wall L3
+        setQ('qty_', 'item_0_6', H1 >= 4 ? perim1 * (H1 - 3) : 0); // Wall L4 (and upwards)
+        setQ('qty_', 'item_0_7', partPanels1); // Partition
 
-        let qty02 = document.getElementById('qty_item_0_2'); if(qty02) qty02.value = sides1; 
-        let qty03 = document.getElementById('qty_item_0_3'); if(qty03) qty03.value = 0; 
-        let qty04 = document.getElementById('qty_item_0_4'); if(qty04) qty04.value = base1; 
-        let qty05 = document.getElementById('qty_item_0_5'); if(qty05) qty05.value = partPanels1; 
+        setQ('qty_', 'item_1_3', L1_in); // Pipe
+        setQ('qty_', 'item_1_4', L1_in); // Angle
 
-        let qty13 = document.getElementById('qty_item_1_3'); if(qty13) qty13.value = L1_in; 
-        let qty14 = document.getElementById('qty_item_1_4'); if(qty14) qty14.value = L1_in; 
-
-        let qty30 = document.getElementById('qty_item_3_0'); if(qty30) qty30.value = H1_in; 
-        let qty31 = document.getElementById('qty_item_3_1'); if(qty31) qty31.value = H1_in; 
-        let qty32 = document.getElementById('qty_item_3_2'); if(qty32) qty32.value = 1; 
-        let qty33 = document.getElementById('qty_item_3_3'); if(qty33) qty33.value = 1; 
+        setQ('qty_', 'item_3_0', H1_in); // Ext Ladder
+        setQ('qty_', 'item_3_1', H1_in); // Int Ladder
+        setQ('qty_', 'item_3_2', 1); // WLI
+        setQ('qty_', 'item_3_3', 1); // Air Vent
 
         let isImperial = (unit === 'ft');
         let sealantPerimeter = isImperial ? 4.88 : 4.0;
         let boltsPerPanel = isImperial ? 16 : 12;
         
-        let qty34 = document.getElementById('qty_item_3_4'); if(qty34) qty34.value = Math.ceil((totalP1 * sealantPerimeter) / 15); 
-        let qty35 = document.getElementById('qty_item_3_5'); if(qty35) qty35.value = Math.ceil(totalP1 * boltsPerPanel * 1.05); 
+        setQ('qty_', 'item_3_4', Math.ceil((totalP1 * sealantPerimeter) / 15)); 
+        setQ('qty_', 'item_3_5', Math.ceil(totalP1 * boltsPerPanel * 1.05)); 
 
         let qty40 = document.getElementById('qty_item_4_0'); 
         if(qty40 && (!qty40.value || qty40.value == "0")) qty40.value = 1;
         let qty41 = document.getElementById('qty_item_4_1');
         if(qty41 && (!qty41.value || qty41.value == "0")) qty41.value = 1;
 
-        // TANK 2 BOM
+        // --- EXACT QTY INJECTIONS TANK 2 ---
         if(numTanks === 2) {
-            let manholeInput2 = document.getElementById('qty2_item_0_0'); 
-            if(manholeInput2) {
-                manholeInput2.value = 1; 
-                let roof2Inp = document.getElementById('qty2_item_0_1');
-                if(roof2Inp) roof2Inp.value = Math.max(0, roof2 - 1); 
-            }
+            setQ('qty2_', 'item_0_0', 1); // Manhole
+            setQ('qty2_', 'item_0_1', Math.max(0, roof2 - 1)); // Roof
+            setQ('qty2_', 'item_0_2', base2); // Base
+            setQ('qty2_', 'item_0_3', H2 >= 1 ? perim2 : 0); // Wall L1
+            setQ('qty2_', 'item_0_4', H2 >= 2 ? perim2 : 0); // Wall L2
+            setQ('qty2_', 'item_0_5', H2 >= 3 ? perim2 : 0); // Wall L3
+            setQ('qty2_', 'item_0_6', H2 >= 4 ? perim2 * (H2 - 3) : 0); // Wall L4 (and upwards)
+            setQ('qty2_', 'item_0_7', partPanels2); // Partition
 
-            let q2_02 = document.getElementById('qty2_item_0_2'); if(q2_02) q2_02.value = sides2; 
-            let q2_03 = document.getElementById('qty2_item_0_3'); if(q2_03) q2_03.value = 0; 
-            let q2_04 = document.getElementById('qty2_item_0_4'); if(q2_04) q2_04.value = base2; 
-            let q2_05 = document.getElementById('qty2_item_0_5'); if(q2_05) q2_05.value = partPanels2; 
+            setQ('qty2_', 'item_1_3', L2_in); 
+            setQ('qty2_', 'item_1_4', L2_in); 
 
-            let q2_13 = document.getElementById('qty2_item_1_3'); if(q2_13) q2_13.value = L2_in; 
-            let q2_14 = document.getElementById('qty2_item_1_4'); if(q2_14) q2_14.value = L2_in; 
+            setQ('qty2_', 'item_3_0', H2_in); 
+            setQ('qty2_', 'item_3_1', H2_in); 
+            setQ('qty2_', 'item_3_2', 1); 
+            setQ('qty2_', 'item_3_3', 1); 
 
-            let q2_30 = document.getElementById('qty2_item_3_0'); if(q2_30) q2_30.value = H2_in; 
-            let q2_31 = document.getElementById('qty2_item_3_1'); if(q2_31) q2_31.value = H2_in; 
-            let q2_32 = document.getElementById('qty2_item_3_2'); if(q2_32) q2_32.value = 1; 
-            let q2_33 = document.getElementById('qty2_item_3_3'); if(q2_33) q2_33.value = 1; 
-
-            let q2_34 = document.getElementById('qty2_item_3_4'); if(q2_34) q2_34.value = Math.ceil((totalP2 * sealantPerimeter) / 15); 
-            let q2_35 = document.getElementById('qty2_item_3_5'); if(q2_35) q2_35.value = Math.ceil(totalP2 * boltsPerPanel * 1.05); 
+            setQ('qty2_', 'item_3_4', Math.ceil((totalP2 * sealantPerimeter) / 15)); 
+            setQ('qty2_', 'item_3_5', Math.ceil(totalP2 * boltsPerPanel * 1.05)); 
 
             let q2_40 = document.getElementById('qty2_item_4_0'); if(q2_40 && !q2_40.value) q2_40.value = 0;
             let q2_41 = document.getElementById('qty2_item_4_1'); if(q2_41 && !q2_41.value) q2_41.value = 0;
@@ -1830,8 +1861,9 @@ Note:
         drawGrid('frontGrid', L1, H1); drawGrid('backGrid', L1, H1);
         drawGrid('leftGrid', W1, H1); drawGrid('rightGrid', W1, H1);
 
-        // Safely update general recommendation text
         let plinthText = document.getElementById('plinthCalcText');
+        const numPlinths = W1 + 1;
+        const plinthLen = L1_in;
         if(plinthText) plinthText.innerText = `Recommendation: Require ${numPlinths} rows of concrete plinths, each ${plinthLen}${unitStr} long, spaced at ${spacingStr} C/C.`;
 
         calcTotals();
