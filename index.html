@@ -93,12 +93,9 @@
         .visual-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; justify-items: center; margin-bottom: 15px; }
         .view-box { text-align: center; background: #f8fafc; padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; width: 100%; max-width: 160px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);} 
         .view-title { font-size: 0.75em; font-weight: 800; margin-bottom: 8px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;}
-        
-        /* BULLETPROOF GRID CSS */
         .grid-draft { display: grid; gap: 1px; background: #94a3b8; border: 2px solid #475569; margin: 0 auto; width: 100%; border-radius: 2px; overflow: hidden;} 
         .panel { background: #e0f2fe; padding-bottom: 100%; height: 0; box-sizing: border-box; }
 
-        /* MULTI-TANK CSS */
         .tank-section-title { background: #e2e8f0; padding: 6px 12px; border-radius: 6px; font-weight: 800; color: #0f172a; margin-bottom: 10px; font-size: 0.9em; text-transform: uppercase; border-left: 4px solid #3b82f6;}
 
         /* --- ADMIN DASHBOARD STYLES --- */
@@ -114,8 +111,6 @@
         .admin-input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-weight: bold; text-align: center;}
         .admin-input.text-left { text-align: left; }
 
-        .print-only { display: none; }
-
         /* ========================================================================== */
         /* --- PROFESSIONAL PRINT STYLES (DUAL MODE) --- */
         /* ========================================================================== */
@@ -128,7 +123,7 @@
             .container { box-shadow: none; max-width: 100%; padding: 0; border: none; }
             
             /* ------------------------------------------------ */
-            /* MODE 1: INTERNAL PRINT (RESTORED TO CLASSIC)     */
+            /* MODE 1: INTERNAL PRINT                           */
             /* ------------------------------------------------ */
             body.print-internal #mainContent { display: block !important; }
             body.print-internal #customerPrintView { display: none !important; }
@@ -139,9 +134,7 @@
             body.print-internal .col-left { width: 100% !important; display: block !important; }
             body.print-internal .col-right { display: none !important; } 
             
-            /* Show BOM Cards on internal print */
-            body.print-internal .col-left > .module-card:not(#bomCard):not(#bomCard2) { display: none !important; }
-            body.print-internal #bomCard, body.print-internal #bomCard2 { border: none !important; padding: 0 !important; margin-bottom: 20px !important; box-shadow: none !important; }
+            body.print-internal .module-card { border: none !important; padding: 0 !important; margin-bottom: 20px !important; box-shadow: none !important; }
             
             body.print-internal .card-header { display: block !important; border-bottom: 2px solid #0f172a !important; margin-bottom: 8px !important; font-size: 11pt !important; color: #0f172a !important; text-transform: uppercase; padding: 0 0 5px 0 !important; background: transparent !important;}
             body.print-internal .card-header span, body.print-internal .card-header button { display: none !important; }
@@ -182,7 +175,6 @@
             body.print-internal .col-uprice { width: 15% !important; }
             body.print-internal .col-itotal { width: 15% !important; }
             
-            /* --- BULLETPROOF INTERNAL SUMMARY TABLE --- */
             body.print-internal #internalPrintFooter { display: block !important; margin-top: 20px; }
             body.print-internal .summary-box { background: #fff !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 6px !important; padding: 10px !important; margin-top: 10px !important; width: 320px !important; float: right !important; box-shadow: none !important;}
             
@@ -192,7 +184,6 @@
             body.print-internal .summary-table .border-bottom td { border-bottom: 1px solid #cbd5e1 !important; padding-bottom: 6px; margin-bottom: 3px; }
             body.print-internal .summary-table .grand-total-row td { font-size: 12pt; padding-top: 8px; }
 
-            /* PERFECT 6-GRID DRAWINGS INTEGRATION */
             body.print-internal .visual-container { display: grid !important; grid-template-columns: repeat(6, 1fr) !important; gap: 5px !important; width: 100% !important; margin: 10px 0 !important; page-break-inside: avoid !important; clear: both !important;}
             body.print-internal .view-box { padding: 4px !important; border: 1px solid #cbd5e1 !important; background: #fff !important; border-radius: 4px !important; }
             body.print-internal .grid-draft { gap: 0.5px !important; border: 1px solid #0f172a !important; background: #fff !important; width: 100% !important;}
@@ -207,7 +198,7 @@
             body.print-internal .sig-box strong { color: #0f172a; font-size: 9pt; text-transform: uppercase;}
 
             /* ------------------------------------------------ */
-            /* MODE 2: CUSTOMER PRINT (TIGHT SPACING MULTI-TANK)*/
+            /* MODE 2: CUSTOMER PRINT                           */
             /* ------------------------------------------------ */
             body.print-customer #mainContent { display: none !important; }
             body.print-customer #customerPrintView { display: block !important; }
@@ -230,14 +221,12 @@
             .cp-meta-right td { border: none; padding: 2px 0 2px 5px; vertical-align: top; text-align: left;}
             .cp-meta-right td:first-child { width: 60px; font-weight: normal; color: #000; text-align: right;}
 
-            /* Formal Customer Table - Spacing Tightened */
             .cp-table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 10px; font-size: 8.5pt; border: 2px solid #000; }
             .cp-table th { background: #d1d5db !important; color: #000 !important; border: 1px solid #000; padding: 4px 6px !important; font-weight: bold; text-align: center; -webkit-print-color-adjust: exact;}
             .cp-table td { border: 1px solid #000; padding: 4px 6px !important; vertical-align: top; color: #000; line-height: 1.3 !important;}
             .cp-table .td-center { text-align: center;}
             .cp-table .td-right { text-align: right;}
             
-            /* Customer T&C Blocks */
             .cp-short-exclusions { display: flex; align-items: stretch; margin-bottom: 10px !important; font-size: 7.5pt; line-height: 1.3; border: 1px solid #000;}
             .cp-short-exclusions .label { background: #d1d5db !important; color: #000; padding: 6px 8px; font-weight: bold; border-right: 1px solid #000; -webkit-print-color-adjust: exact; width: 100px; text-align: center; display: flex; align-items: center; justify-content: center;}
             .cp-short-exclusions .content { padding: 6px 10px; background: #fff; flex: 1;}
@@ -259,12 +248,11 @@
     </style>
     
     <script>
-        const currentVersion = "V26";
+        const currentVersion = "V27";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
-            // Wipe out ALL old buggy temporary cache keys, ensuring blank slate for new variables
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=25; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=26; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -349,7 +337,7 @@
             <strong style="color: #ea580c; display: flex; align-items: center; gap: 8px;">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
                 Project Bank:
-            </strong>
+            </select>
             <select id="memoryDropdown">
                 <option value="">-- Load a Saved Project --</option>
             </select>
@@ -649,7 +637,7 @@ Note:
             <img src="winko logo.png" alt="Winko Logo" style="width:140px; height:auto; object-fit:contain;">
         </div>
         <div class="header-text" style="flex:1;">
-            <h2 style="margin:0 0 5px 0; font-size:16pt; font-weight:800; color:#0f172a;">JUTARAMA INDUSTRIES (M) SDN. BHD. <span style="font-size:11pt; font-weight:normal;">(749861-V)</span></h2>
+            <h2 style="margin:0 0 5px 0; font-size:16pt; font-weight:800; color:#0f172a;">JUTARAMA INDUSTRIES (M) SDN. BHD. <span style="font-size:12pt; font-weight:normal;">(749861-V)</span></h2>
             <p style="margin:2px 0; font-size:9pt; color:#475569;">No. 19, Jalan Mega 2/1, Kawasan Perindustrian Mega 2, 43500 Semenyih, Selangor, Malaysia.</p>
             <p style="margin:2px 0; font-size:9pt; color:#475569;">Tel: (60)-8727 7540 &nbsp;&nbsp;|&nbsp;&nbsp; Email: sales@winko.my &nbsp;&nbsp;|&nbsp;&nbsp; Web: www.winko.my</p>
         </div>
@@ -1131,7 +1119,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV26'); 
+            localStorage.removeItem('winkoProDataV27'); // V27 CACHE BUSTER
             
             if(document.getElementById('partChoice')) document.getElementById('partChoice').value = 'no';
             if(document.getElementById('numTanks')) document.getElementById('numTanks').value = '1';
@@ -1147,38 +1135,40 @@ Note:
 
     function syncPrintHeader() {
         try {
-            // Internal Dashboard Meta Sync
-            if(document.getElementById('metaQuoteId')) document.getElementById('metaQuoteId').innerText = document.getElementById('quoteIdInput').value || "N/A";
-            if(document.getElementById('metaProject')) document.getElementById('metaProject').innerText = document.getElementById('projectName').value || "_____________________";
-            if(document.getElementById('metaStd')) document.getElementById('metaStd').innerText = document.getElementById('stdChoice').value || "";
+            // SAFE OPTIONAL CHAINING FOR EVERY VARIABLE
+            if(document.getElementById('metaQuoteId')) document.getElementById('metaQuoteId').innerText = document.getElementById('quoteIdInput')?.value || "N/A";
+            if(document.getElementById('metaProject')) document.getElementById('metaProject').innerText = document.getElementById('projectName')?.value || "_____________________";
+            if(document.getElementById('metaStd')) document.getElementById('metaStd').innerText = document.getElementById('stdChoice')?.value || "";
             
-            let u = document.getElementById('unitChoice').value === 'ft' ? 'ft' : 'm';
-            let numTanks = document.getElementById('numTanks').value;
+            let u = document.getElementById('unitChoice')?.value === 'ft' ? 'ft' : 'm';
+            let numTanks = document.getElementById('numTanks')?.value || "1";
             
-            let l1 = document.getElementById('length').value || 0;
-            let w1 = document.getElementById('width').value || 0;
-            let h1 = document.getElementById('height').value || 0;
+            let l1 = document.getElementById('length')?.value || 0;
+            let w1 = document.getElementById('width')?.value || 0;
+            let h1 = document.getElementById('height')?.value || 0;
             let dimsStr = `Tank 1: ${l1}${u} (L) x ${w1}${u} (W) x ${h1}${u} (H)`;
             
             if(numTanks === "2") {
-                let l2 = document.getElementById('length2').value || 0;
-                let w2 = document.getElementById('width2').value || 0;
-                let h2 = document.getElementById('height2').value || 0;
+                let l2 = document.getElementById('length2')?.value || 0;
+                let w2 = document.getElementById('width2')?.value || 0;
+                let h2 = document.getElementById('height2')?.value || 0;
                 dimsStr += ` | Tank 2: ${l2}${u} (L) x ${w2}${u} (W) x ${h2}${u} (H)`;
             }
             if(document.getElementById('metaDims')) document.getElementById('metaDims').innerText = dimsStr;
             
-            let matStr = document.getElementById('coatChoice').value || "";
+            let matStr = document.getElementById('coatChoice')?.value || "";
             if(document.getElementById('metaCoat')) document.getElementById('metaCoat').innerText = matStr;
             
             // Build Partition string
-            let pQty1 = parseInt(document.getElementById('partQty').value) || 0;
-            let part1Str = (document.getElementById('partChoice').value === 'yes' && pQty1 > 0) ? `${pQty1}x ${document.getElementById('partType').value} (${document.getElementById('partLen').value}${u} x ${document.getElementById('partHgt').value}${u})` : '';
+            let pQty1 = parseInt(document.getElementById('partQty')?.value) || 0;
+            let partChoice1 = document.getElementById('partChoice')?.value || 'no';
+            let part1Str = (partChoice1 === 'yes' && pQty1 > 0) ? `${pQty1}x ${document.getElementById('partType')?.value || ''} (${document.getElementById('partLen')?.value || 0}${u} x ${document.getElementById('partHgt')?.value || 0}${u})` : '';
             
             let partDisplay = part1Str || 'None';
             if(numTanks === "2") {
-                let pQty2 = parseInt(document.getElementById('partQty2').value) || 0;
-                let part2Str = (document.getElementById('partChoice2').value === 'yes' && pQty2 > 0) ? `${pQty2}x ${document.getElementById('partType2').value} (${document.getElementById('partLen2').value}${u} x ${document.getElementById('partHgt2').value}${u})` : '';
+                let pQty2 = parseInt(document.getElementById('partQty2')?.value) || 0;
+                let partChoice2 = document.getElementById('partChoice2')?.value || 'no';
+                let part2Str = (partChoice2 === 'yes' && pQty2 > 0) ? `${pQty2}x ${document.getElementById('partType2')?.value || ''} (${document.getElementById('partLen2')?.value || 0}${u} x ${document.getElementById('partHgt2')?.value || 0}${u})` : '';
                 if(part1Str && part2Str) partDisplay = `T1: ${part1Str} | T2: ${part2Str}`;
                 else if (part2Str) partDisplay = `T2: ${part2Str}`;
             }
@@ -1186,30 +1176,34 @@ Note:
             if(document.getElementById('metaPart')) document.getElementById('metaPart').innerText = partDisplay;
             
             // CUSTOMER FORMAL PRINT SYNC
-            if(document.getElementById('cpCustName')) document.getElementById('cpCustName').innerText = document.getElementById('custCompany').value || document.getElementById('projectName').value || "Client Name";
-            if(document.getElementById('cpCustAddress')) document.getElementById('cpCustAddress').innerHTML = (document.getElementById('custAddr').value || '').replace(/\n/g, '<br>');
-            if(document.getElementById('cpAttention')) document.getElementById('cpAttention').innerText = document.getElementById('custAttn').value || "";
-            if(document.getElementById('cpProject')) document.getElementById('cpProject').innerText = document.getElementById('projectName').value || "";
-            if(document.getElementById('cpRef')) document.getElementById('cpRef').innerText = document.getElementById('quoteIdInput').value || "";
+            if(document.getElementById('cpCustName')) document.getElementById('cpCustName').innerText = document.getElementById('custCompany')?.value || document.getElementById('projectName')?.value || "Client Name";
+            if(document.getElementById('cpCustAddress')) document.getElementById('cpCustAddress').innerHTML = (document.getElementById('custAddr')?.value || '').replace(/\n/g, '<br>');
+            if(document.getElementById('cpAttention')) document.getElementById('cpAttention').innerText = document.getElementById('custAttn')?.value || "";
+            if(document.getElementById('cpProject')) document.getElementById('cpProject').innerText = document.getElementById('projectName')?.value || "";
+            if(document.getElementById('cpRef')) document.getElementById('cpRef').innerText = document.getElementById('quoteIdInput')?.value || "";
 
             if(document.getElementById('cpMaterial')) document.getElementById('cpMaterial').innerText = matStr;
             if(document.getElementById('cpMaterial2')) document.getElementById('cpMaterial2').innerText = matStr;
             
-            // Format dims for Customer Print (Tank 1)
-            document.getElementById('cpDims').innerText = `${l1}${u} (L) x ${w1}${u} (W) x ${h1}${u} (H)`;
+            if(document.getElementById('cpDims')) document.getElementById('cpDims').innerText = `${l1}${u} (L) x ${w1}${u} (W) x ${h1}${u} (H)`;
             
-            if(document.getElementById('cpStd')) document.getElementById('cpStd').innerText = document.getElementById('stdChoice').value || "";
-            if(document.getElementById('cpThickRoof')) document.getElementById('cpThickRoof').innerText = document.getElementById('thickRoof').value || "";
-            if(document.getElementById('cpThickBase')) document.getElementById('cpThickBase').innerText = document.getElementById('thickBase').value || "";
+            if(document.getElementById('cpStd')) document.getElementById('cpStd').innerText = document.getElementById('stdChoice')?.value || "";
+            if(document.getElementById('cpThickRoof')) document.getElementById('cpThickRoof').innerText = document.getElementById('thickRoof')?.value || "";
+            if(document.getElementById('cpThickBase')) document.getElementById('cpThickBase').innerText = document.getElementById('thickBase')?.value || "";
             
-            // Wall L1-L4 Format
-            let wallStr = `L1: ${document.getElementById('thickWallL1').value || '-'} | L2: ${document.getElementById('thickWallL2').value || '-'} | L3: ${document.getElementById('thickWallL3').value || '-'} | L4: ${document.getElementById('thickWallL4').value || '-'}`;
+            // BULLETPROOF L1-L4 LOGIC
+            let tL1 = document.getElementById('thickWallL1') ? document.getElementById('thickWallL1').value : "-";
+            let tL2 = document.getElementById('thickWallL2') ? document.getElementById('thickWallL2').value : "-";
+            let tL3 = document.getElementById('thickWallL3') ? document.getElementById('thickWallL3').value : "-";
+            let tL4 = document.getElementById('thickWallL4') ? document.getElementById('thickWallL4').value : "-";
+            let wallStr = `L1: ${tL1} | L2: ${tL2} | L3: ${tL3} | L4: ${tL4}`;
+            
             if(document.getElementById('cpThickWall')) document.getElementById('cpThickWall').innerText = wallStr;
 
             if(document.getElementById('cpPartRow')) {
                 if(part1Str !== '') {
                     document.getElementById('cpPartRow').style.display = 'table-row';
-                    document.getElementById('cpPartSection').innerText = part1Str;
+                    if(document.getElementById('cpPartSection')) document.getElementById('cpPartSection').innerText = part1Str;
                 } else {
                     document.getElementById('cpPartRow').style.display = 'none';
                 }
@@ -1227,58 +1221,58 @@ Note:
             let wliQty = document.getElementById('qty_item_3_2') ? document.getElementById('qty_item_3_2').value : '0';
             if(document.getElementById('cpWLI')) document.getElementById('cpWLI').innerText = `${wliType} - ${wliQty} sets`;
 
-            // TANK 2 DATA SYNC (If Applicable)
+            // TANK 2 DATA SYNC
             if(numTanks === "2") {
                 if(document.getElementById('cpTank2Row')) document.getElementById('cpTank2Row').style.display = 'table-row';
-                let l2 = document.getElementById('length2').value || 0;
-                let w2 = document.getElementById('width2').value || 0;
-                let h2 = document.getElementById('height2').value || 0;
+                let l2 = document.getElementById('length2')?.value || 0;
+                let w2 = document.getElementById('width2')?.value || 0;
+                let h2 = document.getElementById('height2')?.value || 0;
                 if(document.getElementById('cpDims2')) document.getElementById('cpDims2').innerText = `${l2}${u} (L) x ${w2}${u} (W) x ${h2}${u} (H)`;
                 
-                if(document.getElementById('cpStd2')) document.getElementById('cpStd2').innerText = document.getElementById('stdChoice').value || "";
-                if(document.getElementById('cpThickRoof2')) document.getElementById('cpThickRoof2').innerText = document.getElementById('thickRoof').value || "";
-                if(document.getElementById('cpThickBase2')) document.getElementById('cpThickBase2').innerText = document.getElementById('thickBase').value || "";
+                if(document.getElementById('cpStd2')) document.getElementById('cpStd2').innerText = document.getElementById('stdChoice')?.value || "";
+                if(document.getElementById('cpThickRoof2')) document.getElementById('cpThickRoof2').innerText = document.getElementById('thickRoof')?.value || "";
+                if(document.getElementById('cpThickBase2')) document.getElementById('cpThickBase2').innerText = document.getElementById('thickBase')?.value || "";
                 if(document.getElementById('cpThickWall2')) document.getElementById('cpThickWall2').innerText = wallStr;
                 
-                let pQty2 = parseInt(document.getElementById('partQty2').value) || 0;
-                let part2Str = (document.getElementById('partChoice2').value === 'yes' && pQty2 > 0) ? `${pQty2}x ${document.getElementById('partType2').value} (${document.getElementById('partLen2').value}${u} x ${document.getElementById('partHgt2').value}${u})` : '';
+                let pQty2 = parseInt(document.getElementById('partQty2')?.value) || 0;
+                let partChoice2 = document.getElementById('partChoice2')?.value || 'no';
+                let part2Str = (partChoice2 === 'yes' && pQty2 > 0) ? `${pQty2}x ${document.getElementById('partType2')?.value || ''} (${document.getElementById('partLen2')?.value || 0}${u} x ${document.getElementById('partHgt2')?.value || 0}${u})` : '';
                 
                 if(document.getElementById('cpPartRow2')) {
                     if(part2Str !== '') {
                         document.getElementById('cpPartRow2').style.display = 'table-row';
-                        document.getElementById('cpPartSection2').innerText = part2Str;
+                        if(document.getElementById('cpPartSection2')) document.getElementById('cpPartSection2').innerText = part2Str;
                     } else {
                         document.getElementById('cpPartRow2').style.display = 'none';
                     }
                 }
                 
-                if(document.getElementById('cpLaddersInt2')) document.getElementById('cpLaddersInt2').innerText = document.getElementById('cpLaddersInt').innerText;
-                if(document.getElementById('cpLaddersExt2')) document.getElementById('cpLaddersExt2').innerText = document.getElementById('cpLaddersExt').innerText;
-                if(document.getElementById('cpWLI2')) document.getElementById('cpWLI2').innerText = document.getElementById('cpWLI').innerText;
+                if(document.getElementById('cpLaddersInt2')) document.getElementById('cpLaddersInt2').innerText = document.getElementById('cpLaddersInt')?.innerText || "";
+                if(document.getElementById('cpLaddersExt2')) document.getElementById('cpLaddersExt2').innerText = document.getElementById('cpLaddersExt')?.innerText || "";
+                if(document.getElementById('cpWLI2')) document.getElementById('cpWLI2').innerText = document.getElementById('cpWLI')?.innerText || "";
 
             } else {
                 if(document.getElementById('cpTank2Row')) document.getElementById('cpTank2Row').style.display = 'none';
             }
 
-
             // GLOBAL T&C
-            if(document.getElementById('cpShortExclusionsText')) document.getElementById('cpShortExclusionsText').innerHTML = (document.getElementById('shortExclusions').value || '').replace(/\n/g, '<br>');
-            if(document.getElementById('cpFullTermsText')) document.getElementById('cpFullTermsText').innerHTML = (document.getElementById('fullTermsNotes').value || '');
+            if(document.getElementById('cpShortExclusionsText')) document.getElementById('cpShortExclusionsText').innerHTML = (document.getElementById('shortExclusions')?.value || '').replace(/\n/g, '<br>');
+            if(document.getElementById('cpFullTermsText')) document.getElementById('cpFullTermsText').innerHTML = (document.getElementById('fullTermsNotes')?.value || '');
             
-            if(document.getElementById('cpValidity')) document.getElementById('cpValidity').innerHTML = `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${document.getElementById('tcValidity').value || ""}</span>`;
+            if(document.getElementById('cpValidity')) document.getElementById('cpValidity').innerHTML = `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${document.getElementById('tcValidity')?.value || ""}</span>`;
             
-            let payText = document.getElementById('tcPayment').value || '';
+            let payText = document.getElementById('tcPayment')?.value || '';
             let formattedPay = payText.split('\n').map(line => {
                 if(line.trim() === '') return '';
                 return `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${line}</span>`;
             }).join('');
             if(document.getElementById('cpPayment')) document.getElementById('cpPayment').innerHTML = formattedPay;
             
-            if(document.getElementById('cpDeliveryTerm')) document.getElementById('cpDeliveryTerm').innerHTML = `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${document.getElementById('tcDelivery').value || ""}</span>`;
-            if(document.getElementById('cpLeadTime')) document.getElementById('cpLeadTime').innerHTML = `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${document.getElementById('tcLead').value || ""}</span>`;
+            if(document.getElementById('cpDeliveryTerm')) document.getElementById('cpDeliveryTerm').innerHTML = `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${document.getElementById('tcDelivery')?.value || ""}</span>`;
+            if(document.getElementById('cpLeadTime')) document.getElementById('cpLeadTime').innerHTML = `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${document.getElementById('tcLead')?.value || ""}</span>`;
 
-            if(document.getElementById('cpSignName')) document.getElementById('cpSignName').innerText = document.getElementById('signName').value || "";
-            if(document.getElementById('cpSignPhone')) document.getElementById('cpSignPhone').innerText = document.getElementById('signPhone').value || "";
+            if(document.getElementById('cpSignName')) document.getElementById('cpSignName').innerText = document.getElementById('signName')?.value || "";
+            if(document.getElementById('cpSignPhone')) document.getElementById('cpSignPhone').innerText = document.getElementById('signPhone')?.value || "";
         } catch(e) { console.log("Sync Print Warning: ", e.message); }
     }
 
@@ -1304,11 +1298,11 @@ Note:
                 if(it.selectId && document.getElementById(`sel2_${it.selectId}`)) data[`sel2_${it.selectId}`] = document.getElementById(`sel2_${it.selectId}`).value; 
             });
         });
-        localStorage.setItem('winkoProDataV26', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV27', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV26');
+        let savedData = localStorage.getItem('winkoProDataV27');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1412,7 +1406,7 @@ Note:
     function calcTotals() {
         let baseCost = 0;
         let totalWeight = 0;
-        let numTanks = parseInt(document.getElementById('numTanks').value) || 1;
+        let numTanks = parseInt(document.getElementById('numTanks')?.value) || 1;
 
         bomStructure.forEach((sec, sIdx) => {
             sec.items.forEach((it, iIdx) => {
@@ -1526,26 +1520,26 @@ Note:
     }
 
     function processTankData() {
-        let numTanks = parseInt(document.getElementById('numTanks').value) || 1;
-        const unit = document.getElementById('unitChoice').value;
+        let numTanks = parseInt(document.getElementById('numTanks')?.value) || 1;
+        const unit = document.getElementById('unitChoice')?.value || 'ft';
         const factor = unit === 'ft' ? 4 : 1;
         const unitStr = unit === 'ft' ? 'ft' : 'm';
         const spacingStr = unit === 'ft' ? '4ft (1220mm)' : '1m (1000mm)';
 
         // TANK 1 DATA
-        const L1_in = parseFloat(document.getElementById('length').value) || 0;
-        const W1_in = parseFloat(document.getElementById('width').value) || 0;
-        const H1_in = parseFloat(document.getElementById('height').value) || 0;
+        const L1_in = parseFloat(document.getElementById('length')?.value) || 0;
+        const W1_in = parseFloat(document.getElementById('width')?.value) || 0;
+        const H1_in = parseFloat(document.getElementById('height')?.value) || 0;
         
         let volLiters1 = (unit === 'ft') ? (L1_in * W1_in * H1_in * 28.3168) : (L1_in * W1_in * H1_in * 1000);
         let effLiters1 = volLiters1 * 0.9; 
 
-        const partChoice1 = document.getElementById('partChoice').value;
+        const partChoice1 = document.getElementById('partChoice')?.value || 'no';
         let pQty1 = 0; let pLen_in1 = 0; let pHgt_in1 = 0;
         if(partChoice1 === 'yes') {
-            pQty1 = parseInt(document.getElementById('partQty').value) || 0;
-            pLen_in1 = parseFloat(document.getElementById('partLen').value) || 0;
-            pHgt_in1 = parseFloat(document.getElementById('partHgt').value) || 0;
+            pQty1 = parseInt(document.getElementById('partQty')?.value) || 0;
+            pLen_in1 = parseFloat(document.getElementById('partLen')?.value) || 0;
+            pHgt_in1 = parseFloat(document.getElementById('partHgt')?.value) || 0;
         }
 
         const L1 = Math.ceil(L1_in / factor);
@@ -1565,19 +1559,19 @@ Note:
         let H2_in = 0, L2_in = 0;
 
         if (numTanks === 2) {
-            L2_in = parseFloat(document.getElementById('length2').value) || 0;
-            let W2_in = parseFloat(document.getElementById('width2').value) || 0;
-            H2_in = parseFloat(document.getElementById('height2').value) || 0;
+            L2_in = parseFloat(document.getElementById('length2')?.value) || 0;
+            let W2_in = parseFloat(document.getElementById('width2')?.value) || 0;
+            H2_in = parseFloat(document.getElementById('height2')?.value) || 0;
             
             volLiters2 = (unit === 'ft') ? (L2_in * W2_in * H2_in * 28.3168) : (L2_in * W2_in * H2_in * 1000);
             effLiters2 = volLiters2 * 0.9; 
 
-            const partChoice2 = document.getElementById('partChoice2').value;
+            const partChoice2 = document.getElementById('partChoice2')?.value || 'no';
             let pQty2 = 0; let pLen_in2 = 0; let pHgt_in2 = 0;
             if(partChoice2 === 'yes') {
-                pQty2 = parseInt(document.getElementById('partQty2').value) || 0;
-                pLen_in2 = parseFloat(document.getElementById('partLen2').value) || 0;
-                pHgt_in2 = parseFloat(document.getElementById('partHgt2').value) || 0;
+                pQty2 = parseInt(document.getElementById('partQty2')?.value) || 0;
+                pLen_in2 = parseFloat(document.getElementById('partLen2')?.value) || 0;
+                pHgt_in2 = parseFloat(document.getElementById('partHgt2')?.value) || 0;
             }
 
             const L2 = Math.ceil(L2_in / factor);
@@ -1665,7 +1659,6 @@ Note:
             if(document.getElementById('qty2_item_3_4')) document.getElementById('qty2_item_3_4').value = Math.ceil((totalP2 * sealantPerimeter) / 15); 
             if(document.getElementById('qty2_item_3_5')) document.getElementById('qty2_item_3_5').value = Math.ceil(totalP2 * boltsPerPanel * 1.05); 
 
-            // Services remain 0 on Tank 2 unless overridden
             if(document.getElementById('qty2_item_4_0') && !document.getElementById('qty2_item_4_0').value) document.getElementById('qty2_item_4_0').value = 0;
             if(document.getElementById('qty2_item_4_1') && !document.getElementById('qty2_item_4_1').value) document.getElementById('qty2_item_4_1').value = 0;
         }
@@ -1683,27 +1676,17 @@ Note:
             let csv = "\uFEFFWINKO INDUSTRIAL SDN BHD\n";
             csv += "OFFICIAL TECHNICAL QUOTATION\n\n";
             
-            let qid = document.getElementById('quoteIdInput').value || "N/A";
-            let proj = document.getElementById('projectName').value || "Unnamed Project";
+            let qid = document.getElementById('quoteIdInput')?.value || "N/A";
+            let proj = document.getElementById('projectName')?.value || "Unnamed Project";
             let d = new Date().toLocaleDateString('en-MY');
-            let dim = document.getElementById('metaDims').innerText;
-            let mat = document.getElementById('coatChoice').value;
-            
-            let partChoice = document.getElementById('partChoice').value;
-            let pQty = parseInt(document.getElementById('partQty').value) || 0;
-            let pType = document.getElementById('partType').value || 'Standard';
-            let pLen = document.getElementById('partLen').value || 0;
-            let pHgt = document.getElementById('partHgt').value || 0;
-            let u = document.getElementById('unitChoice').value === 'ft' ? 'ft' : 'm';
-            
-            let part = (partChoice === 'yes' && pQty > 0) ? `${pQty}x ${pType} (${pLen}${u} x ${pHgt}${u})` : 'None';
+            let dim = document.getElementById('metaDims')?.innerText || "";
+            let mat = document.getElementById('coatChoice')?.value || "";
             
             csv += `"Quote No:","${qid}"\n`;
             csv += `"Project / Client:","${proj.replace(/"/g, '""')}"\n`;
             csv += `"Date:","${d}"\n`;
             csv += `"Dimensions:","${dim}"\n`;
-            csv += `"Material:","${mat}"\n`;
-            csv += `"Partition (Tank 1):","${part}"\n\n`;
+            csv += `"Material:","${mat}"\n\n`;
 
             csv += "TANK 1 BILL OF MATERIALS\n";
             csv += "Category,Item Description,Qty,Unit Wt (kg),Unit Price (RM),Total (RM)\n";
@@ -1721,7 +1704,7 @@ Note:
                 if(q > 0) csv += `"${s.category}","${label}",${q},${w},${p},${t}\n`;
             })});
             
-            let numTanks = parseInt(document.getElementById('numTanks').value) || 1;
+            let numTanks = parseInt(document.getElementById('numTanks')?.value) || 1;
             if(numTanks === 2) {
                 csv += `\nTANK 2 BILL OF MATERIALS\n`;
                 csv += "Category,Item Description,Qty,Unit Wt (kg),Unit Price (RM),Total (RM)\n";
