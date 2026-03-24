@@ -129,14 +129,15 @@
             .container { box-shadow: none; max-width: 100%; padding: 0; border: none; }
             
             /* ------------------------------------------------ */
-            /* MODE 1: INTERNAL PRINT (RESTORED TO V7 CLASSIC)  */
+            /* MODE 1: INTERNAL PRINT (RESTORED TO CLASSIC)     */
             /* ------------------------------------------------ */
             body.print-internal #mainContent { display: block !important; }
             body.print-internal #customerPrintView { display: none !important; }
 
-            /* Allow layout to stack naturally */
-            body.print-internal .app-layout { display: block !important; }
-            body.print-internal .col-left, body.print-internal .col-right { width: 100% !important; display: block !important; }
+            /* Restore Flex side-by-side for internal print */
+            body.print-internal .app-layout { display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; gap: 20px !important; align-items: flex-start !important; }
+            body.print-internal .col-left { flex: 1.5 !important; display: block !important; min-width: 0 !important; }
+            body.print-internal .col-right { flex: 1 !important; display: block !important; position: static !important; min-width: 0 !important;}
             
             body.print-internal .module-card { border: none !important; padding: 0 !important; margin-bottom: 20px !important; box-shadow: none !important; }
             body.print-internal .card-header { display: none !important; } 
@@ -171,15 +172,21 @@
             body.print-internal input, body.print-internal .desc-input, body.print-internal .bom-inline-select { border: none !important; background: transparent !important; color: #0f172a !important; box-shadow: none !important; font-weight: 600; padding: 0 !important; font-size: inherit; appearance: none; -webkit-appearance: none; width: auto;}
             body.print-internal .bom-inline-select { margin-left: 4px; color: #475569 !important; font-weight: 700;}
             
-            body.print-internal .summary-box { background: #f8fafc !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 4px; padding: 10px 15px !important; margin-top: 15px; width: 300px; float: right; page-break-inside: avoid; box-shadow: none;}
+            body.print-internal .summary-box { background: #f8fafc !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 4px; padding: 10px 15px !important; margin-top: 5px; width: 100%; box-shadow: none;}
             body.print-internal .sum-row { border-bottom: 1px solid #cbd5e1 !important; margin-bottom: 5px; padding-bottom: 3px; color: #334155 !important; font-size: 8pt; font-weight: 700;}
             body.print-internal .sum-row.total { background: #0f172a !important; color: #ffffff !important; border: none !important; padding: 8px !important; font-size: 11pt; margin: 8px -15px -10px -15px; border-radius: 0 0 2px 2px;}
-            
-            body.print-internal .visual-container { max-width: 100%; display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; margin: 20px auto 15px auto; page-break-inside: avoid; clear: both;}
+
+            body.print-internal .visual-container { max-width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin: 20px auto 15px auto; page-break-inside: avoid; clear: both;}
             body.print-internal .view-box { padding: 5px; border: 1px solid #cbd5e1 !important; background: #fff !important; border-radius: 4px; }
             body.print-internal .grid-draft { gap: 0.5px; border: 1px solid #0f172a !important; background: #fff !important;}
             body.print-internal .panel { background: #e0f2fe !important; border: 0.5px solid #94a3b8 !important;}
             body.print-internal .view-title { font-size: 6.5pt; margin-bottom: 3px; color: #0f172a !important; text-align: center; font-weight: 800;}
+            
+            body.print-internal .print-footer { display: flex; justify-content: space-between; margin-top: 30px; page-break-inside: avoid; clear: both; padding-top: 10px;}
+            body.print-internal .sig-box { width: 40%; text-align: left; }
+            body.print-internal .sig-box p { font-size: 8pt; margin: 0; color: #334155; }
+            body.print-internal .sig-line { border-bottom: 1px solid #0f172a; margin: 30px 0 5px 0; }
+            body.print-internal .sig-box strong { color: #0f172a; font-size: 9pt; text-transform: uppercase;}
 
             /* ------------------------------------------------ */
             /* MODE 2: CUSTOMER PRINT (2-Page Formal Letter)    */
@@ -342,7 +349,7 @@
                     <div class="config-grid">
                         <div class="form-group"><label>Standard</label><select id="stdChoice" onchange="savePrices(); processTankData();"><option>SANS 10329:2020 Approved by SIRIM & SPAN</option><option>SS 22: 1979</option><option>Other</option></select></div>
                         <div class="form-group"><label>Unit System</label><select id="unitChoice" onchange="updateLabels(); savePrices(); processTankData();"><option value="ft">Imperial (4'x4')</option><option value="m">Metric (1mx1m)</option></select></div>
-                        <div class="form-group"><label>Tank Material / Finish</label><select id="coatChoice" onchange="savePrices(); processTankData();"><option>Hot Dipped Galvanised</option><option>Painted Steel</option><option>Stainless Steel (SS 304)</option><option>Stainless Steel (SS 316)</option></select></div>
+                        <div class="form-group" style="grid-column: span 2;"><label>Tank Material / Finish</label><select id="coatChoice" onchange="savePrices(); processTankData();"><option>Hot Dipped Galvanised</option><option>Painted Steel</option><option>Stainless Steel (SS 304)</option><option>Stainless Steel (SS 316)</option></select></div>
                         <div class="form-group"><label>Partition Wall</label><select id="partChoice" onchange="togglePartitionDetails(); processTankData();"><option value="no">No Partition</option><option value="yes">Yes (Internal Wall)</option></select></div>
                     </div>
 
@@ -456,7 +463,7 @@ Note:
                         <div class="sum-row"><span>Units:</span> <span id="sumUnit">-</span></div>
                         <div class="sum-row"><span>Material:</span> <span id="sumCoat">-</span></div>
                         <div class="sum-row"><span>Partition:</span> <span id="sumPart">-</span></div>
-                        <div class="sum-row" style="color:#38bdf8; font-weight:700;"><span>Capacity (Volume):</span> <span id="sumCapacity_screen">0 Liters</span></div>
+                        <div class="sum-row" style="color:#38bdf8; font-weight:700;"><span>Est. Capacity:</span> <span id="sumCapacity_screen">0 L</span></div>
                         <div class="sum-row" style="color:#fdba74; font-weight:700;"><span>Est. Total Weight:</span> <span id="sumWeight_screen">0 kg</span></div>
                         <hr style="border: 1px solid rgba(255,255,255,0.15); margin: 15px 0;">
                         <div class="sum-row"><span>Subtotal:</span> <span>RM <span id="sumSubtotal_screen">0.00</span></span></div>
@@ -505,10 +512,18 @@ Note:
                 <div class="sum-row total"><span>GRAND TOTAL:</span> <span style="float:right;">RM <span id="grandTotal_print">0.00</span></span></div>
             </div>
             
-            <div class="visual-container" style="margin-top:20px;">
+            <div class="visual-container" style="margin-top:20px; width:60%; margin-bottom: 20px;">
                 <div class="view-box"><div class="view-title">Top</div><div id="topGrid_p" class="grid-draft"></div></div>
                 <div class="view-box"><div class="view-title">Front</div><div id="frontGrid_p" class="grid-draft"></div></div>
                 <div class="view-box"><div class="view-title">Left</div><div id="leftGrid_p" class="grid-draft"></div></div>
+            </div>
+            
+            <div class="print-footer" id="internalSig">
+                <div class="sig-box">
+                    <p>Issued By:</p>
+                    <div class="sig-line"></div>
+                    <p><strong>JUTARAMA INDUSTRIES (M) SDN BHD</strong></p>
+                </div>
             </div>
         </div>
     </div>
@@ -682,12 +697,21 @@ Note:
             document.body.className = 'print-internal';
             syncPrintHeader();
             // Duplicate visuals for internal print footer
-            document.getElementById('topGrid_p').innerHTML = document.getElementById('topGrid').innerHTML;
-            document.getElementById('topGrid_p').style.gridTemplateColumns = document.getElementById('topGrid').style.gridTemplateColumns;
-            document.getElementById('frontGrid_p').innerHTML = document.getElementById('frontGrid').innerHTML;
-            document.getElementById('frontGrid_p').style.gridTemplateColumns = document.getElementById('frontGrid').style.gridTemplateColumns;
-            document.getElementById('leftGrid_p').innerHTML = document.getElementById('leftGrid').innerHTML;
-            document.getElementById('leftGrid_p').style.gridTemplateColumns = document.getElementById('leftGrid').style.gridTemplateColumns;
+            let topG = document.getElementById('topGrid_p');
+            if(topG) {
+                topG.innerHTML = document.getElementById('topGrid').innerHTML;
+                topG.style.gridTemplateColumns = document.getElementById('topGrid').style.gridTemplateColumns;
+            }
+            let frontG = document.getElementById('frontGrid_p');
+            if(frontG) {
+                frontG.innerHTML = document.getElementById('frontGrid').innerHTML;
+                frontG.style.gridTemplateColumns = document.getElementById('frontGrid').style.gridTemplateColumns;
+            }
+            let leftG = document.getElementById('leftGrid_p');
+            if(leftG) {
+                leftG.innerHTML = document.getElementById('leftGrid').innerHTML;
+                leftG.style.gridTemplateColumns = document.getElementById('leftGrid').style.gridTemplateColumns;
+            }
             
             setTimeout(() => { window.print(); }, 300);
         } catch(e) { alert("Internal Print Error: " + e.message); }
@@ -723,7 +747,10 @@ Note:
         const partChoice = document.getElementById('partChoice').value;
         const detailsRow = document.getElementById('partitionDetailsRow');
         if(partChoice === 'yes') { detailsRow.style.display = 'flex'; } 
-        else { detailsRow.style.display = 'none'; document.getElementById('partQty').value = 0; }
+        else { 
+            detailsRow.style.display = 'none'; 
+            if(document.getElementById('partQty')) document.getElementById('partQty').value = 0; 
+        }
     }
 
     // --- FULL BOM STRUCTURE ---
@@ -926,14 +953,18 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV9'); // V9 CACHE BUSTER
             
-            document.getElementById('partChoice').value = 'no';
-            togglePartitionDetails();
+            // V10 CACHE BUSTER - Wipes old broken math memory
+            localStorage.removeItem('winkoProDataV10'); 
+            
+            if(document.getElementById('partChoice')) {
+                document.getElementById('partChoice').value = 'no';
+                togglePartitionDetails();
+            }
 
             applyCustomRows();
             buildBOMTable();
-            document.getElementById('projectName').value = "";
+            if(document.getElementById('projectName')) document.getElementById('projectName').value = "";
             processTankData();
             location.reload(); 
         }
@@ -941,19 +972,20 @@ Note:
 
     function syncPrintHeader() {
         try {
-            document.getElementById('metaQuoteId').innerText = document.getElementById('quoteIdInput').value || "N/A";
-            document.getElementById('metaProject').innerText = document.getElementById('projectName').value || "_____________________";
-            document.getElementById('metaStd').innerText = document.getElementById('stdChoice').value || "";
+            // Internal Dashboard Meta Sync
+            if(document.getElementById('metaQuoteId')) document.getElementById('metaQuoteId').innerText = document.getElementById('quoteIdInput').value || "N/A";
+            if(document.getElementById('metaProject')) document.getElementById('metaProject').innerText = document.getElementById('projectName').value || "_____________________";
+            if(document.getElementById('metaStd')) document.getElementById('metaStd').innerText = document.getElementById('stdChoice').value || "";
             
             let l = document.getElementById('length').value || 0;
             let w = document.getElementById('width').value || 0;
             let h = document.getElementById('height').value || 0;
             let u = document.getElementById('unitChoice').value === 'ft' ? 'ft' : 'm';
             let dimsStr = `${l}${u} (L) x ${w}${u} (W) x ${h}${u} (H)`;
-            document.getElementById('metaDims').innerText = dimsStr;
+            if(document.getElementById('metaDims')) document.getElementById('metaDims').innerText = dimsStr;
             
             let matStr = document.getElementById('coatChoice').value || "";
-            document.getElementById('metaCoat').innerText = matStr;
+            if(document.getElementById('metaCoat')) document.getElementById('metaCoat').innerText = matStr;
             
             let partChoice = document.getElementById('partChoice').value || "no";
             let pQty = parseInt(document.getElementById('partQty').value) || 0;
@@ -963,27 +995,30 @@ Note:
             
             let partDisplay = 'None';
             if(partChoice === 'yes' && pQty > 0) { partDisplay = `${pQty}x ${pType} (${pLen}${u} x ${pHgt}${u})`; }
-            document.getElementById('metaPart').innerText = partDisplay;
+            if(document.getElementById('metaPart')) document.getElementById('metaPart').innerText = partDisplay;
             
-            document.getElementById('cpCustName').innerText = document.getElementById('custCompany').value || document.getElementById('projectName').value || "Client Name";
-            document.getElementById('cpCustAddress').innerHTML = (document.getElementById('custAddr').value || '').replace(/\n/g, '<br>');
-            document.getElementById('cpAttention').innerText = document.getElementById('custAttn').value || "";
-            document.getElementById('cpProject').innerText = document.getElementById('projectName').value || "";
-            document.getElementById('cpRef').innerText = document.getElementById('quoteIdInput').value || "";
+            // CUSTOMER FORMAL PRINT SYNC
+            if(document.getElementById('cpCustName')) document.getElementById('cpCustName').innerText = document.getElementById('custCompany').value || document.getElementById('projectName').value || "Client Name";
+            if(document.getElementById('cpCustAddress')) document.getElementById('cpCustAddress').innerHTML = (document.getElementById('custAddr').value || '').replace(/\n/g, '<br>');
+            if(document.getElementById('cpAttention')) document.getElementById('cpAttention').innerText = document.getElementById('custAttn').value || "";
+            if(document.getElementById('cpProject')) document.getElementById('cpProject').innerText = document.getElementById('projectName').value || "";
+            if(document.getElementById('cpRef')) document.getElementById('cpRef').innerText = document.getElementById('quoteIdInput').value || "";
 
-            document.getElementById('cpMaterial').innerText = matStr;
-            document.getElementById('cpDims').innerText = dimsStr;
-            document.getElementById('cpStd').innerText = document.getElementById('stdChoice').value || "";
+            if(document.getElementById('cpMaterial')) document.getElementById('cpMaterial').innerText = matStr;
+            if(document.getElementById('cpDims')) document.getElementById('cpDims').innerText = dimsStr;
+            if(document.getElementById('cpStd')) document.getElementById('cpStd').innerText = document.getElementById('stdChoice').value || "";
             
-            document.getElementById('cpThickRoof').innerText = document.getElementById('thickRoof').value || "";
-            document.getElementById('cpThickBase').innerText = document.getElementById('thickBase').value || "";
-            document.getElementById('cpThickWall').innerText = document.getElementById('thickWall').value || "";
+            if(document.getElementById('cpThickRoof')) document.getElementById('cpThickRoof').innerText = document.getElementById('thickRoof').value || "";
+            if(document.getElementById('cpThickBase')) document.getElementById('cpThickBase').innerText = document.getElementById('thickBase').value || "";
+            if(document.getElementById('cpThickWall')) document.getElementById('cpThickWall').innerText = document.getElementById('thickWall').value || "";
 
-            if(partChoice === 'yes' && pQty > 0) {
-                document.getElementById('cpPartRow').style.display = 'table-row';
-                document.getElementById('cpPartSection').innerText = partDisplay;
-            } else {
-                document.getElementById('cpPartRow').style.display = 'none';
+            if(document.getElementById('cpPartRow')) {
+                if(partChoice === 'yes' && pQty > 0) {
+                    document.getElementById('cpPartRow').style.display = 'table-row';
+                    document.getElementById('cpPartSection').innerText = partDisplay;
+                } else {
+                    document.getElementById('cpPartRow').style.display = 'none';
+                }
             }
 
             let extLadMat = document.getElementById('extLadMat') ? document.getElementById('extLadMat').value : 'External Ladder';
@@ -991,30 +1026,30 @@ Note:
             let qtyExt = document.getElementById('qty_item_3_0') ? document.getElementById('qty_item_3_0').value : '0';
             let qtyInt = document.getElementById('qty_item_3_1') ? document.getElementById('qty_item_3_1').value : '0';
 
-            document.getElementById('cpLaddersInt').innerText = `${intLadMat} Internal Ladder - ${qtyInt} sets`;
-            document.getElementById('cpLaddersExt').innerText = `${extLadMat} External Ladder with safety cage - ${qtyExt} sets`;
+            if(document.getElementById('cpLaddersInt')) document.getElementById('cpLaddersInt').innerText = `${intLadMat} Internal Ladder - ${qtyInt} sets`;
+            if(document.getElementById('cpLaddersExt')) document.getElementById('cpLaddersExt').innerText = `${extLadMat} External Ladder with safety cage - ${qtyExt} sets`;
 
             let wliType = document.getElementById('wliType') ? document.getElementById('wliType').value : 'Water Level Indicator';
             let wliQty = document.getElementById('qty_item_3_2') ? document.getElementById('qty_item_3_2').value : '0';
-            document.getElementById('cpWLI').innerText = `${wliType} - ${wliQty} sets`;
+            if(document.getElementById('cpWLI')) document.getElementById('cpWLI').innerText = `${wliType} - ${wliQty} sets`;
 
-            document.getElementById('cpShortExclusionsText').innerHTML = (document.getElementById('shortExclusions').value || '').replace(/\n/g, '<br>');
-            document.getElementById('cpFullTermsText').innerHTML = (document.getElementById('fullTermsNotes').value || '');
+            if(document.getElementById('cpShortExclusionsText')) document.getElementById('cpShortExclusionsText').innerHTML = (document.getElementById('shortExclusions').value || '').replace(/\n/g, '<br>');
+            if(document.getElementById('cpFullTermsText')) document.getElementById('cpFullTermsText').innerHTML = (document.getElementById('fullTermsNotes').value || '');
             
-            document.getElementById('cpValidity').innerHTML = `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${document.getElementById('tcValidity').value || ""}</span>`;
+            if(document.getElementById('cpValidity')) document.getElementById('cpValidity').innerHTML = `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${document.getElementById('tcValidity').value || ""}</span>`;
             
             let payText = document.getElementById('tcPayment').value || '';
             let formattedPay = payText.split('\n').map(line => {
                 if(line.trim() === '') return '';
                 return `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${line}</span>`;
             }).join('');
-            document.getElementById('cpPayment').innerHTML = formattedPay;
+            if(document.getElementById('cpPayment')) document.getElementById('cpPayment').innerHTML = formattedPay;
             
-            document.getElementById('cpDeliveryTerm').innerHTML = `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${document.getElementById('tcDelivery').value || ""}</span>`;
-            document.getElementById('cpLeadTime').innerHTML = `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${document.getElementById('tcLead').value || ""}</span>`;
+            if(document.getElementById('cpDeliveryTerm')) document.getElementById('cpDeliveryTerm').innerHTML = `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${document.getElementById('tcDelivery').value || ""}</span>`;
+            if(document.getElementById('cpLeadTime')) document.getElementById('cpLeadTime').innerHTML = `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${document.getElementById('tcLead').value || ""}</span>`;
 
-            document.getElementById('cpSignName').innerText = document.getElementById('signName').value || "";
-            document.getElementById('cpSignPhone').innerText = document.getElementById('signPhone').value || "";
+            if(document.getElementById('cpSignName')) document.getElementById('cpSignName').innerText = document.getElementById('signName').value || "";
+            if(document.getElementById('cpSignPhone')) document.getElementById('cpSignPhone').innerText = document.getElementById('signPhone').value || "";
         } catch(e) { console.log("Sync Print Warning: ", e.message); }
     }
 
@@ -1032,11 +1067,11 @@ Note:
                 if(it.selectId && document.getElementById(it.selectId)) data[it.selectId] = document.getElementById(it.selectId).value; 
             });
         });
-        localStorage.setItem('winkoProDataV9', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV10', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV9');
+        let savedData = localStorage.getItem('winkoProDataV10');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1085,10 +1120,13 @@ Note:
                 }
                 nameHtml += `</div>`;
 
+                // Safe fallback for weight if it was missing from old cache
+                let safeWt = it.wt !== undefined && it.wt !== null ? it.wt : 0;
+
                 html += `<tr>
                     <td class="col-item">${nameHtml}</td>
                     <td class="col-input col-qty"><input type="number" value="0" id="qty_${id}" oninput="calcTotals(); savePrices();"></td>
-                    <td class="col-input col-wt"><input type="number" step="0.1" value="${(it.wt || 0)}" id="wt_${id}" oninput="calcTotals(); savePrices();"></td>
+                    <td class="col-input col-wt"><input type="number" step="0.1" value="${safeWt}" id="wt_${id}" oninput="calcTotals(); savePrices();"></td>
                     <td class="col-input col-uprice"><input type="number" step="0.01" value="${it.def.toFixed(2)}" id="price_${id}" oninput="calcTotals(); savePrices();"></td>
                     <td class="col-total col-itotal" id="total_${id}">0.00</td>
                 </tr>`;
@@ -1097,6 +1135,7 @@ Note:
         tbody.innerHTML = html;
     }
 
+    // --- MATH FIX ---
     function calcTotals() {
         let subtotal = 0;
         let totalWeight = 0;
@@ -1104,51 +1143,65 @@ Note:
         bomStructure.forEach((sec, sIdx) => {
             sec.items.forEach((it, iIdx) => {
                 const id = `item_${sIdx}_${iIdx}`;
-                if(document.getElementById(`qty_${id}`)) {
-                    const q = parseFloat(document.getElementById(`qty_${id}`).value) || 0;
-                    const p = parseFloat(document.getElementById(`price_${id}`).value) || 0;
-                    const w = parseFloat(document.getElementById(`wt_${id}`).value) || 0;
+                const qtyEl = document.getElementById(`qty_${id}`);
+                const priceEl = document.getElementById(`price_${id}`);
+                const wtEl = document.getElementById(`wt_${id}`);
+                
+                if(qtyEl && priceEl && wtEl) {
+                    const q = parseFloat(qtyEl.value) || 0;
+                    const p = parseFloat(priceEl.value) || 0;
+                    let w = parseFloat(wtEl.value);
+                    if(isNaN(w)) w = 0; // Hard fix for NaN weight bug
                     
                     const total = q * p;
-                    document.getElementById(`total_${id}`).innerText = total.toLocaleString('en-MY', {minimumFractionDigits:2});
+                    const totalEl = document.getElementById(`total_${id}`);
+                    if(totalEl) totalEl.innerText = total.toLocaleString('en-MY', {minimumFractionDigits:2});
+                    
                     subtotal += total;
-                    totalWeight += q * w;
+                    totalWeight += (q * w);
                 }
             });
         });
 
-        let disc = subtotal * ((parseFloat(document.getElementById('discountPct').value) || 0) / 100);
-        let sst = (subtotal - disc) * ((parseFloat(document.getElementById('sstPct').value) || 0) / 100);
+        let discInput = document.getElementById('discountPct');
+        let sstInput = document.getElementById('sstPct');
+        
+        let disc = subtotal * ((parseFloat(discInput ? discInput.value : 0) || 0) / 100);
+        let sst = (subtotal - disc) * ((parseFloat(sstInput ? sstInput.value : 0) || 0) / 100);
         let grand = subtotal - disc + sst;
         
-        document.getElementById('sumSubtotal_screen').innerText = subtotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
-        document.getElementById('sumDiscount_screen').innerText = disc.toLocaleString('en-MY', {minimumFractionDigits: 2});
-        document.getElementById('sumSST_screen').innerText = sst.toLocaleString('en-MY', {minimumFractionDigits: 2});
-        document.getElementById('grandTotal_screen').innerText = grand.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumSubtotal_screen')) document.getElementById('sumSubtotal_screen').innerText = subtotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumDiscount_screen')) document.getElementById('sumDiscount_screen').innerText = disc.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumSST_screen')) document.getElementById('sumSST_screen').innerText = sst.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('grandTotal_screen')) document.getElementById('grandTotal_screen').innerText = grand.toLocaleString('en-MY', {minimumFractionDigits: 2});
 
-        document.getElementById('sumSubtotal_print').innerText = subtotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
-        document.getElementById('sumDiscount_print').innerText = disc.toLocaleString('en-MY', {minimumFractionDigits: 2});
-        document.getElementById('sumSST_print').innerText = sst.toLocaleString('en-MY', {minimumFractionDigits: 2});
-        document.getElementById('grandTotal_print').innerText = grand.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumSubtotal_print')) document.getElementById('sumSubtotal_print').innerText = subtotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumDiscount_print')) document.getElementById('sumDiscount_print').innerText = disc.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumSST_print')) document.getElementById('sumSST_print').innerText = sst.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('grandTotal_print')) document.getElementById('grandTotal_print').innerText = grand.toLocaleString('en-MY', {minimumFractionDigits: 2});
         
         let weightStr = totalWeight.toLocaleString('en-MY', {maximumFractionDigits: 1}) + " kg";
-        document.getElementById('sumWeight_screen').innerText = weightStr;
-        document.getElementById('sumWeight_print').innerText = weightStr;
+        if(document.getElementById('sumWeight_screen')) document.getElementById('sumWeight_screen').innerText = weightStr;
+        if(document.getElementById('sumWeight_print')) document.getElementById('sumWeight_print').innerText = weightStr;
 
-        document.getElementById('cpSstPct').innerText = document.getElementById('sstPct').value || 0;
-        document.getElementById('cpSstAmt').innerText = sst.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('cpSstPct')) document.getElementById('cpSstPct').innerText = (sstInput ? sstInput.value : 0) || 0;
+        if(document.getElementById('cpSstAmt')) document.getElementById('cpSstAmt').innerText = sst.toLocaleString('en-MY', {minimumFractionDigits: 2});
         
         let netTotal = subtotal - disc;
-        document.getElementById('cpUnitPrice').innerText = netTotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
-        document.getElementById('cpTotalPrice').innerText = netTotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
-        document.getElementById('cpGrandTotal').innerText = grand.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('cpUnitPrice')) document.getElementById('cpUnitPrice').innerText = netTotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('cpTotalPrice')) document.getElementById('cpTotalPrice').innerText = netTotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('cpGrandTotal')) document.getElementById('cpGrandTotal').innerText = grand.toLocaleString('en-MY', {minimumFractionDigits: 2});
 
         syncPrintHeader(); 
     }
 
     function drawGrid(id, c, r) {
-        const g = document.getElementById(id); g.style.gridTemplateColumns = `repeat(${c}, 1fr)`; g.innerHTML = '';
-        for(let i=0; i<(c*r); i++) g.innerHTML += '<div class="panel"></div>';
+        const g = document.getElementById(id); 
+        if(g) {
+            g.style.gridTemplateColumns = `repeat(${c}, 1fr)`; 
+            g.innerHTML = '';
+            for(let i=0; i<(c*r); i++) g.innerHTML += '<div class="panel"></div>';
+        }
     }
 
     function processTankData() {
@@ -1164,8 +1217,11 @@ Note:
         let effLiters = volLiters * 0.9; // 10% freeboard
         let effGals = effLiters * 0.219969; // UK Gallons
         
-        document.getElementById('sumCapacity_screen').innerText = effLiters.toLocaleString('en-MY', {maximumFractionDigits: 0}) + " L (" + effGals.toLocaleString('en-MY', {maximumFractionDigits: 0}) + " Gal)";
-        document.getElementById('sumCapacity_print').innerText = document.getElementById('sumCapacity_screen').innerText;
+        let capScreen = document.getElementById('sumCapacity_screen');
+        if(capScreen) capScreen.innerText = effLiters.toLocaleString('en-MY', {maximumFractionDigits: 0}) + " L (" + effGals.toLocaleString('en-MY', {maximumFractionDigits: 0}) + " Gal)";
+        
+        let capPrint = document.getElementById('sumCapacity_print');
+        if(capPrint && capScreen) capPrint.innerText = capScreen.innerText;
         
         const partChoice = document.getElementById('partChoice').value;
         let pQty = 0; let pLen_in = 0; let pHgt_in = 0;
@@ -1188,10 +1244,10 @@ Note:
 
         const numPlinths = W + 1;
         const plinthLen = L_in;
-        document.getElementById('plinthCalcText').innerText = `Recommendation: Require ${numPlinths} rows of concrete plinths, each ${plinthLen}${unitStr} long, spaced at ${spacingStr} C/C.`;
-        document.getElementById('sumStd').innerText = document.getElementById('stdChoice').value;
-        document.getElementById('sumUnit').innerText = document.getElementById('unitChoice').options[document.getElementById('unitChoice').selectedIndex].text;
-        document.getElementById('sumCoat').innerText = document.getElementById('coatChoice').value;
+        if(document.getElementById('plinthCalcText')) document.getElementById('plinthCalcText').innerText = `Recommendation: Require ${numPlinths} rows of concrete plinths, each ${plinthLen}${unitStr} long, spaced at ${spacingStr} C/C.`;
+        if(document.getElementById('sumStd')) document.getElementById('sumStd').innerText = document.getElementById('stdChoice').value;
+        if(document.getElementById('sumUnit')) document.getElementById('sumUnit').innerText = document.getElementById('unitChoice').options[document.getElementById('unitChoice').selectedIndex].text;
+        if(document.getElementById('sumCoat')) document.getElementById('sumCoat').innerText = document.getElementById('coatChoice').value;
 
         // ACCURATE ISOLATED MATH
         let roof = L * W;
@@ -1203,7 +1259,7 @@ Note:
         
         let totalP = roof + base + sides + partPanels;
 
-        document.getElementById('totalPanelsCount').innerText = totalP;
+        if(document.getElementById('totalPanelsCount')) document.getElementById('totalPanelsCount').innerText = totalP;
 
         let manholeInput = document.getElementById('qty_item_0_0'); 
         if(manholeInput) {
@@ -1217,6 +1273,7 @@ Note:
         if(document.getElementById('qty_item_0_3')) document.getElementById('qty_item_0_3').value = 0; 
         if(document.getElementById('qty_item_0_4')) document.getElementById('qty_item_0_4').value = base; 
         
+        // Populate dedicated Partition row (Item 5)
         if(document.getElementById('qty_item_0_5')) document.getElementById('qty_item_0_5').value = partPanels; 
 
         if(document.getElementById('qty_item_1_3')) document.getElementById('qty_item_1_3').value = L_in; 
@@ -1228,8 +1285,9 @@ Note:
         if(document.getElementById('qty_item_3_3')) document.getElementById('qty_item_3_3').value = 1; 
 
         // ACCURATE ACCESSORY MATH BASED ON UNIT (1m vs 4ft)
-        let sealantPerimeter = unit === 'ft' ? 4.88 : 4.0;
-        let boltsPerPanel = unit === 'ft' ? 16 : 12;
+        let isImperial = (unit === 'ft');
+        let sealantPerimeter = isImperial ? 4.88 : 4.0;
+        let boltsPerPanel = isImperial ? 16 : 12;
         
         if(document.getElementById('qty_item_3_4')) document.getElementById('qty_item_3_4').value = Math.ceil((totalP * sealantPerimeter) / 15); 
         if(document.getElementById('qty_item_3_5')) document.getElementById('qty_item_3_5').value = Math.ceil(totalP * boltsPerPanel * 1.05); 
@@ -1283,17 +1341,20 @@ Note:
                 let q = document.getElementById(`qty_${id}`).value;
                 let w = document.getElementById(`wt_${id}`).value;
                 let p = document.getElementById(`price_${id}`).value;
-                let t = document.getElementById(`total_${id}`).innerText.replace(/,/g, '');
+                
+                let totalEl = document.getElementById(`total_${id}`);
+                let t = totalEl ? totalEl.innerText.replace(/,/g, '') : "0";
+                
                 if(q > 0) csv += `"${s.category}","${label}",${q},${w},${p},${t}\n`;
             })});
             
             csv += `\n`;
             
-            let sub = document.getElementById('sumSubtotal_screen').innerText.replace(/,/g, '');
-            let disc = document.getElementById('sumDiscount_screen').innerText.replace(/,/g, '');
-            let sst = document.getElementById('sumSST_screen').innerText.replace(/,/g, '');
-            let grand = document.getElementById('grandTotal_screen').innerText.replace(/,/g, '');
-            let wt = document.getElementById('sumWeight_screen').innerText.replace(' kg', '').replace(/,/g, '');
+            let sub = document.getElementById('sumSubtotal_screen') ? document.getElementById('sumSubtotal_screen').innerText.replace(/,/g, '') : "0";
+            let disc = document.getElementById('sumDiscount_screen') ? document.getElementById('sumDiscount_screen').innerText.replace(/,/g, '') : "0";
+            let sst = document.getElementById('sumSST_screen') ? document.getElementById('sumSST_screen').innerText.replace(/,/g, '') : "0";
+            let grand = document.getElementById('grandTotal_screen') ? document.getElementById('grandTotal_screen').innerText.replace(/,/g, '') : "0";
+            let wt = document.getElementById('sumWeight_screen') ? document.getElementById('sumWeight_screen').innerText.replace(' kg', '').replace(/,/g, '') : "0";
 
             csv += `,,,,"Est. Total Weight (kg)",${wt}\n`;
             csv += `,,,,"Subtotal (RM)",${sub}\n`;
@@ -1316,10 +1377,13 @@ Note:
         }
     }
 
+    // Initialize
     applyCustomRows();
     buildBOMTable();
     loadPrices();
     togglePartitionDetails(); 
+    // Force a safe recalculation on load
+    processTankData();
 </script>
 
 </body>
