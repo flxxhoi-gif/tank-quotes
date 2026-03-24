@@ -134,7 +134,6 @@
             body.print-internal #mainContent { display: block !important; }
             body.print-internal #customerPrintView { display: none !important; }
 
-            /* Hide all input cards except the BOM table */
             body.print-internal .internal-hide { display: none !important; }
             
             body.print-internal .app-layout { display: block !important; }
@@ -974,9 +973,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            
-            // V16 CACHE BUSTER - Wipes old UI cache
-            localStorage.removeItem('winkoProDataV16'); 
+            localStorage.removeItem('winkoProDataV17'); // V17 CACHE BUSTER
             
             if(document.getElementById('partChoice')) {
                 document.getElementById('partChoice').value = 'no';
@@ -1088,11 +1085,11 @@ Note:
                 if(it.selectId && document.getElementById(it.selectId)) data[it.selectId] = document.getElementById(it.selectId).value; 
             });
         });
-        localStorage.setItem('winkoProDataV16', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV17', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV16');
+        let savedData = localStorage.getItem('winkoProDataV17');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1189,7 +1186,7 @@ Note:
         let markupPct = parseFloat(markupInput ? markupInput.value : 0) || 0;
         let markupAmt = baseCost * (markupPct / 100);
         
-        let subtotal = baseCost + markupAmt; // This is the Gross Selling Price
+        let subtotal = baseCost + markupAmt; 
         
         let discPct = parseFloat(discInput ? discInput.value : 0) || 0;
         let discAmt = subtotal * (discPct / 100);
@@ -1222,7 +1219,7 @@ Note:
         if(document.getElementById('sumWeight_screen')) document.getElementById('sumWeight_screen').innerText = weightStr;
         if(document.getElementById('sumWeight_print')) document.getElementById('sumWeight_print').innerText = weightStr;
 
-        // Output to CUSTOMER PDF (They ONLY see Net Total as Unit Price)
+        // Output to CUSTOMER PDF
         if(document.getElementById('cpSstPct')) document.getElementById('cpSstPct').innerText = sstPct || 0;
         if(document.getElementById('cpSstAmt')) document.getElementById('cpSstAmt').innerText = sstAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
         if(document.getElementById('cpUnitPrice')) document.getElementById('cpUnitPrice').innerText = netTotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
