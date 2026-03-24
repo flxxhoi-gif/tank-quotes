@@ -177,7 +177,7 @@
             body.print-internal .col-itotal { width: 15% !important; }
             
             body.print-internal #internalPrintFooter { display: block !important; margin-top: 20px; }
-            body.print-internal .summary-box { background: #fff !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 6px !important; padding: 10px !important; margin-top: 10px !important; width: 340px !important; float: right !important; box-shadow: none !important;}
+            body.print-internal .summary-box { background: #fff !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 6px !important; padding: 10px !important; margin-top: 10px !important; width: 320px !important; float: right !important; box-shadow: none !important;}
             
             body.print-internal .summary-table { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
             body.print-internal .summary-table td { padding: 4px 0; border: none; color: #0f172a; font-weight: 700; }
@@ -249,11 +249,11 @@
     </style>
     
     <script>
-        const currentVersion = "V31";
+        const currentVersion = "V32";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=30; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=31; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -372,6 +372,7 @@
                     </div>
 
                     <div class="tank-section-title">Tank 1 Specifications</div>
+                    <div class="form-group" style="margin-bottom: 10px;"><label>Tank 1 Reference Name (Prints on Customer Quote)</label><input type="text" id="tank1Name" value="Main Tank" oninput="syncPrintHeader(); savePrices();"></div>
                     <div class="dim-grid">
                         <div class="form-group"><label>Tank Length</label><input type="number" id="length" value="12" oninput="processTankData(); savePrices();"></div>
                         <div class="form-group"><label>Tank Width</label><input type="number" id="width" value="4" oninput="processTankData(); savePrices();"></div>
@@ -392,6 +393,7 @@
 
                     <div id="tank2Section" style="display: none; margin-top: 25px; border-top: 2px solid #cbd5e1; padding-top: 15px;">
                         <div class="tank-section-title" style="background:#fef3c7; border-left:4px solid #10b981;">Tank 2 Specifications</div>
+                        <div class="form-group" style="margin-bottom: 10px;"><label>Tank 2 Reference Name (Prints on Customer Quote)</label><input type="text" id="tank2Name" value="Suction Tank" oninput="syncPrintHeader(); savePrices();"></div>
                         <div class="config-grid" style="margin-bottom:15px;">
                             <div class="form-group"><label>Tank 2 Standard</label><select id="stdChoice2" onchange="savePrices(); processTankData();"><option>SANS 10329:2020 Approved by SIRIM & SPAN</option><option>SS 22: 1979</option><option>Other</option></select></div>
                             <div class="form-group"><label>Tank 2 Material / Finish</label><select id="coatChoice2" onchange="savePrices(); processTankData();"><option>Hot Dipped Galvanised</option><option>Painted Steel</option><option>Stainless Steel (SS 304)</option><option>Stainless Steel (SS 316)</option></select></div>
@@ -685,6 +687,7 @@ Note:
             <tr id="cpTank1Row">
                 <td class="td-center" style="font-weight:bold; padding-top:8px;">1</td>
                 <td style="padding-top:8px; padding-bottom: 8px; line-height:1.4;">
+                    <div id="cpTank1Label" style="font-weight:900; font-size:10pt; color:#ea580c; margin-bottom:3px; text-transform:uppercase;">MAIN TANK</div>
                     <strong>Supply and Install New <span id="cpMaterial"></span> Pressed Steel Tank Size: <span id="cpDims"></span></strong><br>
                     Comply to <span id="cpStd"></span><br>
                     <table style="border:none; width:100%; font-size:8.5pt; margin-top:2px;">
@@ -716,6 +719,7 @@ Note:
             <tr id="cpTank2Row" style="display:none;">
                 <td class="td-center" style="font-weight:bold; padding-top:8px;">2</td>
                 <td style="padding-top:8px; padding-bottom: 8px; line-height:1.4;">
+                    <div id="cpTank2Label" style="font-weight:900; font-size:10pt; color:#ea580c; margin-bottom:3px; text-transform:uppercase;">SUCTION TANK</div>
                     <strong>Supply and Install New <span id="cpMaterial2"></span> Pressed Steel Tank Size: <span id="cpDims2"></span></strong><br>
                     Comply to <span id="cpStd2"></span><br>
                     <table style="border:none; width:100%; font-size:8.5pt; margin-top:2px;">
@@ -937,7 +941,7 @@ Note:
         }
     }
 
-    // --- FULL BOM STRUCTURE (UPGRADED VERSION 29 EXACT TIER MAPPING) ---
+    // --- FULL BOM STRUCTURE ---
     const systemBaseStructure = [
         { category: "Panels", items: [
             {name: "Manhole Panel", def: 450, wt: 45}, 
@@ -986,7 +990,7 @@ Note:
     let bomStructure = JSON.parse(JSON.stringify(systemBaseStructure));
     let customRowCounts = JSON.parse(localStorage.getItem('winkoCustomCounts')) || [0,0,0,0,0];
 
-    const configIDs = ['quoteIdInput', 'numTanks', 'stdChoice','stdChoice2','unitChoice','coatChoice','coatChoice2',
+    const configIDs = ['quoteIdInput', 'tank1Name', 'tank2Name', 'numTanks', 'stdChoice','stdChoice2','unitChoice','coatChoice','coatChoice2',
                        'length','width','height', 'partChoice', 'partQty','partLen','partHgt','partType',
                        'length2','width2','height2', 'partChoice2', 'partQty2','partLen2','partHgt2','partType2',
                        'thickRoof', 'thickWallL1', 'thickWallL2', 'thickWallL3', 'thickWallL4', 'thickBase', 'markupPct','discountPct','sstPct', 
@@ -1178,7 +1182,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV31'); // V31 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV32'); // V32 CACHE BUSTER
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1298,6 +1302,10 @@ Note:
             let cpDims1 = document.getElementById('cpDims');
             if(cpDims1) cpDims1.innerText = `${l1}${u} (L) x ${w1}${u} (W) x ${h1}${u} (H)`;
             
+            let t1NameEl = document.getElementById('tank1Name');
+            let cpTank1Label = document.getElementById('cpTank1Label');
+            if(cpTank1Label) cpTank1Label.innerText = (t1NameEl && t1NameEl.value) ? t1NameEl.value : "MAIN TANK";
+
             let cpStd1 = document.getElementById('cpStd'); if(cpStd1) cpStd1.innerText = (sInput && sInput.value) ? sInput.value : "";
             
             let tRoof = document.getElementById('thickRoof'); let valRoof = (tRoof && tRoof.value) ? tRoof.value : "";
@@ -1324,6 +1332,7 @@ Note:
                 }
             }
 
+            // TANK 1 LADDERS
             let extLadMatEl = document.getElementById('extLadMat'); let extLadMat = (extLadMatEl && extLadMatEl.value) ? extLadMatEl.value : 'External Ladder';
             let intLadMatEl = document.getElementById('intLadMat'); let intLadMat = (intLadMatEl && intLadMatEl.value) ? intLadMatEl.value : 'Internal Ladder';
             let qtyExtEl = document.getElementById('qty_item_3_0'); let qtyExt = (qtyExtEl && qtyExtEl.value) ? qtyExtEl.value : '0';
@@ -1342,6 +1351,10 @@ Note:
                 let elL2 = document.getElementById('length2'); let l2 = (elL2 && elL2.value) ? elL2.value : 0;
                 let elW2 = document.getElementById('width2'); let w2 = (elW2 && elW2.value) ? elW2.value : 0;
                 let elH2 = document.getElementById('height2'); let h2 = (elH2 && elH2.value) ? elH2.value : 0;
+                
+                let t2NameEl = document.getElementById('tank2Name');
+                let cpTank2Label = document.getElementById('cpTank2Label');
+                if(cpTank2Label) cpTank2Label.innerText = (t2NameEl && t2NameEl.value) ? t2NameEl.value : "SUCTION TANK";
 
                 let coatChoice2 = document.getElementById('coatChoice2');
                 let matStr2 = (coatChoice2 && coatChoice2.value) ? coatChoice2.value : matStr;
@@ -1375,9 +1388,18 @@ Note:
                     }
                 }
                 
-                let cpLaddersInt2 = document.getElementById('cpLaddersInt2'); if(cpLaddersInt2 && cpLaddersInt) cpLaddersInt2.innerText = cpLaddersInt.innerText;
-                let cpLaddersExt2 = document.getElementById('cpLaddersExt2'); if(cpLaddersExt2 && cpLaddersExt) cpLaddersExt2.innerText = cpLaddersExt.innerText;
-                let cpWLI2 = document.getElementById('cpWLI2'); if(cpWLI2 && cpWLI) cpWLI2.innerText = cpWLI.innerText;
+                // TANK 2 LADDERS FIX: NOW PULLS SPECIFICALLY FROM TANK 2 BOM
+                let extLadMatEl2 = document.getElementById('sel2_extLadMat'); let extLadMat2 = (extLadMatEl2 && extLadMatEl2.value) ? extLadMatEl2.value : 'External Ladder';
+                let intLadMatEl2 = document.getElementById('sel2_intLadMat'); let intLadMat2 = (intLadMatEl2 && intLadMatEl2.value) ? intLadMatEl2.value : 'Internal Ladder';
+                let qtyExtEl2 = document.getElementById('qty2_item_3_0'); let qtyExt2 = (qtyExtEl2 && qtyExtEl2.value) ? qtyExtEl2.value : '0';
+                let qtyIntEl2 = document.getElementById('qty2_item_3_1'); let qtyInt2 = (qtyIntEl2 && qtyIntEl2.value) ? qtyIntEl2.value : '0';
+
+                let cpLaddersInt2 = document.getElementById('cpLaddersInt2'); if(cpLaddersInt2) cpLaddersInt2.innerText = `${intLadMat2} Internal Ladder - ${qtyInt2} sets`;
+                let cpLaddersExt2 = document.getElementById('cpLaddersExt2'); if(cpLaddersExt2) cpLaddersExt2.innerText = `${extLadMat2} External Ladder with safety cage - ${qtyExt2} sets`;
+
+                let wliTypeEl2 = document.getElementById('sel2_wliType'); let wliType2 = (wliTypeEl2 && wliTypeEl2.value) ? wliTypeEl2.value : 'Water Level Indicator';
+                let wliQtyEl2 = document.getElementById('qty2_item_3_2'); let wliQty2 = (wliQtyEl2 && wliQtyEl2.value) ? wliQtyEl2.value : '0';
+                let cpWLI2 = document.getElementById('cpWLI2'); if(cpWLI2) cpWLI2.innerText = `${wliType2} - ${wliQty2} sets`;
 
             } else {
                 let cpTank2Row = document.getElementById('cpTank2Row'); if(cpTank2Row) cpTank2Row.style.display = 'none';
@@ -1449,11 +1471,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV31', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV32', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV31');
+        let savedData = localStorage.getItem('winkoProDataV32');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1897,14 +1919,6 @@ Note:
             let cChoice = document.getElementById('coatChoice');
             let mat = (cChoice && cChoice.value) ? cChoice.value : "";
             
-            let cChoice2 = document.getElementById('coatChoice2');
-            let mat2 = (cChoice2 && cChoice2.value) ? cChoice2.value : "";
-            
-            let ntEl = document.getElementById('numTanks');
-            let numTanks = (ntEl && ntEl.value) ? parseInt(ntEl.value) : 1;
-            
-            if(numTanks === 2 && mat2) mat += ` | Tank 2: ${mat2}`;
-            
             let pChoice = document.getElementById('partChoice');
             let partChoice = (pChoice && pChoice.value) ? pChoice.value : 'no';
             
@@ -1953,6 +1967,9 @@ Note:
                 
                 if(q > 0) csv += `"${s.category}","${label}",${q},${w},${p},${t}\n`;
             })});
+            
+            let ntEl = document.getElementById('numTanks');
+            let numTanks = (ntEl && ntEl.value) ? parseInt(ntEl.value) : 1;
             
             if(numTanks === 2) {
                 csv += `\nTANK 2 BILL OF MATERIALS\n`;
