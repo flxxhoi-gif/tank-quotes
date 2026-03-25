@@ -253,11 +253,11 @@
     </style>
     
     <script>
-        const currentVersion = "V44";
+        const currentVersion = "V45";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=43; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=44; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -1259,7 +1259,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV44'); // V44 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV45'); // V45 CACHE BUSTER
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1561,11 +1561,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV44', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV45', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV44');
+        let savedData = localStorage.getItem('winkoProDataV45');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1802,6 +1802,15 @@ Note:
         syncPrintHeader(); 
     }
 
+    function getQtyVal(id) {
+        let el = document.getElementById(id);
+        if(el && el.value) {
+            let v = parseInt(el.value);
+            return isNaN(v) ? 0 : v;
+        }
+        return 0;
+    }
+
     function drawGrid(id, c, r, pType = null, pPos = -1, isSideView = false, activeStays = [false, false, false, false]) {
         const g = document.getElementById(id); 
         const gp = document.getElementById(id + '_p'); 
@@ -1902,12 +1911,12 @@ Note:
             }
         }
 
-        // Read Angle Stays inputs dynamically for visual drawing
+        // Read Angle Stays inputs dynamically for visual drawing WITHOUT optional chaining
         let stays1 = [
-            (parseInt(document.getElementById('qty_item_2_0')?.value) || 0) > 0,
-            (parseInt(document.getElementById('qty_item_2_1')?.value) || 0) > 0,
-            (parseInt(document.getElementById('qty_item_2_2')?.value) || 0) > 0,
-            (parseInt(document.getElementById('qty_item_2_3')?.value) || 0) > 0
+            getQtyVal('qty_item_2_0') > 0,
+            getQtyVal('qty_item_2_1') > 0,
+            getQtyVal('qty_item_2_2') > 0,
+            getQtyVal('qty_item_2_3') > 0
         ];
 
         let tRoof = document.getElementById('thickRoof') ? document.getElementById('thickRoof').value : "1.5mm";
@@ -1917,7 +1926,7 @@ Note:
         let tL3 = document.getElementById('thickWallL3') ? document.getElementById('thickWallL3').value : "3.0mm";
         let tL4 = document.getElementById('thickWallL4') ? document.getElementById('thickWallL4').value : "1.5mm";
 
-        let updateDesc = (prefix, id, val) => { let el = document.getElementById(prefix + id); if(el) el.value = val; };
+        let updateDesc = function(prefix, id, val) { let el = document.getElementById(prefix + id); if(el) el.value = val; };
         updateDesc('desc_', 'item_0_1', tRoof + " Roof Panel");
         updateDesc('desc_', 'item_0_2', tBase + " Base Panel");
         updateDesc('desc_', 'item_0_3', tL1 + " Wall Panel (L1)");
@@ -1984,10 +1993,10 @@ Note:
             updateDesc('desc2_', 'item_0_6', tL4 + " Wall Panel (L4)");
 
             let stays2 = [
-                (parseInt(document.getElementById('qty2_item_2_0')?.value) || 0) > 0,
-                (parseInt(document.getElementById('qty2_item_2_1')?.value) || 0) > 0,
-                (parseInt(document.getElementById('qty2_item_2_2')?.value) || 0) > 0,
-                (parseInt(document.getElementById('qty2_item_2_3')?.value) || 0) > 0
+                getQtyVal('qty2_item_2_0') > 0,
+                getQtyVal('qty2_item_2_1') > 0,
+                getQtyVal('qty2_item_2_2') > 0,
+                getQtyVal('qty2_item_2_3') > 0
             ];
 
             drawGrid('topGrid2', L2, W2, pTypeTop2, pPosTop2, false); 
@@ -2017,7 +2026,7 @@ Note:
         if(tpCount) tpCount.innerText = combinedTotalP;
 
         // --- EXACT QTY INJECTIONS TANK 1 ---
-        let setQ = (prefix, id, val) => { let el = document.getElementById(prefix + id); if(el) el.value = val; };
+        let setQ = function(prefix, id, val) { let el = document.getElementById(prefix + id); if(el) el.value = val; };
         
         setQ('qty_', 'item_0_0', 1); 
         setQ('qty_', 'item_0_1', Math.max(0, roof1 - 1)); 
@@ -2035,9 +2044,7 @@ Note:
         setQ('qty_', 'item_1_3', L1_in);  // Pipe
         setQ('qty_', 'item_1_4', L1_in);  // Angle
 
-        // ANGLE STAYS TANK 1 - REMOVED FORCED AUTO-CALC
-        // You manually requested they remain empty unless typed. 
-        // We will not touch 'qty_item_2_0' through 'qty_item_2_3'
+        // ANGLE STAYS TANK 1 - NO FORCED CALC, ONLY MANUAL INPUT NOW
 
         setQ('qty_', 'item_3_0', H1_in); 
         setQ('qty_', 'item_3_1', H1_in); 
@@ -2074,7 +2081,7 @@ Note:
             setQ('qty2_', 'item_1_3', L2_in); 
             setQ('qty2_', 'item_1_4', L2_in); 
 
-            // ANGLE STAYS TANK 2 - REMOVED FORCED AUTO-CALC
+            // ANGLE STAYS TANK 2 - NO FORCED CALC, ONLY MANUAL INPUT NOW
             
             setQ('qty2_', 'item_3_0', H2_in); 
             setQ('qty2_', 'item_3_1', H2_in); 
@@ -2192,4 +2199,66 @@ Note:
                     }
                     
                     let qEl = document.getElementById(`qty2_${id}`); let q = qEl ? qEl.value : 0;
-                    let wEl =
+                    let wEl = document.getElementById(`wt2_${id}`); let w = wEl ? wEl.value : 0;
+                    let pEl = document.getElementById(`price2_${id}`); let p = pEl ? pEl.value : 0;
+                    let totEl = document.getElementById(`total2_${id}`); let t = totEl ? totEl.innerText.replace(/,/g, '') : 0;
+                    
+                    if(q > 0) csv += `"${s.category}","${label}",${q},${w},${p},${t}\n`;
+                })});
+            } else if (mode === "custom") {
+                let cNameEl2 = document.getElementById('customItemName');
+                let cName = (cNameEl2 && cNameEl2.value) ? cNameEl2.value : "";
+                let cCostEl2 = document.getElementById('customItemCost');
+                let cCost = (cCostEl2 && cCostEl2.value) ? cCostEl2.value : 0;
+                csv += `\nCUSTOM ITEM (ITEM 2)\n`;
+                csv += `"Description","Qty","Unit Base Cost (RM)","Total (RM)"\n`;
+                csv += `"${cName.replace(/"/g, '""')}",1,${cCost},${cCost}\n`;
+            }
+
+            csv += `\n`;
+            
+            let bEl = document.getElementById('sumBaseCost_screen'); let base = bEl ? bEl.innerText.replace(/,/g, '') : "0";
+            let mEl = document.getElementById('sumMarkup_screen'); let markup = mEl ? mEl.innerText.replace(/,/g, '') : "0";
+            let sEl = document.getElementById('sumSubtotal_screen'); let sub = sEl ? sEl.innerText.replace(/,/g, '') : "0";
+            let dEl = document.getElementById('sumDiscount_screen'); let disc = dEl ? dEl.innerText.replace(/,/g, '') : "0";
+            let sstEl = document.getElementById('sumSST_screen'); let sst = sstEl ? sstEl.innerText.replace(/,/g, '') : "0";
+            let gEl = document.getElementById('grandTotal_screen'); let grand = gEl ? gEl.innerText.replace(/,/g, '') : "0";
+            let wEl = document.getElementById('sumWeight_screen'); let wt = wEl ? wEl.innerText.replace(' kg', '').replace(/,/g, '') : "0";
+
+            csv += `,,,,"Est. Total Weight (kg)",${wt}\n`;
+            csv += `,,,,"Base Cost (RM)",${base}\n`;
+            csv += `,,,,"Mark-Up (RM)",+${markup}\n`;
+            csv += `,,,,"Gross Subtotal (RM)",${sub}\n`;
+            csv += `,,,,"Discount (RM)",-${disc}\n`;
+            csv += `,,,,"SST Tax (RM)",${sst}\n`;
+            csv += `,,,,"GRAND TOTAL (RM)",${grand}\n`;
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a'); 
+            a.href = url; 
+            a.download = `Jutarama_Quote_${qid}.csv`; 
+            
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+        } catch(e) {
+            alert("Error generating Excel file: " + e.message);
+        }
+    }
+
+    // Initialize
+    applyCustomRows();
+    buildBOMTable();
+    loadPrices();
+    
+    // Force final recalculation on script load
+    setTimeout(function() { 
+        toggleTank2(); 
+        processTankData(); 
+    }, 100);
+</script>
+
+</body>
+</html>
