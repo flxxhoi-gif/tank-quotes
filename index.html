@@ -253,11 +253,11 @@
     </style>
     
     <script>
-        const currentVersion = "V43";
+        const currentVersion = "V44";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=42; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=43; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -369,9 +369,7 @@
                     <div class="card-header"><span>📐</span> 2. Tank Engineering & Dimensions</div>
                     <div class="config-grid">
                         <div class="form-group"><label>Tank 1 Standard</label><select id="stdChoice" onchange="savePrices(); processTankData();"><option>SANS 10329:2020 Approved by SIRIM & SPAN</option><option>SS 22: 1979</option><option>Other</option></select></div>
-                        
                         <div class="form-group"><label>Unit System</label><select id="unitChoice" onchange="handleUnitChange();"><option value="ft">Imperial (4'x4')</option><option value="m">Metric (1mx1m)</option></select></div>
-                        
                         <div class="form-group" style="grid-column: span 2;"><label>Tank 1 Material / Finish</label><select id="coatChoice" onchange="savePrices(); processTankData();"><option>Hot Dipped Galvanised</option><option>Painted Steel</option><option>Stainless Steel (SS 304)</option><option>Stainless Steel (SS 316)</option></select></div>
                         
                         <div class="form-group" style="grid-column: span 2;">
@@ -386,9 +384,9 @@
 
                     <div class="tank-section-title">Tank 1 Specifications</div>
                     <div class="dim-grid">
-                        <div class="form-group"><label>Tank Length</label><input type="number" id="length" value="12" oninput="processTankData(); savePrices();"></div>
-                        <div class="form-group"><label>Tank Width</label><input type="number" id="width" value="4" oninput="processTankData(); savePrices();"></div>
-                        <div class="form-group"><label>Tank Height</label><input type="number" id="height" value="4" oninput="processTankData(); savePrices();"></div>
+                        <div class="form-group"><label>Tank Length</label><input type="number" id="length" value="12" step="0.01" oninput="processTankData(); savePrices();"></div>
+                        <div class="form-group"><label>Tank Width</label><input type="number" id="width" value="4" step="0.01" oninput="processTankData(); savePrices();"></div>
+                        <div class="form-group"><label>Tank Height</label><input type="number" id="height" value="4" step="0.01" oninput="processTankData(); savePrices();"></div>
                     </div>
                     
                     <div class="config-grid" style="margin-bottom:15px;">
@@ -397,8 +395,8 @@
                     <div id="partitionDetailsRow" style="display: none; background: #fff7ed; padding: 15px; border: 1px dashed #fdba74; border-radius: 8px; margin-bottom: 15px;">
                         <div style="display:flex; gap:15px; flex-wrap:wrap;">
                             <div class="form-group" style="flex:0.5; min-width:60px;"><label>Qty</label><input type="number" id="partQty" value="0" min="0" oninput="processTankData(); savePrices();"></div>
-                            <div class="form-group" style="flex:1; min-width:80px;"><label>L/W (<span class="unitLabel">Ft</span>)</label><input type="number" id="partLen" value="0" oninput="processTankData(); savePrices();"></div>
-                            <div class="form-group" style="flex:1; min-width:80px;"><label>Height (<span class="unitLabel">Ft</span>)</label><input type="number" id="partHgt" value="0" oninput="processTankData(); savePrices();"></div>
+                            <div class="form-group" style="flex:1; min-width:80px;"><label>L/W (<span class="unitLabel">Ft</span>)</label><input type="number" id="partLen" value="0" step="0.01" oninput="processTankData(); savePrices();"></div>
+                            <div class="form-group" style="flex:1; min-width:80px;"><label>Height (<span class="unitLabel">Ft</span>)</label><input type="number" id="partHgt" value="0" step="0.01" oninput="processTankData(); savePrices();"></div>
                             <div class="form-group" style="flex:1; min-width:100px;"><label>Pos. (Panels)</label><input type="number" id="partPos" value="1" min="1" oninput="processTankData(); savePrices();" title="Number of panels from the edge to place the partition"></div>
                             <div class="form-group" style="flex:1.5; min-width:120px;"><label>Type</label><input type="text" id="partType" placeholder="e.g. Divider" oninput="processTankData(); savePrices();"></div>
                         </div>
@@ -411,9 +409,9 @@
                             <div class="form-group"><label>Tank 2 Material / Finish</label><select id="coatChoice2" onchange="savePrices(); processTankData();"><option>Hot Dipped Galvanised</option><option>Painted Steel</option><option>Stainless Steel (SS 304)</option><option>Stainless Steel (SS 316)</option></select></div>
                         </div>
                         <div class="dim-grid">
-                            <div class="form-group"><label>Tank Length</label><input type="number" id="length2" value="8" oninput="processTankData(); savePrices();"></div>
-                            <div class="form-group"><label>Tank Width</label><input type="number" id="width2" value="4" oninput="processTankData(); savePrices();"></div>
-                            <div class="form-group"><label>Tank Height</label><input type="number" id="height2" value="4" oninput="processTankData(); savePrices();"></div>
+                            <div class="form-group"><label>Tank Length</label><input type="number" id="length2" value="8" step="0.01" oninput="processTankData(); savePrices();"></div>
+                            <div class="form-group"><label>Tank Width</label><input type="number" id="width2" value="4" step="0.01" oninput="processTankData(); savePrices();"></div>
+                            <div class="form-group"><label>Tank Height</label><input type="number" id="height2" value="4" step="0.01" oninput="processTankData(); savePrices();"></div>
                         </div>
                         
                         <div class="config-grid" style="margin-bottom:15px;">
@@ -422,8 +420,8 @@
                         <div id="partitionDetailsRow2" style="display: none; background: #fff7ed; padding: 15px; border: 1px dashed #fdba74; border-radius: 8px; margin-bottom: 15px;">
                             <div style="display:flex; gap:15px; flex-wrap:wrap;">
                                 <div class="form-group" style="flex:0.6;"><label>Part. Qty</label><input type="number" id="partQty2" value="0" min="0" oninput="processTankData(); savePrices();"></div>
-                                <div class="form-group" style="flex:1;"><label>Part. L/W (<span class="unitLabel">Ft</span>)</label><input type="number" id="partLen2" value="0" oninput="processTankData(); savePrices();"></div>
-                                <div class="form-group" style="flex:1;"><label>Part. Height (<span class="unitLabel">Ft</span>)</label><input type="number" id="partHgt2" value="0" oninput="processTankData(); savePrices();"></div>
+                                <div class="form-group" style="flex:1;"><label>Part. L/W (<span class="unitLabel">Ft</span>)</label><input type="number" id="partLen2" value="0" step="0.01" oninput="processTankData(); savePrices();"></div>
+                                <div class="form-group" style="flex:1;"><label>Part. Height (<span class="unitLabel">Ft</span>)</label><input type="number" id="partHgt2" value="0" step="0.01" oninput="processTankData(); savePrices();"></div>
                                 <div class="form-group" style="flex:1; min-width:100px;"><label>Pos. (Panels)</label><input type="number" id="partPos2" value="1" min="1" oninput="processTankData(); savePrices();" title="Number of panels from the edge to place the partition"></div>
                                 <div class="form-group" style="flex:2;"><label>Partition Type</label><input type="text" id="partType2" placeholder="e.g. Divider" oninput="processTankData(); savePrices();"></div>
                             </div>
@@ -880,9 +878,11 @@ Note:
                 if(el && el.value > 0) {
                     let v = parseFloat(el.value);
                     if(newUnit === 'm' && oldUnit === 'ft') {
-                        el.value = Math.max(1, Math.round(v * 0.3048));
+                        // EXACT FACTORY METRICATION: 1ft = 0.305m
+                        el.value = (v * 0.305).toFixed(2).replace(/\.00$/, '');
                     } else if (newUnit === 'ft' && oldUnit === 'm') {
-                        el.value = Math.max(4, Math.round((v / 0.3048) / 4) * 4);
+                        // EXACT FACTORY METRICATION: 1m = (1/0.305)ft
+                        el.value = Math.round(v / 0.305);
                     }
                 }
             });
@@ -1259,7 +1259,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV43'); // V43 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV44'); // V44 CACHE BUSTER
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1561,11 +1561,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV43', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV44', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV43');
+        let savedData = localStorage.getItem('winkoProDataV44');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1902,7 +1902,14 @@ Note:
             }
         }
 
-        // Dynamic BOM Descriptions Updates based on Inputs
+        // Read Angle Stays inputs dynamically for visual drawing
+        let stays1 = [
+            (parseInt(document.getElementById('qty_item_2_0')?.value) || 0) > 0,
+            (parseInt(document.getElementById('qty_item_2_1')?.value) || 0) > 0,
+            (parseInt(document.getElementById('qty_item_2_2')?.value) || 0) > 0,
+            (parseInt(document.getElementById('qty_item_2_3')?.value) || 0) > 0
+        ];
+
         let tRoof = document.getElementById('thickRoof') ? document.getElementById('thickRoof').value : "1.5mm";
         let tBase = document.getElementById('thickBase') ? document.getElementById('thickBase').value : "4.5mm";
         let tL1 = document.getElementById('thickWallL1') ? document.getElementById('thickWallL1').value : "4.5mm";
@@ -1976,6 +1983,19 @@ Note:
             updateDesc('desc2_', 'item_0_5', tL3 + " Wall Panel (L3)");
             updateDesc('desc2_', 'item_0_6', tL4 + " Wall Panel (L4)");
 
+            let stays2 = [
+                (parseInt(document.getElementById('qty2_item_2_0')?.value) || 0) > 0,
+                (parseInt(document.getElementById('qty2_item_2_1')?.value) || 0) > 0,
+                (parseInt(document.getElementById('qty2_item_2_2')?.value) || 0) > 0,
+                (parseInt(document.getElementById('qty2_item_2_3')?.value) || 0) > 0
+            ];
+
+            drawGrid('topGrid2', L2, W2, pTypeTop2, pPosTop2, false); 
+            drawGrid('bottomGrid2', L2, W2, pTypeTop2, pPosTop2, false);
+            drawGrid('frontGrid2', L2, H2, pTypeFront2, pPosFront2, true, stays2); 
+            drawGrid('backGrid2', L2, H2, pTypeFront2, pPosFront2, true, stays2);
+            drawGrid('leftGrid2', W2, H2, pTypeSide2, pPosSide2, true, stays2); 
+            drawGrid('rightGrid2', W2, H2, pTypeSide2, pPosSide2, true, stays2);
         } else {
             if(document.getElementById('qty2_item_0_0')) {
                  const t2Inputs = document.querySelectorAll('[id^="qty2_"]');
@@ -2008,15 +2028,26 @@ Note:
         setQ('qty_', 'item_0_6', H1 >= 4 ? perim1 * (H1 - 3) : 0); 
         setQ('qty_', 'item_0_7', partPanels1); 
 
-        let isImperial = (unit === 'ft');
-        let sealantPerimeter = isImperial ? 4.88 : 4.0;
-        let boltsPerPanel = isImperial ? 16 : 12;
+        // CLEATS AND TRUSSES Auto-Calc
+        setQ('qty_', 'item_1_0', H1 * 4); // Type A (Corners)
+        setQ('qty_', 'item_1_1', perim1); // Type B (Base/Roof Joints)
+        setQ('qty_', 'item_1_2', perim1); // Type C
+        setQ('qty_', 'item_1_3', L1_in);  // Pipe
+        setQ('qty_', 'item_1_4', L1_in);  // Angle
+
+        // ANGLE STAYS TANK 1 - REMOVED FORCED AUTO-CALC
+        // You manually requested they remain empty unless typed. 
+        // We will not touch 'qty_item_2_0' through 'qty_item_2_3'
 
         setQ('qty_', 'item_3_0', H1_in); 
         setQ('qty_', 'item_3_1', H1_in); 
         setQ('qty_', 'item_3_2', 1); 
         setQ('qty_', 'item_3_3', 1); 
 
+        let isImperial = (unit === 'ft');
+        let sealantPerimeter = isImperial ? 4.88 : 4.0;
+        let boltsPerPanel = isImperial ? 16 : 12;
+        
         setQ('qty_', 'item_3_4', Math.ceil((totalP1 * sealantPerimeter) / 15)); 
         setQ('qty_', 'item_3_5', Math.ceil(totalP1 * boltsPerPanel * 1.05)); 
 
@@ -2024,21 +2055,6 @@ Note:
         if(qty40 && (!qty40.value || qty40.value == "0")) qty40.value = 1;
         let qty41 = document.getElementById('qty_item_4_1');
         if(qty41 && (!qty41.value || qty41.value == "0")) qty41.value = 1;
-
-        // Read Angle Stays inputs dynamically for visual drawing T1
-        let stays1 = [
-            (parseInt(document.getElementById('qty_item_2_0')?.value) || 0) > 0,
-            (parseInt(document.getElementById('qty_item_2_1')?.value) || 0) > 0,
-            (parseInt(document.getElementById('qty_item_2_2')?.value) || 0) > 0,
-            (parseInt(document.getElementById('qty_item_2_3')?.value) || 0) > 0
-        ];
-
-        drawGrid('topGrid', L1, W1, pTypeTop1, pPosTop1, false); 
-        drawGrid('bottomGrid', L1, W1, pTypeTop1, pPosTop1, false);
-        drawGrid('frontGrid', L1, H1, pTypeFront1, pPosFront1, true, stays1); 
-        drawGrid('backGrid', L1, H1, pTypeFront1, pPosFront1, true, stays1);
-        drawGrid('leftGrid', W1, H1, pTypeSide1, pPosSide1, true, stays1); 
-        drawGrid('rightGrid', W1, H1, pTypeSide1, pPosSide1, true, stays1);
 
         // --- EXACT QTY INJECTIONS TANK 2 ---
         if(mode === "2") {
@@ -2051,6 +2067,15 @@ Note:
             setQ('qty2_', 'item_0_6', H2 >= 4 ? perim2 * (H2 - 3) : 0); 
             setQ('qty2_', 'item_0_7', partPanels2); 
 
+            // CLEATS AND TRUSSES
+            setQ('qty2_', 'item_1_0', H2 * 4); 
+            setQ('qty2_', 'item_1_1', perim2); 
+            setQ('qty2_', 'item_1_2', perim2); 
+            setQ('qty2_', 'item_1_3', L2_in); 
+            setQ('qty2_', 'item_1_4', L2_in); 
+
+            // ANGLE STAYS TANK 2 - REMOVED FORCED AUTO-CALC
+            
             setQ('qty2_', 'item_3_0', H2_in); 
             setQ('qty2_', 'item_3_1', H2_in); 
             setQ('qty2_', 'item_3_2', 1); 
@@ -2061,21 +2086,14 @@ Note:
 
             let q2_40 = document.getElementById('qty2_item_4_0'); if(q2_40 && !q2_40.value) q2_40.value = 0;
             let q2_41 = document.getElementById('qty2_item_4_1'); if(q2_41 && !q2_41.value) q2_41.value = 0;
-            
-            let stays2 = [
-                (parseInt(document.getElementById('qty2_item_2_0')?.value) || 0) > 0,
-                (parseInt(document.getElementById('qty2_item_2_1')?.value) || 0) > 0,
-                (parseInt(document.getElementById('qty2_item_2_2')?.value) || 0) > 0,
-                (parseInt(document.getElementById('qty2_item_2_3')?.value) || 0) > 0
-            ];
-
-            drawGrid('topGrid2', L2, W2, pTypeTop2, pPosTop2, false); 
-            drawGrid('bottomGrid2', L2, W2, pTypeTop2, pPosTop2, false);
-            drawGrid('frontGrid2', L2, H2, pTypeFront2, pPosFront2, true, stays2); 
-            drawGrid('backGrid2', L2, H2, pTypeFront2, pPosFront2, true, stays2);
-            drawGrid('leftGrid2', W2, H2, pTypeSide2, pPosSide2, true, stays2); 
-            drawGrid('rightGrid2', W2, H2, pTypeSide2, pPosSide2, true, stays2);
         }
+
+        drawGrid('topGrid', L1, W1, pTypeTop1, pPosTop1, false); 
+        drawGrid('bottomGrid', L1, W1, pTypeTop1, pPosTop1, false);
+        drawGrid('frontGrid', L1, H1, pTypeFront1, pPosFront1, true, stays1); 
+        drawGrid('backGrid', L1, H1, pTypeFront1, pPosFront1, true, stays1);
+        drawGrid('leftGrid', W1, H1, pTypeSide1, pPosSide1, true, stays1); 
+        drawGrid('rightGrid', W1, H1, pTypeSide1, pPosSide1, true, stays1);
 
         calcTotals();
         savePrices();
@@ -2174,64 +2192,4 @@ Note:
                     }
                     
                     let qEl = document.getElementById(`qty2_${id}`); let q = qEl ? qEl.value : 0;
-                    let wEl = document.getElementById(`wt2_${id}`); let w = wEl ? wEl.value : 0;
-                    let pEl = document.getElementById(`price2_${id}`); let p = pEl ? pEl.value : 0;
-                    let totEl = document.getElementById(`total2_${id}`); let t = totEl ? totEl.innerText.replace(/,/g, '') : 0;
-                    
-                    if(q > 0) csv += `"${s.category}","${label}",${q},${w},${p},${t}\n`;
-                })});
-            } else if (mode === "custom") {
-                let cName = document.getElementById('customItemName')?.value || "";
-                let cCost = document.getElementById('customItemCost')?.value || 0;
-                csv += `\nCUSTOM ITEM (ITEM 2)\n`;
-                csv += `"Description","Qty","Unit Base Cost (RM)","Total (RM)"\n`;
-                csv += `"${cName.replace(/"/g, '""')}",1,${cCost},${cCost}\n`;
-            }
-
-            csv += `\n`;
-            
-            let bEl = document.getElementById('sumBaseCost_screen'); let base = bEl ? bEl.innerText.replace(/,/g, '') : "0";
-            let mEl = document.getElementById('sumMarkup_screen'); let markup = mEl ? mEl.innerText.replace(/,/g, '') : "0";
-            let sEl = document.getElementById('sumSubtotal_screen'); let sub = sEl ? sEl.innerText.replace(/,/g, '') : "0";
-            let dEl = document.getElementById('sumDiscount_screen'); let disc = dEl ? dEl.innerText.replace(/,/g, '') : "0";
-            let sstEl = document.getElementById('sumSST_screen'); let sst = sstEl ? sstEl.innerText.replace(/,/g, '') : "0";
-            let gEl = document.getElementById('grandTotal_screen'); let grand = gEl ? gEl.innerText.replace(/,/g, '') : "0";
-            let wEl = document.getElementById('sumWeight_screen'); let wt = wEl ? wEl.innerText.replace(' kg', '').replace(/,/g, '') : "0";
-
-            csv += `,,,,"Est. Total Weight (kg)",${wt}\n`;
-            csv += `,,,,"Base Cost (RM)",${base}\n`;
-            csv += `,,,,"Mark-Up (RM)",+${markup}\n`;
-            csv += `,,,,"Gross Subtotal (RM)",${sub}\n`;
-            csv += `,,,,"Discount (RM)",-${disc}\n`;
-            csv += `,,,,"SST Tax (RM)",${sst}\n`;
-            csv += `,,,,"GRAND TOTAL (RM)",${grand}\n`;
-
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a'); 
-            a.href = url; 
-            a.download = `Jutarama_Quote_${qid}.csv`; 
-            
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            
-        } catch(e) {
-            alert("Error generating Excel file: " + e.message);
-        }
-    }
-
-    // Initialize
-    applyCustomRows();
-    buildBOMTable();
-    loadPrices();
-    
-    // Force final recalculation on script load
-    setTimeout(function() { 
-        toggleTank2(); 
-        processTankData(); 
-    }, 100);
-</script>
-
-</body>
-</html>
+                    let wEl =
