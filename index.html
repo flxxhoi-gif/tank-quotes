@@ -249,11 +249,11 @@
     </style>
     
     <script>
-        const currentVersion = "V38";
+        const currentVersion = "V39";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=37; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=38; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -938,32 +938,38 @@ Note:
         }
     }
 
-    // --- FULL BOM STRUCTURE ---
+    // --- FULL BOM STRUCTURE (UPGRADED VERSION 39 WITH EXACT WEIGHTS) ---
     const systemBaseStructure = [
         { category: "Panels", items: [
-            {name: "Manhole Panel", def: 450, wt: 45}, 
-            {name: "Roof Panel", def: 220, wt: 25}, 
-            {name: "Base Panel", def: 350, wt: 65}, 
-            {name: "Wall Panel (L1)", def: 350, wt: 65}, 
-            {name: "Wall Panel (L2)", def: 280, wt: 45},
-            {name: "Wall Panel (L3)", def: 220, wt: 25},
-            {name: "Wall Panel (L4)", def: 220, wt: 25},
-            {name: "Partition Panel", def: 280, wt: 45}
+            {name: "Manhole Panel", def: 450, wt: 55}, 
+            {name: "Roof Panel", def: 220, wt: 26}, 
+            {name: "Base Panel", def: 350, wt: 68}, 
+            {name: "Wall Panel (L1)", def: 350, wt: 68}, 
+            {name: "Wall Panel (L2)", def: 280, wt: 48},
+            {name: "Wall Panel (L3)", def: 280, wt: 48},
+            {name: "Wall Panel (L4)", def: 220, wt: 26},
+            {name: "Partition Panel", def: 280, wt: 48}
         ]},
         { category: "Cleat & Trusses", items: [
-            {name: "Type A Cleat", def: 25, wt: 1}, {name: "Type B Cleat", def: 28, wt: 1.5}, {name: "Type C Cleat", def: 30, wt: 2},
-            {name: "Ø1\" Pipe", def: 12, wt: 1.5}, {name: "2\" x 2\" angle", def: 15, wt: 2}
+            {name: "Type A Cleat", def: 25, wt: 1.2}, 
+            {name: "Type B Cleat", def: 28, wt: 1.8}, 
+            {name: "Type C Cleat", def: 30, wt: 2.5},
+            {name: "Ø1\" Pipe", def: 12, wt: 1.6}, 
+            {name: "2\" x 2\" angle", def: 15, wt: 2.2}
         ]},
         { category: "Angle Stay", items: [
-            {name: "44 1/4\" (L1 Stay)", def: 45, wt: 5}, {name: "67\" (L2 Stay)", def: 65, wt: 8}, {name: "11' 3\" (L3 Stay)", def: 95, wt: 15}, {name: "15' 8.5\" (L4 Stay)", def: 125, wt: 20}
+            {name: "44 1/4\" (L1 Stay)", def: 45, wt: 4.5}, 
+            {name: "67\" (L2 Stay)", def: 65, wt: 7.2}, 
+            {name: "11' 3\" (L3 Stay)", def: 95, wt: 14.5}, 
+            {name: "15' 8.5\" (L4 Stay)", def: 125, wt: 19.8}
         ]},
         { category: "Accessories", items: [
-            {name: "Ext. Ladder", def: 55, wt: 2, selectId: "extLadMat", options: ["HDG", "SS 304", "SS 316"]}, 
-            {name: "Int. Ladder", def: 75, wt: 2, selectId: "intLadMat", options: ["HDG", "SS 304", "SS 316"]}, 
-            {name: "Water Level Indicator", def: 220, wt: 3, selectId: "wliType", options: ["Ball Float", "Tube Type"]}, 
-            {name: "Air Vent", def: 85, wt: 2, selectId: "ventType", options: ["HDG Steel", "ABS Plastic"]},
-            {name: "Mastic Sealant (Rolls)", def: 38, wt: 0.5}, 
-            {name: "Bolt & Nut Sets", def: 1.60, wt: 0.1}
+            {name: "Ext. Ladder", def: 55, wt: 3.5, selectId: "extLadMat", options: ["HDG", "SS 304", "SS 316"]}, 
+            {name: "Int. Ladder", def: 75, wt: 3.5, selectId: "intLadMat", options: ["HDG", "SS 304", "SS 316"]}, 
+            {name: "Water Level Indicator", def: 220, wt: 2.5, selectId: "wliType", options: ["Ball Float", "Tube Type"]}, 
+            {name: "Air Vent", def: 85, wt: 1.5, selectId: "ventType", options: ["HDG Steel", "ABS Plastic"]},
+            {name: "Mastic Sealant (Rolls)", def: 38, wt: 0.8}, 
+            {name: "Bolt & Nut Sets", def: 1.60, wt: 0.15}
         ]},
         { category: "Services", items: [
             {name: "Installation & Labor", def: 3500, wt: 0}, 
@@ -1179,7 +1185,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV38'); // V38 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV39'); // V39 CACHE BUSTER
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1325,6 +1331,7 @@ Note:
                 }
             }
 
+            // TANK 1 LADDERS
             let extLadMatEl = document.getElementById('extLadMat'); let extLadMat = (extLadMatEl && extLadMatEl.value) ? extLadMatEl.value : 'External Ladder';
             let intLadMatEl = document.getElementById('intLadMat'); let intLadMat = (intLadMatEl && intLadMatEl.value) ? intLadMatEl.value : 'Internal Ladder';
             let qtyExtEl = document.getElementById('qty_item_3_0'); let qtyExt = (qtyExtEl && qtyExtEl.value) ? qtyExtEl.value : '0';
@@ -1458,11 +1465,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV38', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV39', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV38');
+        let savedData = localStorage.getItem('winkoProDataV39');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1694,11 +1701,13 @@ Note:
             }
             
             let tier = (r - 1) - row; 
-            if(isSideView && activeStays[tier]) {
-                extraStyle += 'background-image: linear-gradient(to bottom right, transparent 48%, rgba(234, 88, 12, 0.6) 49%, rgba(234, 88, 12, 0.6) 51%, transparent 52%), linear-gradient(to bottom left, transparent 48%, rgba(234, 88, 12, 0.6) 49%, rgba(234, 88, 12, 0.6) 51%, transparent 52%); ';
+            let stayHtml = '';
+            // Only draw stay lines on internal vertical joints (col > 0)
+            if(isSideView && activeStays[tier] && col > 0) {
+                stayHtml = `<div style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; background-image: linear-gradient(to bottom right, transparent 48%, rgba(234, 88, 12, 0.7) 49%, rgba(234, 88, 12, 0.7) 51%, transparent 52%); z-index: 5;"></div>`;
             }
 
-            html += `<div class="panel" style="aspect-ratio: 1/1; min-height: 15px; border: 0.5px solid #94a3b8; background-color: #e0f2fe; box-sizing: border-box; position: relative; ${extraStyle}"></div>`;
+            html += `<div class="panel" style="aspect-ratio: 1/1; min-height: 15px; border: 0.5px solid #94a3b8; background-color: #e0f2fe; box-sizing: border-box; position: relative; ${extraStyle}">${stayHtml}</div>`;
         }
         
         if(g) {
@@ -1774,7 +1783,7 @@ Note:
             }
         }
 
-        // Read Angle Stays inputs dynamically for X drawing
+        // Read Angle Stays inputs dynamically for visual drawing
         let stays1 = [
             (parseInt(document.getElementById('qty_item_2_0')?.value) || 0) > 0,
             (parseInt(document.getElementById('qty_item_2_1')?.value) || 0) > 0,
@@ -1900,10 +1909,9 @@ Note:
         setQ('qty_', 'item_0_6', H1 >= 4 ? perim1 * (H1 - 3) : 0); 
         setQ('qty_', 'item_0_7', partPanels1); 
 
-        // CLEATS AND TRUSSES Auto-Calc
-        setQ('qty_', 'item_1_0', H1 * 4); // Type A
-        setQ('qty_', 'item_1_1', perim1); // Type B
-        setQ('qty_', 'item_1_2', perim1); // Type C
+        setQ('qty_', 'item_1_0', H1 * 4); 
+        setQ('qty_', 'item_1_1', perim1); 
+        setQ('qty_', 'item_1_2', perim1); 
         setQ('qty_', 'item_1_3', L1_in); 
         setQ('qty_', 'item_1_4', L1_in); 
 
@@ -1935,10 +1943,9 @@ Note:
             setQ('qty2_', 'item_0_6', H2 >= 4 ? perim2 * (H2 - 3) : 0); 
             setQ('qty2_', 'item_0_7', partPanels2); 
 
-            // CLEATS AND TRUSSES
-            setQ('qty2_', 'item_1_0', H2 * 4); // Type A
-            setQ('qty2_', 'item_1_1', perim2); // Type B
-            setQ('qty2_', 'item_1_2', perim2); // Type C
+            setQ('qty2_', 'item_1_0', H2 * 4); 
+            setQ('qty2_', 'item_1_1', perim2); 
+            setQ('qty2_', 'item_1_2', perim2); 
             setQ('qty2_', 'item_1_3', L2_in); 
             setQ('qty2_', 'item_1_4', L2_in); 
 
