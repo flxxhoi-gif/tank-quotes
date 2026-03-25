@@ -14,7 +14,2105 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(5px);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 9999; color: white; text-align: center;<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Winko / Jutarama - Enterprise Quoting</title>
+    <style>
+        /* --- MODERN RESET & TYPOGRAPHY --- */
+        * { box-sizing: border-box; }
+        body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f8fafc; padding: 20px; color: #334155; margin: 0; line-height: 1.5; }
+        
+        /* --- SECURITY OVERLAY --- */
+        #securityOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(5px);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
             z-index: 9999; color: white; text-align: center;
+        }
+        .login-card { background: white; padding: 50px 40px; border-radius: 16px; color: #333; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); width: 90%; max-width: 420px; display: flex; flex-direction: column; align-items: center;}
+        .login-card input { width: 100%; padding: 14px; margin: 25px 0 15px 0; border: 2px solid #e2e8f0; border-radius: 8px; text-align: center; font-size: 18px; outline: none; transition: border-color 0.3s; }
+        .login-card input:focus { border-color: #ea580c; box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1); }
+        .login-card button { width: 100%; padding: 14px; background: linear-gradient(135deg, #ea580c, #c2410c); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; transition: transform 0.2s, box-shadow 0.2s;}
+        .login-card button:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(234, 88, 12, 0.3); }
+        
+        #mainContent, #adminContent { display: none; }
+        #customerPrintView { display: none; } 
+        .print-only { display: none; }
+
+        /* --- DASHBOARD STYLES (SCREEN) --- */
+        .container { max-width: 1550px; margin: auto; padding: 10px; }
+        
+        .app-header-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #cbd5e1; padding-bottom: 15px; margin-bottom: 20px; }
+        .app-header-bar h2 { color: #0f172a; margin: 0; font-weight: 900; font-size: 1.8em; letter-spacing: -0.5px;}
+        .live-clock { font-size: 0.9em; color: #64748b; font-weight: 600; background: #e2e8f0; padding: 6px 12px; border-radius: 20px;}
+        
+        .memory-panel { background: #fff7ed; border: 1px dashed #fed7aa; padding: 12px 20px; border-radius: 10px; display: flex; gap: 15px; align-items: center; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(234,88,12,0.05); }
+        .memory-panel select { flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #fdba74; font-weight: 600; color: #ea580c; outline: none;}
+        .memory-panel select:focus { box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1); }
+        .memory-btn { padding: 10px 18px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; color: white; transition: all 0.2s;}
+        .btn-save { background: #10b981; } .btn-save:hover { background: #059669; transform: translateY(-1px);}
+        .btn-del { background: #f43f5e; } .btn-del:hover { background: #e11d48; transform: translateY(-1px);}
+
+        .app-layout { display: flex; gap: 25px; flex-wrap: wrap; width: 100%; align-items: flex-start;}
+        .col-left { flex: 1.4; min-width: 500px; display: flex; flex-direction: column; gap: 20px; }
+        .col-right { flex: 0.9; min-width: 400px; display: flex; flex-direction: column; gap: 20px; position: sticky; top: 20px; }
+
+        .module-card { background: #ffffff; border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        .card-header { font-size: 1.15em; font-weight: 800; color: #0f172a; margin-top: 0; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; }
+        .card-header span { color: #ea580c; margin-right: 6px; }
+
+        .reset-btn { background: #94a3b8; color: white; border: none; padding: 6px 12px; font-size: 12px; border-radius: 6px; cursor: pointer; transition: 0.2s; font-weight: 600;}
+        .reset-btn:hover { background: #64748b; }
+        
+        .config-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 15px; }
+        .dim-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px; width: 100%; }
+        .form-group { display: flex; flex-direction: column; margin-bottom: 5px;}
+        .form-group label { font-size: 0.8em; font-weight: 700; color: #64748b; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;}
+        .form-group input, .form-group select, .form-group textarea { padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; font-weight: 600; background: #f8fafc; font-family: inherit; transition: all 0.2s;}
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #ea580c; background: #fff; outline: none; box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1); }
+        
+        table { width: 100%; border-collapse: separate; border-spacing: 0; margin-bottom: 10px; font-size: 0.9em; table-layout: fixed; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; }
+        th { background: #f1f5f9; color: #475569; padding: 12px; text-align: center; border-bottom: 2px solid #e2e8f0; text-transform: uppercase; font-size: 0.8em; letter-spacing: 0.5px;}
+        td { padding: 8px 10px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;}
+        tr:last-child td { border-bottom: none; }
+        
+        .col-item { background: #fff; font-weight: 600; width: 40%; color: #1e293b;}
+        .col-input { width: 14%; }
+        .col-total { text-align: right; font-weight: 700; width: 18%; background: #fafafa; color: #b91c1c;}
+        
+        .desc-input { flex: 1 1 100px; min-width: 80px; padding: 6px; border: 1px solid transparent; background: transparent; font-weight: 600; font-family: inherit; font-size: 1em; color: #0f172a; transition: 0.2s; border-radius: 4px; }
+        .desc-input:focus, .desc-input:hover { border-color: #ea580c; background: #fff; outline: none; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
+        .col-input input { width: 100%; padding: 6px; text-align: center; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc; font-weight: 600; color: #0f172a; transition: 0.2s;}
+        .col-input input:focus { background: #fff; border-color: #ea580c; outline: none; box-shadow: 0 0 0 2px rgba(234,88,12,0.1);}
+        
+        .section-header { background: #f8fafc; font-weight: 800; text-align: left; color: #1e293b; border-bottom: 2px solid #e2e8f0; border-top: 4px solid #fff;}
+        .bom-inline-select { flex: 0 0 auto; max-width: 110px; margin-left: 4px; padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85em; font-weight: 600; color: #ea580c; background: #fff; cursor: pointer; transition: 0.2s;}
+        .bom-inline-select:focus { outline: none; border-color: #ea580c; box-shadow: 0 0 0 2px rgba(234,88,12,0.1);}
+
+        /* Floating Premium Summary Box */
+        .summary-box { background: linear-gradient(145deg, #0f172a, #1e293b); color: white; padding: 25px; border-radius: 12px; box-shadow: 0 15px 25px -5px rgba(15,23,42,0.3);}
+        .sum-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 1em; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; color: #cbd5e1;}
+        .sum-row span:last-child { font-weight: 600; color: white;}
+        .sum-row.total { font-size: 1.8em; font-weight: 800; color: #fbbf24; border-bottom: none; border-top: 2px solid rgba(255,255,255,0.2); padding-top: 15px; margin-top: 15px;}
+        .sum-row.total span:last-child { color: #fbbf24; }
+
+        .btn-group { display: flex; gap: 12px; }
+        .action-btn { flex: 1; padding: 14px; background: #ea580c; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 700; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;}
+        .action-btn:hover { background: #c2410c; transform: translateY(-2px); box-shadow: 0 8px 15px -3px rgba(234,88,12,0.3);}
+        .export-btn { background: #334155; } .export-btn:hover { background: #1e293b; box-shadow: 0 8px 15px -3px rgba(15,23,42,0.3);}
+        .print-btn { background: #059669; } .print-btn:hover { background: #047857; box-shadow: 0 8px 15px -3px rgba(5,150,105,0.3);}
+
+        .visual-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; justify-items: center; margin-bottom: 15px; }
+        .view-box { text-align: center; background: #f8fafc; padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; width: 100%; max-width: 160px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);} 
+        .view-title { font-size: 0.75em; font-weight: 800; margin-bottom: 8px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;}
+        
+        .grid-draft { display: grid; gap: 1px; background: #94a3b8; border: 2px solid #475569; margin: 0 auto; width: 100%; border-radius: 2px; overflow: hidden;} 
+        .panel { background: #e0f2fe; padding-bottom: 100%; height: 0; box-sizing: border-box; }
+
+        .tank-section-title { background: #e2e8f0; padding: 6px 12px; border-radius: 6px; font-weight: 800; color: #0f172a; margin-bottom: 10px; font-size: 0.9em; text-transform: uppercase; border-left: 4px solid #3b82f6;}
+
+        /* --- ADMIN DASHBOARD STYLES --- */
+        .admin-header { background: #0f172a; color: white; padding: 25px 30px; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center;}
+        .admin-header h2 { color: white; border: none; margin: 0; padding: 0; font-weight: 800;}
+        .admin-btn { padding: 12px 24px; background: #e11d48; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s;}
+        .admin-btn.save { background: #10b981; }
+        .admin-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.2);}
+        .admin-container { background: #1e293b; padding: 30px; border-radius: 0 0 12px 12px; color: white;}
+        .admin-table { width: 100%; border-collapse: collapse; background: white; color: #0f172a; border-radius: 8px; overflow: hidden; box-shadow: 0 10px 15px rgba(0,0,0,0.3);}
+        .admin-table th { background: #334155; color: white; border-color: #475569; padding: 15px; font-size: 0.9em; text-transform: uppercase; letter-spacing: 0.5px;}
+        .admin-table td { border-color: #e2e8f0; padding: 10px;}
+        .admin-input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-weight: bold; text-align: center;}
+        .admin-input.text-left { text-align: left; }
+
+        /* ========================================================================== */
+        /* --- PROFESSIONAL PRINT STYLES (DUAL MODE) --- */
+        /* ========================================================================== */
+        @media print {
+            @page { size: A4; margin: 10mm 15mm; }
+            body { background: white; padding: 0; font-size: 9pt; color: #0f172a; font-family: Arial, Helvetica, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            .container { box-shadow: none; max-width: 100%; padding: 0; border: none; }
+            
+            /* ------------------------------------------------ */
+            /* MODE 1: INTERNAL PRINT                           */
+            /* ------------------------------------------------ */
+            body.print-internal #mainContent { display: block !important; }
+            body.print-internal #customerPrintView { display: none !important; }
+
+            body.print-internal .internal-hide { display: none !important; }
+            
+            body.print-internal .app-layout { display: block !important; }
+            body.print-internal .col-left { width: 100% !important; display: block !important; }
+            body.print-internal .col-right { display: none !important; } 
+            
+            body.print-internal .module-card { border: none !important; padding: 0 !important; margin-bottom: 20px !important; box-shadow: none !important; }
+            
+            body.print-internal .card-header { display: block !important; border-bottom: 2px solid #0f172a !important; margin-bottom: 8px !important; font-size: 11pt !important; color: #0f172a !important; text-transform: uppercase; padding: 0 0 5px 0 !important; background: transparent !important;}
+            body.print-internal .card-header span, body.print-internal .card-header button { display: none !important; }
+
+            body.print-internal .print-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #ea580c; padding-bottom: 10px; margin-bottom: 15px; }
+            body.print-internal .header-left { display: flex; align-items: center; gap: 20px; }
+            body.print-internal .header-left img { width: 120px; height: auto; object-fit: contain; }
+            body.print-internal .header-text h1 { margin: 0 0 5px 0; font-size: 14pt; color: #0f172a; font-weight: 800; letter-spacing: 0.5px; }
+            body.print-internal .header-text p { margin: 2px 0; font-size: 8pt; color: #475569; font-weight: 500;}
+            body.print-internal .header-right { text-align: right; }
+            body.print-internal .header-right h2 { margin: 0 0 5px 0; font-size: 22pt; color: #ea580c; font-weight: 800; letter-spacing: 1px;}
+            body.print-internal .header-right p { margin: 2px 0; font-size: 9pt; color: #1e293b; font-weight: 600;}
+            
+            body.print-internal .quote-meta { display: flex; gap: 15px; margin-bottom: 15px; }
+            body.print-internal .meta-box { flex: 1; border: 1px solid #cbd5e1; padding: 8px 12px; border-radius: 6px; background: #f8fafc; }
+            body.print-internal .meta-item { font-size: 8pt; margin-bottom: 4px; display: flex; }
+            body.print-internal .meta-label { font-weight: 700; color: #64748b; width: 90px; text-transform: uppercase;}
+            body.print-internal .meta-value { font-weight: 700; color: #0f172a; }
+            
+            body.print-internal table { font-size: 8.5pt; margin-bottom: 10px; border-collapse: collapse; width: 100%; border: 1px solid #cbd5e1; border-radius: 0;}
+            body.print-internal tr { border-bottom: 1px solid #e2e8f0; page-break-inside: avoid; }
+            body.print-internal tr:nth-child(even):not(.section-header-row) { background-color: #f8fafc !important; }
+            body.print-internal th { background-color: #0f172a !important; color: #ffffff !important; padding: 4px 6px; border: 1px solid #0f172a; font-weight: 700; text-transform: uppercase;}
+            body.print-internal td { border-right: 1px solid #e2e8f0; padding: 3px 6px; color: #0f172a;}
+            body.print-internal td:last-child { border-right: none; }
+            body.print-internal td.text-center { text-align: center; } body.print-internal td.text-right { text-align: right; font-weight: 700; color: #0f172a !important;}
+            body.print-internal .section-header { background-color: #e2e8f0 !important; font-weight: 800; color: #0f172a !important; border-bottom: 1px solid #cbd5e1 !important; padding: 4px 6px !important; text-transform: uppercase; font-size: 7.5pt; border-right: none;}
+            
+            body.print-internal input, body.print-internal .desc-input, body.print-internal .bom-inline-select { border: none !important; background: transparent !important; color: #0f172a !important; box-shadow: none !important; font-weight: 600; padding: 0 !important; font-size: inherit; appearance: none; -webkit-appearance: none; width: auto;}
+            body.print-internal input.desc-input { width: 100% !important; text-align: left !important; }
+            body.print-internal input[type="number"] { width: 100% !important; text-align: center !important; }
+            body.print-internal .col-uprice input { text-align: right !important; }
+            body.print-internal .bom-inline-select { margin-left: 4px; color: #475569 !important; font-weight: 700;}
+
+            body.print-internal .col-item { width: 45% !important; }
+            body.print-internal .col-qty { width: 10% !important; }
+            body.print-internal .col-wt { width: 15% !important; }
+            body.print-internal .col-uprice { width: 15% !important; }
+            body.print-internal .col-itotal { width: 15% !important; }
+            
+            body.print-internal #internalPrintFooter { display: block !important; margin-top: 20px; }
+            body.print-internal .summary-box { background: #fff !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 6px !important; padding: 10px !important; margin-top: 10px !important; width: 340px !important; float: right !important; box-shadow: none !important;}
+            
+            body.print-internal .summary-table { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
+            body.print-internal .summary-table td { padding: 4px 0; border: none; color: #0f172a; font-weight: 700; }
+            body.print-internal .summary-table .border-top td { border-top: 1px solid #cbd5e1 !important; padding-top: 6px; margin-top: 3px; }
+            body.print-internal .summary-table .border-bottom td { border-bottom: 1px solid #cbd5e1 !important; padding-bottom: 6px; margin-bottom: 3px; }
+            body.print-internal .summary-table .grand-total-row td { font-size: 12pt; padding-top: 8px; }
+
+            body.print-internal .visual-container { display: grid !important; grid-template-columns: repeat(6, 1fr) !important; gap: 5px !important; width: 100% !important; margin: 10px 0 !important; page-break-inside: avoid !important; clear: both !important;}
+            body.print-internal .view-box { padding: 4px !important; border: 1px solid #cbd5e1 !important; background: #fff !important; border-radius: 4px !important; }
+            body.print-internal .grid-draft { gap: 0.5px !important; border: 1px solid #0f172a !important; background: #fff !important; width: 100% !important;}
+            body.print-internal .panel { background: #e0f2fe !important; border: 0.5px solid #94a3b8 !important; min-height: 12px !important; box-sizing: border-box !important;}
+            body.print-internal .view-title { font-size: 6pt !important; margin-bottom: 3px !important; color: #0f172a !important; text-align: center !important; font-weight: 800 !important; text-transform: uppercase !important;}
+            body.print-internal .tank-section-title { font-size: 8pt !important; margin-bottom: 5px !important; margin-top: 10px !important; color: #0f172a !important; font-weight: bold;}
+
+            body.print-internal .print-footer { display: flex; justify-content: space-between; margin-top: 20px; page-break-inside: avoid; clear: both; padding-top: 10px;}
+            body.print-internal .sig-box { width: 40%; text-align: left; }
+            body.print-internal .sig-box p { font-size: 8pt; margin: 0; color: #334155; }
+            body.print-internal .sig-line { border-bottom: 1px solid #0f172a; margin: 30px 0 5px 0; }
+            body.print-internal .sig-box strong { color: #0f172a; font-size: 9pt; text-transform: uppercase;}
+
+            /* ------------------------------------------------ */
+            /* MODE 2: CUSTOMER PRINT                           */
+            /* ------------------------------------------------ */
+            body.print-customer #mainContent { display: none !important; }
+            body.print-customer #customerPrintView { display: block !important; }
+
+            .cp-header { display: flex; margin-bottom: 15px;}
+            .cp-header-left { width: 35%; display: flex; align-items: center; justify-content: center; background: transparent; padding: 5px;}
+            .cp-header-right { width: 65%; padding-left: 20px;}
+            
+            .cp-meta-layout { display: flex; justify-content: space-between; align-items: stretch; margin-bottom: 10px;}
+            .cp-meta-left { width: 55%; font-size: 8.5pt;}
+            .cp-meta-left table { width: 100%; border: none; margin: 0;}
+            .cp-meta-left td { border: none; padding: 2px 5px 2px 0; vertical-align: top;}
+            .cp-meta-left td:first-child { width: 70px; font-weight: normal; color: #000;}
+            
+            .cp-meta-center { width: 15%; text-align: center; display: flex; align-items: center; justify-content: center;}
+            .cp-quotation-box { border: 2px solid #000; padding: 4px 10px; font-weight: bold; font-size: 10pt; letter-spacing: 1px;}
+            
+            .cp-meta-right { width: 30%; font-size: 8.5pt; text-align: right;}
+            .cp-meta-right table { width: 100%; border: none; margin: 0;}
+            .cp-meta-right td { border: none; padding: 2px 0 2px 5px; vertical-align: top; text-align: left;}
+            .cp-meta-right td:first-child { width: 60px; font-weight: normal; color: #000; text-align: right;}
+
+            .cp-table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 10px; font-size: 8.5pt; border: 2px solid #000; }
+            .cp-table th { background: #d1d5db !important; color: #000 !important; border: 1px solid #000; padding: 4px 6px !important; font-weight: bold; text-align: center; -webkit-print-color-adjust: exact;}
+            .cp-table td { border: 1px solid #000; padding: 4px 6px !important; vertical-align: top; color: #000; line-height: 1.3 !important;}
+            .cp-table .td-center { text-align: center;}
+            .cp-table .td-right { text-align: right;}
+            
+            .cp-short-exclusions { display: flex; align-items: stretch; margin-bottom: 15px !important; font-size: 8pt; line-height: 1.4; border: 1px solid #000;}
+            .cp-short-exclusions .label { background: #d1d5db !important; color: #000; padding: 6px 10px; font-weight: bold; border-right: 1px solid #000; -webkit-print-color-adjust: exact; width: 100px; text-align: center; display: flex; align-items: center; justify-content: center;}
+            .cp-short-exclusions .content { padding: 6px 10px; background: #fff; flex: 1;}
+
+            .page-break-section { page-break-before: always; padding-top: 10px; }
+            
+            .cp-full-terms { font-size: 8pt !important; line-height: 1.3 !important; white-space: pre-wrap; margin-bottom: 15px !important; color: #000;}
+
+            .cp-tnc { font-size: 8pt !important; margin-bottom: 15px !important; page-break-inside: avoid;}
+            .cp-tnc-title { font-weight: bold; text-decoration: underline; margin-bottom: 5px; font-size: 8.5pt;}
+            .cp-tnc table { width: 100%; border: none; border-collapse: collapse;}
+            .cp-tnc td { border: none; padding: 3px 5px; vertical-align: top;}
+            .cp-tnc td:first-child { width: 140px; font-weight: bold; color: #000;}
+
+            .cp-signoff { display: flex; justify-content: space-between; margin-top: 15px; page-break-inside: avoid;}
+            .cp-signoff-left { width: 50%; }
+            .cp-signoff-left p { margin: 2px 0; font-size: 8.5pt;}
+        }
+    </style>
+    
+    <script>
+        const currentVersion = "V36";
+        if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
+            localStorage.setItem("winkoAppVersion", currentVersion);
+            localStorage.removeItem("winkoProData");
+            for(let i=13; i<=35; i++) localStorage.removeItem("winkoProDataV" + i);
+            window.location.reload(true);
+        }
+    </script>
+</head>
+<body>
+
+<div id="securityOverlay">
+    <div class="login-card">
+        <img src="winko logo.png" alt="Winko Logo" style="max-width: 180px; margin-bottom: 10px;">
+        <p style="color:#64748b; margin-top: 0; font-weight: 600;">Technical Quoting Gateway</p>
+        <input type="password" id="passInput" placeholder="Enter Password" onkeypress="if(event.key==='Enter') checkPassword()">
+        <button onclick="checkPassword()">Unlock Dashboard</button>
+        <p style="font-size: 11px; margin-top:20px; color:#94a3b8; font-weight: 600;">Admin Portal: Requires Master Password</p>
+    </div>
+</div>
+
+<div id="adminContent">
+    <div class="container" style="background: transparent; box-shadow: none; padding:0;">
+        <div class="admin-header">
+            <h2>⚙️ Master Inventory Control</h2>
+            <div>
+                <button class="admin-btn" onclick="location.reload()">🚪 Back to Login</button>
+                <button class="admin-btn save" onclick="saveAdminDefaults()" style="margin-left: 10px;">💾 Save Master Defaults</button>
+            </div>
+        </div>
+        <div class="admin-container">
+            <p style="margin-top:0; color: #94a3b8; font-weight: 500;">Warning: Changing these values will permanently update the starting template for all new quotations.</p>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th style="width:20%; text-align:left;">Category</th>
+                        <th style="width:40%; text-align:left;">Default Item Name</th>
+                        <th style="width:20%;">Default Wt (kg)</th>
+                        <th style="width:20%;">Default Price (RM)</th>
+                    </tr>
+                </thead>
+                <tbody id="adminBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="mainContent">
+    <div class="container">
+        
+        <div class="app-header-bar no-print">
+            <h2>Winko Configurator</h2>
+            <div class="live-clock">System Time: <span id="liveClock">Loading...</span></div>
+        </div>
+
+        <div class="print-header print-only">
+            <div class="header-left">
+                <img src="winko logo.png" alt="Winko Logo">
+                <div class="header-text">
+                    <h1>JUTARAMA INDUSTRIES (M) SDN BHD</h1>
+                    <p><strong>(749861-V)</strong></p>
+                    <p>No. 19, Kawasan Perindustrian Mega 2,</p>
+                    <p>Jln Mega 2/1, 43500 Semenyih, Selangor, Malaysia.</p>
+                    <p>Tel: (60)-8727 7540 &nbsp;|&nbsp; Email: sales@winko.my &nbsp;|&nbsp; Web: www.winko.my</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <h2 id="docTypeTitle">INTERNAL QUOTATION</h2>
+                <p><strong>Quote No:</strong> <span id="metaQuoteId"></span></p>
+                <p><strong>Date:</strong> <span id="metaDate"></span></p>
+            </div>
+        </div>
+
+        <div class="quote-meta print-only">
+            <div class="meta-box">
+                <div class="meta-item"><span class="meta-label">Prepared For:</span> <span class="meta-value" id="metaProject">________________</span></div>
+                <div class="meta-item"><span class="meta-label">Standard:</span> <span class="meta-value" id="metaStd"></span></div>
+            </div>
+            <div class="meta-box">
+                <div class="meta-item"><span class="meta-label">Dimensions:</span> <span class="meta-value" id="metaDims"></span></div>
+                <div class="meta-item"><span class="meta-label">Material:</span> <span class="meta-value" id="metaCoat"></span></div>
+                <div class="meta-item"><span class="meta-label">Partition:</span> <span class="meta-value" id="metaPart"></span></div>
+            </div>
+        </div>
+
+        <div class="memory-panel no-print">
+            <strong style="color: #ea580c; display: flex; align-items: center; gap: 8px;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                Project Bank:
+            </strong>
+            <select id="memoryDropdown">
+                <option value="">-- Load a Saved Project --</option>
+            </select>
+            <button class="memory-btn btn-save" onclick="loadFromMemory()">Load</button>
+            <button class="memory-btn btn-save" onclick="saveToMemory()" style="background: #ea580c;">Save Current</button>
+            <button class="memory-btn btn-del" onclick="deleteFromMemory()">Delete</button>
+        </div>
+
+        <div class="app-layout">
+            <div class="col-left">
+                
+                <div class="module-card internal-hide no-print">
+                    <div class="card-header"><span>📋</span> 1. Project & Client Info</div>
+                    <div class="config-grid">
+                        <div class="form-group"><label>Quote Ref Number</label><input type="text" id="quoteIdInput" placeholder="e.g. QP-26-008" oninput="syncPrintHeader(); savePrices();"></div>
+                        <div class="form-group"><label>Project Name (Req. for Saving)</label><input type="text" id="projectName" placeholder="e.g. Conod (Bukit Minyak)" oninput="syncPrintHeader(); savePrices();"></div>
+                        <div class="form-group"><label>Customer Company</label><input type="text" id="custCompany" placeholder="e.g. ELCO Advance Engineering" oninput="syncPrintHeader(); savePrices();"></div>
+                        <div class="form-group"><label>Attention (Person)</label><input type="text" id="custAttn" placeholder="e.g. Ms. Gooi" oninput="syncPrintHeader(); savePrices();"></div>
+                        <div class="form-group" style="grid-column: span 2;"><label>Customer Address</label><textarea id="custAddr" rows="2" placeholder="Street, City, Zip" oninput="syncPrintHeader(); savePrices();"></textarea></div>
+                    </div>
+                </div>
+
+                <div class="module-card internal-hide no-print">
+                    <div class="card-header"><span>📐</span> 2. Tank Engineering & Dimensions</div>
+                    <div class="config-grid">
+                        <div class="form-group"><label>Tank 1 Standard</label><select id="stdChoice" onchange="savePrices(); processTankData();"><option>SANS 10329:2020 Approved by SIRIM & SPAN</option><option>SS 22: 1979</option><option>Other</option></select></div>
+                        <div class="form-group"><label>Unit System</label><select id="unitChoice" onchange="updateLabels(); savePrices(); processTankData();"><option value="ft">Imperial (4'x4')</option><option value="m">Metric (1mx1m)</option></select></div>
+                        <div class="form-group" style="grid-column: span 2;"><label>Tank 1 Material / Finish</label><select id="coatChoice" onchange="savePrices(); processTankData();"><option>Hot Dipped Galvanised</option><option>Painted Steel</option><option>Stainless Steel (SS 304)</option><option>Stainless Steel (SS 316)</option></select></div>
+                        
+                        <div class="form-group" style="grid-column: span 2;"><label style="color:#2563eb;">Number of Tanks in Project</label><select id="numTanks" onchange="toggleTank2(); processTankData(); savePrices();" style="border: 2px solid #93c5fd;"><option value="1">1 Tank Configuration</option><option value="2">2 Tank Configurations</option></select></div>
+                    </div>
+
+                    <div class="tank-section-title">Tank 1 Specifications</div>
+                    <div class="dim-grid">
+                        <div class="form-group"><label>Tank Length</label><input type="number" id="length" value="12" oninput="processTankData(); savePrices();"></div>
+                        <div class="form-group"><label>Tank Width</label><input type="number" id="width" value="4" oninput="processTankData(); savePrices();"></div>
+                        <div class="form-group"><label>Tank Height</label><input type="number" id="height" value="4" oninput="processTankData(); savePrices();"></div>
+                    </div>
+                    
+                    <div class="config-grid" style="margin-bottom:15px;">
+                        <div class="form-group" style="grid-column: span 2;"><label>Tank 1 Partition</label><select id="partChoice" onchange="togglePartitionDetails(); processTankData();"><option value="no">No Partition</option><option value="yes">Yes (Internal Wall)</option></select></div>
+                    </div>
+                    <div id="partitionDetailsRow" style="display: none; background: #fff7ed; padding: 15px; border: 1px dashed #fdba74; border-radius: 8px; margin-bottom: 15px;">
+                        <div style="display:flex; gap:15px; flex-wrap:wrap;">
+                            <div class="form-group" style="flex:0.5; min-width:60px;"><label>Qty</label><input type="number" id="partQty" value="0" min="0" oninput="processTankData(); savePrices();"></div>
+                            <div class="form-group" style="flex:1; min-width:80px;"><label>L/W (<span class="unitLabel">Ft</span>)</label><input type="number" id="partLen" value="0" oninput="processTankData(); savePrices();"></div>
+                            <div class="form-group" style="flex:1; min-width:80px;"><label>Height (<span class="unitLabel">Ft</span>)</label><input type="number" id="partHgt" value="0" oninput="processTankData(); savePrices();"></div>
+                            <div class="form-group" style="flex:1; min-width:100px;"><label>Pos. (Panels)</label><input type="number" id="partPos" value="1" min="1" oninput="processTankData(); savePrices();" title="Number of panels from the edge to place the partition"></div>
+                            <div class="form-group" style="flex:1.5; min-width:120px;"><label>Type</label><input type="text" id="partType" placeholder="e.g. Divider" oninput="processTankData(); savePrices();"></div>
+                        </div>
+                    </div>
+
+                    <div id="tank2Section" style="display: none; margin-top: 25px; border-top: 2px solid #cbd5e1; padding-top: 15px;">
+                        <div class="tank-section-title" style="background:#fef3c7; border-left:4px solid #10b981;">Tank 2 Specifications</div>
+                        <div class="config-grid" style="margin-bottom:15px;">
+                            <div class="form-group"><label>Tank 2 Standard</label><select id="stdChoice2" onchange="savePrices(); processTankData();"><option>SANS 10329:2020 Approved by SIRIM & SPAN</option><option>SS 22: 1979</option><option>Other</option></select></div>
+                            <div class="form-group"><label>Tank 2 Material / Finish</label><select id="coatChoice2" onchange="savePrices(); processTankData();"><option>Hot Dipped Galvanised</option><option>Painted Steel</option><option>Stainless Steel (SS 304)</option><option>Stainless Steel (SS 316)</option></select></div>
+                        </div>
+                        <div class="dim-grid">
+                            <div class="form-group"><label>Tank Length</label><input type="number" id="length2" value="8" oninput="processTankData(); savePrices();"></div>
+                            <div class="form-group"><label>Tank Width</label><input type="number" id="width2" value="4" oninput="processTankData(); savePrices();"></div>
+                            <div class="form-group"><label>Tank Height</label><input type="number" id="height2" value="4" oninput="processTankData(); savePrices();"></div>
+                        </div>
+                        
+                        <div class="config-grid" style="margin-bottom:15px;">
+                            <div class="form-group" style="grid-column: span 2;"><label>Tank 2 Partition</label><select id="partChoice2" onchange="togglePartitionDetails(); processTankData();"><option value="no">No Partition</option><option value="yes">Yes (Internal Wall)</option></select></div>
+                        </div>
+                        <div id="partitionDetailsRow2" style="display: none; background: #fff7ed; padding: 15px; border: 1px dashed #fdba74; border-radius: 8px; margin-bottom: 15px;">
+                            <div style="display:flex; gap:15px; flex-wrap:wrap;">
+                                <div class="form-group" style="flex:0.6;"><label>Part. Qty</label><input type="number" id="partQty2" value="0" min="0" oninput="processTankData(); savePrices();"></div>
+                                <div class="form-group" style="flex:1;"><label>Part. L/W (<span class="unitLabel">Ft</span>)</label><input type="number" id="partLen2" value="0" oninput="processTankData(); savePrices();"></div>
+                                <div class="form-group" style="flex:1;"><label>Part. Height (<span class="unitLabel">Ft</span>)</label><input type="number" id="partHgt2" value="0" oninput="processTankData(); savePrices();"></div>
+                                <div class="form-group" style="flex:1; min-width:100px;"><label>Pos. (Panels)</label><input type="number" id="partPos2" value="1" min="1" oninput="processTankData(); savePrices();" title="Number of panels from the edge to place the partition"></div>
+                                <div class="form-group" style="flex:2;"><label>Partition Type</label><input type="text" id="partType2" placeholder="e.g. Divider" oninput="processTankData(); savePrices();"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tank-section-title" style="margin-top: 25px; border-left:4px solid #ea580c;">Global Panel Thicknesses</div>
+                    <div style="background: #f8fafc; padding:15px; border-radius:6px; border:1px solid #e2e8f0; margin-bottom: 15px;">
+                        <div class="dim-grid" style="margin-bottom: 0;">
+                            <div class="form-group"><label>Roof Thick.</label><input type="text" id="thickRoof" value="1.5mm" oninput="syncPrintHeader(); processTankData(); savePrices();"></div>
+                            <div class="form-group"><label>Base Thick.</label><input type="text" id="thickBase" value="4.5mm" oninput="syncPrintHeader(); processTankData(); savePrices();"></div>
+                            <div class="form-group"><label>Wall L1 Thick.</label><input type="text" id="thickWallL1" value="4.5mm" oninput="syncPrintHeader(); processTankData(); savePrices();"></div>
+                        </div>
+                        <div class="dim-grid" style="margin-top: 15px; margin-bottom: 0;">
+                            <div class="form-group"><label>Wall L2 Thick.</label><input type="text" id="thickWallL2" value="3.0mm" oninput="syncPrintHeader(); processTankData(); savePrices();"></div>
+                            <div class="form-group"><label>Wall L3 Thick.</label><input type="text" id="thickWallL3" value="3.0mm" oninput="syncPrintHeader(); processTankData(); savePrices();"></div>
+                            <div class="form-group"><label>Wall L4 Thick.</label><input type="text" id="thickWallL4" value="1.5mm" oninput="syncPrintHeader(); processTankData(); savePrices();"></div>
+                        </div>
+                    </div>
+
+                    <button class="action-btn" onclick="processTankData()" style="width:100%; background: #0f172a; margin-top: 10px;">⚙️ Calculate Internal BOM</button>
+                </div>
+                
+                <div class="module-card internal-hide no-print">
+                    <div class="card-header"><span>💰</span> 3. Commercial Terms & Formatting</div>
+                    
+                    <div class="dim-grid" style="background: #ecfdf5; padding:15px; border-radius:8px; border:2px solid #10b981; margin-bottom:15px;">
+                        <div class="form-group"><label style="color:#047857;">Profit Mark-Up (%)</label><input type="number" id="markupPct" value="0" oninput="calcTotals(); savePrices();" style="border-color:#10b981; font-size: 16px; color: #047857; font-weight: 800;"></div>
+                        <div class="form-group"><label>Discount (%)</label><input type="number" id="discountPct" value="0" oninput="calcTotals(); savePrices();"></div>
+                        <div class="form-group"><label>SST Tax (%)</label><input type="number" id="sstPct" value="5" oninput="calcTotals(); savePrices();"></div>
+                    </div>
+
+                    <div class="config-grid" style="background: #f8fafc; padding:15px; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:15px;">
+                        <div class="form-group" style="grid-column: span 2;"><label>Quotation Validity</label><input type="text" id="tcValidity" value="14 Days from the date of quotation, subject to stock availability and our confirmation." oninput="syncPrintHeader(); savePrices();"></div>
+                        <div class="form-group" style="grid-column: span 2;"><label>Delivery Lead-time</label><input type="text" id="tcLead" value="6 - 10 weeks from official confirmation order, non-refundable down payment received and all technical details in good order. (NO Retention sump and LAD will be entertained)" oninput="syncPrintHeader(); savePrices();"></div>
+                        <div class="form-group" style="grid-column: span 2;"><label>Delivery Location</label><input type="text" id="tcDelivery" value="Deliver to site exclude unloading, materials handling at site and hoisting." oninput="syncPrintHeader(); savePrices();"></div>
+                        <div class="form-group" style="grid-column: span 2;"><label>Payment Terms (Each line gets underlined on PDF)</label><textarea id="tcPayment" rows="3" oninput="syncPrintHeader(); savePrices();">30% down payment upon confirmation of order
+50% payment before delivery
+20% after testing and commissioning (no retention)</textarea></div>
+                        <div class="form-group"><label>Sign-off Name</label><input type="text" id="signName" value="LEE JL" oninput="syncPrintHeader(); savePrices();"></div>
+                        <div class="form-group"><label>Sign-off Phone</label><input type="text" id="signPhone" value="019-2215558" oninput="syncPrintHeader(); savePrices();"></div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label>Short Exclusions (Prints in Box on Page 2)</label>
+                        <textarea id="shortExclusions" rows="5" oninput="syncPrintHeader(); savePrices();">- Float valve chamber or top sumps
+- Flanges, nozzles, pipes, vortex, valves, electrode sensor, pumps and filter.
+- Scaffolding
+- Unloading and hoisting of materials.
+- HIRARC, permit application, medical test and site safety supervisor.</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Full Document T&C (Prints on Page 2)</label>
+                        <textarea id="fullTermsNotes" rows="12" oninput="syncPrintHeader(); savePrices();">Scope of Supply
+1. Standard tank accessories such as bolt, nut, washer, foam tape, air vent, 600x600mm access manhole, internal stays & brackets, internal & external ladder, water level indicator, subject to manufacturer's design and standard and item mentioned in quotation.
+2. Pipe hole opening at factory (Exclude flange). Pipe hole opening on site will be an additional charge.
+
+Excluded from the Supply
+1. Float valve chamber or top sump.
+2. Flanges, nozzles, pipes, valves, vortex, electrode sensor, pumps and filter.
+3. RC works and RC plinths.
+4. Scaffolding & safety platform for installation.
+5. Unloading, shifting and hoisting of materials at site.
+6. Safety training courses, equipment and medical test require to install tank.
+7. Design calculation report (Subject to additional charges if request)
+8. Water tank cleaning after installation
+9. Water supply for testing
+
+Note:
+1. Tank design to sit on 1M Center to center RC tank support/Plinths with at least 500mm height and 200mm width. Design to be provided by others.
+2. RC plinths MUST be level with maximum tolerance of ± 3mm.
+3. Leak test should be done within 3 months from completion of tank installation to maintain the quality of foam tape.
+4. The customer shall be responsible for the security of materials at site after delivery. Missing item shall be replaced with additional charges.
+5. The customer should arrange manpower/equipment/machine to unload the materials from lorry and transfer/hoist to the RC plinths area.
+6. Is responsible of customer to make sure RC plinths are level before call for delivery and installation.
+7. For installation of Elevated tank, the customer shall provide, at its own expense, equipment to ensure workers' safety. Customer shall provide working at height equipment such as boom lift, hoisting crane, erection of scaffolding and platform and any other equipment deemed necessaries.
+8. Additional charges will be imposed for projects with excessive work site requirements. Customer shall pre-empt on all the excessive/additional work site requirements before request for quotation or confirming the order.
+9. Delivery and installation time: Monday to Saturday, 8am to 5pm. Additional charges will be imposed if requested to deliver or install tank out of above working hours or Public Holidays.
+10. Upon PO received, the delivery and installation of tank shall be done within 6 months. Any date extension will be subjected to price revision and storage charges.</textarea>
+                    </div>
+                </div>
+
+                <div class="module-card" id="bomCard">
+                    <div class="card-header bom-title">
+                        <div><span>⚙️</span> INTERNAL BOM <span id="bomTitle1" style="color:#1e293b;"></span></div>
+                        <button class="reset-btn no-print" onclick="resetDefaultPrices()">↺ Reset Defaults</button>
+                    </div>
+                    <table id="bomTable">
+                        <thead><tr>
+                            <th class="col-item text-left">Item Description</th>
+                            <th class="col-qty text-center">Qty</th>
+                            <th class="col-wt text-center">Wt (kg)</th>
+                            <th class="col-uprice text-right">Unit Cost</th>
+                            <th class="col-itotal text-right">Total Cost</th>
+                        </tr></thead>
+                        <tbody id="bomBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="module-card" id="bomCard2" style="display:none;">
+                    <div class="card-header bom-title">
+                        <div><span>⚙️</span> INTERNAL BOM - TANK 2</div>
+                    </div>
+                    <table id="bomTable2">
+                        <thead><tr>
+                            <th class="col-item text-left">Item Description</th>
+                            <th class="col-qty text-center">Qty</th>
+                            <th class="col-wt text-center">Wt (kg)</th>
+                            <th class="col-uprice text-right">Unit Cost</th>
+                            <th class="col-itotal text-right">Total Cost</th>
+                        </tr></thead>
+                        <tbody id="bomBody2"></tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="col-right">
+                
+                <div style="position: sticky; top: 20px;">
+                    <div class="summary-box no-print">
+                        <div class="sum-row"><span>Standard:</span> <span id="sumStd">-</span></div>
+                        <div class="sum-row"><span>Units:</span> <span id="sumUnit">-</span></div>
+                        <div class="sum-row"><span>Material:</span> <span id="sumCoat">-</span></div>
+                        <div class="sum-row"><span>Partition:</span> <span id="sumPart">-</span></div>
+                        <div class="sum-row" style="color:#38bdf8; font-weight:700;"><span>Est. Capacity:</span> <span id="sumCapacity_screen">0 L</span></div>
+                        <div class="sum-row" style="color:#fdba74; font-weight:700;"><span>Est. Total Weight:</span> <span id="sumWeight_screen">0 kg</span></div>
+                        <hr style="border: 1px solid rgba(255,255,255,0.15); margin: 15px 0;">
+                        <div class="sum-row"><span>Base Cost:</span> <span>RM <span id="sumBaseCost_screen">0.00</span></span></div>
+                        <div class="sum-row" style="color: #34d399; font-weight: bold;"><span>Mark-Up:</span> <span>+ RM <span id="sumMarkup_screen">0.00</span></span></div>
+                        <div class="sum-row" style="font-weight:700;"><span>Gross Subtotal:</span> <span>RM <span id="sumSubtotal_screen">0.00</span></span></div>
+                        <div class="sum-row"><span>Discount:</span> <span style="color: #fbbf24;">- RM <span id="sumDiscount_screen">0.00</span></span></div>
+                        <div class="sum-row"><span>SST Tax:</span> <span>+ RM <span id="sumSST_screen">0.00</span></span></div>
+                        <div class="sum-row total"><span>GRAND TOTAL:</span> <span>RM <span id="grandTotal_screen">0.00</span></span></div>
+                    </div>
+
+                    <div class="btn-group no-print" style="margin-bottom: 25px;">
+                        <button class="action-btn export-btn" onclick="exportCSV()">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2-2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            Export
+                        </button>
+                        <button class="action-btn print-btn" style="background: #334155;" onclick="printInternal()">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                            Internal
+                        </button>
+                        <button class="action-btn print-btn" onclick="printCustomer()">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                            Customer
+                        </button>
+                    </div>
+
+                    <div class="module-card no-print" style="margin-bottom:20px;">
+                        <div class="card-header" style="font-size: 1em;">Tank 1 Assembly Draft</div>
+                        <div class="visual-container" id="visualsArea">
+                            <div class="view-box"><div class="view-title">Top</div><div id="topGrid" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Front</div><div id="frontGrid" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Left</div><div id="leftGrid" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Back</div><div id="backGrid" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Right</div><div id="rightGrid" class="grid-draft"></div></div>
+                        </div>
+                    </div>
+                    
+                    <div class="module-card no-print" id="tank2VisualsCard" style="display:none;">
+                        <div class="card-header" style="font-size: 1em;">Tank 2 Assembly Draft</div>
+                        <div class="visual-container">
+                            <div class="view-box"><div class="view-title">Top</div><div id="topGrid2" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Front</div><div id="frontGrid2" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Left</div><div id="leftGrid2" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid2" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Back</div><div id="backGrid2" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Right</div><div id="rightGrid2" class="grid-draft"></div></div>
+                        </div>
+                    </div>
+
+                </div> </div>
+        </div>
+
+        <div class="clearfix print-only" id="internalPrintFooter">
+            <div class="summary-box">
+                <table class="summary-table">
+                    <tr><td style="text-align:left;">Est. Capacity:</td><td style="text-align:right;" id="sumCapacity_print">0 L</td></tr>
+                    <tr><td style="text-align:left;">Est. Total Wt:</td><td style="text-align:right;" id="sumWeight_print">0 kg</td></tr>
+                    <tr class="border-top"><td style="text-align:left;">Base Cost:</td><td style="text-align:right;">RM <span id="sumBaseCost_print">0.00</span></td></tr>
+                    <tr><td style="text-align:left;">Mark-Up:</td><td style="text-align:right; color:#059669;">+ RM <span id="sumMarkup_print">0.00</span></td></tr>
+                    <tr><td style="text-align:left;">Gross Subtotal:</td><td style="text-align:right; font-weight:800;">RM <span id="sumSubtotal_print">0.00</span></td></tr>
+                    <tr><td style="text-align:left;">Discount:</td><td style="text-align:right; color:#b91c1c;">- RM <span id="sumDiscount_print">0.00</span></td></tr>
+                    <tr class="border-bottom"><td style="text-align:left;">SST Tax:</td><td style="text-align:right;">+ RM <span id="sumSST_print">0.00</span></td></tr>
+                    <tr class="grand-total-row"><td style="text-align:left;">GRAND TOTAL:</td><td style="text-align:right;">RM <span id="grandTotal_print">0.00</span></td></tr>
+                </table>
+            </div>
+            
+            <div class="tank-section-title">Tank 1 Drafts</div>
+            <div class="visual-container">
+                <div class="view-box"><div class="view-title">Top</div><div id="topGrid_p" class="grid-draft"></div></div>
+                <div class="view-box"><div class="view-title">Front</div><div id="frontGrid_p" class="grid-draft"></div></div>
+                <div class="view-box"><div class="view-title">Left</div><div id="leftGrid_p" class="grid-draft"></div></div>
+                <div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid_p" class="grid-draft"></div></div>
+                <div class="view-box"><div class="view-title">Back</div><div id="backGrid_p" class="grid-draft"></div></div>
+                <div class="view-box"><div class="view-title">Right</div><div id="rightGrid_p" class="grid-draft"></div></div>
+            </div>
+            
+            <div id="tank2VisualsPrint" style="display:none;">
+                <div class="tank-section-title" style="margin-top:15px;">Tank 2 Drafts</div>
+                <div class="visual-container">
+                    <div class="view-box"><div class="view-title">Top</div><div id="topGrid2_p" class="grid-draft"></div></div>
+                    <div class="view-box"><div class="view-title">Front</div><div id="frontGrid2_p" class="grid-draft"></div></div>
+                    <div class="view-box"><div class="view-title">Left</div><div id="leftGrid2_p" class="grid-draft"></div></div>
+                    <div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid2_p" class="grid-draft"></div></div>
+                    <div class="view-box"><div class="view-title">Back</div><div id="backGrid2_p" class="grid-draft"></div></div>
+                    <div class="view-box"><div class="view-title">Right</div><div id="rightGrid2_p" class="grid-draft"></div></div>
+                </div>
+            </div>
+            
+            <div class="print-footer" id="internalSig">
+                <div class="sig-box">
+                    <p>Prepared By:</p>
+                    <div class="sig-line"></div>
+                    <p><strong>JUTARAMA INDUSTRIES (M) SDN BHD</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="customerPrintView">
+    
+    <div class="print-header" style="display:flex; align-items:center; border-bottom: 4px solid #ea580c; padding-bottom: 10px; margin-bottom: 15px;">
+        <div class="header-left" style="margin-right: 20px;">
+            <img src="winko logo.png" alt="Winko Logo" style="width:140px; height:auto; object-fit:contain;">
+        </div>
+        <div class="header-text" style="flex:1;">
+            <h2 style="margin:0 0 5px 0; font-size:16pt; font-weight:800; color:#0f172a;">JUTARAMA INDUSTRIES (M) SDN. BHD. <span style="font-size:12pt; font-weight:normal;">(749861-V)</span></h2>
+            <p style="margin:2px 0; font-size:9pt; color:#475569;">No. 19, Jalan Mega 2/1, Kawasan Perindustrian Mega 2, 43500 Semenyih, Selangor, Malaysia.</p>
+            <p style="margin:2px 0; font-size:9pt; color:#475569;">Tel: (60)-8727 7540 &nbsp;&nbsp;|&nbsp;&nbsp; Email: sales@winko.my &nbsp;&nbsp;|&nbsp;&nbsp; Web: www.winko.my</p>
+        </div>
+    </div>
+
+    <div class="cp-meta-layout">
+        <div class="cp-meta-left">
+            <table>
+                <tr><td>Customer</td><td>: <strong id="cpCustName"></strong></td></tr>
+                <tr><td>Address</td><td>: <span id="cpCustAddress"></span></td></tr>
+                <tr><td style="padding-top:10px;">Attention</td><td style="padding-top:10px;">: <span id="cpAttention"></span></td></tr>
+                <tr><td style="padding-top:10px;">Project</td><td style="padding-top:10px;">: <span id="cpProject"></span></td></tr>
+            </table>
+        </div>
+        <div class="cp-meta-center">
+            <div class="cp-quotation-box">QUOTATION</div>
+        </div>
+        <div class="cp-meta-right">
+            <table>
+                <tr><td>Date</td><td>: <strong id="cpDate"></strong></td></tr>
+                <tr><td>Our Ref</td><td>: <strong id="cpRef"></strong></td></tr>
+            </table>
+        </div>
+    </div>
+
+    <p style="font-size: 9pt; margin-bottom: 10px;">With reference to your enquiry, we are pleased to provide our quotation for the following tanks:-</p>
+    <p style="font-size: 9pt; font-weight: bold; text-decoration: underline; margin-bottom: 10px;">RE: SUPPLY, DELIVER AND INSTALL PRESSED STEEL TANK</p>
+
+    <table class="cp-table">
+        <thead>
+            <tr>
+                <th style="width:6%;">Item</th>
+                <th style="width:50%;">Description</th>
+                <th style="width:14%;">Unit Price<br>(RM)</th>
+                <th style="width:10%;">Qty<br>(unit)</th>
+                <th style="width:20%;">Total Price<br>(RM)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="cpTank1Row">
+                <td class="td-center" style="font-weight:bold; padding-top:8px;">1</td>
+                <td style="padding-top:8px; padding-bottom: 8px; line-height:1.4;">
+                    <strong>Supply and Install New <span id="cpMaterial"></span> Pressed Steel Tank Size: <span id="cpDims"></span></strong><br>
+                    Comply to <span id="cpStd"></span><br>
+                    <table style="border:none; width:100%; font-size:8.5pt; margin-top:2px;">
+                        <tr>
+                            <td style="width:20px; border:none; padding:1px;">a)</td>
+                            <td style="width:75px; border:none; padding:1px;">Thickness:</td>
+                            <td style="width:50px; border:none; padding:1px;">Roof</td>
+                            <td style="border:none; padding:1px;">: <span id="cpThickRoof"></span></td>
+                        </tr>
+                        <tr><td style="border:none; padding:1px;"></td><td style="border:none; padding:1px;"></td><td style="border:none; padding:1px;">Base</td><td style="border:none; padding:1px;">: <span id="cpThickBase"></span></td></tr>
+                        <tr><td style="border:none; padding:1px;"></td><td style="border:none; padding:1px;"></td><td style="border:none; padding:1px;">Wall</td><td style="border:none; padding:1px;">: <span id="cpThickWall"></span></td></tr>
+                        
+                        <tr>
+                            <td style="border:none; padding:1px; vertical-align:top;">b)</td>
+                            <td style="border:none; padding:1px; vertical-align:top;" colspan="3">Ladders: &nbsp;&nbsp;&nbsp; <span id="cpLaddersInt"></span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="cpLaddersExt"></span></td>
+                        </tr>
+                        
+                        <tr><td style="border:none; padding:1px;">c)</td><td style="border:none; padding:1px;" colspan="3">Water Level Indicator: &nbsp;&nbsp;&nbsp; <span id="cpWLI"></span></td></tr>
+                        <tr id="cpPartRow"><td style="border:none; padding:1px;">d)</td><td style="border:none; padding:1px;" colspan="3">Partition: &nbsp;&nbsp;&nbsp; <span id="cpPartSection"></span></td></tr>
+                        <tr><td style="border:none; padding:1px;">e)</td><td style="border:none; padding:1px;" colspan="3">Tank to be sit on existing I-Beam or RC plinths (to be provided by client)</td></tr>
+                        <tr><td style="border:none; padding:1px;">f)</td><td style="border:none; padding:1px;" colspan="3">Exclude flanges, nozzles, vortex inhibitor, pipe works valves and etc..</td></tr>
+                    </table>
+                </td>
+                <td class="td-right" style="padding-top:8px;" id="cpUnitPrice"></td>
+                <td class="td-center" style="padding-top:8px;" id="cpNumTanks">1</td>
+                <td class="td-right" style="padding-top:8px;" id="cpTotalPrice"></td>
+            </tr>
+
+            <tr id="cpTank2Row" style="display:none;">
+                <td class="td-center" style="font-weight:bold; padding-top:8px;">2</td>
+                <td style="padding-top:8px; padding-bottom: 8px; line-height:1.4;">
+                    <strong>Supply and Install New <span id="cpMaterial2"></span> Pressed Steel Tank Size: <span id="cpDims2"></span></strong><br>
+                    Comply to <span id="cpStd2"></span><br>
+                    <table style="border:none; width:100%; font-size:8.5pt; margin-top:2px;">
+                        <tr>
+                            <td style="width:20px; border:none; padding:1px;">a)</td>
+                            <td style="width:75px; border:none; padding:1px;">Thickness:</td>
+                            <td style="width:50px; border:none; padding:1px;">Roof</td>
+                            <td style="border:none; padding:1px;">: <span id="cpThickRoof2"></span></td>
+                        </tr>
+                        <tr><td style="border:none; padding:1px;"></td><td style="border:none; padding:1px;"></td><td style="border:none; padding:1px;">Base</td><td style="border:none; padding:1px;">: <span id="cpThickBase2"></span></td></tr>
+                        <tr><td style="border:none; padding:1px;"></td><td style="border:none; padding:1px;"></td><td style="border:none; padding:1px;">Wall</td><td style="border:none; padding:1px;">: <span id="cpThickWall2"></span></td></tr>
+                        
+                        <tr>
+                            <td style="border:none; padding:1px; vertical-align:top;">b)</td>
+                            <td style="border:none; padding:1px; vertical-align:top;" colspan="3">Ladders: &nbsp;&nbsp;&nbsp; <span id="cpLaddersInt2"></span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="cpLaddersExt2"></span></td>
+                        </tr>
+                        
+                        <tr><td style="border:none; padding:1px;">c)</td><td style="border:none; padding:1px;" colspan="3">Water Level Indicator: &nbsp;&nbsp;&nbsp; <span id="cpWLI2"></span></td></tr>
+                        <tr id="cpPartRow2"><td style="border:none; padding:1px;">d)</td><td style="border:none; padding:1px;" colspan="3">Partition: &nbsp;&nbsp;&nbsp; <span id="cpPartSection2"></span></td></tr>
+                        <tr><td style="border:none; padding:1px;">e)</td><td style="border:none; padding:1px;" colspan="3">Tank to be sit on existing I-Beam or RC plinths (to be provided by client)</td></tr>
+                        <tr><td style="border:none; padding:1px;">f)</td><td style="border:none; padding:1px;" colspan="3">Exclude flanges, nozzles, vortex inhibitor, pipe works valves and etc..</td></tr>
+                    </table>
+                </td>
+                <td class="td-right" style="padding-top:8px;" id="cpUnitPrice2"></td>
+                <td class="td-center" style="padding-top:8px;">1</td>
+                <td class="td-right" style="padding-top:8px;" id="cpTotalPrice2"></td>
+            </tr>
+
+            <tr>
+                <td colspan="2" style="border-right:none; border-bottom:none;"></td>
+                <td colspan="2" class="td-right" style="border-left:none; border-bottom:none;">SST <span id="cpSstPct"></span>%</td>
+                <td class="td-right" style="border-bottom:none;" id="cpSstAmt"></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="border:none;"></td>
+                <td colspan="2" style="border-left:none; border-top:none; border-bottom:none;"></td>
+                <td class="td-right" style="font-weight:bold; border-top: 1px solid black; border-bottom: 4px double black; padding-top:8px; padding-bottom:8px; font-size:10pt;" id="cpGrandTotal"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="page-break-section">
+        
+        <div class="cp-short-exclusions">
+            <div class="label">Exclusion</div>
+            <div class="content" id="cpShortExclusionsText"></div>
+        </div>
+
+        <div class="cp-full-terms" id="cpFullTermsText"></div>
+
+        <div class="cp-tnc">
+            <div class="cp-tnc-title">TERMS & CONDITIONS :-</div>
+            <table style="margin-top:10px;">
+                <tr>
+                    <td style="width:130px; font-weight:bold; vertical-align:top;">Quotation Validity:</td>
+                    <td id="cpValidity"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold; vertical-align:top; padding-top:6px;">Terms of Payment:</td>
+                    <td id="cpPayment" style="padding-top:6px; line-height:1.4;"></td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold; vertical-align:top; padding-top:6px;">Delivery Lead Time:</td>
+                    <td style="padding-top:6px;"><span id="cpLeadTime"></span></td>
+                </tr>
+                <tr>
+                    <td style="font-weight:bold; vertical-align:top; padding-top:6px;">Delivery Location:</td>
+                    <td style="padding-top:6px;"><span id="cpDeliveryTerm" style="border-bottom:1px solid #000;"></span></td>
+                </tr>
+            </table>
+        </div>
+
+        <p style="font-size: 8.5pt; color: #000; margin-top: 15px; margin-bottom: 20px;">We trusted that our quotation meets with your expectations. Should you have any further queries, please do not hesitate to call on us. We thank you for the opportunity to quote, and remain.</p>
+        
+        <div class="cp-signoff">
+            <div class="cp-signoff-left">
+                <p>Best Regards & Thank you.</p>
+                <p style="font-weight:bold; margin-bottom: 40px;">JUTARAMA INDUSTRIES (M) SDN BHD</p>
+                <p style="font-weight:bold; text-decoration:underline;" id="cpSignName"></p>
+                <p id="cpSignPhone"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- SECURITY LOGIC ---
+    const SECRET_PASSWORD = "Winko2026";
+    const ADMIN_PASSWORD = "AdminMaster99";
+
+    function checkPassword() {
+        let pass = document.getElementById('passInput').value;
+        if(pass === SECRET_PASSWORD) {
+            document.getElementById('securityOverlay').style.display='none';
+            document.getElementById('mainContent').style.display='block';
+            
+            if(!document.getElementById('quoteIdInput').value) {
+                const d = new Date();
+                document.getElementById('quoteIdInput').value = "QP-" + d.getFullYear().toString().substr(-2) + "-00" + Math.floor(Math.random() * 9 + 1);
+            }
+            
+            refreshMemoryDropdown();
+            processTankData(); 
+        } else if (pass === ADMIN_PASSWORD) {
+            document.getElementById('securityOverlay').style.display='none';
+            document.getElementById('adminContent').style.display='block';
+            buildAdminTable();
+        } else {
+            alert("Incorrect Password");
+        }
+    }
+
+    // --- PRINT TOGGLE LOGIC ---
+    function printInternal() {
+        try {
+            document.body.className = 'print-internal';
+            syncPrintHeader();
+            
+            const grids = ['top', 'front', 'left', 'bottom', 'back', 'right'];
+            grids.forEach(prefix => {
+                let s1 = document.getElementById(prefix + 'Grid'); let t1 = document.getElementById(prefix + 'Grid_p');
+                if(s1 && t1) { t1.innerHTML = s1.innerHTML; t1.style.gridTemplateColumns = s1.style.gridTemplateColumns; }
+                
+                let s2 = document.getElementById(prefix + 'Grid2'); let t2 = document.getElementById(prefix + 'Grid2_p');
+                if(s2 && t2) { t2.innerHTML = s2.innerHTML; t2.style.gridTemplateColumns = s2.style.gridTemplateColumns; }
+            });
+            
+            setTimeout(() => { window.print(); }, 300);
+        } catch(e) { alert("Internal Print Error: " + e.message); }
+    }
+    
+    function printCustomer() {
+        try {
+            document.body.className = 'print-customer';
+            syncPrintHeader(); 
+            setTimeout(() => { window.print(); }, 300);
+        } catch(e) { alert("Customer Print Error: " + e.message); }
+    }
+
+    window.addEventListener('afterprint', () => { document.body.className = ''; });
+
+    // --- TIME & UI LOGIC ---
+    function updateClock() {
+        const now = new Date();
+        const str = now.toLocaleDateString('en-MY').replace(/\//g, '-');
+        const elements = ['liveClock', 'metaDate', 'cpDate'];
+        for(let i=0; i<elements.length; i++) {
+            let el = document.getElementById(elements[i]);
+            if(el) {
+                if(elements[i] === 'liveClock') el.innerText = str + " " + now.toLocaleTimeString('en-MY');
+                else el.innerText = str;
+            }
+        }
+    }
+    setInterval(updateClock, 1000); updateClock();
+
+    function updateLabels() {
+        let uChoice = document.getElementById('unitChoice');
+        const unit = (uChoice && uChoice.value === 'ft') ? 'Ft' : 'Meter';
+        let labels = document.querySelectorAll('.unitLabel');
+        for(let i=0; i<labels.length; i++) {
+            labels[i].innerText = unit;
+        }
+    }
+    
+    function toggleTank2() {
+        let nTanks = document.getElementById('numTanks');
+        const numTanks = nTanks ? nTanks.value : "1";
+        
+        let t2Sec = document.getElementById('tank2Section');
+        let t2VisCard = document.getElementById('tank2VisualsCard');
+        let t2VisPrint = document.getElementById('tank2VisualsPrint');
+        let cpNum = document.getElementById('cpNumTanks');
+        let bCard2 = document.getElementById('bomCard2');
+
+        if(numTanks === "2") {
+            if(t2Sec) t2Sec.style.display = 'block';
+            if(t2VisCard) t2VisCard.style.display = 'block';
+            if(t2VisPrint) t2VisPrint.style.display = 'block';
+            if(cpNum) cpNum.innerText = "1 LOT"; 
+            if(bCard2) bCard2.style.display = 'block'; 
+        } else {
+            if(t2Sec) t2Sec.style.display = 'none';
+            if(t2VisCard) t2VisCard.style.display = 'none';
+            if(t2VisPrint) t2VisPrint.style.display = 'none';
+            if(cpNum) cpNum.innerText = "1";
+            if(bCard2) bCard2.style.display = 'none'; 
+        }
+        togglePartitionDetails();
+    }
+
+    function togglePartitionDetails() {
+        let pChoice1 = document.getElementById('partChoice');
+        let partChoice = pChoice1 ? pChoice1.value : 'no';
+        let detailsRow = document.getElementById('partitionDetailsRow');
+        let pQty1 = document.getElementById('partQty');
+        
+        if(partChoice === 'yes') { 
+            if(detailsRow) detailsRow.style.display = 'flex'; 
+        } else { 
+            if(detailsRow) detailsRow.style.display = 'none'; 
+            if(pQty1) pQty1.value = 0; 
+        }
+        
+        let pChoice2 = document.getElementById('partChoice2');
+        let partChoice2 = pChoice2 ? pChoice2.value : 'no';
+        let detailsRow2 = document.getElementById('partitionDetailsRow2');
+        let pQty2 = document.getElementById('partQty2');
+
+        if(partChoice2 === 'yes') { 
+            if(detailsRow2) detailsRow2.style.display = 'flex'; 
+        } else { 
+            if(detailsRow2) detailsRow2.style.display = 'none'; 
+            if(pQty2) pQty2.value = 0; 
+        }
+    }
+
+    // --- FULL BOM STRUCTURE ---
+    const systemBaseStructure = [
+        { category: "Panels", items: [
+            {name: "Manhole Panel", def: 450, wt: 45}, 
+            {name: "Roof Panel", def: 220, wt: 25}, 
+            {name: "Base Panel", def: 350, wt: 65}, 
+            {name: "Wall Panel (L1)", def: 350, wt: 65}, 
+            {name: "Wall Panel (L2)", def: 280, wt: 45},
+            {name: "Wall Panel (L3)", def: 220, wt: 25},
+            {name: "Wall Panel (L4)", def: 220, wt: 25},
+            {name: "Partition Panel", def: 280, wt: 45}
+        ]},
+        { category: "Cleat & Trusses", items: [
+            {name: "Type A Cleat", def: 25, wt: 1}, {name: "Type B Cleat", def: 28, wt: 1.5}, {name: "Type C Cleat", def: 30, wt: 2},
+            {name: "Ø1\" Pipe", def: 12, wt: 1.5}, {name: "2\" x 2\" angle", def: 15, wt: 2}
+        ]},
+        { category: "Angle Stay", items: [
+            {name: "44 1/4\"", def: 45, wt: 5}, {name: "67\"", def: 65, wt: 8}, {name: "11' 3\"", def: 95, wt: 15}, {name: "15' 8.5\"", def: 125, wt: 20}
+        ]},
+        { category: "Accessories", items: [
+            {name: "Ext. Ladder", def: 55, wt: 2, selectId: "extLadMat", options: ["HDG", "SS 304", "SS 316"]}, 
+            {name: "Int. Ladder", def: 75, wt: 2, selectId: "intLadMat", options: ["HDG", "SS 304", "SS 316"]}, 
+            {name: "Water Level Indicator", def: 220, wt: 3, selectId: "wliType", options: ["Ball Float", "Tube Type"]}, 
+            {name: "Air Vent", def: 85, wt: 2, selectId: "ventType", options: ["HDG Steel", "ABS Plastic"]},
+            {name: "Mastic Sealant (Rolls)", def: 38, wt: 0.5}, 
+            {name: "Bolt & Nut Sets", def: 1.60, wt: 0.1}
+        ]},
+        { category: "Services", items: [
+            {name: "Installation & Labor", def: 3500, wt: 0}, 
+            {name: "Transport", def: 850, wt: 0}
+        ]}
+    ];
+
+    let masterDefaults = JSON.parse(localStorage.getItem('winkoMasterDefaults'));
+    if(masterDefaults) {
+        masterDefaults.forEach((sec, sIdx) => {
+            sec.items.forEach((it, iIdx) => {
+                if(systemBaseStructure[sIdx] && systemBaseStructure[sIdx].items[iIdx]) {
+                    systemBaseStructure[sIdx].items[iIdx].name = it.name;
+                    systemBaseStructure[sIdx].items[iIdx].def = it.def;
+                    systemBaseStructure[sIdx].items[iIdx].wt = it.wt;
+                }
+            });
+        });
+    }
+
+    let bomStructure = JSON.parse(JSON.stringify(systemBaseStructure));
+    let customRowCounts = JSON.parse(localStorage.getItem('winkoCustomCounts')) || [0,0,0,0,0];
+
+    const configIDs = ['quoteIdInput', 'numTanks', 'stdChoice','stdChoice2','unitChoice','coatChoice','coatChoice2',
+                       'length','width','height', 'partChoice', 'partQty','partLen','partHgt','partPos','partType',
+                       'length2','width2','height2', 'partChoice2', 'partQty2','partLen2','partHgt2','partPos2','partType2',
+                       'thickRoof', 'thickWallL1', 'thickWallL2', 'thickWallL3', 'thickWallL4', 'thickBase', 'markupPct','discountPct','sstPct', 
+                       'shortExclusions', 'fullTermsNotes', 'custCompany', 'custAttn', 'custAddr', 'tcValidity', 'tcLead', 'tcDelivery', 'tcPayment', 'signName', 'signPhone'];
+
+    // --- ADMIN PANEL LOGIC ---
+    function buildAdminTable() {
+        const tbody = document.getElementById('adminBody');
+        let html = '';
+        systemBaseStructure.forEach((sec, sIdx) => {
+            sec.items.forEach((it, iIdx) => {
+                html += `<tr>
+                    <td style="font-weight:800; background:#f1f5f9; text-align:left;">${sec.category}</td>
+                    <td><input type="text" class="admin-input text-left" id="adm_name_${sIdx}_${iIdx}" value="${it.name}"></td>
+                    <td><input type="number" step="0.1" class="admin-input" id="adm_wt_${sIdx}_${iIdx}" value="${it.wt || 0}"></td>
+                    <td><input type="number" step="0.01" class="admin-input" id="adm_price_${sIdx}_${iIdx}" value="${it.def.toFixed(2)}"></td>
+                </tr>`;
+            });
+        });
+        tbody.innerHTML = html;
+    }
+
+    function saveAdminDefaults() {
+        let newDefaults = JSON.parse(JSON.stringify(systemBaseStructure));
+        newDefaults.forEach((sec, sIdx) => {
+            sec.items.forEach((it, iIdx) => {
+                let elName = document.getElementById(`adm_name_${sIdx}_${iIdx}`);
+                let elWt = document.getElementById(`adm_wt_${sIdx}_${iIdx}`);
+                let elPrice = document.getElementById(`adm_price_${sIdx}_${iIdx}`);
+                if(elName) it.name = elName.value;
+                if(elWt) it.wt = parseFloat(elWt.value) || 0;
+                if(elPrice) it.def = parseFloat(elPrice.value) || 0;
+            });
+        });
+        localStorage.setItem('winkoMasterDefaults', JSON.stringify(newDefaults));
+        alert("Success! Master Defaults have been permanently updated.");
+        location.reload(); 
+    }
+
+    function applyCustomRows() {
+        bomStructure = JSON.parse(JSON.stringify(systemBaseStructure));
+        for(let i=0; i<customRowCounts.length; i++) {
+            for(let j=0; j<customRowCounts[i]; j++) {
+                bomStructure[i].items.push({name: "Custom Added Item", def: 0, wt: 0});
+            }
+        }
+    }
+
+    function addCategoryRow(sIdx) {
+        savePrices(); 
+        customRowCounts[sIdx]++;
+        localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
+        applyCustomRows();
+        buildBOMTable();
+        loadPrices();
+    }
+
+    function removeCategoryRow(sIdx) {
+        if(customRowCounts[sIdx] > 0) {
+            savePrices();
+            customRowCounts[sIdx]--;
+            localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
+            applyCustomRows();
+            buildBOMTable();
+            loadPrices();
+        }
+    }
+
+    function refreshMemoryDropdown() {
+        let memory = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {};
+        let sel = document.getElementById('memoryDropdown');
+        if(sel) {
+            sel.innerHTML = '<option value="">-- Load a Saved Project --</option>';
+            Object.keys(memory).forEach(k => {
+                sel.innerHTML += `<option value="${k}">${k}</option>`;
+            });
+        }
+    }
+
+    function saveToMemory() {
+        let pNameEl = document.getElementById('projectName');
+        if(!pNameEl) return;
+        let pName = pNameEl.value.trim();
+        if(!pName) { alert("Please type a Project Name first to save it."); return; }
+        
+        let data = {};
+        configIDs.forEach(id => { 
+            let el = document.getElementById(id);
+            if(el) data[id] = el.value; 
+        });
+        
+        data.customRowCounts = JSON.parse(JSON.stringify(customRowCounts));
+
+        bomStructure.forEach((sec, sIdx) => {
+            sec.items.forEach((it, iIdx) => {
+                let uId = `item_${sIdx}_${iIdx}`;
+                // T1
+                let d1 = document.getElementById(`desc_${uId}`); if(d1) data[`desc_${uId}`] = d1.value;
+                let w1 = document.getElementById(`wt_${uId}`); if(w1) data[`wt_${uId}`] = w1.value;
+                let p1 = document.getElementById(`price_${uId}`); if(p1) data[`price_${uId}`] = p1.value;
+                let q1 = document.getElementById(`qty_${uId}`); if(q1) data[`qty_${uId}`] = q1.value;
+                if(it.selectId) { let s1 = document.getElementById(it.selectId); if(s1) data[it.selectId] = s1.value; }
+                
+                // T2
+                let d2 = document.getElementById(`desc2_${uId}`); if(d2) data[`desc2_${uId}`] = d2.value;
+                let w2 = document.getElementById(`wt2_${uId}`); if(w2) data[`wt2_${uId}`] = w2.value;
+                let p2 = document.getElementById(`price2_${uId}`); if(p2) data[`price2_${uId}`] = p2.value;
+                let q2 = document.getElementById(`qty2_${uId}`); if(q2) data[`qty2_${uId}`] = q2.value;
+                if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
+            });
+        });
+
+        let memory = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {};
+        memory[pName] = data;
+        localStorage.setItem('winkoMemoryBank', JSON.stringify(memory));
+        alert("Project '" + pName + "' has been saved securely to memory.");
+        refreshMemoryDropdown();
+        let md = document.getElementById('memoryDropdown');
+        if(md) md.value = pName;
+        syncPrintHeader();
+    }
+
+    function loadFromMemory() {
+        let md = document.getElementById('memoryDropdown');
+        if(!md) return;
+        let pName = md.value;
+        if(!pName) return;
+        
+        let memory = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {};
+        let savedData = memory[pName];
+        
+        if (savedData) {
+            customRowCounts = savedData.customRowCounts || [0,0,0,0,0];
+            localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
+            applyCustomRows();
+            buildBOMTable();
+
+            let pn = document.getElementById('projectName');
+            if(pn) pn.value = pName;
+
+            configIDs.forEach(id => {
+                if (savedData[id] !== undefined) {
+                    let el = document.getElementById(id);
+                    if(el) el.value = savedData[id];
+                }
+            });
+            updateLabels();
+            toggleTank2();
+            
+            bomStructure.forEach((sec, sIdx) => {
+                sec.items.forEach((it, iIdx) => {
+                    let uId = `item_${sIdx}_${iIdx}`;
+                    // T1
+                    let d1 = document.getElementById(`desc_${uId}`); if(savedData[`desc_${uId}`] && d1) d1.value = savedData[`desc_${uId}`]; 
+                    let w1 = document.getElementById(`wt_${uId}`); if(savedData[`wt_${uId}`] && w1) w1.value = savedData[`wt_${uId}`]; 
+                    let p1 = document.getElementById(`price_${uId}`); if(savedData[`price_${uId}`] && p1) p1.value = savedData[`price_${uId}`];
+                    let q1 = document.getElementById(`qty_${uId}`); if(savedData[`qty_${uId}`] && q1) q1.value = savedData[`qty_${uId}`];
+                    if(it.selectId) { let s1 = document.getElementById(it.selectId); if(savedData[it.selectId] && s1) s1.value = savedData[it.selectId]; }
+                    
+                    // T2
+                    let d2 = document.getElementById(`desc2_${uId}`); if(savedData[`desc2_${uId}`] && d2) d2.value = savedData[`desc2_${uId}`]; 
+                    let w2 = document.getElementById(`wt2_${uId}`); if(savedData[`wt2_${uId}`] && w2) w2.value = savedData[`wt2_${uId}`]; 
+                    let p2 = document.getElementById(`price2_${uId}`); if(savedData[`price2_${uId}`] && p2) p2.value = savedData[`price2_${uId}`];
+                    let q2 = document.getElementById(`qty2_${uId}`); if(savedData[`qty2_${uId}`] && q2) q2.value = savedData[`qty2_${uId}`];
+                    if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(savedData[`sel2_${it.selectId}`] && s2) s2.value = savedData[`sel2_${it.selectId}`]; }
+                });
+            });
+            
+            processTankData(); 
+        }
+    }
+
+    function deleteFromMemory() {
+        let md = document.getElementById('memoryDropdown');
+        if(!md) return;
+        let pName = md.value;
+        if(!pName) { alert("Select a project from the dropdown to delete."); return; }
+        if(confirm("Are you sure you want to permanently delete '" + pName + "'?")) {
+            let memory = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {};
+            delete memory[pName];
+            localStorage.setItem('winkoMemoryBank', JSON.stringify(memory));
+            refreshMemoryDropdown();
+            let pn = document.getElementById('projectName');
+            if(pn) pn.value = "";
+        }
+    }
+
+    function resetDefaultPrices() {
+        if(confirm("Reset the current board back to the Master Template?")) {
+            customRowCounts = [0,0,0,0,0];
+            localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
+            localStorage.removeItem('winkoProDataV36'); // V36 CACHE BUSTER
+            
+            let pc = document.getElementById('partChoice');
+            if(pc) pc.value = 'no';
+            let nt = document.getElementById('numTanks');
+            if(nt) nt.value = '1';
+            
+            toggleTank2();
+            applyCustomRows();
+            buildBOMTable();
+            
+            let pn = document.getElementById('projectName');
+            if(pn) pn.value = "";
+            processTankData();
+            location.reload(); 
+        }
+    }
+
+    function syncPrintHeader() {
+        try {
+            // Internal Dashboard Meta Sync
+            let metaQ = document.getElementById('metaQuoteId');
+            let qInput = document.getElementById('quoteIdInput');
+            if(metaQ) metaQ.innerText = (qInput && qInput.value) ? qInput.value : "N/A";
+            
+            let metaP = document.getElementById('metaProject');
+            let pInput = document.getElementById('projectName');
+            if(metaP) metaP.innerText = (pInput && pInput.value) ? pInput.value : "_____________________";
+            
+            let metaS = document.getElementById('metaStd');
+            let sInput = document.getElementById('stdChoice');
+            if(metaS) metaS.innerText = (sInput && sInput.value) ? sInput.value : "";
+            
+            let sumStd = document.getElementById('sumStd');
+            if(sumStd && sInput) sumStd.innerText = sInput.value || "-";
+
+            let sumUnit = document.getElementById('sumUnit');
+            let unitChoice = document.getElementById('unitChoice');
+            let u = (unitChoice && unitChoice.value === 'ft') ? 'ft' : 'm';
+            if(sumUnit && unitChoice) {
+                sumUnit.innerText = unitChoice.options[unitChoice.selectedIndex] ? unitChoice.options[unitChoice.selectedIndex].text : "-";
+            }
+
+            let sumCoat = document.getElementById('sumCoat');
+            let coatChoice = document.getElementById('coatChoice');
+            let matStr = (coatChoice && coatChoice.value) ? coatChoice.value : "";
+            if(sumCoat) sumCoat.innerText = matStr || "-";
+
+            let numTanksEl = document.getElementById('numTanks');
+            let numTanks = (numTanksEl && numTanksEl.value) ? numTanksEl.value : "1";
+            
+            let elL1 = document.getElementById('length'); let l1 = (elL1 && elL1.value) ? elL1.value : 0;
+            let elW1 = document.getElementById('width'); let w1 = (elW1 && elW1.value) ? elW1.value : 0;
+            let elH1 = document.getElementById('height'); let h1 = (elH1 && elH1.value) ? elH1.value : 0;
+            let dimsStr = `Tank 1: ${l1}${u} (L) x ${w1}${u} (W) x ${h1}${u} (H)`;
+            
+            if(numTanks === "2") {
+                let elL2 = document.getElementById('length2'); let l2 = (elL2 && elL2.value) ? elL2.value : 0;
+                let elW2 = document.getElementById('width2'); let w2 = (elW2 && elW2.value) ? elW2.value : 0;
+                let elH2 = document.getElementById('height2'); let h2 = (elH2 && elH2.value) ? elH2.value : 0;
+                dimsStr += ` | Tank 2: ${l2}${u} (L) x ${w2}${u} (W) x ${h2}${u} (H)`;
+            }
+            let metaDims = document.getElementById('metaDims');
+            if(metaDims) metaDims.innerText = dimsStr;
+            
+            let metaCoat = document.getElementById('metaCoat');
+            if(metaCoat) metaCoat.innerText = matStr;
+            
+            // Build Partition string
+            let elPQ1 = document.getElementById('partQty'); let pQty1 = (elPQ1 && elPQ1.value) ? parseInt(elPQ1.value) : 0;
+            let elPC1 = document.getElementById('partChoice'); let partChoice1 = (elPC1 && elPC1.value) ? elPC1.value : 'no';
+            let elPT1 = document.getElementById('partType'); let pt1 = (elPT1 && elPT1.value) ? elPT1.value : '';
+            let elPL1 = document.getElementById('partLen'); let pl1 = (elPL1 && elPL1.value) ? elPL1.value : 0;
+            let elPH1 = document.getElementById('partHgt'); let ph1 = (elPH1 && elPH1.value) ? elPH1.value : 0;
+
+            let part1Str = (partChoice1 === 'yes' && pQty1 > 0) ? `${pQty1}x ${pt1} (${pl1}${u} x ${ph1}${u})` : '';
+            let partDisplay = part1Str || 'None';
+            
+            if(numTanks === "2") {
+                let elPQ2 = document.getElementById('partQty2'); let pQty2 = (elPQ2 && elPQ2.value) ? parseInt(elPQ2.value) : 0;
+                let elPC2 = document.getElementById('partChoice2'); let partChoice2 = (elPC2 && elPC2.value) ? elPC2.value : 'no';
+                let elPT2 = document.getElementById('partType2'); let pt2 = (elPT2 && elPT2.value) ? elPT2.value : '';
+                let elPL2 = document.getElementById('partLen2'); let pl2 = (elPL2 && elPL2.value) ? elPL2.value : 0;
+                let elPH2 = document.getElementById('partHgt2'); let ph2 = (elPH2 && elPH2.value) ? elPH2.value : 0;
+
+                let part2Str = (partChoice2 === 'yes' && pQty2 > 0) ? `${pQty2}x ${pt2} (${pl2}${u} x ${ph2}${u})` : '';
+                if(part1Str && part2Str) partDisplay = `T1: ${part1Str} | T2: ${part2Str}`;
+                else if (part2Str) partDisplay = `T2: ${part2Str}`;
+            }
+            
+            let metaPart = document.getElementById('metaPart');
+            if(metaPart) metaPart.innerText = partDisplay;
+
+            let sumPart = document.getElementById('sumPart');
+            if(sumPart) sumPart.innerText = partDisplay;
+            
+            // CUSTOMER FORMAL PRINT SYNC
+            let cpCustName = document.getElementById('cpCustName');
+            let custCompany = document.getElementById('custCompany');
+            if(cpCustName) cpCustName.innerText = (custCompany && custCompany.value) ? custCompany.value : ((pInput && pInput.value) ? pInput.value : "Client Name");
+            
+            let cpCustAddr = document.getElementById('cpCustAddress');
+            let custAddr = document.getElementById('custAddr');
+            if(cpCustAddr) cpCustAddr.innerHTML = (custAddr && custAddr.value) ? custAddr.value.replace(/\n/g, '<br>') : '';
+            
+            let cpAttn = document.getElementById('cpAttention');
+            let custAttn = document.getElementById('custAttn');
+            if(cpAttn) cpAttn.innerText = (custAttn && custAttn.value) ? custAttn.value : "";
+            
+            let cpProject = document.getElementById('cpProject');
+            if(cpProject) cpProject.innerText = (pInput && pInput.value) ? pInput.value : "";
+            
+            let cpRef = document.getElementById('cpRef');
+            if(cpRef) cpRef.innerText = (qInput && qInput.value) ? qInput.value : "";
+
+            let cpMat1 = document.getElementById('cpMaterial'); if(cpMat1) cpMat1.innerText = matStr;
+            
+            let cpDims1 = document.getElementById('cpDims');
+            if(cpDims1) cpDims1.innerText = `${l1}${u} (L) x ${w1}${u} (W) x ${h1}${u} (H)`;
+
+            let cpStd1 = document.getElementById('cpStd'); if(cpStd1) cpStd1.innerText = (sInput && sInput.value) ? sInput.value : "";
+            
+            let tRoof = document.getElementById('thickRoof'); let valRoof = (tRoof && tRoof.value) ? tRoof.value : "";
+            let tBase = document.getElementById('thickBase'); let valBase = (tBase && tBase.value) ? tBase.value : "";
+            let cpTRoof = document.getElementById('cpThickRoof'); if(cpTRoof) cpTRoof.innerText = valRoof;
+            let cpTBase = document.getElementById('cpThickBase'); if(cpTBase) cpTBase.innerText = valBase;
+            
+            let tL1 = document.getElementById('thickWallL1'); let valL1 = (tL1 && tL1.value) ? tL1.value : "-";
+            let tL2 = document.getElementById('thickWallL2'); let valL2 = (tL2 && tL2.value) ? tL2.value : "-";
+            let tL3 = document.getElementById('thickWallL3'); let valL3 = (tL3 && tL3.value) ? tL3.value : "-";
+            let tL4 = document.getElementById('thickWallL4'); let valL4 = (tL4 && tL4.value) ? tL4.value : "-";
+            let wallStr = `L1: ${valL1} | L2: ${valL2} | L3: ${valL3} | L4: ${valL4}`;
+            
+            let cpTWall = document.getElementById('cpThickWall'); if(cpTWall) cpTWall.innerText = wallStr;
+
+            let cpPartRow = document.getElementById('cpPartRow');
+            let cpPartSec = document.getElementById('cpPartSection');
+            if(cpPartRow) {
+                if(part1Str !== '') {
+                    cpPartRow.style.display = 'table-row';
+                    if(cpPartSec) cpPartSec.innerText = part1Str;
+                } else {
+                    cpPartRow.style.display = 'none';
+                }
+            }
+
+            let extLadMatEl = document.getElementById('extLadMat'); let extLadMat = (extLadMatEl && extLadMatEl.value) ? extLadMatEl.value : 'External Ladder';
+            let intLadMatEl = document.getElementById('intLadMat'); let intLadMat = (intLadMatEl && intLadMatEl.value) ? intLadMatEl.value : 'Internal Ladder';
+            let qtyExtEl = document.getElementById('qty_item_3_0'); let qtyExt = (qtyExtEl && qtyExtEl.value) ? qtyExtEl.value : '0';
+            let qtyIntEl = document.getElementById('qty_item_3_1'); let qtyInt = (qtyIntEl && qtyIntEl.value) ? qtyIntEl.value : '0';
+
+            let cpLaddersInt = document.getElementById('cpLaddersInt'); if(cpLaddersInt) cpLaddersInt.innerText = `${intLadMat} Internal Ladder - ${qtyInt} sets`;
+            let cpLaddersExt = document.getElementById('cpLaddersExt'); if(cpLaddersExt) cpLaddersExt.innerText = `${extLadMat} External Ladder with safety cage - ${qtyExt} sets`;
+
+            let wliTypeEl = document.getElementById('wliType'); let wliType = (wliTypeEl && wliTypeEl.value) ? wliTypeEl.value : 'Water Level Indicator';
+            let wliQtyEl = document.getElementById('qty_item_3_2'); let wliQty = (wliQtyEl && wliQtyEl.value) ? wliQtyEl.value : '0';
+            let cpWLI = document.getElementById('cpWLI'); if(cpWLI) cpWLI.innerText = `${wliType} - ${wliQty} sets`;
+
+            // TANK 2 DATA SYNC (If Applicable)
+            if(numTanks === "2") {
+                let cpTank2Row = document.getElementById('cpTank2Row'); if(cpTank2Row) cpTank2Row.style.display = 'table-row';
+                let elL2 = document.getElementById('length2'); let l2 = (elL2 && elL2.value) ? elL2.value : 0;
+                let elW2 = document.getElementById('width2'); let w2 = (elW2 && elW2.value) ? elW2.value : 0;
+                let elH2 = document.getElementById('height2'); let h2 = (elH2 && elH2.value) ? elH2.value : 0;
+
+                let coatChoice2 = document.getElementById('coatChoice2');
+                let matStr2 = (coatChoice2 && coatChoice2.value) ? coatChoice2.value : matStr;
+                let cpMat2 = document.getElementById('cpMaterial2'); if(cpMat2) cpMat2.innerText = matStr2;
+
+                let cpDims2 = document.getElementById('cpDims2'); if(cpDims2) cpDims2.innerText = `${l2}${u} (L) x ${w2}${u} (W) x ${h2}${u} (H)`;
+                
+                let sInput2 = document.getElementById('stdChoice2');
+                let cpStd2 = document.getElementById('cpStd2'); if(cpStd2) cpStd2.innerText = (sInput2 && sInput2.value) ? sInput2.value : "";
+                
+                let cpTRoof2 = document.getElementById('cpThickRoof2'); if(cpTRoof2) cpTRoof2.innerText = valRoof;
+                let cpTBase2 = document.getElementById('cpThickBase2'); if(cpTBase2) cpTBase2.innerText = valBase;
+                let cpTWall2 = document.getElementById('cpThickWall2'); if(cpTWall2) cpTWall2.innerText = wallStr;
+                
+                let elPQ2 = document.getElementById('partQty2'); let pQty2 = (elPQ2 && elPQ2.value) ? parseInt(elPQ2.value) : 0;
+                let elPC2 = document.getElementById('partChoice2'); let partChoice2 = (elPC2 && elPC2.value) ? elPC2.value : 'no';
+                let elPT2 = document.getElementById('partType2'); let pt2 = (elPT2 && elPT2.value) ? elPT2.value : '';
+                let elPL2 = document.getElementById('partLen2'); let pl2 = (elPL2 && elPL2.value) ? elPL2.value : 0;
+                let elPH2 = document.getElementById('partHgt2'); let ph2 = (elPH2 && elPH2.value) ? elPH2.value : 0;
+                
+                let part2Str = (partChoice2 === 'yes' && pQty2 > 0) ? `${pQty2}x ${pt2} (${pl2}${u} x ${ph2}${u})` : '';
+                
+                let cpPartRow2 = document.getElementById('cpPartRow2');
+                let cpPartSec2 = document.getElementById('cpPartSection2');
+                if(cpPartRow2) {
+                    if(part2Str !== '') {
+                        cpPartRow2.style.display = 'table-row';
+                        if(cpPartSec2) cpPartSec2.innerText = part2Str;
+                    } else {
+                        cpPartRow2.style.display = 'none';
+                    }
+                }
+                
+                let extLadMatEl2 = document.getElementById('sel2_extLadMat'); let extLadMat2 = (extLadMatEl2 && extLadMatEl2.value) ? extLadMatEl2.value : 'External Ladder';
+                let intLadMatEl2 = document.getElementById('sel2_intLadMat'); let intLadMat2 = (intLadMatEl2 && intLadMatEl2.value) ? intLadMatEl2.value : 'Internal Ladder';
+                let qtyExtEl2 = document.getElementById('qty2_item_3_0'); let qtyExt2 = (qtyExtEl2 && qtyExtEl2.value) ? qtyExtEl2.value : '0';
+                let qtyIntEl2 = document.getElementById('qty2_item_3_1'); let qtyInt2 = (qtyIntEl2 && qtyIntEl2.value) ? qtyIntEl2.value : '0';
+
+                let cpLaddersInt2 = document.getElementById('cpLaddersInt2'); if(cpLaddersInt2) cpLaddersInt2.innerText = `${intLadMat2} Internal Ladder - ${qtyInt2} sets`;
+                let cpLaddersExt2 = document.getElementById('cpLaddersExt2'); if(cpLaddersExt2) cpLaddersExt2.innerText = `${extLadMat2} External Ladder with safety cage - ${qtyExt2} sets`;
+
+                let wliTypeEl2 = document.getElementById('sel2_wliType'); let wliType2 = (wliTypeEl2 && wliTypeEl2.value) ? wliTypeEl2.value : 'Water Level Indicator';
+                let wliQtyEl2 = document.getElementById('qty2_item_3_2'); let wliQty2 = (wliQtyEl2 && wliQtyEl2.value) ? wliQtyEl2.value : '0';
+                let cpWLI2 = document.getElementById('cpWLI2'); if(cpWLI2) cpWLI2.innerText = `${wliType2} - ${wliQty2} sets`;
+
+            } else {
+                let cpTank2Row = document.getElementById('cpTank2Row'); if(cpTank2Row) cpTank2Row.style.display = 'none';
+            }
+
+            // GLOBAL T&C
+            let shortExcEl = document.getElementById('shortExclusions');
+            let cpShortExc = document.getElementById('cpShortExclusionsText');
+            if(cpShortExc) cpShortExc.innerHTML = (shortExcEl && shortExcEl.value) ? shortExcEl.value.replace(/\n/g, '<br>') : '';
+            
+            let fullTermsEl = document.getElementById('fullTermsNotes');
+            let cpFullTerms = document.getElementById('cpFullTermsText');
+            if(cpFullTerms) cpFullTerms.innerHTML = (fullTermsEl && fullTermsEl.value) ? fullTermsEl.value : '';
+            
+            let valEl = document.getElementById('tcValidity');
+            let cpVal = document.getElementById('cpValidity');
+            if(cpVal) cpVal.innerHTML = `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${(valEl && valEl.value) ? valEl.value : ""}</span>`;
+            
+            let payEl = document.getElementById('tcPayment');
+            let cpPay = document.getElementById('cpPayment');
+            let payText = (payEl && payEl.value) ? payEl.value : '';
+            let formattedPay = payText.split('\n').map(line => {
+                if(line.trim() === '') return '';
+                return `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${line}</span>`;
+            }).join('');
+            if(cpPay) cpPay.innerHTML = formattedPay;
+            
+            let delEl = document.getElementById('tcDelivery');
+            let cpDel = document.getElementById('cpDeliveryTerm');
+            if(cpDel) cpDel.innerHTML = `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${(delEl && delEl.value) ? delEl.value : ""}</span>`;
+            
+            let leadEl = document.getElementById('tcLead');
+            let cpLead = document.getElementById('cpLeadTime');
+            if(cpLead) cpLead.innerHTML = `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${(leadEl && leadEl.value) ? leadEl.value : ""}</span>`;
+
+            let signNameEl = document.getElementById('signName');
+            let cpSignName = document.getElementById('cpSignName');
+            if(cpSignName) cpSignName.innerText = (signNameEl && signNameEl.value) ? signNameEl.value : "";
+            
+            let signPhoneEl = document.getElementById('signPhone');
+            let cpSignPhone = document.getElementById('cpSignPhone');
+            if(cpSignPhone) cpSignPhone.innerText = (signPhoneEl && signPhoneEl.value) ? signPhoneEl.value : "";
+            
+        } catch(e) { console.log("Sync Print Warning: ", e.message); }
+    }
+
+    function savePrices() {
+        let data = {};
+        configIDs.forEach(id => { 
+            let el = document.getElementById(id);
+            if(el) data[id] = el.value; 
+        });
+        
+        bomStructure.forEach((sec, sIdx) => {
+            sec.items.forEach((it, iIdx) => {
+                let uId = `item_${sIdx}_${iIdx}`;
+                // T1
+                let d1 = document.getElementById(`desc_${uId}`); if(d1) data[`desc_${uId}`] = d1.value;
+                let w1 = document.getElementById(`wt_${uId}`); if(w1) data[`wt_${uId}`] = w1.value;
+                let p1 = document.getElementById(`price_${uId}`); if(p1) data[`price_${uId}`] = p1.value;
+                let q1 = document.getElementById(`qty_${uId}`); if(q1) data[`qty_${uId}`] = q1.value;
+                if(it.selectId) { let s1 = document.getElementById(it.selectId); if(s1) data[it.selectId] = s1.value; }
+                
+                // T2
+                let d2 = document.getElementById(`desc2_${uId}`); if(d2) data[`desc2_${uId}`] = d2.value;
+                let w2 = document.getElementById(`wt2_${uId}`); if(w2) data[`wt2_${uId}`] = w2.value;
+                let p2 = document.getElementById(`price2_${uId}`); if(p2) data[`price2_${uId}`] = p2.value;
+                let q2 = document.getElementById(`qty2_${uId}`); if(q2) data[`qty2_${uId}`] = q2.value;
+                if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
+            });
+        });
+        localStorage.setItem('winkoProDataV36', JSON.stringify(data));
+    }
+
+    function loadPrices() {
+        let savedData = localStorage.getItem('winkoProDataV36');
+        if (savedData) {
+            savedData = JSON.parse(savedData);
+            configIDs.forEach(id => {
+                if (savedData[id] !== undefined) {
+                    let el = document.getElementById(id);
+                    if(el) el.value = savedData[id];
+                }
+            });
+            updateLabels();
+            toggleTank2();
+            
+            bomStructure.forEach((sec, sIdx) => {
+                sec.items.forEach((it, iIdx) => {
+                    let uId = `item_${sIdx}_${iIdx}`;
+                    // T1
+                    let d1 = document.getElementById(`desc_${uId}`); if(savedData[`desc_${uId}`] && d1) d1.value = savedData[`desc_${uId}`]; 
+                    let w1 = document.getElementById(`wt_${uId}`); if(savedData[`wt_${uId}`] && w1) w1.value = savedData[`wt_${uId}`]; 
+                    let p1 = document.getElementById(`price_${uId}`); if(savedData[`price_${uId}`] && p1) p1.value = savedData[`price_${uId}`];
+                    let q1 = document.getElementById(`qty_${uId}`); if(savedData[`qty_${uId}`] && q1) q1.value = savedData[`qty_${uId}`];
+                    if(it.selectId) { let s1 = document.getElementById(it.selectId); if(savedData[it.selectId] && s1) s1.value = savedData[it.selectId]; }
+                    
+                    // T2
+                    let d2 = document.getElementById(`desc2_${uId}`); if(savedData[`desc2_${uId}`] && d2) d2.value = savedData[`desc2_${uId}`]; 
+                    let w2 = document.getElementById(`wt2_${uId}`); if(savedData[`wt2_${uId}`] && w2) w2.value = savedData[`wt2_${uId}`]; 
+                    let p2 = document.getElementById(`price2_${uId}`); if(savedData[`price2_${uId}`] && p2) p2.value = savedData[`price2_${uId}`];
+                    let q2 = document.getElementById(`qty2_${uId}`); if(savedData[`qty2_${uId}`] && q2) q2.value = savedData[`qty2_${uId}`];
+                    if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(savedData[`sel2_${it.selectId}`] && s2) s2.value = savedData[`sel2_${it.selectId}`]; }
+                });
+            });
+        }
+    }
+
+    function buildBOMTable() {
+        const tbody = document.getElementById('bomBody');
+        const tbody2 = document.getElementById('bomBody2');
+        let html = '';
+        let html2 = '';
+        
+        bomStructure.forEach((sec, sIdx) => {
+            let secHeader1 = `<tr class="section-header-row"><td colspan="5" class="section-header" style="padding:0;">
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px;">
+                    <span>${sec.category}</span>
+                    <div class="no-print">
+                        <button type="button" onclick="addCategoryRow(${sIdx})" style="padding:4px 8px; font-size:11px; background:#fff; border:1px solid #ea580c; color:#ea580c; border-radius:4px; cursor:pointer; font-weight:700;">+ Add Row</button>
+                        <button type="button" onclick="removeCategoryRow(${sIdx})" style="padding:4px 8px; font-size:11px; background:#fff; border:1px solid #e11d48; color:#e11d48; border-radius:4px; cursor:pointer; margin-left:6px; font-weight:700;">- Remove</button>
+                    </div>
+                </div>
+            </td></tr>`;
+            html += secHeader1;
+            
+            let secHeader2 = `<tr class="section-header-row"><td colspan="5" class="section-header" style="padding:8px 12px;">
+                <span>${sec.category}</span>
+            </td></tr>`;
+            html2 += secHeader2;
+            
+            sec.items.forEach((it, iIdx) => {
+                const id = `item_${sIdx}_${iIdx}`;
+                
+                let safeWt = (it.wt !== undefined && it.wt !== null && !isNaN(it.wt)) ? it.wt : 0;
+
+                // TANK 1 ROW HTML
+                let nameHtml = `<div style="display:flex; align-items:center; flex-wrap:wrap; gap:4px;">
+                                  <input type="text" id="desc_${id}" class="desc-input" value="${it.name}" onchange="savePrices()">`;
+                if(it.selectId) {
+                    nameHtml += ` <select id="${it.selectId}" class="bom-inline-select" onchange="savePrices()">` +
+                                it.options.map(o => `<option value="${o}">${o}</option>`).join('') +
+                                `</select>`;
+                }
+                nameHtml += `</div>`;
+
+                html += `<tr>
+                    <td class="col-item">${nameHtml}</td>
+                    <td class="col-input col-qty"><input type="number" value="0" id="qty_${id}" oninput="calcTotals(); savePrices();"></td>
+                    <td class="col-input col-wt"><input type="number" step="0.1" value="${safeWt}" id="wt_${id}" oninput="calcTotals(); savePrices();"></td>
+                    <td class="col-input col-uprice"><input type="number" step="0.01" value="${it.def.toFixed(2)}" id="price_${id}" oninput="calcTotals(); savePrices();"></td>
+                    <td class="col-total col-itotal" id="total_${id}">0.00</td>
+                </tr>`;
+
+                // TANK 2 ROW HTML
+                let nameHtml2 = `<div style="display:flex; align-items:center; flex-wrap:wrap; gap:4px;">
+                                  <input type="text" id="desc2_${id}" class="desc-input" value="${it.name}" onchange="savePrices()">`;
+                if(it.selectId) {
+                    nameHtml2 += ` <select id="sel2_${it.selectId}" class="bom-inline-select" onchange="savePrices()">` +
+                                it.options.map(o => `<option value="${o}">${o}</option>`).join('') +
+                                `</select>`;
+                }
+                nameHtml2 += `</div>`;
+
+                html2 += `<tr>
+                    <td class="col-item">${nameHtml2}</td>
+                    <td class="col-input col-qty"><input type="number" value="0" id="qty2_${id}" oninput="calcTotals(); savePrices();"></td>
+                    <td class="col-input col-wt"><input type="number" step="0.1" value="${safeWt}" id="wt2_${id}" oninput="calcTotals(); savePrices();"></td>
+                    <td class="col-input col-uprice"><input type="number" step="0.01" value="${it.def.toFixed(2)}" id="price2_${id}" oninput="calcTotals(); savePrices();"></td>
+                    <td class="col-total col-itotal" id="total2_${id}">0.00</td>
+                </tr>`;
+            });
+        });
+        if(tbody) tbody.innerHTML = html;
+        if(tbody2) tbody2.innerHTML = html2;
+    }
+
+    function calcTotals() {
+        let baseCost = 0;
+        let totalWeight = 0;
+        let ntEl = document.getElementById('numTanks');
+        let numTanks = (ntEl && ntEl.value) ? parseInt(ntEl.value) : 1;
+
+        bomStructure.forEach((sec, sIdx) => {
+            sec.items.forEach((it, iIdx) => {
+                const id = `item_${sIdx}_${iIdx}`;
+                
+                // Tank 1 Math
+                const qtyEl1 = document.getElementById(`qty_${id}`);
+                const priceEl1 = document.getElementById(`price_${id}`);
+                const wtEl1 = document.getElementById(`wt_${id}`);
+                if(qtyEl1 && priceEl1 && wtEl1) {
+                    const q = parseFloat(qtyEl1.value) || 0;
+                    const p = parseFloat(priceEl1.value) || 0;
+                    let w = parseFloat(wtEl1.value); if(isNaN(w)) w = 0; 
+                    const total = q * p;
+                    const totalEl = document.getElementById(`total_${id}`);
+                    if(totalEl) totalEl.innerText = total.toLocaleString('en-MY', {minimumFractionDigits:2});
+                    baseCost += total;
+                    totalWeight += (q * w);
+                }
+
+                // Tank 2 Math
+                if (numTanks === 2) {
+                    const qtyEl2 = document.getElementById(`qty2_${id}`);
+                    const priceEl2 = document.getElementById(`price2_${id}`);
+                    const wtEl2 = document.getElementById(`wt2_${id}`);
+                    if(qtyEl2 && priceEl2 && wtEl2) {
+                        const q2 = parseFloat(qtyEl2.value) || 0;
+                        const p2 = parseFloat(priceEl2.value) || 0;
+                        let w2 = parseFloat(wtEl2.value); if(isNaN(w2)) w2 = 0; 
+                        const total2 = q2 * p2;
+                        const totalEl2 = document.getElementById(`total2_${id}`);
+                        if(totalEl2) totalEl2.innerText = total2.toLocaleString('en-MY', {minimumFractionDigits:2});
+                        baseCost += total2;
+                        totalWeight += (q2 * w2);
+                    }
+                }
+            });
+        });
+
+        let markupInput = document.getElementById('markupPct');
+        let discInput = document.getElementById('discountPct');
+        let sstInput = document.getElementById('sstPct');
+        
+        let markupPct = (markupInput && markupInput.value) ? parseFloat(markupInput.value) : 0;
+        if(isNaN(markupPct)) markupPct = 0;
+        let markupAmt = baseCost * (markupPct / 100);
+        let subtotal = baseCost + markupAmt; 
+        
+        let discPct = (discInput && discInput.value) ? parseFloat(discInput.value) : 0;
+        if(isNaN(discPct)) discPct = 0;
+        let discAmt = subtotal * (discPct / 100);
+        let netTotal = subtotal - discAmt;
+        
+        let sstPct = (sstInput && sstInput.value) ? parseFloat(sstInput.value) : 0;
+        if(isNaN(sstPct)) sstPct = 0;
+        let sstAmt = netTotal * (sstPct / 100);
+        let grand = netTotal + sstAmt;
+        
+        // Output to Screen (Internal view)
+        if(document.getElementById('sumBaseCost_screen')) document.getElementById('sumBaseCost_screen').innerText = baseCost.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumMarkup_screen')) document.getElementById('sumMarkup_screen').innerText = markupAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumSubtotal_screen')) document.getElementById('sumSubtotal_screen').innerText = subtotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumDiscount_screen')) document.getElementById('sumDiscount_screen').innerText = discAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumSST_screen')) document.getElementById('sumSST_screen').innerText = sstAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('grandTotal_screen')) document.getElementById('grandTotal_screen').innerText = grand.toLocaleString('en-MY', {minimumFractionDigits: 2});
+
+        // Output to Internal PDF
+        if(document.getElementById('sumBaseCost_print')) document.getElementById('sumBaseCost_print').innerText = baseCost.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumMarkup_print')) document.getElementById('sumMarkup_print').innerText = markupAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumSubtotal_print')) document.getElementById('sumSubtotal_print').innerText = subtotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumDiscount_print')) document.getElementById('sumDiscount_print').innerText = discAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumSST_print')) document.getElementById('sumSST_print').innerText = sstAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('grandTotal_print')) document.getElementById('grandTotal_print').innerText = grand.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        
+        // Weight
+        let weightStr = totalWeight.toLocaleString('en-MY', {maximumFractionDigits: 1}) + " kg";
+        if(document.getElementById('sumWeight_screen')) document.getElementById('sumWeight_screen').innerText = weightStr;
+        if(document.getElementById('sumWeight_print')) document.getElementById('sumWeight_print').innerText = weightStr;
+
+        // Output to CUSTOMER PDF (Split Cost if 2 Tanks)
+        let t1 = window.currentTotalP1 || 1;
+        let t2 = window.currentTotalP2 || 0;
+        let totalPanels = t1 + t2;
+        if (totalPanels === 0) totalPanels = 1;
+        
+        let price1 = netTotal;
+        let price2 = 0;
+        
+        if (numTanks === 2 && t2 > 0) {
+            price1 = netTotal * (t1 / totalPanels);
+            price2 = netTotal * (t2 / totalPanels);
+            
+            if(document.getElementById('cpUnitPrice2')) document.getElementById('cpUnitPrice2').innerText = price2.toLocaleString('en-MY', {minimumFractionDigits: 2});
+            if(document.getElementById('cpTotalPrice2')) document.getElementById('cpTotalPrice2').innerText = price2.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        }
+        
+        if(document.getElementById('cpUnitPrice')) document.getElementById('cpUnitPrice').innerText = price1.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('cpTotalPrice')) document.getElementById('cpTotalPrice').innerText = price1.toLocaleString('en-MY', {minimumFractionDigits: 2});
+
+        if(document.getElementById('cpSstPct')) document.getElementById('cpSstPct').innerText = sstPct || 0;
+        if(document.getElementById('cpSstAmt')) document.getElementById('cpSstAmt').innerText = sstAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('cpGrandTotal')) document.getElementById('cpGrandTotal').innerText = grand.toLocaleString('en-MY', {minimumFractionDigits: 2});
+
+        syncPrintHeader(); 
+    }
+
+    function drawGrid(id, c, r, pType = null, pPos = -1) {
+        const g = document.getElementById(id); 
+        const gp = document.getElementById(id + '_p'); 
+        
+        let html = '';
+        for(let i=0; i<(c*r); i++) {
+            let col = i % c;
+            let row = Math.floor(i / c);
+            let extraStyle = '';
+            
+            if (pType === 'v' && col === pPos) {
+                extraStyle = 'border-right: 3px solid #ef4444 !important; z-index: 10;';
+            } else if (pType === 'h' && row === pPos) {
+                extraStyle = 'border-bottom: 3px solid #ef4444 !important; z-index: 10;';
+            }
+            
+            html += `<div class="panel" style="aspect-ratio: 1/1; min-height: 15px; border: 0.5px solid #94a3b8; background: #e0f2fe; box-sizing: border-box; position: relative; ${extraStyle}"></div>`;
+        }
+        
+        if(g) {
+            g.style.gridTemplateColumns = `repeat(${c}, 1fr)`; 
+            g.innerHTML = html;
+        }
+        if(gp) {
+            gp.style.gridTemplateColumns = `repeat(${c}, 1fr)`; 
+            gp.innerHTML = html;
+        }
+    }
+
+    function processTankData() {
+        let ntEl = document.getElementById('numTanks');
+        let numTanks = (ntEl && ntEl.value) ? parseInt(ntEl.value) : 1;
+        
+        let ucEl = document.getElementById('unitChoice');
+        const unit = (ucEl && ucEl.value) ? ucEl.value : 'ft';
+        
+        const factor = unit === 'ft' ? 4 : 1;
+        const unitStr = unit === 'ft' ? 'ft' : 'm';
+        const spacingStr = unit === 'ft' ? '4ft (1220mm)' : '1m (1000mm)';
+
+        // TANK 1 DATA
+        let l1El = document.getElementById('length'); const L1_in = (l1El && l1El.value) ? parseFloat(l1El.value) : 0;
+        let w1El = document.getElementById('width'); const W1_in = (w1El && w1El.value) ? parseFloat(w1El.value) : 0;
+        let h1El = document.getElementById('height'); const H1_in = (h1El && h1El.value) ? parseFloat(h1El.value) : 0;
+        
+        let volLiters1 = (unit === 'ft') ? (L1_in * W1_in * H1_in * 28.3168) : (L1_in * W1_in * H1_in * 1000);
+        let effLiters1 = volLiters1 * 0.9; 
+
+        const pc1El = document.getElementById('partChoice');
+        const partChoice1 = (pc1El && pc1El.value) ? pc1El.value : 'no';
+        let pQty1 = 0; let pLen_in1 = 0; let pHgt_in1 = 0; let pPos_in1 = 1;
+        
+        if(partChoice1 === 'yes') {
+            let pq1El = document.getElementById('partQty'); pQty1 = (pq1El && pq1El.value) ? parseInt(pq1El.value) : 0;
+            let pl1El = document.getElementById('partLen'); pLen_in1 = (pl1El && pl1El.value) ? parseFloat(pl1El.value) : 0;
+            let ph1El = document.getElementById('partHgt'); pHgt_in1 = (ph1El && ph1El.value) ? parseFloat(ph1El.value) : 0;
+            let ppos1El = document.getElementById('partPos'); pPos_in1 = (ppos1El && ppos1El.value) ? parseInt(ppos1El.value) : 1;
+        }
+
+        const L1 = Math.ceil(L1_in / factor);
+        const W1 = Math.ceil(W1_in / factor);
+        const H1 = Math.ceil(H1_in / factor);
+        const pL1 = Math.ceil(pLen_in1 / factor);
+        const pH1 = Math.ceil(pHgt_in1 / factor);
+        const pPosIdx1 = Math.max(0, pPos_in1 - 1);
+
+        let roof1 = L1 * W1; 
+        let base1 = L1 * W1; 
+        let perim1 = (L1 + W1) * 2;
+        let sides1 = perim1 * H1; 
+        let partPanels1 = (partChoice1 === 'yes' && pQty1 > 0) ? (pL1 * pH1 * pQty1) : 0;
+        let totalP1 = roof1 + base1 + sides1 + partPanels1;
+        window.currentTotalP1 = totalP1;
+
+        // Partition Drawing Logic T1
+        let pTypeTop1 = null, pPosTop1 = -1;
+        let pTypeFront1 = null, pPosFront1 = -1;
+        let pTypeSide1 = null, pPosSide1 = -1;
+
+        if (partChoice1 === 'yes' && pQty1 > 0) {
+            if (pL1 === W1) { 
+                pTypeTop1 = 'v'; pPosTop1 = Math.min(L1 - 2, pPosIdx1);
+                pTypeFront1 = 'v'; pPosFront1 = Math.min(L1 - 2, pPosIdx1);
+            } else if (pL1 === L1) { 
+                pTypeTop1 = 'h'; pPosTop1 = Math.min(W1 - 2, pPosIdx1);
+                pTypeSide1 = 'v'; pPosSide1 = Math.min(W1 - 2, pPosIdx1);
+            } else { 
+                pTypeTop1 = 'v'; pPosTop1 = Math.min(L1 - 2, pPosIdx1);
+                pTypeFront1 = 'v'; pPosFront1 = Math.min(L1 - 2, pPosIdx1);
+            }
+        }
+
+        let tRoof = document.getElementById('thickRoof') ? document.getElementById('thickRoof').value : "1.5mm";
+        let tBase = document.getElementById('thickBase') ? document.getElementById('thickBase').value : "4.5mm";
+        let tL1 = document.getElementById('thickWallL1') ? document.getElementById('thickWallL1').value : "4.5mm";
+        let tL2 = document.getElementById('thickWallL2') ? document.getElementById('thickWallL2').value : "3.0mm";
+        let tL3 = document.getElementById('thickWallL3') ? document.getElementById('thickWallL3').value : "3.0mm";
+        let tL4 = document.getElementById('thickWallL4') ? document.getElementById('thickWallL4').value : "1.5mm";
+
+        let updateDesc = (prefix, id, val) => { let el = document.getElementById(prefix + id); if(el) el.value = val; };
+        updateDesc('desc_', 'item_0_1', tRoof + " Roof Panel");
+        updateDesc('desc_', 'item_0_2', tBase + " Base Panel");
+        updateDesc('desc_', 'item_0_3', tL1 + " Wall Panel (L1)");
+        updateDesc('desc_', 'item_0_4', tL2 + " Wall Panel (L2)");
+        updateDesc('desc_', 'item_0_5', tL3 + " Wall Panel (L3)");
+        updateDesc('desc_', 'item_0_6', tL4 + " Wall Panel (L4)");
+
+        // TANK 2 DATA
+        let volLiters2 = 0, effLiters2 = 0;
+        let roof2 = 0, base2 = 0, perim2 = 0, sides2 = 0, partPanels2 = 0, totalP2 = 0;
+        let H2_in = 0, L2_in = 0, L2 = 0, W2 = 0, H2 = 0;
+        
+        let pTypeTop2 = null, pPosTop2 = -1;
+        let pTypeFront2 = null, pPosFront2 = -1;
+        let pTypeSide2 = null, pPosSide2 = -1;
+
+        if (numTanks === 2) {
+            let l2El = document.getElementById('length2'); L2_in = (l2El && l2El.value) ? parseFloat(l2El.value) : 0;
+            let w2El = document.getElementById('width2'); let W2_in = (w2El && w2El.value) ? parseFloat(w2El.value) : 0;
+            let h2El = document.getElementById('height2'); H2_in = (h2El && h2El.value) ? parseFloat(h2El.value) : 0;
+            
+            volLiters2 = (unit === 'ft') ? (L2_in * W2_in * H2_in * 28.3168) : (L2_in * W2_in * H2_in * 1000);
+            effLiters2 = volLiters2 * 0.9; 
+
+            let pc2El = document.getElementById('partChoice2');
+            const partChoice2 = (pc2El && pc2El.value) ? pc2El.value : 'no';
+            let pQty2 = 0; let pLen_in2 = 0; let pHgt_in2 = 0; let pPos_in2 = 1;
+            if(partChoice2 === 'yes') {
+                let pq2El = document.getElementById('partQty2'); pQty2 = (pq2El && pq2El.value) ? parseInt(pq2El.value) : 0;
+                let pl2El = document.getElementById('partLen2'); pLen_in2 = (pl2El && pl2El.value) ? parseFloat(pl2El.value) : 0;
+                let ph2El = document.getElementById('partHgt2'); pHgt_in2 = (ph2El && ph2El.value) ? parseFloat(ph2El.value) : 0;
+                let ppos2El = document.getElementById('partPos2'); pPos_in2 = (ppos2El && ppos2El.value) ? parseInt(ppos2El.value) : 1;
+            }
+
+            L2 = Math.ceil(L2_in / factor);
+            W2 = Math.ceil(W2_in / factor);
+            H2 = Math.ceil(H2_in / factor);
+            const pL2 = Math.ceil(pLen_in2 / factor);
+            const pH2 = Math.ceil(pHgt_in2 / factor);
+            const pPosIdx2 = Math.max(0, pPos_in2 - 1);
+
+            roof2 = L2 * W2; base2 = L2 * W2; perim2 = (L2 + W2) * 2; sides2 = perim2 * H2; 
+            partPanels2 = (partChoice2 === 'yes' && pQty2 > 0) ? (pL2 * pH2 * pQty2) : 0;
+            totalP2 = roof2 + base2 + sides2 + partPanels2;
+
+            if (partChoice2 === 'yes' && pQty2 > 0) {
+                if (pL2 === W2) { 
+                    pTypeTop2 = 'v'; pPosTop2 = Math.min(L2 - 2, pPosIdx2);
+                    pTypeFront2 = 'v'; pPosFront2 = Math.min(L2 - 2, pPosIdx2);
+                } else if (pL2 === L2) { 
+                    pTypeTop2 = 'h'; pPosTop2 = Math.min(W2 - 2, pPosIdx2);
+                    pTypeSide2 = 'v'; pPosSide2 = Math.min(W2 - 2, pPosIdx2);
+                } else { 
+                    pTypeTop2 = 'v'; pPosTop2 = Math.min(L2 - 2, pPosIdx2);
+                    pTypeFront2 = 'v'; pPosFront2 = Math.min(L2 - 2, pPosIdx2);
+                }
+            }
+
+            updateDesc('desc2_', 'item_0_1', tRoof + " Roof Panel");
+            updateDesc('desc2_', 'item_0_2', tBase + " Base Panel");
+            updateDesc('desc2_', 'item_0_3', tL1 + " Wall Panel (L1)");
+            updateDesc('desc2_', 'item_0_4', tL2 + " Wall Panel (L2)");
+            updateDesc('desc2_', 'item_0_5', tL3 + " Wall Panel (L3)");
+            updateDesc('desc2_', 'item_0_6', tL4 + " Wall Panel (L4)");
+
+            drawGrid('topGrid2', L2, W2, pTypeTop2, pPosTop2); 
+            drawGrid('bottomGrid2', L2, W2, pTypeTop2, pPosTop2);
+            drawGrid('frontGrid2', L2, H2, pTypeFront2, pPosFront2); 
+            drawGrid('backGrid2', L2, H2, pTypeFront2, pPosFront2);
+            drawGrid('leftGrid2', W2, H2, pTypeSide2, pPosSide2); 
+            drawGrid('rightGrid2', W2, H2, pTypeSide2, pPosSide2);
+        } else {
+            if(document.getElementById('qty2_item_0_0')) {
+                 const t2Inputs = document.querySelectorAll('[id^="qty2_"]');
+                 for(let i=0; i<t2Inputs.length; i++) {
+                     t2Inputs[i].value = 0;
+                 }
+            }
+        }
+        window.currentTotalP2 = (numTanks === 2) ? totalP2 : 0;
+
+        let totalEffLiters = effLiters1 + effLiters2;
+        let capScreen = document.getElementById('sumCapacity_screen');
+        if(capScreen) capScreen.innerText = totalEffLiters.toLocaleString('en-MY', {maximumFractionDigits: 0}) + " L";
+        let capPrint = document.getElementById('sumCapacity_print');
+        if(capPrint && capScreen) capPrint.innerText = capScreen.innerText;
+
+        let combinedTotalP = totalP1 + totalP2;
+        let tpCount = document.getElementById('totalPanelsCount');
+        if(tpCount) tpCount.innerText = combinedTotalP;
+
+        // --- EXACT QTY INJECTIONS TANK 1 ---
+        let setQ = (prefix, id, val) => { let el = document.getElementById(prefix + id); if(el) el.value = val; };
+        
+        setQ('qty_', 'item_0_0', 1); 
+        setQ('qty_', 'item_0_1', Math.max(0, roof1 - 1)); 
+        setQ('qty_', 'item_0_2', base1); 
+        setQ('qty_', 'item_0_3', H1 >= 1 ? perim1 : 0); 
+        setQ('qty_', 'item_0_4', H1 >= 2 ? perim1 : 0); 
+        setQ('qty_', 'item_0_5', H1 >= 3 ? perim1 : 0); 
+        setQ('qty_', 'item_0_6', H1 >= 4 ? perim1 * (H1 - 3) : 0); 
+        setQ('qty_', 'item_0_7', partPanels1); 
+
+        setQ('qty_', 'item_1_3', L1_in); 
+        setQ('qty_', 'item_1_4', L1_in); 
+
+        // --- ANGLE STAY CALCULATION TANK 1 ---
+        // Formula based on vertical wall seams needing tie rods
+        let joints1 = Math.max(0, (L1 - 1) * 2 + (W1 - 1) * 2);
+        setQ('qty_', 'item_2_0', H1 >= 1 ? joints1 : 0); // 44 1/4" (Tier 1)
+        setQ('qty_', 'item_2_1', H1 >= 2 ? joints1 : 0); // 67" (Tier 2)
+        setQ('qty_', 'item_2_2', H1 >= 3 ? joints1 : 0); // 11'3" (Tier 3)
+        setQ('qty_', 'item_2_3', H1 >= 4 ? joints1 : 0); // 15'8.5" (Tier 4)
+
+        setQ('qty_', 'item_3_0', H1_in); 
+        setQ('qty_', 'item_3_1', H1_in); 
+        setQ('qty_', 'item_3_2', 1); 
+        setQ('qty_', 'item_3_3', 1); 
+
+        let isImperial = (unit === 'ft');
+        let sealantPerimeter = isImperial ? 4.88 : 4.0;
+        let boltsPerPanel = isImperial ? 16 : 12;
+        
+        setQ('qty_', 'item_3_4', Math.ceil((totalP1 * sealantPerimeter) / 15)); 
+        setQ('qty_', 'item_3_5', Math.ceil(totalP1 * boltsPerPanel * 1.05)); 
+
+        let qty40 = document.getElementById('qty_item_4_0'); 
+        if(qty40 && (!qty40.value || qty40.value == "0")) qty40.value = 1;
+        let qty41 = document.getElementById('qty_item_4_1');
+        if(qty41 && (!qty41.value || qty41.value == "0")) qty41.value = 1;
+
+        // --- EXACT QTY INJECTIONS TANK 2 ---
+        if(numTanks === 2) {
+            setQ('qty2_', 'item_0_0', 1); 
+            setQ('qty2_', 'item_0_1', Math.max(0, roof2 - 1)); 
+            setQ('qty2_', 'item_0_2', base2); 
+            setQ('qty2_', 'item_0_3', H2 >= 1 ? perim2 : 0); 
+            setQ('qty2_', 'item_0_4', H2 >= 2 ? perim2 : 0); 
+            setQ('qty2_', 'item_0_5', H2 >= 3 ? perim2 : 0); 
+            setQ('qty2_', 'item_0_6', H2 >= 4 ? perim2 * (H2 - 3) : 0); 
+            setQ('qty2_', 'item_0_7', partPanels2); 
+
+            setQ('qty2_', 'item_1_3', L2_in); 
+            setQ('qty2_', 'item_1_4', L2_in); 
+
+            // --- ANGLE STAY CALCULATION TANK 2 ---
+            let joints2 = Math.max(0, (L2 - 1) * 2 + (W2 - 1) * 2);
+            setQ('qty2_', 'item_2_0', H2 >= 1 ? joints2 : 0); 
+            setQ('qty2_', 'item_2_1', H2 >= 2 ? joints2 : 0); 
+            setQ('qty2_', 'item_2_2', H2 >= 3 ? joints2 : 0); 
+            setQ('qty2_', 'item_2_3', H2 >= 4 ? joints2 : 0); 
+
+            setQ('qty2_', 'item_3_0', H2_in); 
+            setQ('qty2_', 'item_3_1', H2_in); 
+            setQ('qty2_', 'item_3_2', 1); 
+            setQ('qty2_', 'item_3_3', 1); 
+
+            setQ('qty2_', 'item_3_4', Math.ceil((totalP2 * sealantPerimeter) / 15)); 
+            setQ('qty2_', 'item_3_5', Math.ceil(totalP2 * boltsPerPanel * 1.05)); 
+
+            let q2_40 = document.getElementById('qty2_item_4_0'); if(q2_40 && !q2_40.value) q2_40.value = 0;
+            let q2_41 = document.getElementById('qty2_item_4_1'); if(q2_41 && !q2_41.value) q2_41.value = 0;
+        }
+
+        drawGrid('topGrid', L1, W1, pTypeTop1, pPosTop1); 
+        drawGrid('bottomGrid', L1, W1, pTypeTop1, pPosTop1);
+        drawGrid('frontGrid', L1, H1, pTypeFront1, pPosFront1); 
+        drawGrid('backGrid', L1, H1, pTypeFront1, pPosFront1);
+        drawGrid('leftGrid', W1, H1, pTypeSide1, pPosSide1); 
+        drawGrid('rightGrid', W1, H1, pTypeSide1, pPosSide1);
+
+        let plinthText = document.getElementById('plinthCalcText');
+        const numPlinths = W1 + 1;
+        const plinthLen = L1_in;
+        if(plinthText) plinthText.innerText = `Recommendation: Require ${numPlinths} rows of concrete plinths, each ${plinthLen}${unitStr} long, spaced at ${spacingStr} C/C.`;
+
+        calcTotals();
+        savePrices();
+    }
+
+    function exportCSV() {
+        try {
+            let csv = "\uFEFFWINKO INDUSTRIAL SDN BHD\n";
+            csv += "OFFICIAL TECHNICAL QUOTATION\n\n";
+            
+            let qInput = document.getElementById('quoteIdInput');
+            let qid = (qInput && qInput.value) ? qInput.value : "N/A";
+            
+            let pInput = document.getElementById('projectName');
+            let proj = (pInput && pInput.value) ? pInput.value : "Unnamed Project";
+            
+            let d = new Date().toLocaleDateString('en-MY');
+            let dimEl = document.getElementById('metaDims');
+            let dim = dimEl ? dimEl.innerText : "";
+            
+            let cChoice = document.getElementById('coatChoice');
+            let mat = (cChoice && cChoice.value) ? cChoice.value : "";
+            
+            let cChoice2 = document.getElementById('coatChoice2');
+            let mat2 = (cChoice2 && cChoice2.value) ? cChoice2.value : "";
+            
+            let ntEl = document.getElementById('numTanks');
+            let numTanks = (ntEl && ntEl.value) ? parseInt(ntEl.value) : 1;
+            
+            if(numTanks === 2 && mat2) mat += ` | Tank 2: ${mat2}`;
+            
+            let pChoice = document.getElementById('partChoice');
+            let partChoice = (pChoice && pChoice.value) ? pChoice.value : 'no';
+            
+            let ptQty = document.getElementById('partQty');
+            let pQty = (ptQty && ptQty.value) ? parseInt(ptQty.value) : 0;
+            
+            let ptType = document.getElementById('partType');
+            let pType = (ptType && ptType.value) ? ptType.value : 'Standard';
+            
+            let ptLen = document.getElementById('partLen');
+            let pLen = (ptLen && ptLen.value) ? ptLen.value : 0;
+            
+            let ptHgt = document.getElementById('partHgt');
+            let pHgt = (ptHgt && ptHgt.value) ? ptHgt.value : 0;
+            
+            let uChoice = document.getElementById('unitChoice');
+            let u = (uChoice && uChoice.value === 'ft') ? 'ft' : 'm';
+            
+            let part = (partChoice === 'yes' && pQty > 0) ? `${pQty}x ${pType} (${pLen}${u} x ${pHgt}${u})` : 'None';
+            
+            csv += `"Quote No:","${qid}"\n`;
+            csv += `"Project / Client:","${proj.replace(/"/g, '""')}"\n`;
+            csv += `"Date:","${d}"\n`;
+            csv += `"Dimensions:","${dim}"\n`;
+            csv += `"Material:","${mat}"\n`;
+            csv += `"Partition (Tank 1):","${part}"\n\n`;
+
+            csv += "TANK 1 BILL OF MATERIALS\n";
+            csv += "Category,Item Description,Qty,Unit Wt (kg),Unit Price (RM),Total (RM)\n";
+            
+            bomStructure.forEach((s, si) => { s.items.forEach((it, ii) => {
+                let id = `item_${si}_${ii}`;
+                let descEl = document.getElementById(`desc_${id}`);
+                if(!descEl) return;
+                
+                let label = descEl.value.replace(/"/g, '""');
+                if(it.selectId) {
+                    let sEl = document.getElementById(it.selectId);
+                    if(sEl) label += " (" + sEl.value + ")"; 
+                }
+                
+                let qEl = document.getElementById(`qty_${id}`); let q = qEl ? qEl.value : 0;
+                let wEl = document.getElementById(`wt_${id}`); let w = wEl ? wEl.value : 0;
+                let pEl = document.getElementById(`price_${id}`); let p = pEl ? pEl.value : 0;
+                let totEl = document.getElementById(`total_${id}`); let t = totEl ? totEl.innerText.replace(/,/g, '') : 0;
+                
+                if(q > 0) csv += `"${s.category}","${label}",${q},${w},${p},${t}\n`;
+            })});
+            
+            if(numTanks === 2) {
+                csv += `\nTANK 2 BILL OF MATERIALS\n`;
+                csv += "Category,Item Description,Qty,Unit Wt (kg),Unit Price (RM),Total (RM)\n";
+                bomStructure.forEach((s, si) => { s.items.forEach((it, ii) => {
+                    let id = `item_${si}_${ii}`;
+                    let desc2El = document.getElementById(`desc2_${id}`);
+                    if(!desc2El) return;
+                    
+                    let label = desc2El.value.replace(/"/g, '""');
+                    if(it.selectId) {
+                        let s2El = document.getElementById(`sel2_${it.selectId}`);
+                        if(s2El) label += " (" + s2El.value + ")"; 
+                    }
+                    
+                    let qEl = document.getElementById(`qty2_${id}`); let q = qEl ? qEl.value : 0;
+                    let wEl = document.getElementById(`wt2_${id}`); let w = wEl ? wEl.value : 0;
+                    let pEl = document.getElementById(`price2_${id}`); let p = pEl ? pEl.value : 0;
+                    let totEl = document.getElementById(`total2_${id}`); let t = totEl ? totEl.innerText.replace(/,/g, '') : 0;
+                    
+                    if(q > 0) csv += `"${s.category}","${label}",${q},${w},${p},${t}\n`;
+                })});
+            }
+
+            csv += `\n`;
+            
+            let bEl = document.getElementById('sumBaseCost_screen'); let base = bEl ? bEl.innerText.replace(/,/g, '') : "0";
+            let mEl = document.getElementById('sumMarkup_screen'); let markup = mEl ? mEl.innerText.replace(/,/g, '') : "0";
+            let sEl = document.getElementById('sumSubtotal_screen'); let sub = sEl ? sEl.innerText.replace(/,/g, '') : "0";
+            let dEl = document.getElementById('sumDiscount_screen'); let disc = dEl ? dEl.innerText.replace(/,/g, '') : "0";
+            let sstEl = document.getElementById('sumSST_screen'); let sst = sstEl ? sstEl.innerText.replace(/,/g, '') : "0";
+            let gEl = document.getElementById('grandTotal_screen'); let grand = gEl ? gEl.innerText.replace(/,/g, '') : "0";
+            let wEl = document.getElementById('sumWeight_screen'); let wt = wEl ? wEl.innerText.replace(' kg', '').replace(/,/g, '') : "0";
+
+            csv += `,,,,"Est. Total Weight (kg)",${wt}\n`;
+            csv += `,,,,"Base Cost (RM)",${base}\n`;
+            csv += `,,,,"Mark-Up (RM)",+${markup}\n`;
+            csv += `,,,,"Gross Subtotal (RM)",${sub}\n`;
+            csv += `,,,,"Discount (RM)",-${disc}\n`;
+            csv += `,,,,"SST Tax (RM)",${sst}\n`;
+            csv += `,,,,"GRAND TOTAL (RM)",${grand}\n`;
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a'); 
+            a.href = url; 
+            a.download = `Jutarama_Quote_${qid}.csv`; 
+            
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+        } catch(e) {
+            alert("Error generating Excel file: " + e.message);
+        }
+    }
+
+    // Initialize
+    applyCustomRows();
+    buildBOMTable();
+    loadPrices();
+    
+    // Force final recalculation on script load
+    setTimeout(function() { 
+        toggleTank2(); 
+        processTankData(); 
+    }, 100);
+</script>
+
+</body>
+</html>
         }
         .login-card { background: white; padding: 50px 40px; border-radius: 16px; color: #333; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); width: 90%; max-width: 420px; display: flex; flex-direction: column; align-items: center;}
         .login-card input { width: 100%; padding: 14px; margin: 25px 0 15px 0; border: 2px solid #e2e8f0; border-radius: 8px; text-align: center; font-size: 18px; outline: none; transition: border-color 0.3s; }
