@@ -19,7 +19,7 @@
         .login-card { background: white; padding: 50px 40px; border-radius: 16px; color: #333; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); width: 90%; max-width: 420px; display: flex; flex-direction: column; align-items: center;}
         .login-card input { width: 100%; padding: 14px; margin: 25px 0 15px 0; border: 2px solid #e2e8f0; border-radius: 8px; text-align: center; font-size: 18px; outline: none; transition: border-color 0.3s; }
         .login-card input:focus { border-color: #ea580c; box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1); }
-        .login-card button { width: 100%; padding: 14px; background: linear-gradient(135deg, #ea580c, #c2410c); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; transition: transform 0.2s, box-shadow 0.2s;}
+        .login-card button { width: 100%; padding: 14px; background: linear-gradient(135deg, #ea580c, #c2410c); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: font-size: 16px; transition: transform 0.2s, box-shadow 0.2s;}
         .login-card button:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(234, 88, 12, 0.3); }
         
         #mainContent, #adminContent { display: none; }
@@ -249,11 +249,11 @@
     </style>
     
     <script>
-        const currentVersion = "V40";
+        const currentVersion = "V41";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=39; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=40; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -554,6 +554,7 @@ Note:
                         <div class="sum-row"><span>Material:</span> <span id="sumCoat">-</span></div>
                         <div class="sum-row"><span>Partition:</span> <span id="sumPart">-</span></div>
                         <div class="sum-row" style="color:#38bdf8; font-weight:700;"><span>Est. Capacity:</span> <span id="sumCapacity_screen">0 L</span></div>
+                        <div class="sum-row" style="color:#a855f7; font-weight:700;"><span>Total Panels:</span> <span id="sumPanels_screen">0</span></div>
                         <div class="sum-row" style="color:#fdba74; font-weight:700;"><span>Est. Total Weight:</span> <span id="sumWeight_screen">0 kg</span></div>
                         <hr style="border: 1px solid rgba(255,255,255,0.15); margin: 15px 0;">
                         <div class="sum-row"><span>Base Cost:</span> <span>RM <span id="sumBaseCost_screen">0.00</span></span></div>
@@ -610,6 +611,7 @@ Note:
             <div class="summary-box">
                 <table class="summary-table">
                     <tr><td style="text-align:left;">Est. Capacity:</td><td style="text-align:right;" id="sumCapacity_print">0 L</td></tr>
+                    <tr><td style="text-align:left;">Total Panels:</td><td style="text-align:right;" id="sumPanels_print">0</td></tr>
                     <tr><td style="text-align:left;">Est. Total Wt:</td><td style="text-align:right;" id="sumWeight_print">0 kg</td></tr>
                     <tr class="border-top"><td style="text-align:left;">Base Cost:</td><td style="text-align:right;">RM <span id="sumBaseCost_print">0.00</span></td></tr>
                     <tr><td style="text-align:left;">Mark-Up:</td><td style="text-align:right; color:#059669;">+ RM <span id="sumMarkup_print">0.00</span></td></tr>
@@ -703,7 +705,7 @@ Note:
             <tr id="cpTank1Row">
                 <td class="td-center" style="font-weight:bold; padding-top:8px;">1</td>
                 <td style="padding-top:8px; padding-bottom: 8px; line-height:1.4;">
-                    <strong>Supply and Install New <span id="cpMaterial"></span> Pressed Steel Tank Size: <span id="cpDims"></span></strong><br>
+                    <strong>Supply and Install New <span id="cpMaterial"></span> Pressed Steel Tank Size:<br><span id="cpDims"></span></strong><br>
                     Comply to <span id="cpStd"></span><br>
                     <table style="border:none; width:100%; font-size:8.5pt; margin-top:2px;">
                         <tr>
@@ -735,7 +737,7 @@ Note:
                 <td class="td-center" style="font-weight:bold; padding-top:8px;">2</td>
                 <td style="padding-top:8px; padding-bottom: 8px; line-height:1.4;">
                     <div id="cpTank2Specs">
-                        <strong>Supply and Install New <span id="cpMaterial2"></span> Pressed Steel Tank Size: <span id="cpDims2"></span></strong><br>
+                        <strong>Supply and Install New <span id="cpMaterial2"></span> Pressed Steel Tank Size:<br><span id="cpDims2"></span></strong><br>
                         Comply to <span id="cpStd2"></span><br>
                         <table style="border:none; width:100%; font-size:8.5pt; margin-top:2px;">
                             <tr>
@@ -915,7 +917,6 @@ Note:
         let t2VisPrint = document.getElementById('tank2VisualsPrint');
         let cpNum = document.getElementById('cpNumTanks');
         let bCard2 = document.getElementById('bomCard2');
-        let bTitle1 = document.getElementById('bomTitle1');
 
         if(mode === "2") {
             if(t2Sec) t2Sec.style.display = 'block';
@@ -924,7 +925,6 @@ Note:
             if(t2VisPrint) t2VisPrint.style.display = 'block';
             if(cpNum) cpNum.innerText = "1 LOT"; 
             if(bCard2) bCard2.style.display = 'block'; 
-            if(bTitle1) bTitle1.innerText = "- TANK 1"; 
         } else if (mode === "custom") {
             if(t2Sec) t2Sec.style.display = 'none';
             if(customSec) customSec.style.display = 'block';
@@ -932,7 +932,6 @@ Note:
             if(t2VisPrint) t2VisPrint.style.display = 'none';
             if(cpNum) cpNum.innerText = "1 LOT"; 
             if(bCard2) bCard2.style.display = 'none'; 
-            if(bTitle1) bTitle1.innerText = ""; 
         } else {
             if(t2Sec) t2Sec.style.display = 'none';
             if(customSec) customSec.style.display = 'none';
@@ -940,7 +939,6 @@ Note:
             if(t2VisPrint) t2VisPrint.style.display = 'none';
             if(cpNum) cpNum.innerText = "1";
             if(bCard2) bCard2.style.display = 'none'; 
-            if(bTitle1) bTitle1.innerText = ""; 
         }
         togglePartitionDetails();
     }
@@ -1218,7 +1216,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV40'); // V40 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV41'); // V41 CACHE BUSTER
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1339,8 +1337,9 @@ Note:
 
             let cpMat1 = document.getElementById('cpMaterial'); if(cpMat1) cpMat1.innerText = matStr;
             
+            let t1Panels = window.currentTotalP1 || 0;
             let cpDims1 = document.getElementById('cpDims');
-            if(cpDims1) cpDims1.innerText = `${l1}${u} (L) x ${w1}${u} (W) x ${h1}${u} (H)`;
+            if(cpDims1) cpDims1.innerText = `${l1}${u} (L) x ${w1}${u} (W) x ${h1}${u} (H) (Total: ${t1Panels} Panels)`;
 
             let cpStd1 = document.getElementById('cpStd'); if(cpStd1) cpStd1.innerText = (sInput && sInput.value) ? sInput.value : "";
             
@@ -1399,7 +1398,9 @@ Note:
                 let matStr2 = (coatChoice2 && coatChoice2.value) ? coatChoice2.value : matStr;
                 let cpMat2 = document.getElementById('cpMaterial2'); if(cpMat2) cpMat2.innerText = matStr2;
 
-                let cpDims2 = document.getElementById('cpDims2'); if(cpDims2) cpDims2.innerText = `${l2}${u} (L) x ${w2}${u} (W) x ${h2}${u} (H)`;
+                let t2Panels = window.currentTotalP2 || 0;
+                let cpDims2 = document.getElementById('cpDims2'); 
+                if(cpDims2) cpDims2.innerText = `${l2}${u} (L) x ${w2}${u} (W) x ${h2}${u} (H) (Total: ${t2Panels} Panels)`;
                 
                 let sInput2 = document.getElementById('stdChoice2');
                 let cpStd2 = document.getElementById('cpStd2'); if(cpStd2) cpStd2.innerText = (sInput2 && sInput2.value) ? sInput2.value : "";
@@ -1517,11 +1518,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV40', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV41', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV40');
+        let savedData = localStorage.getItem('winkoProDataV41');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1693,8 +1694,13 @@ Note:
         if(isNaN(sstPct)) sstPct = 0;
         let sstAmt = netTotal * (sstPct / 100);
         let grand = netTotal + sstAmt;
+
+        let exactT1 = window.currentTotalP1 || 0;
+        let exactT2 = window.currentTotalP2 || 0;
+        let totalExactPanels = exactT1 + exactT2;
         
         // Output to Screen (Internal view)
+        if(document.getElementById('sumPanels_screen')) document.getElementById('sumPanels_screen').innerText = totalExactPanels;
         if(document.getElementById('sumBaseCost_screen')) document.getElementById('sumBaseCost_screen').innerText = baseCost.toLocaleString('en-MY', {minimumFractionDigits: 2});
         if(document.getElementById('sumMarkup_screen')) document.getElementById('sumMarkup_screen').innerText = markupAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
         if(document.getElementById('sumSubtotal_screen')) document.getElementById('sumSubtotal_screen').innerText = subtotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
@@ -1703,6 +1709,7 @@ Note:
         if(document.getElementById('grandTotal_screen')) document.getElementById('grandTotal_screen').innerText = grand.toLocaleString('en-MY', {minimumFractionDigits: 2});
 
         // Output to Internal PDF
+        if(document.getElementById('sumPanels_print')) document.getElementById('sumPanels_print').innerText = totalExactPanels;
         if(document.getElementById('sumBaseCost_print')) document.getElementById('sumBaseCost_print').innerText = baseCost.toLocaleString('en-MY', {minimumFractionDigits: 2});
         if(document.getElementById('sumMarkup_print')) document.getElementById('sumMarkup_print').innerText = markupAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
         if(document.getElementById('sumSubtotal_print')) document.getElementById('sumSubtotal_print').innerText = subtotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
@@ -1973,16 +1980,11 @@ Note:
         setQ('qty_', 'item_0_6', H1 >= 4 ? perim1 * (H1 - 3) : 0); 
         setQ('qty_', 'item_0_7', partPanels1); 
 
-        // CLEATS AND TRUSSES Auto-Calc
-        setQ('qty_', 'item_1_0', H1 * 4); // Type A (Corners)
-        setQ('qty_', 'item_1_1', perim1); // Type B (Base/Roof Joints)
-        setQ('qty_', 'item_1_2', perim1); // Type C
-        setQ('qty_', 'item_1_3', L1_in);  // Pipe
-        setQ('qty_', 'item_1_4', L1_in);  // Angle
-
-        // ANGLE STAYS TANK 1 - REMOVED FORCED AUTO-CALC
-        // You manually requested they remain empty unless typed. 
-        // We will not touch 'qty_item_2_0' through 'qty_item_2_3'
+        setQ('qty_', 'item_1_0', H1 * 4); 
+        setQ('qty_', 'item_1_1', perim1); 
+        setQ('qty_', 'item_1_2', perim1); 
+        setQ('qty_', 'item_1_3', L1_in); 
+        setQ('qty_', 'item_1_4', L1_in); 
 
         setQ('qty_', 'item_3_0', H1_in); 
         setQ('qty_', 'item_3_1', H1_in); 
@@ -2012,15 +2014,12 @@ Note:
             setQ('qty2_', 'item_0_6', H2 >= 4 ? perim2 * (H2 - 3) : 0); 
             setQ('qty2_', 'item_0_7', partPanels2); 
 
-            // CLEATS AND TRUSSES
             setQ('qty2_', 'item_1_0', H2 * 4); 
             setQ('qty2_', 'item_1_1', perim2); 
             setQ('qty2_', 'item_1_2', perim2); 
             setQ('qty2_', 'item_1_3', L2_in); 
             setQ('qty2_', 'item_1_4', L2_in); 
 
-            // ANGLE STAYS TANK 2 - REMOVED FORCED AUTO-CALC
-            
             setQ('qty2_', 'item_3_0', H2_in); 
             setQ('qty2_', 'item_3_1', H2_in); 
             setQ('qty2_', 'item_3_2', 1); 
@@ -2090,10 +2089,13 @@ Note:
             
             let part = (partChoice === 'yes' && pQty > 0) ? `${pQty}x ${pType} (${pLen}${u} x ${pHgt}${u})` : 'None';
             
+            let tPanels = document.getElementById('sumPanels_screen') ? document.getElementById('sumPanels_screen').innerText : "0";
+
             csv += `"Quote No:","${qid}"\n`;
             csv += `"Project / Client:","${proj.replace(/"/g, '""')}"\n`;
             csv += `"Date:","${d}"\n`;
             csv += `"Dimensions:","${dim}"\n`;
+            csv += `"Total Panels:","${tPanels} pcs"\n`;
             csv += `"Material:","${mat}"\n`;
             csv += `"Partition (Tank 1):","${part}"\n\n`;
 
