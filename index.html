@@ -228,7 +228,6 @@
             .cp-table .td-center { text-align: center;}
             .cp-table .td-right { text-align: right;}
             
-            /* Exclusions explicitly formatted for Page 2 */
             .cp-short-exclusions { display: flex; align-items: stretch; margin-bottom: 15px !important; font-size: 8pt; line-height: 1.4; border: 1px solid #000;}
             .cp-short-exclusions .label { background: #d1d5db !important; color: #000; padding: 6px 10px; font-weight: bold; border-right: 1px solid #000; -webkit-print-color-adjust: exact; width: 100px; text-align: center; display: flex; align-items: center; justify-content: center;}
             .cp-short-exclusions .content { padding: 6px 10px; background: #fff; flex: 1;}
@@ -250,11 +249,11 @@
     </style>
     
     <script>
-        const currentVersion = "V33";
+        const currentVersion = "V34";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=32; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=33; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -1175,7 +1174,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV33'); // V33 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV34'); // V34 CACHE BUSTER
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1456,11 +1455,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV33', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV34', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV33');
+        let savedData = localStorage.getItem('winkoProDataV34');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1673,13 +1672,23 @@ Note:
         syncPrintHeader(); 
     }
 
-    function drawGrid(id, c, r) {
+    function drawGrid(id, c, r, pType = null, pPos = -1) {
         const g = document.getElementById(id); 
         const gp = document.getElementById(id + '_p'); 
         
         let html = '';
         for(let i=0; i<(c*r); i++) {
-            html += '<div class="panel" style="aspect-ratio: 1/1; min-height: 15px; border: 0.5px solid #94a3b8; background: #e0f2fe; box-sizing: border-box;"></div>';
+            let col = i % c;
+            let row = Math.floor(i / c);
+            let extraStyle = '';
+            
+            if (pType === 'v' && col === pPos) {
+                extraStyle = 'border-right: 3px solid #ef4444 !important; z-index: 10;';
+            } else if (pType === 'h' && row === pPos) {
+                extraStyle = 'border-bottom: 3px solid #ef4444 !important; z-index: 10;';
+            }
+            
+            html += `<div class="panel" style="aspect-ratio: 1/1; min-height: 15px; border: 0.5px solid #94a3b8; background: #e0f2fe; box-sizing: border-box; position: relative; ${extraStyle}"></div>`;
         }
         
         if(g) {
@@ -1726,7 +1735,6 @@ Note:
         const pL1 = Math.ceil(pLen_in1 / factor);
         const pH1 = Math.ceil(pHgt_in1 / factor);
 
-        // --- NEW ALGORITHM: TIERED WALL CALCULATION ---
         let roof1 = L1 * W1; 
         let base1 = L1 * W1; 
         let perim1 = (L1 + W1) * 2;
@@ -1734,6 +1742,24 @@ Note:
         let partPanels1 = (partChoice1 === 'yes' && pQty1 > 0) ? (pL1 * pH1 * pQty1) : 0;
         let totalP1 = roof1 + base1 + sides1 + partPanels1;
         window.currentTotalP1 = totalP1;
+
+        // Partition Drawing Logic T1
+        let pTypeTop1 = null, pPosTop1 = -1;
+        let pTypeFront1 = null, pPosFront1 = -1;
+        let pTypeSide1 = null, pPosSide1 = -1;
+
+        if (partChoice1 === 'yes' && pQty1 > 0) {
+            if (pL1 === W1) { // Divides Length
+                pTypeTop1 = 'v'; pPosTop1 = Math.max(0, Math.floor(L1 / 2) - 1);
+                pTypeFront1 = 'v'; pPosFront1 = Math.max(0, Math.floor(L1 / 2) - 1);
+            } else if (pL1 === L1) { // Divides Width
+                pTypeTop1 = 'h'; pPosTop1 = Math.max(0, Math.floor(W1 / 2) - 1);
+                pTypeSide1 = 'v'; pPosSide1 = Math.max(0, Math.floor(W1 / 2) - 1);
+            } else { // Fallback
+                pTypeTop1 = 'v'; pPosTop1 = Math.max(0, Math.floor(L1 / 2) - 1);
+                pTypeFront1 = 'v'; pPosFront1 = Math.max(0, Math.floor(L1 / 2) - 1);
+            }
+        }
 
         // Dynamic BOM Descriptions Updates based on Inputs
         let tRoof = document.getElementById('thickRoof') ? document.getElementById('thickRoof').value : "1.5mm";
@@ -1755,6 +1781,10 @@ Note:
         let volLiters2 = 0, effLiters2 = 0;
         let roof2 = 0, base2 = 0, perim2 = 0, sides2 = 0, partPanels2 = 0, totalP2 = 0;
         let H2_in = 0, L2_in = 0, L2 = 0, W2 = 0, H2 = 0;
+        
+        let pTypeTop2 = null, pPosTop2 = -1;
+        let pTypeFront2 = null, pPosFront2 = -1;
+        let pTypeSide2 = null, pPosSide2 = -1;
 
         if (numTanks === 2) {
             let l2El = document.getElementById('length2'); L2_in = (l2El && l2El.value) ? parseFloat(l2El.value) : 0;
@@ -1783,6 +1813,19 @@ Note:
             partPanels2 = (partChoice2 === 'yes' && pQty2 > 0) ? (pL2 * pH2 * pQty2) : 0;
             totalP2 = roof2 + base2 + sides2 + partPanels2;
 
+            if (partChoice2 === 'yes' && pQty2 > 0) {
+                if (pL2 === W2) { // Divides Length
+                    pTypeTop2 = 'v'; pPosTop2 = Math.max(0, Math.floor(L2 / 2) - 1);
+                    pTypeFront2 = 'v'; pPosFront2 = Math.max(0, Math.floor(L2 / 2) - 1);
+                } else if (pL2 === L2) { // Divides Width
+                    pTypeTop2 = 'h'; pPosTop2 = Math.max(0, Math.floor(W2 / 2) - 1);
+                    pTypeSide2 = 'v'; pPosSide2 = Math.max(0, Math.floor(W2 / 2) - 1);
+                } else { // Fallback
+                    pTypeTop2 = 'v'; pPosTop2 = Math.max(0, Math.floor(L2 / 2) - 1);
+                    pTypeFront2 = 'v'; pPosFront2 = Math.max(0, Math.floor(L2 / 2) - 1);
+                }
+            }
+
             updateDesc('desc2_', 'item_0_1', tRoof + " Roof Panel");
             updateDesc('desc2_', 'item_0_2', tBase + " Base Panel");
             updateDesc('desc2_', 'item_0_3', tL1 + " Wall Panel (L1)");
@@ -1790,9 +1833,12 @@ Note:
             updateDesc('desc2_', 'item_0_5', tL3 + " Wall Panel (L3)");
             updateDesc('desc2_', 'item_0_6', tL4 + " Wall Panel (L4)");
 
-            drawGrid('topGrid2', L2, W2); drawGrid('bottomGrid2', L2, W2);
-            drawGrid('frontGrid2', L2, H2); drawGrid('backGrid2', L2, H2);
-            drawGrid('leftGrid2', W2, H2); drawGrid('rightGrid2', W2, H2);
+            drawGrid('topGrid2', L2, W2, pTypeTop2, pPosTop2); 
+            drawGrid('bottomGrid2', L2, W2, pTypeTop2, pPosTop2);
+            drawGrid('frontGrid2', L2, H2, pTypeFront2, pPosFront2); 
+            drawGrid('backGrid2', L2, H2, pTypeFront2, pPosFront2);
+            drawGrid('leftGrid2', W2, H2, pTypeSide2, pPosSide2); 
+            drawGrid('rightGrid2', W2, H2, pTypeSide2, pPosSide2);
         } else {
             if(document.getElementById('qty2_item_0_0')) {
                  const t2Inputs = document.querySelectorAll('[id^="qty2_"]');
@@ -1810,7 +1856,6 @@ Note:
         let capPrint = document.getElementById('sumCapacity_print');
         if(capPrint && capScreen) capPrint.innerText = capScreen.innerText;
 
-        // COMBINED BOM UPDATES
         let combinedTotalP = totalP1 + totalP2;
         let tpCount = document.getElementById('totalPanelsCount');
         if(tpCount) tpCount.innerText = combinedTotalP;
@@ -1873,9 +1918,12 @@ Note:
             let q2_41 = document.getElementById('qty2_item_4_1'); if(q2_41 && !q2_41.value) q2_41.value = 0;
         }
 
-        drawGrid('topGrid', L1, W1); drawGrid('bottomGrid', L1, W1);
-        drawGrid('frontGrid', L1, H1); drawGrid('backGrid', L1, H1);
-        drawGrid('leftGrid', W1, H1); drawGrid('rightGrid', W1, H1);
+        drawGrid('topGrid', L1, W1, pTypeTop1, pPosTop1); 
+        drawGrid('bottomGrid', L1, W1, pTypeTop1, pPosTop1);
+        drawGrid('frontGrid', L1, H1, pTypeFront1, pPosFront1); 
+        drawGrid('backGrid', L1, H1, pTypeFront1, pPosFront1);
+        drawGrid('leftGrid', W1, H1, pTypeSide1, pPosSide1); 
+        drawGrid('rightGrid', W1, H1, pTypeSide1, pPosSide1);
 
         let plinthText = document.getElementById('plinthCalcText');
         const numPlinths = W1 + 1;
