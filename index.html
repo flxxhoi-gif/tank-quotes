@@ -249,11 +249,11 @@
     </style>
     
     <script>
-        const currentVersion = "V34";
+        const currentVersion = "V35";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=33; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=34; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -382,11 +382,12 @@
                         <div class="form-group" style="grid-column: span 2;"><label>Tank 1 Partition</label><select id="partChoice" onchange="togglePartitionDetails(); processTankData();"><option value="no">No Partition</option><option value="yes">Yes (Internal Wall)</option></select></div>
                     </div>
                     <div id="partitionDetailsRow" style="display: none; background: #fff7ed; padding: 15px; border: 1px dashed #fdba74; border-radius: 8px; margin-bottom: 15px;">
-                        <div style="display:flex; gap:15px;">
-                            <div class="form-group" style="flex:0.6;"><label>Part. Qty</label><input type="number" id="partQty" value="0" min="0" oninput="processTankData(); savePrices();"></div>
-                            <div class="form-group" style="flex:1;"><label>Part. L/W (<span class="unitLabel">Ft</span>)</label><input type="number" id="partLen" value="0" oninput="processTankData(); savePrices();"></div>
-                            <div class="form-group" style="flex:1;"><label>Part. Height (<span class="unitLabel">Ft</span>)</label><input type="number" id="partHgt" value="0" oninput="processTankData(); savePrices();"></div>
-                            <div class="form-group" style="flex:2;"><label>Partition Type</label><input type="text" id="partType" placeholder="e.g. Divider" oninput="processTankData(); savePrices();"></div>
+                        <div style="display:flex; gap:15px; flex-wrap:wrap;">
+                            <div class="form-group" style="flex:0.5; min-width:60px;"><label>Qty</label><input type="number" id="partQty" value="0" min="0" oninput="processTankData(); savePrices();"></div>
+                            <div class="form-group" style="flex:1; min-width:80px;"><label>L/W (<span class="unitLabel">Ft</span>)</label><input type="number" id="partLen" value="0" oninput="processTankData(); savePrices();"></div>
+                            <div class="form-group" style="flex:1; min-width:80px;"><label>Height (<span class="unitLabel">Ft</span>)</label><input type="number" id="partHgt" value="0" oninput="processTankData(); savePrices();"></div>
+                            <div class="form-group" style="flex:1; min-width:100px;"><label>Pos. (Panels)</label><input type="number" id="partPos" value="1" min="1" oninput="processTankData(); savePrices();" title="Number of panels from the edge to place the partition"></div>
+                            <div class="form-group" style="flex:1.5; min-width:120px;"><label>Type</label><input type="text" id="partType" placeholder="e.g. Divider" oninput="processTankData(); savePrices();"></div>
                         </div>
                     </div>
 
@@ -406,11 +407,12 @@
                             <div class="form-group" style="grid-column: span 2;"><label>Tank 2 Partition</label><select id="partChoice2" onchange="togglePartitionDetails(); processTankData();"><option value="no">No Partition</option><option value="yes">Yes (Internal Wall)</option></select></div>
                         </div>
                         <div id="partitionDetailsRow2" style="display: none; background: #fff7ed; padding: 15px; border: 1px dashed #fdba74; border-radius: 8px; margin-bottom: 15px;">
-                            <div style="display:flex; gap:15px;">
-                                <div class="form-group" style="flex:0.6;"><label>Part. Qty</label><input type="number" id="partQty2" value="0" min="0" oninput="processTankData(); savePrices();"></div>
-                                <div class="form-group" style="flex:1;"><label>Part. L/W (<span class="unitLabel">Ft</span>)</label><input type="number" id="partLen2" value="0" oninput="processTankData(); savePrices();"></div>
-                                <div class="form-group" style="flex:1;"><label>Part. Height (<span class="unitLabel">Ft</span>)</label><input type="number" id="partHgt2" value="0" oninput="processTankData(); savePrices();"></div>
-                                <div class="form-group" style="flex:2;"><label>Partition Type</label><input type="text" id="partType2" placeholder="e.g. Divider" oninput="processTankData(); savePrices();"></div>
+                            <div style="display:flex; gap:15px; flex-wrap:wrap;">
+                                <div class="form-group" style="flex:0.5; min-width:60px;"><label>Qty</label><input type="number" id="partQty2" value="0" min="0" oninput="processTankData(); savePrices();"></div>
+                                <div class="form-group" style="flex:1; min-width:80px;"><label>L/W (<span class="unitLabel">Ft</span>)</label><input type="number" id="partLen2" value="0" oninput="processTankData(); savePrices();"></div>
+                                <div class="form-group" style="flex:1; min-width:80px;"><label>Height (<span class="unitLabel">Ft</span>)</label><input type="number" id="partHgt2" value="0" oninput="processTankData(); savePrices();"></div>
+                                <div class="form-group" style="flex:1; min-width:100px;"><label>Pos. (Panels)</label><input type="number" id="partPos2" value="1" min="1" oninput="processTankData(); savePrices();" title="Number of panels from the edge to place the partition"></div>
+                                <div class="form-group" style="flex:1.5; min-width:120px;"><label>Type</label><input type="text" id="partType2" placeholder="e.g. Divider" oninput="processTankData(); savePrices();"></div>
                             </div>
                         </div>
                     </div>
@@ -983,8 +985,8 @@ Note:
     let customRowCounts = JSON.parse(localStorage.getItem('winkoCustomCounts')) || [0,0,0,0,0];
 
     const configIDs = ['quoteIdInput', 'numTanks', 'stdChoice','stdChoice2','unitChoice','coatChoice','coatChoice2',
-                       'length','width','height', 'partChoice', 'partQty','partLen','partHgt','partType',
-                       'length2','width2','height2', 'partChoice2', 'partQty2','partLen2','partHgt2','partType2',
+                       'length','width','height', 'partChoice', 'partQty','partLen','partHgt','partPos','partType',
+                       'length2','width2','height2', 'partChoice2', 'partQty2','partLen2','partHgt2','partPos2','partType2',
                        'thickRoof', 'thickWallL1', 'thickWallL2', 'thickWallL3', 'thickWallL4', 'thickBase', 'markupPct','discountPct','sstPct', 
                        'shortExclusions', 'fullTermsNotes', 'custCompany', 'custAttn', 'custAddr', 'tcValidity', 'tcLead', 'tcDelivery', 'tcPayment', 'signName', 'signPhone'];
 
@@ -1174,7 +1176,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV34'); // V34 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV35'); // V35 CACHE BUSTER
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1293,7 +1295,7 @@ Note:
             
             let cpDims1 = document.getElementById('cpDims');
             if(cpDims1) cpDims1.innerText = `${l1}${u} (L) x ${w1}${u} (W) x ${h1}${u} (H)`;
-
+            
             let cpStd1 = document.getElementById('cpStd'); if(cpStd1) cpStd1.innerText = (sInput && sInput.value) ? sInput.value : "";
             
             let tRoof = document.getElementById('thickRoof'); let valRoof = (tRoof && tRoof.value) ? tRoof.value : "";
@@ -1320,7 +1322,6 @@ Note:
                 }
             }
 
-            // TANK 1 LADDERS
             let extLadMatEl = document.getElementById('extLadMat'); let extLadMat = (extLadMatEl && extLadMatEl.value) ? extLadMatEl.value : 'External Ladder';
             let intLadMatEl = document.getElementById('intLadMat'); let intLadMat = (intLadMatEl && intLadMatEl.value) ? intLadMatEl.value : 'Internal Ladder';
             let qtyExtEl = document.getElementById('qty_item_3_0'); let qtyExt = (qtyExtEl && qtyExtEl.value) ? qtyExtEl.value : '0';
@@ -1372,7 +1373,7 @@ Note:
                     }
                 }
                 
-                // TANK 2 LADDERS FIX: NOW PULLS SPECIFICALLY FROM TANK 2 BOM
+                // TANK 2 LADDERS
                 let extLadMatEl2 = document.getElementById('sel2_extLadMat'); let extLadMat2 = (extLadMatEl2 && extLadMatEl2.value) ? extLadMatEl2.value : 'External Ladder';
                 let intLadMatEl2 = document.getElementById('sel2_intLadMat'); let intLadMat2 = (intLadMatEl2 && intLadMatEl2.value) ? intLadMatEl2.value : 'Internal Ladder';
                 let qtyExtEl2 = document.getElementById('qty2_item_3_0'); let qtyExt2 = (qtyExtEl2 && qtyExtEl2.value) ? qtyExtEl2.value : '0';
@@ -1455,11 +1456,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV34', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV35', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV34');
+        let savedData = localStorage.getItem('winkoProDataV35');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1722,11 +1723,13 @@ Note:
 
         const pc1El = document.getElementById('partChoice');
         const partChoice1 = (pc1El && pc1El.value) ? pc1El.value : 'no';
-        let pQty1 = 0; let pLen_in1 = 0; let pHgt_in1 = 0;
+        let pQty1 = 0; let pLen_in1 = 0; let pHgt_in1 = 0; let pPos_in1 = 1;
+        
         if(partChoice1 === 'yes') {
             let pq1El = document.getElementById('partQty'); pQty1 = (pq1El && pq1El.value) ? parseInt(pq1El.value) : 0;
             let pl1El = document.getElementById('partLen'); pLen_in1 = (pl1El && pl1El.value) ? parseFloat(pl1El.value) : 0;
             let ph1El = document.getElementById('partHgt'); pHgt_in1 = (ph1El && ph1El.value) ? parseFloat(ph1El.value) : 0;
+            let ppos1El = document.getElementById('partPos'); pPos_in1 = (ppos1El && ppos1El.value) ? parseInt(ppos1El.value) : 1;
         }
 
         const L1 = Math.ceil(L1_in / factor);
@@ -1734,7 +1737,9 @@ Note:
         const H1 = Math.ceil(H1_in / factor);
         const pL1 = Math.ceil(pLen_in1 / factor);
         const pH1 = Math.ceil(pHgt_in1 / factor);
+        const pPosIdx1 = Math.max(0, pPos_in1 - 1); // Convert human 1-index to 0-index for grid
 
+        // --- TANK 1 ALGORITHM ---
         let roof1 = L1 * W1; 
         let base1 = L1 * W1; 
         let perim1 = (L1 + W1) * 2;
@@ -1750,14 +1755,14 @@ Note:
 
         if (partChoice1 === 'yes' && pQty1 > 0) {
             if (pL1 === W1) { // Divides Length
-                pTypeTop1 = 'v'; pPosTop1 = Math.max(0, Math.floor(L1 / 2) - 1);
-                pTypeFront1 = 'v'; pPosFront1 = Math.max(0, Math.floor(L1 / 2) - 1);
+                pTypeTop1 = 'v'; pPosTop1 = Math.min(L1 - 2, pPosIdx1);
+                pTypeFront1 = 'v'; pPosFront1 = Math.min(L1 - 2, pPosIdx1);
             } else if (pL1 === L1) { // Divides Width
-                pTypeTop1 = 'h'; pPosTop1 = Math.max(0, Math.floor(W1 / 2) - 1);
-                pTypeSide1 = 'v'; pPosSide1 = Math.max(0, Math.floor(W1 / 2) - 1);
+                pTypeTop1 = 'h'; pPosTop1 = Math.min(W1 - 2, pPosIdx1);
+                pTypeSide1 = 'v'; pPosSide1 = Math.min(W1 - 2, pPosIdx1);
             } else { // Fallback
-                pTypeTop1 = 'v'; pPosTop1 = Math.max(0, Math.floor(L1 / 2) - 1);
-                pTypeFront1 = 'v'; pPosFront1 = Math.max(0, Math.floor(L1 / 2) - 1);
+                pTypeTop1 = 'v'; pPosTop1 = Math.min(L1 - 2, pPosIdx1);
+                pTypeFront1 = 'v'; pPosFront1 = Math.min(L1 - 2, pPosIdx1);
             }
         }
 
@@ -1796,11 +1801,12 @@ Note:
 
             let pc2El = document.getElementById('partChoice2');
             const partChoice2 = (pc2El && pc2El.value) ? pc2El.value : 'no';
-            let pQty2 = 0; let pLen_in2 = 0; let pHgt_in2 = 0;
+            let pQty2 = 0; let pLen_in2 = 0; let pHgt_in2 = 0; let pPos_in2 = 1;
             if(partChoice2 === 'yes') {
                 let pq2El = document.getElementById('partQty2'); pQty2 = (pq2El && pq2El.value) ? parseInt(pq2El.value) : 0;
                 let pl2El = document.getElementById('partLen2'); pLen_in2 = (pl2El && pl2El.value) ? parseFloat(pl2El.value) : 0;
                 let ph2El = document.getElementById('partHgt2'); pHgt_in2 = (ph2El && ph2El.value) ? parseFloat(ph2El.value) : 0;
+                let ppos2El = document.getElementById('partPos2'); pPos_in2 = (ppos2El && ppos2El.value) ? parseInt(ppos2El.value) : 1;
             }
 
             L2 = Math.ceil(L2_in / factor);
@@ -1808,6 +1814,7 @@ Note:
             H2 = Math.ceil(H2_in / factor);
             const pL2 = Math.ceil(pLen_in2 / factor);
             const pH2 = Math.ceil(pHgt_in2 / factor);
+            const pPosIdx2 = Math.max(0, pPos_in2 - 1);
 
             roof2 = L2 * W2; base2 = L2 * W2; perim2 = (L2 + W2) * 2; sides2 = perim2 * H2; 
             partPanels2 = (partChoice2 === 'yes' && pQty2 > 0) ? (pL2 * pH2 * pQty2) : 0;
@@ -1815,14 +1822,14 @@ Note:
 
             if (partChoice2 === 'yes' && pQty2 > 0) {
                 if (pL2 === W2) { // Divides Length
-                    pTypeTop2 = 'v'; pPosTop2 = Math.max(0, Math.floor(L2 / 2) - 1);
-                    pTypeFront2 = 'v'; pPosFront2 = Math.max(0, Math.floor(L2 / 2) - 1);
+                    pTypeTop2 = 'v'; pPosTop2 = Math.min(L2 - 2, pPosIdx2);
+                    pTypeFront2 = 'v'; pPosFront2 = Math.min(L2 - 2, pPosIdx2);
                 } else if (pL2 === L2) { // Divides Width
-                    pTypeTop2 = 'h'; pPosTop2 = Math.max(0, Math.floor(W2 / 2) - 1);
-                    pTypeSide2 = 'v'; pPosSide2 = Math.max(0, Math.floor(W2 / 2) - 1);
+                    pTypeTop2 = 'h'; pPosTop2 = Math.min(W2 - 2, pPosIdx2);
+                    pTypeSide2 = 'v'; pPosSide2 = Math.min(W2 - 2, pPosIdx2);
                 } else { // Fallback
-                    pTypeTop2 = 'v'; pPosTop2 = Math.max(0, Math.floor(L2 / 2) - 1);
-                    pTypeFront2 = 'v'; pPosFront2 = Math.max(0, Math.floor(L2 / 2) - 1);
+                    pTypeTop2 = 'v'; pPosTop2 = Math.min(L2 - 2, pPosIdx2);
+                    pTypeFront2 = 'v'; pPosFront2 = Math.min(L2 - 2, pPosIdx2);
                 }
             }
 
@@ -1856,6 +1863,7 @@ Note:
         let capPrint = document.getElementById('sumCapacity_print');
         if(capPrint && capScreen) capPrint.innerText = capScreen.innerText;
 
+        // COMBINED BOM UPDATES
         let combinedTotalP = totalP1 + totalP2;
         let tpCount = document.getElementById('totalPanelsCount');
         if(tpCount) tpCount.innerText = combinedTotalP;
