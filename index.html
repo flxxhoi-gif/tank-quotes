@@ -253,11 +253,11 @@
     </style>
     
     <script>
-        const currentVersion = "V46";
+        const currentVersion = "V47";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=45; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=46; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -384,9 +384,9 @@
 
                     <div class="tank-section-title">Tank 1 Specifications</div>
                     <div class="dim-grid">
-                        <div class="form-group"><label>Tank Length</label><input type="number" id="length" value="12" step="0.01" oninput="processTankData(); savePrices();"></div>
-                        <div class="form-group"><label>Tank Width</label><input type="number" id="width" value="4" step="0.01" oninput="processTankData(); savePrices();"></div>
-                        <div class="form-group"><label>Tank Height</label><input type="number" id="height" value="4" step="0.01" oninput="processTankData(); savePrices();"></div>
+                        <div class="form-group"><label>Tank Length (<span class="unitLabel">Ft</span>)</label><input type="number" id="length" value="12" step="0.01" oninput="processTankData(); savePrices();"></div>
+                        <div class="form-group"><label>Tank Width (<span class="unitLabel">Ft</span>)</label><input type="number" id="width" value="4" step="0.01" oninput="processTankData(); savePrices();"></div>
+                        <div class="form-group"><label>Tank Height (<span class="unitLabel">Ft</span>)</label><input type="number" id="height" value="4" step="0.01" oninput="processTankData(); savePrices();"></div>
                     </div>
                     
                     <div class="config-grid" style="margin-bottom:15px;">
@@ -409,9 +409,9 @@
                             <div class="form-group"><label>Tank 2 Material / Finish</label><select id="coatChoice2" onchange="savePrices(); processTankData();"><option>Hot Dipped Galvanised</option><option>Painted Steel</option><option>Stainless Steel (SS 304)</option><option>Stainless Steel (SS 316)</option></select></div>
                         </div>
                         <div class="dim-grid">
-                            <div class="form-group"><label>Tank Length</label><input type="number" id="length2" value="8" step="0.01" oninput="processTankData(); savePrices();"></div>
-                            <div class="form-group"><label>Tank Width</label><input type="number" id="width2" value="4" step="0.01" oninput="processTankData(); savePrices();"></div>
-                            <div class="form-group"><label>Tank Height</label><input type="number" id="height2" value="4" step="0.01" oninput="processTankData(); savePrices();"></div>
+                            <div class="form-group"><label>Tank Length (<span class="unitLabel">Ft</span>)</label><input type="number" id="length2" value="8" step="0.01" oninput="processTankData(); savePrices();"></div>
+                            <div class="form-group"><label>Tank Width (<span class="unitLabel">Ft</span>)</label><input type="number" id="width2" value="4" step="0.01" oninput="processTankData(); savePrices();"></div>
+                            <div class="form-group"><label>Tank Height (<span class="unitLabel">Ft</span>)</label><input type="number" id="height2" value="4" step="0.01" oninput="processTankData(); savePrices();"></div>
                         </div>
                         
                         <div class="config-grid" style="margin-bottom:15px;">
@@ -1259,7 +1259,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV46'); // V46 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV47'); // V47 CACHE BUSTER
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1410,6 +1410,7 @@ Note:
                 }
             }
 
+            // TANK 1 LADDERS
             let extLadMatEl = document.getElementById('extLadMat'); let extLadMat = (extLadMatEl && extLadMatEl.value) ? extLadMatEl.value : 'External Ladder';
             let intLadMatEl = document.getElementById('intLadMat'); let intLadMat = (intLadMatEl && intLadMatEl.value) ? intLadMatEl.value : 'Internal Ladder';
             let qtyExtEl = document.getElementById('qty_item_3_0'); let qtyExt = (qtyExtEl && qtyExtEl.value) ? qtyExtEl.value : '0';
@@ -1560,11 +1561,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV46', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV47', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV46');
+        let savedData = localStorage.getItem('winkoProDataV47');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1598,6 +1599,8 @@ Note:
                     if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(savedData[`sel2_${it.selectId}`] && s2) s2.value = savedData[`sel2_${it.selectId}`]; }
                 });
             });
+            
+            processTankData(); 
         }
     }
 
@@ -1925,13 +1928,18 @@ Note:
         let tL3 = document.getElementById('thickWallL3') ? document.getElementById('thickWallL3').value : "3.0mm";
         let tL4 = document.getElementById('thickWallL4') ? document.getElementById('thickWallL4').value : "1.5mm";
 
+        let pSfx = unit === 'ft' ? " (4'x4')" : " (1x1m)";
+        
         let updateDesc = function(prefix, id, val) { let el = document.getElementById(prefix + id); if(el) el.value = val; };
-        updateDesc('desc_', 'item_0_1', tRoof + " Roof Panel");
-        updateDesc('desc_', 'item_0_2', tBase + " Base Panel");
-        updateDesc('desc_', 'item_0_3', tL1 + " Wall Panel (L1)");
-        updateDesc('desc_', 'item_0_4', tL2 + " Wall Panel (L2)");
-        updateDesc('desc_', 'item_0_5', tL3 + " Wall Panel (L3)");
-        updateDesc('desc_', 'item_0_6', tL4 + " Wall Panel (L4)");
+        
+        updateDesc('desc_', 'item_0_0', "Manhole Panel" + pSfx);
+        updateDesc('desc_', 'item_0_1', tRoof + " Roof Panel" + pSfx);
+        updateDesc('desc_', 'item_0_2', tBase + " Base Panel" + pSfx);
+        updateDesc('desc_', 'item_0_3', tL1 + " Wall Panel (L1)" + pSfx);
+        updateDesc('desc_', 'item_0_4', tL2 + " Wall Panel (L2)" + pSfx);
+        updateDesc('desc_', 'item_0_5', tL3 + " Wall Panel (L3)" + pSfx);
+        updateDesc('desc_', 'item_0_6', tL4 + " Wall Panel (L4)" + pSfx);
+        updateDesc('desc_', 'item_0_7', "Partition Panel" + pSfx);
 
         // TANK 2 DATA
         let volLiters2 = 0, effLiters2 = 0;
@@ -1984,12 +1992,14 @@ Note:
                 }
             }
 
-            updateDesc('desc2_', 'item_0_1', tRoof + " Roof Panel");
-            updateDesc('desc2_', 'item_0_2', tBase + " Base Panel");
-            updateDesc('desc2_', 'item_0_3', tL1 + " Wall Panel (L1)");
-            updateDesc('desc2_', 'item_0_4', tL2 + " Wall Panel (L2)");
-            updateDesc('desc2_', 'item_0_5', tL3 + " Wall Panel (L3)");
-            updateDesc('desc2_', 'item_0_6', tL4 + " Wall Panel (L4)");
+            updateDesc('desc2_', 'item_0_0', "Manhole Panel" + pSfx);
+            updateDesc('desc2_', 'item_0_1', tRoof + " Roof Panel" + pSfx);
+            updateDesc('desc2_', 'item_0_2', tBase + " Base Panel" + pSfx);
+            updateDesc('desc2_', 'item_0_3', tL1 + " Wall Panel (L1)" + pSfx);
+            updateDesc('desc2_', 'item_0_4', tL2 + " Wall Panel (L2)" + pSfx);
+            updateDesc('desc2_', 'item_0_5', tL3 + " Wall Panel (L3)" + pSfx);
+            updateDesc('desc2_', 'item_0_6', tL4 + " Wall Panel (L4)" + pSfx);
+            updateDesc('desc2_', 'item_0_7', "Partition Panel" + pSfx);
 
             let stays2 = [
                 getQtyVal('qty2_item_2_0') > 0,
@@ -2049,10 +2059,13 @@ Note:
             let s1 = [0, 0, 0, 0];
             if (H1 >= 1 && H1 <= 4) s1[H1 - 1] = 2 * V1;
             for (let i = 1; i < H1 && i <= 4; i++) s1[i - 1] = (H1 - i) * V1;
-            setQ('qty_', 'item_2_0', s1[0]); // L1 Stay
-            setQ('qty_', 'item_2_1', s1[1]); // L2 Stay
-            setQ('qty_', 'item_2_2', s1[2]); // L3 Stay
-            setQ('qty_', 'item_2_3', s1[3]); // L4 Stay
+            
+            // Set metric stays automatically
+            let setStayIfEmpty = function(prefix, id, val) { let el = document.getElementById(prefix + id); if(el && !el.value) el.value = val; };
+            setStayIfEmpty('qty_', 'item_2_0', s1[0]); // L1 Stay
+            setStayIfEmpty('qty_', 'item_2_1', s1[1]); // L2 Stay
+            setStayIfEmpty('qty_', 'item_2_2', s1[2]); // L3 Stay
+            setStayIfEmpty('qty_', 'item_2_3', s1[3]); // L4 Stay
         } else {
             setQ('qty_', 'item_1_0', H1 * 4); // Type A (Imperial)
             setQ('qty_', 'item_1_1', perim1); // Type B (Imperial)
@@ -2106,10 +2119,11 @@ Note:
                 let s2 = [0, 0, 0, 0];
                 if (H2 >= 1 && H2 <= 4) s2[H2 - 1] = 2 * V2;
                 for (let i = 1; i < H2 && i <= 4; i++) s2[i - 1] = (H2 - i) * V2;
-                setQ('qty2_', 'item_2_0', s2[0]); 
-                setQ('qty2_', 'item_2_1', s2[1]); 
-                setQ('qty2_', 'item_2_2', s2[2]); 
-                setQ('qty2_', 'item_2_3', s2[3]); 
+                let setStayIfEmpty2 = function(prefix, id, val) { let el = document.getElementById(prefix + id); if(el && !el.value) el.value = val; };
+                setStayIfEmpty2('qty2_', 'item_2_0', s2[0]); 
+                setStayIfEmpty2('qty2_', 'item_2_1', s2[1]); 
+                setStayIfEmpty2('qty2_', 'item_2_2', s2[2]); 
+                setStayIfEmpty2('qty2_', 'item_2_3', s2[3]); 
             } else {
                 setQ('qty2_', 'item_1_0', H2 * 4); 
                 setQ('qty2_', 'item_1_1', perim2); 
@@ -2141,6 +2155,11 @@ Note:
         drawGrid('backGrid', L1, H1, pTypeFront1, pPosFront1, true, stays1);
         drawGrid('leftGrid', W1, H1, pTypeSide1, pPosSide1, true, stays1); 
         drawGrid('rightGrid', W1, H1, pTypeSide1, pPosSide1, true, stays1);
+
+        let plinthText = document.getElementById('plinthCalcText');
+        const numPlinths = W1 + 1;
+        const plinthLen = L1_in;
+        if(plinthText) plinthText.innerText = `Recommendation: Require ${numPlinths} rows of concrete plinths, each ${plinthLen}${unitStr} long, spaced at ${spacingStr} C/C.`;
 
         calcTotals();
         savePrices();
