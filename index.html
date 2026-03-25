@@ -19,7 +19,7 @@
         .login-card { background: white; padding: 50px 40px; border-radius: 16px; color: #333; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); width: 90%; max-width: 420px; display: flex; flex-direction: column; align-items: center;}
         .login-card input { width: 100%; padding: 14px; margin: 25px 0 15px 0; border: 2px solid #e2e8f0; border-radius: 8px; text-align: center; font-size: 18px; outline: none; transition: border-color 0.3s; }
         .login-card input:focus { border-color: #ea580c; box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1); }
-        .login-card button { width: 100%; padding: 14px; background: linear-gradient(135deg, #ea580c, #c2410c); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: font-size: 16px; transition: transform 0.2s, box-shadow 0.2s;}
+        .login-card button { width: 100%; padding: 14px; background: linear-gradient(135deg, #ea580c, #c2410c); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; transition: transform 0.2s, box-shadow 0.2s;}
         .login-card button:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(234, 88, 12, 0.3); }
         
         #mainContent, #adminContent { display: none; }
@@ -155,14 +155,14 @@
             body.print-internal .meta-label { font-weight: 700; color: #64748b; width: 90px; text-transform: uppercase;}
             body.print-internal .meta-value { font-weight: 700; color: #0f172a; }
             
-            body.print-internal table { font-size: 8.5pt; margin-bottom: 10px; border-collapse: collapse; width: 100%; border: 1px solid #cbd5e1; border-radius: 0;}
-            body.print-internal tr { border-bottom: 1px solid #e2e8f0; page-break-inside: avoid; }
+            body.print-internal table { font-size: 8.5pt; margin-bottom: 10px; border-collapse: collapse; width: 100%; border: 1px solid #0f172a; border-radius: 0;}
+            body.print-internal tr { border-bottom: 1px solid #cbd5e1; page-break-inside: avoid; }
             body.print-internal tr:nth-child(even):not(.section-header-row) { background-color: #f8fafc !important; }
-            body.print-internal th { background-color: #0f172a !important; color: #ffffff !important; padding: 4px 6px; border: 1px solid #0f172a; font-weight: 700; text-transform: uppercase;}
-            body.print-internal td { border-right: 1px solid #e2e8f0; padding: 3px 6px; color: #0f172a;}
+            body.print-internal th { background-color: #1e293b !important; color: #ffffff !important; padding: 6px 8px; border: 1px solid #1e293b; font-weight: 700; text-transform: uppercase;}
+            body.print-internal td { border-right: 1px solid #cbd5e1; padding: 4px 8px; color: #0f172a;}
             body.print-internal td:last-child { border-right: none; }
             body.print-internal td.text-center { text-align: center; } body.print-internal td.text-right { text-align: right; font-weight: 700; color: #0f172a !important;}
-            body.print-internal .section-header { background-color: #e2e8f0 !important; font-weight: 800; color: #0f172a !important; border-bottom: 1px solid #cbd5e1 !important; padding: 4px 6px !important; text-transform: uppercase; font-size: 7.5pt; border-right: none;}
+            body.print-internal .section-header { background-color: #e2e8f0 !important; font-weight: 800; color: #0f172a !important; border-bottom: 1px solid #cbd5e1 !important; padding: 5px 8px !important; text-transform: uppercase; font-size: 7.5pt; border-right: none;}
             
             body.print-internal input, body.print-internal .desc-input, body.print-internal .bom-inline-select { border: none !important; background: transparent !important; color: #0f172a !important; box-shadow: none !important; font-weight: 600; padding: 0 !important; font-size: inherit; appearance: none; -webkit-appearance: none; width: auto;}
             body.print-internal input.desc-input { width: 100% !important; text-align: left !important; }
@@ -176,27 +176,31 @@
             body.print-internal .col-uprice { width: 15% !important; }
             body.print-internal .col-itotal { width: 15% !important; }
             
-            body.print-internal #internalPrintFooter { display: block !important; margin-top: 20px; }
-            body.print-internal .summary-box { background: #fff !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 6px !important; padding: 10px !important; margin-top: 10px !important; width: 340px !important; float: right !important; box-shadow: none !important;}
+            /* --- REFINED INTERNAL FOOTER: SIDE-BY-SIDE --- */
+            body.print-internal .footer-flex { display: flex !important; justify-content: space-between !important; align-items: flex-end !important; margin-top: 15px !important; page-break-inside: avoid !important; }
+            body.print-internal .sig-box { width: 40% !important; text-align: left !important; margin-bottom: 10px !important;}
+            body.print-internal .sig-box p { font-size: 9pt !important; margin: 0 !important; color: #0f172a !important; }
+            body.print-internal .sig-line { border-bottom: 1.5px solid #0f172a !important; margin: 40px 0 5px 0 !important; }
+            body.print-internal .sig-box strong { font-size: 10pt !important; color: #0f172a !important; text-transform: uppercase !important;}
+
+            body.print-internal .summary-box { background: #fff !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 8px !important; padding: 15px !important; margin-top: 0 !important; width: 350px !important; float: none !important; box-shadow: 4px 4px 0px rgba(0,0,0,0.1) !important;}
             
-            body.print-internal .summary-table { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
-            body.print-internal .summary-table td { padding: 4px 0; border: none; color: #0f172a; font-weight: 700; }
-            body.print-internal .summary-table .border-top td { border-top: 1px solid #cbd5e1 !important; padding-top: 6px; margin-top: 3px; }
-            body.print-internal .summary-table .border-bottom td { border-bottom: 1px solid #cbd5e1 !important; padding-bottom: 6px; margin-bottom: 3px; }
-            body.print-internal .summary-table .grand-total-row td { font-size: 12pt; padding-top: 8px; }
+            body.print-internal .summary-table { width: 100%; border-collapse: collapse; font-size: 9.5pt; margin-bottom: 0 !important; border: none !important;}
+            body.print-internal .summary-table td { padding: 4px 0; border: none; color: #0f172a; font-weight: 700; text-align: right !important;}
+            body.print-internal .summary-table td:first-child { text-align: left !important; }
+            body.print-internal .summary-table .border-top td { border-top: 1.5px solid #cbd5e1 !important; padding-top: 6px; margin-top: 3px; }
+            body.print-internal .summary-table .border-bottom td { border-bottom: 1.5px solid #cbd5e1 !important; padding-bottom: 6px; margin-bottom: 3px; }
+            body.print-internal .summary-table .grand-total-row td { font-size: 12.5pt; padding-top: 10px; }
 
-            body.print-internal .visual-container { display: grid !important; grid-template-columns: repeat(6, 1fr) !important; gap: 5px !important; width: 100% !important; margin: 10px 0 !important; page-break-inside: avoid !important; clear: both !important;}
-            body.print-internal .view-box { padding: 4px !important; border: 1px solid #cbd5e1 !important; background: #fff !important; border-radius: 4px !important; }
-            body.print-internal .grid-draft { gap: 0.5px !important; border: 1px solid #0f172a !important; background: #fff !important; width: 100% !important;}
+            /* PAGE BREAK FOR DRAWINGS */
+            body.print-internal .drawings-page { page-break-before: always !important; padding-top: 20px !important; }
+            body.print-internal .tank-section-title { font-size: 11pt !important; margin-bottom: 10px !important; margin-top: 15px !important; color: #0f172a !important; font-weight: 800 !important; text-transform: uppercase !important; border-bottom: 2px solid #0f172a !important; padding-bottom: 5px !important; border-left: none !important; background: transparent !important;}
+
+            body.print-internal .visual-container { display: grid !important; grid-template-columns: repeat(6, 1fr) !important; gap: 8px !important; width: 100% !important; margin: 15px 0 25px 0 !important; page-break-inside: avoid !important; clear: both !important;}
+            body.print-internal .view-box { padding: 6px !important; border: 1.5px solid #cbd5e1 !important; background: #f8fafc !important; border-radius: 6px !important; }
+            body.print-internal .grid-draft { gap: 0.5px !important; border: 1.5px solid #0f172a !important; background: #fff !important; width: 100% !important;}
             body.print-internal .panel { background: #e0f2fe !important; border: 0.5px solid #94a3b8 !important; min-height: 12px !important; box-sizing: border-box !important;}
-            body.print-internal .view-title { font-size: 6pt !important; margin-bottom: 3px !important; color: #0f172a !important; text-align: center !important; font-weight: 800 !important; text-transform: uppercase !important;}
-            body.print-internal .tank-section-title { font-size: 8pt !important; margin-bottom: 5px !important; margin-top: 10px !important; color: #0f172a !important; font-weight: bold;}
-
-            body.print-internal .print-footer { display: flex; justify-content: space-between; margin-top: 20px; page-break-inside: avoid; clear: both; padding-top: 10px;}
-            body.print-internal .sig-box { width: 40%; text-align: left; }
-            body.print-internal .sig-box p { font-size: 8pt; margin: 0; color: #334155; }
-            body.print-internal .sig-line { border-bottom: 1px solid #0f172a; margin: 30px 0 5px 0; }
-            body.print-internal .sig-box strong { color: #0f172a; font-size: 9pt; text-transform: uppercase;}
+            body.print-internal .view-title { font-size: 7pt !important; margin-bottom: 4px !important; color: #0f172a !important; text-align: center !important; font-weight: 800 !important; text-transform: uppercase !important;}
 
             /* ------------------------------------------------ */
             /* MODE 2: CUSTOMER PRINT                           */
@@ -249,11 +253,11 @@
     </style>
     
     <script>
-        const currentVersion = "V41";
+        const currentVersion = "V42";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=40; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=41; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -607,50 +611,54 @@ Note:
                 </div> </div>
         </div>
 
-        <div class="clearfix print-only" id="internalPrintFooter">
-            <div class="summary-box">
-                <table class="summary-table">
-                    <tr><td style="text-align:left;">Est. Capacity:</td><td style="text-align:right;" id="sumCapacity_print">0 L</td></tr>
-                    <tr><td style="text-align:left;">Total Panels:</td><td style="text-align:right;" id="sumPanels_print">0</td></tr>
-                    <tr><td style="text-align:left;">Est. Total Wt:</td><td style="text-align:right;" id="sumWeight_print">0 kg</td></tr>
-                    <tr class="border-top"><td style="text-align:left;">Base Cost:</td><td style="text-align:right;">RM <span id="sumBaseCost_print">0.00</span></td></tr>
-                    <tr><td style="text-align:left;">Mark-Up:</td><td style="text-align:right; color:#059669;">+ RM <span id="sumMarkup_print">0.00</span></td></tr>
-                    <tr><td style="text-align:left;">Gross Subtotal:</td><td style="text-align:right; font-weight:800;">RM <span id="sumSubtotal_print">0.00</span></td></tr>
-                    <tr><td style="text-align:left;">Discount:</td><td style="text-align:right; color:#b91c1c;">- RM <span id="sumDiscount_print">0.00</span></td></tr>
-                    <tr class="border-bottom"><td style="text-align:left;">SST Tax:</td><td style="text-align:right;">+ RM <span id="sumSST_print">0.00</span></td></tr>
-                    <tr class="grand-total-row"><td style="text-align:left;">GRAND TOTAL:</td><td style="text-align:right;">RM <span id="grandTotal_print">0.00</span></td></tr>
-                </table>
-            </div>
+        <div class="print-only" id="internalPrintFooter">
             
-            <div class="tank-section-title">Tank 1 Drafts</div>
-            <div class="visual-container">
-                <div class="view-box"><div class="view-title">Top</div><div id="topGrid_p" class="grid-draft"></div></div>
-                <div class="view-box"><div class="view-title">Front</div><div id="frontGrid_p" class="grid-draft"></div></div>
-                <div class="view-box"><div class="view-title">Left</div><div id="leftGrid_p" class="grid-draft"></div></div>
-                <div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid_p" class="grid-draft"></div></div>
-                <div class="view-box"><div class="view-title">Back</div><div id="backGrid_p" class="grid-draft"></div></div>
-                <div class="view-box"><div class="view-title">Right</div><div id="rightGrid_p" class="grid-draft"></div></div>
-            </div>
-            
-            <div id="tank2VisualsPrint" style="display:none;">
-                <div class="tank-section-title" style="margin-top:15px;">Tank 2 Drafts</div>
-                <div class="visual-container">
-                    <div class="view-box"><div class="view-title">Top</div><div id="topGrid2_p" class="grid-draft"></div></div>
-                    <div class="view-box"><div class="view-title">Front</div><div id="frontGrid2_p" class="grid-draft"></div></div>
-                    <div class="view-box"><div class="view-title">Left</div><div id="leftGrid2_p" class="grid-draft"></div></div>
-                    <div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid2_p" class="grid-draft"></div></div>
-                    <div class="view-box"><div class="view-title">Back</div><div id="backGrid2_p" class="grid-draft"></div></div>
-                    <div class="view-box"><div class="view-title">Right</div><div id="rightGrid2_p" class="grid-draft"></div></div>
-                </div>
-            </div>
-            
-            <div class="print-footer" id="internalSig">
+            <div class="footer-flex">
                 <div class="sig-box">
                     <p>Prepared By:</p>
                     <div class="sig-line"></div>
                     <p><strong>JUTARAMA INDUSTRIES (M) SDN BHD</strong></p>
                 </div>
+
+                <div class="summary-box">
+                    <table class="summary-table">
+                        <tr><td>Est. Capacity:</td><td id="sumCapacity_print">0 L</td></tr>
+                        <tr><td>Total Panels:</td><td id="sumPanels_print">0</td></tr>
+                        <tr><td>Est. Total Wt:</td><td id="sumWeight_print">0 kg</td></tr>
+                        <tr class="border-top"><td>Base Cost:</td><td>RM <span id="sumBaseCost_print">0.00</span></td></tr>
+                        <tr><td>Mark-Up:</td><td style="color:#059669;">+ RM <span id="sumMarkup_print">0.00</span></td></tr>
+                        <tr><td>Gross Subtotal:</td><td style="font-weight:800;">RM <span id="sumSubtotal_print">0.00</span></td></tr>
+                        <tr><td>Discount:</td><td style="color:#b91c1c;">- RM <span id="sumDiscount_print">0.00</span></td></tr>
+                        <tr class="border-bottom"><td>SST Tax:</td><td>+ RM <span id="sumSST_print">0.00</span></td></tr>
+                        <tr class="grand-total-row"><td>GRAND TOTAL:</td><td>RM <span id="grandTotal_print">0.00</span></td></tr>
+                    </table>
+                </div>
             </div>
+            
+            <div class="drawings-page">
+                <div class="tank-section-title">Tank 1 Assembly Drafts</div>
+                <div class="visual-container">
+                    <div class="view-box"><div class="view-title">Top</div><div id="topGrid_p" class="grid-draft"></div></div>
+                    <div class="view-box"><div class="view-title">Front</div><div id="frontGrid_p" class="grid-draft"></div></div>
+                    <div class="view-box"><div class="view-title">Left</div><div id="leftGrid_p" class="grid-draft"></div></div>
+                    <div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid_p" class="grid-draft"></div></div>
+                    <div class="view-box"><div class="view-title">Back</div><div id="backGrid_p" class="grid-draft"></div></div>
+                    <div class="view-box"><div class="view-title">Right</div><div id="rightGrid_p" class="grid-draft"></div></div>
+                </div>
+                
+                <div id="tank2VisualsPrint" style="display:none;">
+                    <div class="tank-section-title">Tank 2 Assembly Drafts</div>
+                    <div class="visual-container">
+                        <div class="view-box"><div class="view-title">Top</div><div id="topGrid2_p" class="grid-draft"></div></div>
+                        <div class="view-box"><div class="view-title">Front</div><div id="frontGrid2_p" class="grid-draft"></div></div>
+                        <div class="view-box"><div class="view-title">Left</div><div id="leftGrid2_p" class="grid-draft"></div></div>
+                        <div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid2_p" class="grid-draft"></div></div>
+                        <div class="view-box"><div class="view-title">Back</div><div id="backGrid2_p" class="grid-draft"></div></div>
+                        <div class="view-box"><div class="view-title">Right</div><div id="rightGrid2_p" class="grid-draft"></div></div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -969,7 +977,7 @@ Note:
         }
     }
 
-    // --- FULL BOM STRUCTURE (UPGRADED VERSION 39 WITH EXACT WEIGHTS) ---
+    // --- FULL BOM STRUCTURE ---
     const systemBaseStructure = [
         { category: "Panels", items: [
             {name: "Manhole Panel", def: 450, wt: 55}, 
@@ -1216,7 +1224,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV41'); // V41 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV42'); // V42 CACHE BUSTER
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1518,11 +1526,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV41', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV42', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV41');
+        let savedData = localStorage.getItem('winkoProDataV42');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1828,6 +1836,7 @@ Note:
         const pH1 = Math.ceil(pHgt_in1 / factor);
         const pPosIdx1 = Math.max(0, pPos_in1 - 1);
 
+        // --- NEW ALGORITHM: TIERED WALL CALCULATION ---
         let roof1 = L1 * W1; 
         let base1 = L1 * W1; 
         let perim1 = (L1 + W1) * 2;
@@ -1980,11 +1989,16 @@ Note:
         setQ('qty_', 'item_0_6', H1 >= 4 ? perim1 * (H1 - 3) : 0); 
         setQ('qty_', 'item_0_7', partPanels1); 
 
-        setQ('qty_', 'item_1_0', H1 * 4); 
-        setQ('qty_', 'item_1_1', perim1); 
-        setQ('qty_', 'item_1_2', perim1); 
-        setQ('qty_', 'item_1_3', L1_in); 
-        setQ('qty_', 'item_1_4', L1_in); 
+        // CLEATS AND TRUSSES Auto-Calc
+        setQ('qty_', 'item_1_0', H1 * 4); // Type A (Corners)
+        setQ('qty_', 'item_1_1', perim1); // Type B (Base/Roof Joints)
+        setQ('qty_', 'item_1_2', perim1); // Type C
+        setQ('qty_', 'item_1_3', L1_in);  // Pipe
+        setQ('qty_', 'item_1_4', L1_in);  // Angle
+
+        // ANGLE STAYS TANK 1 - REMOVED FORCED AUTO-CALC
+        // You manually requested they remain empty unless typed. 
+        // We will not touch 'qty_item_2_0' through 'qty_item_2_3'
 
         setQ('qty_', 'item_3_0', H1_in); 
         setQ('qty_', 'item_3_1', H1_in); 
@@ -2014,12 +2028,15 @@ Note:
             setQ('qty2_', 'item_0_6', H2 >= 4 ? perim2 * (H2 - 3) : 0); 
             setQ('qty2_', 'item_0_7', partPanels2); 
 
+            // CLEATS AND TRUSSES
             setQ('qty2_', 'item_1_0', H2 * 4); 
             setQ('qty2_', 'item_1_1', perim2); 
             setQ('qty2_', 'item_1_2', perim2); 
             setQ('qty2_', 'item_1_3', L2_in); 
             setQ('qty2_', 'item_1_4', L2_in); 
 
+            // ANGLE STAYS TANK 2 - REMOVED FORCED AUTO-CALC
+            
             setQ('qty2_', 'item_3_0', H2_in); 
             setQ('qty2_', 'item_3_1', H2_in); 
             setQ('qty2_', 'item_3_2', 1); 
