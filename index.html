@@ -177,7 +177,7 @@
             body.print-internal .col-itotal { width: 15% !important; }
             
             body.print-internal #internalPrintFooter { display: block !important; margin-top: 20px; }
-            body.print-internal .summary-box { background: #fff !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 6px !important; padding: 10px !important; margin-top: 10px !important; width: 320px !important; float: right !important; box-shadow: none !important;}
+            body.print-internal .summary-box { background: #fff !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 6px !important; padding: 10px !important; margin-top: 10px !important; width: 340px !important; float: right !important; box-shadow: none !important;}
             
             body.print-internal .summary-table { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
             body.print-internal .summary-table td { padding: 4px 0; border: none; color: #0f172a; font-weight: 700; }
@@ -249,11 +249,11 @@
     </style>
     
     <script>
-        const currentVersion = "V37";
+        const currentVersion = "V38";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=36; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=37; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -805,11 +805,14 @@ Note:
 
 <script>
     // --- SECURITY LOGIC ---
-    const SECRET_PASSWORD = "Winko2026";
-    const ADMIN_PASSWORD = "AdminMaster99";
+    const SECRET_PASSWORD = "winko2026";
+    const ADMIN_PASSWORD = "adminmaster99";
 
     function checkPassword() {
-        let pass = document.getElementById('passInput').value.trim();
+        let passEl = document.getElementById('passInput');
+        if(!passEl) return;
+        let pass = passEl.value.trim().toLowerCase();
+        
         if(pass === SECRET_PASSWORD) {
             document.getElementById('securityOverlay').style.display='none';
             document.getElementById('mainContent').style.display='block';
@@ -1176,7 +1179,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV37'); // V37 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV38'); // V38 CACHE BUSTER
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1322,7 +1325,6 @@ Note:
                 }
             }
 
-            // TANK 1 LADDERS
             let extLadMatEl = document.getElementById('extLadMat'); let extLadMat = (extLadMatEl && extLadMatEl.value) ? extLadMatEl.value : 'External Ladder';
             let intLadMatEl = document.getElementById('intLadMat'); let intLadMat = (intLadMatEl && intLadMatEl.value) ? intLadMatEl.value : 'Internal Ladder';
             let qtyExtEl = document.getElementById('qty_item_3_0'); let qtyExt = (qtyExtEl && qtyExtEl.value) ? qtyExtEl.value : '0';
@@ -1374,7 +1376,6 @@ Note:
                     }
                 }
                 
-                // TANK 2 LADDERS FIX: NOW PULLS SPECIFICALLY FROM TANK 2 BOM
                 let extLadMatEl2 = document.getElementById('sel2_extLadMat'); let extLadMat2 = (extLadMatEl2 && extLadMatEl2.value) ? extLadMatEl2.value : 'External Ladder';
                 let intLadMatEl2 = document.getElementById('sel2_intLadMat'); let intLadMat2 = (intLadMatEl2 && intLadMatEl2.value) ? intLadMatEl2.value : 'Internal Ladder';
                 let qtyExtEl2 = document.getElementById('qty2_item_3_0'); let qtyExt2 = (qtyExtEl2 && qtyExtEl2.value) ? qtyExtEl2.value : '0';
@@ -1457,11 +1458,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV37', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV38', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV37');
+        let savedData = localStorage.getItem('winkoProDataV38');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1517,9 +1518,11 @@ Note:
             </td></tr>`;
             html2 += secHeader2;
             
+            let isStay = (sec.category === "Angle Stay");
+            let inputTrigger = isStay ? "calcTotals(); savePrices(); processTankData();" : "calcTotals(); savePrices();";
+
             sec.items.forEach((it, iIdx) => {
                 const id = `item_${sIdx}_${iIdx}`;
-                
                 let safeWt = (it.wt !== undefined && it.wt !== null && !isNaN(it.wt)) ? it.wt : 0;
 
                 // TANK 1 ROW HTML
@@ -1534,7 +1537,7 @@ Note:
 
                 html += `<tr>
                     <td class="col-item">${nameHtml}</td>
-                    <td class="col-input col-qty"><input type="number" value="0" id="qty_${id}" oninput="calcTotals(); savePrices();"></td>
+                    <td class="col-input col-qty"><input type="number" value="0" id="qty_${id}" oninput="${inputTrigger}"></td>
                     <td class="col-input col-wt"><input type="number" step="0.1" value="${safeWt}" id="wt_${id}" oninput="calcTotals(); savePrices();"></td>
                     <td class="col-input col-uprice"><input type="number" step="0.01" value="${it.def.toFixed(2)}" id="price_${id}" oninput="calcTotals(); savePrices();"></td>
                     <td class="col-total col-itotal" id="total_${id}">0.00</td>
@@ -1552,7 +1555,7 @@ Note:
 
                 html2 += `<tr>
                     <td class="col-item">${nameHtml2}</td>
-                    <td class="col-input col-qty"><input type="number" value="0" id="qty2_${id}" oninput="calcTotals(); savePrices();"></td>
+                    <td class="col-input col-qty"><input type="number" value="0" id="qty2_${id}" oninput="${inputTrigger}"></td>
                     <td class="col-input col-wt"><input type="number" step="0.1" value="${safeWt}" id="wt2_${id}" oninput="calcTotals(); savePrices();"></td>
                     <td class="col-input col-uprice"><input type="number" step="0.01" value="${it.def.toFixed(2)}" id="price2_${id}" oninput="calcTotals(); savePrices();"></td>
                     <td class="col-total col-itotal" id="total2_${id}">0.00</td>
@@ -1674,7 +1677,7 @@ Note:
         syncPrintHeader(); 
     }
 
-    function drawGrid(id, c, r, pType = null, pPos = -1, isSideView = false) {
+    function drawGrid(id, c, r, pType = null, pPos = -1, isSideView = false, activeStays = [false, false, false, false]) {
         const g = document.getElementById(id); 
         const gp = document.getElementById(id + '_p'); 
         
@@ -1690,9 +1693,9 @@ Note:
                 extraStyle += 'border-bottom: 3px solid #ef4444 !important; z-index: 10; ';
             }
             
-            // Render Visual Angle Stays on Side Views
-            if(isSideView) {
-                extraStyle += 'background-image: linear-gradient(to bottom right, transparent 48%, rgba(234, 88, 12, 0.4) 49%, rgba(234, 88, 12, 0.4) 51%, transparent 52%), linear-gradient(to bottom left, transparent 48%, rgba(234, 88, 12, 0.4) 49%, rgba(234, 88, 12, 0.4) 51%, transparent 52%); ';
+            let tier = (r - 1) - row; 
+            if(isSideView && activeStays[tier]) {
+                extraStyle += 'background-image: linear-gradient(to bottom right, transparent 48%, rgba(234, 88, 12, 0.6) 49%, rgba(234, 88, 12, 0.6) 51%, transparent 52%), linear-gradient(to bottom left, transparent 48%, rgba(234, 88, 12, 0.6) 49%, rgba(234, 88, 12, 0.6) 51%, transparent 52%); ';
             }
 
             html += `<div class="panel" style="aspect-ratio: 1/1; min-height: 15px; border: 0.5px solid #94a3b8; background-color: #e0f2fe; box-sizing: border-box; position: relative; ${extraStyle}"></div>`;
@@ -1771,6 +1774,14 @@ Note:
             }
         }
 
+        // Read Angle Stays inputs dynamically for X drawing
+        let stays1 = [
+            (parseInt(document.getElementById('qty_item_2_0')?.value) || 0) > 0,
+            (parseInt(document.getElementById('qty_item_2_1')?.value) || 0) > 0,
+            (parseInt(document.getElementById('qty_item_2_2')?.value) || 0) > 0,
+            (parseInt(document.getElementById('qty_item_2_3')?.value) || 0) > 0
+        ];
+
         let tRoof = document.getElementById('thickRoof') ? document.getElementById('thickRoof').value : "1.5mm";
         let tBase = document.getElementById('thickBase') ? document.getElementById('thickBase').value : "4.5mm";
         let tL1 = document.getElementById('thickWallL1') ? document.getElementById('thickWallL1').value : "4.5mm";
@@ -1844,12 +1855,19 @@ Note:
             updateDesc('desc2_', 'item_0_5', tL3 + " Wall Panel (L3)");
             updateDesc('desc2_', 'item_0_6', tL4 + " Wall Panel (L4)");
 
+            let stays2 = [
+                (parseInt(document.getElementById('qty2_item_2_0')?.value) || 0) > 0,
+                (parseInt(document.getElementById('qty2_item_2_1')?.value) || 0) > 0,
+                (parseInt(document.getElementById('qty2_item_2_2')?.value) || 0) > 0,
+                (parseInt(document.getElementById('qty2_item_2_3')?.value) || 0) > 0
+            ];
+
             drawGrid('topGrid2', L2, W2, pTypeTop2, pPosTop2, false); 
             drawGrid('bottomGrid2', L2, W2, pTypeTop2, pPosTop2, false);
-            drawGrid('frontGrid2', L2, H2, pTypeFront2, pPosFront2, true); 
-            drawGrid('backGrid2', L2, H2, pTypeFront2, pPosFront2, true);
-            drawGrid('leftGrid2', W2, H2, pTypeSide2, pPosSide2, true); 
-            drawGrid('rightGrid2', W2, H2, pTypeSide2, pPosSide2, true);
+            drawGrid('frontGrid2', L2, H2, pTypeFront2, pPosFront2, true, stays2); 
+            drawGrid('backGrid2', L2, H2, pTypeFront2, pPosFront2, true, stays2);
+            drawGrid('leftGrid2', W2, H2, pTypeSide2, pPosSide2, true, stays2); 
+            drawGrid('rightGrid2', W2, H2, pTypeSide2, pPosSide2, true, stays2);
         } else {
             if(document.getElementById('qty2_item_0_0')) {
                  const t2Inputs = document.querySelectorAll('[id^="qty2_"]');
@@ -1860,7 +1878,6 @@ Note:
         }
         window.currentTotalP2 = (numTanks === 2) ? totalP2 : 0;
 
-        // COMBINED CAPACITIES
         let totalEffLiters = effLiters1 + effLiters2;
         let capScreen = document.getElementById('sumCapacity_screen');
         if(capScreen) capScreen.innerText = totalEffLiters.toLocaleString('en-MY', {maximumFractionDigits: 0}) + " L";
@@ -1883,21 +1900,13 @@ Note:
         setQ('qty_', 'item_0_6', H1 >= 4 ? perim1 * (H1 - 3) : 0); 
         setQ('qty_', 'item_0_7', partPanels1); 
 
-        // CLEATS AND TRUSSES
+        // CLEATS AND TRUSSES Auto-Calc
         setQ('qty_', 'item_1_0', H1 * 4); // Type A
         setQ('qty_', 'item_1_1', perim1); // Type B
         setQ('qty_', 'item_1_2', perim1); // Type C
         setQ('qty_', 'item_1_3', L1_in); 
         setQ('qty_', 'item_1_4', L1_in); 
 
-        // ANGLE STAYS TANK 1
-        let vJoints1 = Math.max(0, (L1 - 1) * 2 + (W1 - 1) * 2);
-        setQ('qty_', 'item_2_0', H1 >= 1 ? vJoints1 : 0); // L1 Stays
-        setQ('qty_', 'item_2_1', H1 >= 2 ? vJoints1 : 0); // L2 Stays
-        setQ('qty_', 'item_2_2', H1 >= 3 ? vJoints1 : 0); // L3 Stays
-        setQ('qty_', 'item_2_3', H1 >= 4 ? vJoints1 : 0); // L4 Stays
-
-        // ACCESSORIES
         setQ('qty_', 'item_3_0', H1_in); 
         setQ('qty_', 'item_3_1', H1_in); 
         setQ('qty_', 'item_3_2', 1); 
@@ -1933,14 +1942,6 @@ Note:
             setQ('qty2_', 'item_1_3', L2_in); 
             setQ('qty2_', 'item_1_4', L2_in); 
 
-            // ANGLE STAYS TANK 2
-            let vJoints2 = Math.max(0, (L2 - 1) * 2 + (W2 - 1) * 2);
-            setQ('qty2_', 'item_2_0', H2 >= 1 ? vJoints2 : 0); 
-            setQ('qty2_', 'item_2_1', H2 >= 2 ? vJoints2 : 0); 
-            setQ('qty2_', 'item_2_2', H2 >= 3 ? vJoints2 : 0); 
-            setQ('qty2_', 'item_2_3', H2 >= 4 ? vJoints2 : 0); 
-
-            // ACCESSORIES
             setQ('qty2_', 'item_3_0', H2_in); 
             setQ('qty2_', 'item_3_1', H2_in); 
             setQ('qty2_', 'item_3_2', 1); 
@@ -1955,10 +1956,10 @@ Note:
 
         drawGrid('topGrid', L1, W1, pTypeTop1, pPosTop1, false); 
         drawGrid('bottomGrid', L1, W1, pTypeTop1, pPosTop1, false);
-        drawGrid('frontGrid', L1, H1, pTypeFront1, pPosFront1, true); 
-        drawGrid('backGrid', L1, H1, pTypeFront1, pPosFront1, true);
-        drawGrid('leftGrid', W1, H1, pTypeSide1, pPosSide1, true); 
-        drawGrid('rightGrid', W1, H1, pTypeSide1, pPosSide1, true);
+        drawGrid('frontGrid', L1, H1, pTypeFront1, pPosFront1, true, stays1); 
+        drawGrid('backGrid', L1, H1, pTypeFront1, pPosFront1, true, stays1);
+        drawGrid('leftGrid', W1, H1, pTypeSide1, pPosSide1, true, stays1); 
+        drawGrid('rightGrid', W1, H1, pTypeSide1, pPosSide1, true, stays1);
 
         let plinthText = document.getElementById('plinthCalcText');
         const numPlinths = W1 + 1;
