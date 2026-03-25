@@ -253,11 +253,11 @@
     </style>
     
     <script>
-        const currentVersion = "V45";
+        const currentVersion = "V46";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=44; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=45; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -1259,7 +1259,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV45'); // V45 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV46'); // V46 CACHE BUSTER
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1410,7 +1410,6 @@ Note:
                 }
             }
 
-            // TANK 1 LADDERS
             let extLadMatEl = document.getElementById('extLadMat'); let extLadMat = (extLadMatEl && extLadMatEl.value) ? extLadMatEl.value : 'External Ladder';
             let intLadMatEl = document.getElementById('intLadMat'); let intLadMat = (intLadMatEl && intLadMatEl.value) ? intLadMatEl.value : 'Internal Ladder';
             let qtyExtEl = document.getElementById('qty_item_3_0'); let qtyExt = (qtyExtEl && qtyExtEl.value) ? qtyExtEl.value : '0';
@@ -1561,11 +1560,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV45', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV46', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV45');
+        let savedData = localStorage.getItem('winkoProDataV46');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -2037,26 +2036,48 @@ Note:
         setQ('qty_', 'item_0_6', H1 >= 4 ? perim1 * (H1 - 3) : 0); 
         setQ('qty_', 'item_0_7', partPanels1); 
 
-        // CLEATS AND TRUSSES Auto-Calc
-        setQ('qty_', 'item_1_0', H1 * 4); // Type A (Corners)
-        setQ('qty_', 'item_1_1', perim1); // Type B (Base/Roof Joints)
-        setQ('qty_', 'item_1_2', perim1); // Type C
-        setQ('qty_', 'item_1_3', L1_in);  // Pipe
-        setQ('qty_', 'item_1_4', L1_in);  // Angle
-
-        // ANGLE STAYS TANK 1 - NO FORCED CALC, ONLY MANUAL INPUT NOW
+        // CLEATS AND TRUSSES (Conditional for Metric vs Imperial)
+        if(unit === 'm') {
+            let V1 = Math.max(0, perim1 - 4);
+            setQ('qty_', 'item_1_0', (H1 * perim1) - 4); // Type A (Metric)
+            setQ('qty_', 'item_1_1', perim1 + 4);        // Type B (Metric)
+            setQ('qty_', 'item_1_2', perim1 - 4);        // Type C (Metric)
+            setQ('qty_', 'item_1_3', Math.max(0, L1 - 2) * 4); // Pipe
+            setQ('qty_', 'item_1_4', 0); // Angle
+            
+            // ANGLE STAYS (Metric)
+            let s1 = [0, 0, 0, 0];
+            if (H1 >= 1 && H1 <= 4) s1[H1 - 1] = 2 * V1;
+            for (let i = 1; i < H1 && i <= 4; i++) s1[i - 1] = (H1 - i) * V1;
+            setQ('qty_', 'item_2_0', s1[0]); // L1 Stay
+            setQ('qty_', 'item_2_1', s1[1]); // L2 Stay
+            setQ('qty_', 'item_2_2', s1[2]); // L3 Stay
+            setQ('qty_', 'item_2_3', s1[3]); // L4 Stay
+        } else {
+            setQ('qty_', 'item_1_0', H1 * 4); // Type A (Imperial)
+            setQ('qty_', 'item_1_1', perim1); // Type B (Imperial)
+            setQ('qty_', 'item_1_2', perim1); // Type C (Imperial)
+            setQ('qty_', 'item_1_3', L1_in);  // Pipe
+            setQ('qty_', 'item_1_4', L1_in);  // Angle
+            // Angle stays are left empty for manual input in Imperial
+        }
 
         setQ('qty_', 'item_3_0', H1_in); 
         setQ('qty_', 'item_3_1', H1_in); 
-        setQ('qty_', 'item_3_2', 1); 
+        setQ('qty_', 'item_3_2', unit === 'm' ? H1_in : 1); // WLI logic
         setQ('qty_', 'item_3_3', 1); 
 
         let isImperial = (unit === 'ft');
         let sealantPerimeter = isImperial ? 4.88 : 4.0;
         let boltsPerPanel = isImperial ? 16 : 12;
         
-        setQ('qty_', 'item_3_4', Math.ceil((totalP1 * sealantPerimeter) / 15)); 
-        setQ('qty_', 'item_3_5', Math.ceil(totalP1 * boltsPerPanel * 1.05)); 
+        if(unit === 'm') {
+            setQ('qty_', 'item_3_4', Math.ceil(totalP1 * 0.22)); 
+            setQ('qty_', 'item_3_5', Math.ceil(totalP1 * 20));
+        } else {
+            setQ('qty_', 'item_3_4', Math.ceil((totalP1 * sealantPerimeter) / 15)); 
+            setQ('qty_', 'item_3_5', Math.ceil(totalP1 * boltsPerPanel * 1.05)); 
+        }
 
         let qty40 = document.getElementById('qty_item_4_0'); 
         if(qty40 && (!qty40.value || qty40.value == "0")) qty40.value = 1;
@@ -2074,22 +2095,41 @@ Note:
             setQ('qty2_', 'item_0_6', H2 >= 4 ? perim2 * (H2 - 3) : 0); 
             setQ('qty2_', 'item_0_7', partPanels2); 
 
-            // CLEATS AND TRUSSES
-            setQ('qty2_', 'item_1_0', H2 * 4); 
-            setQ('qty2_', 'item_1_1', perim2); 
-            setQ('qty2_', 'item_1_2', perim2); 
-            setQ('qty2_', 'item_1_3', L2_in); 
-            setQ('qty2_', 'item_1_4', L2_in); 
-
-            // ANGLE STAYS TANK 2 - NO FORCED CALC, ONLY MANUAL INPUT NOW
+            if(unit === 'm') {
+                let V2 = Math.max(0, perim2 - 4);
+                setQ('qty2_', 'item_1_0', (H2 * perim2) - 4); 
+                setQ('qty2_', 'item_1_1', perim2 + 4);        
+                setQ('qty2_', 'item_1_2', perim2 - 4);        
+                setQ('qty2_', 'item_1_3', Math.max(0, L2 - 2) * 4); 
+                setQ('qty2_', 'item_1_4', 0); 
+                
+                let s2 = [0, 0, 0, 0];
+                if (H2 >= 1 && H2 <= 4) s2[H2 - 1] = 2 * V2;
+                for (let i = 1; i < H2 && i <= 4; i++) s2[i - 1] = (H2 - i) * V2;
+                setQ('qty2_', 'item_2_0', s2[0]); 
+                setQ('qty2_', 'item_2_1', s2[1]); 
+                setQ('qty2_', 'item_2_2', s2[2]); 
+                setQ('qty2_', 'item_2_3', s2[3]); 
+            } else {
+                setQ('qty2_', 'item_1_0', H2 * 4); 
+                setQ('qty2_', 'item_1_1', perim2); 
+                setQ('qty2_', 'item_1_2', perim2); 
+                setQ('qty2_', 'item_1_3', L2_in); 
+                setQ('qty2_', 'item_1_4', L2_in); 
+            }
             
             setQ('qty2_', 'item_3_0', H2_in); 
             setQ('qty2_', 'item_3_1', H2_in); 
-            setQ('qty2_', 'item_3_2', 1); 
+            setQ('qty2_', 'item_3_2', unit === 'm' ? H2_in : 1); 
             setQ('qty2_', 'item_3_3', 1); 
 
-            setQ('qty2_', 'item_3_4', Math.ceil((totalP2 * sealantPerimeter) / 15)); 
-            setQ('qty2_', 'item_3_5', Math.ceil(totalP2 * boltsPerPanel * 1.05)); 
+            if(unit === 'm') {
+                setQ('qty2_', 'item_3_4', Math.ceil(totalP2 * 0.22)); 
+                setQ('qty2_', 'item_3_5', Math.ceil(totalP2 * 20));
+            } else {
+                setQ('qty2_', 'item_3_4', Math.ceil((totalP2 * sealantPerimeter) / 15)); 
+                setQ('qty2_', 'item_3_5', Math.ceil(totalP2 * boltsPerPanel * 1.05)); 
+            }
 
             let q2_40 = document.getElementById('qty2_item_4_0'); if(q2_40 && !q2_40.value) q2_40.value = 0;
             let q2_41 = document.getElementById('qty2_item_4_1'); if(q2_41 && !q2_41.value) q2_41.value = 0;
@@ -2206,10 +2246,8 @@ Note:
                     if(q > 0) csv += `"${s.category}","${label}",${q},${w},${p},${t}\n`;
                 })});
             } else if (mode === "custom") {
-                let cNameEl2 = document.getElementById('customItemName');
-                let cName = (cNameEl2 && cNameEl2.value) ? cNameEl2.value : "";
-                let cCostEl2 = document.getElementById('customItemCost');
-                let cCost = (cCostEl2 && cCostEl2.value) ? cCostEl2.value : 0;
+                let cName = document.getElementById('customItemName')?.value || "";
+                let cCost = document.getElementById('customItemCost')?.value || 0;
                 csv += `\nCUSTOM ITEM (ITEM 2)\n`;
                 csv += `"Description","Qty","Unit Base Cost (RM)","Total (RM)"\n`;
                 csv += `"${cName.replace(/"/g, '""')}",1,${cCost},${cCost}\n`;
