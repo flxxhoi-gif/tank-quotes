@@ -253,11 +253,11 @@
     </style>
     
     <script>
-        const currentVersion = "V47";
+        const currentVersion = "V48";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=46; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=47; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -369,7 +369,16 @@
                     <div class="card-header"><span>📐</span> 2. Tank Engineering & Dimensions</div>
                     <div class="config-grid">
                         <div class="form-group"><label>Tank 1 Standard</label><select id="stdChoice" onchange="savePrices(); processTankData();"><option>SANS 10329:2020 Approved by SIRIM & SPAN</option><option>SS 22: 1979</option><option>Other</option></select></div>
-                        <div class="form-group"><label>Unit System</label><select id="unitChoice" onchange="handleUnitChange();"><option value="ft">Imperial (4'x4')</option><option value="m">Metric (1mx1m)</option></select></div>
+                        
+                        <div class="form-group">
+                            <label>Unit System</label>
+                            <select id="unitChoice" onchange="handleUnitChange();" style="border: 2px solid #3b82f6;">
+                                <option value="ft">Imperial Panels (Input in Feet)</option>
+                                <option value="m_122">Imperial Panels (Input in Meters: 1.22m)</option>
+                                <option value="m_100">True Metric Panels (Input in Meters: 1m)</option>
+                            </select>
+                        </div>
+                        
                         <div class="form-group" style="grid-column: span 2;"><label>Tank 1 Material / Finish</label><select id="coatChoice" onchange="savePrices(); processTankData();"><option>Hot Dipped Galvanised</option><option>Painted Steel</option><option>Stainless Steel (SS 304)</option><option>Stainless Steel (SS 316)</option></select></div>
                         
                         <div class="form-group" style="grid-column: span 2;">
@@ -877,13 +886,17 @@ Note:
                 let el = document.getElementById(id);
                 if(el && el.value > 0) {
                     let v = parseFloat(el.value);
-                    if(newUnit === 'm' && oldUnit === 'ft') {
-                        // EXACT FACTORY METRICATION: 1ft = 0.305m
-                        el.value = (v * 0.305).toFixed(2).replace(/\.00$/, '');
-                    } else if (newUnit === 'ft' && oldUnit === 'm') {
-                        // EXACT FACTORY METRICATION: 1m = (1/0.305)ft
-                        el.value = Math.round(v / 0.305);
-                    }
+                    
+                    // Convert everything to a base panel count first to safely translate
+                    let panels = 0;
+                    if (oldUnit === 'ft') panels = v / 4;
+                    else if (oldUnit === 'm_122') panels = v / 1.22;
+                    else if (oldUnit === 'm_100') panels = v / 1;
+
+                    // Now output based on new unit
+                    if (newUnit === 'ft') el.value = (panels * 4);
+                    else if (newUnit === 'm_122') el.value = +(panels * 1.22).toFixed(2);
+                    else if (newUnit === 'm_100') el.value = Math.round(panels);
                 }
             });
             window.currentUnit = newUnit;
@@ -939,10 +952,12 @@ Note:
 
     function updateLabels() {
         let uChoice = document.getElementById('unitChoice');
-        const unit = (uChoice && uChoice.value === 'ft') ? 'Ft' : 'Meter';
+        let newUnit = uChoice ? uChoice.value : 'ft';
+        
+        const unitLabel = newUnit === 'ft' ? 'Ft' : 'Meter';
         let labels = document.querySelectorAll('.unitLabel');
         for(let i=0; i<labels.length; i++) {
-            labels[i].innerText = unit;
+            labels[i].innerText = unitLabel;
         }
     }
     
@@ -1008,7 +1023,7 @@ Note:
         }
     }
 
-    // --- FULL BOM STRUCTURE (UPGRADED VERSION 39 WITH EXACT WEIGHTS) ---
+    // --- FULL BOM STRUCTURE ---
     const systemBaseStructure = [
         { category: "Panels", items: [
             {name: "Manhole Panel", def: 450, wt: 55}, 
@@ -1259,7 +1274,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV47'); // V47 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV48'); // V48 CACHE BUSTER
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1410,7 +1425,6 @@ Note:
                 }
             }
 
-            // TANK 1 LADDERS
             let extLadMatEl = document.getElementById('extLadMat'); let extLadMat = (extLadMatEl && extLadMatEl.value) ? extLadMatEl.value : 'External Ladder';
             let intLadMatEl = document.getElementById('intLadMat'); let intLadMat = (intLadMatEl && intLadMatEl.value) ? intLadMatEl.value : 'Internal Ladder';
             let qtyExtEl = document.getElementById('qty_item_3_0'); let qtyExt = (qtyExtEl && qtyExtEl.value) ? qtyExtEl.value : '0';
@@ -1561,11 +1575,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV47', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV48', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV47');
+        let savedData = localStorage.getItem('winkoProDataV48');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1599,8 +1613,6 @@ Note:
                     if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(savedData[`sel2_${it.selectId}`] && s2) s2.value = savedData[`sel2_${it.selectId}`]; }
                 });
             });
-            
-            processTankData(); 
         }
     }
 
@@ -1857,9 +1869,16 @@ Note:
         let ucEl = document.getElementById('unitChoice');
         const unit = (ucEl && ucEl.value) ? ucEl.value : 'ft';
         
-        const factor = unit === 'ft' ? 4 : 1;
+        let factor = 1;
+        if (unit === 'ft') factor = 4;
+        else if (unit === 'm_122') factor = 1.22;
+        else if (unit === 'm_100') factor = 1;
+        
+        const isImperial = (unit === 'ft' || unit === 'm_122');
+        const pSfx = isImperial ? (unit === 'ft' ? " (4'x4')" : " (1.22x1.22m)") : " (1x1m)";
+        
         const unitStr = unit === 'ft' ? 'ft' : 'm';
-        const spacingStr = unit === 'ft' ? '4ft (1220mm)' : '1m (1000mm)';
+        const spacingStr = isImperial ? '4ft (1220mm)' : '1m (1000mm)';
 
         // TANK 1 DATA
         let l1El = document.getElementById('length'); const L1_in = (l1El && l1El.value) ? parseFloat(l1El.value) : 0;
@@ -1880,13 +1899,14 @@ Note:
             let ppos1El = document.getElementById('partPos'); pPos_in1 = (ppos1El && ppos1El.value) ? parseInt(ppos1El.value) : 1;
         }
 
-        const L1 = Math.ceil(L1_in / factor);
-        const W1 = Math.ceil(W1_in / factor);
-        const H1 = Math.ceil(H1_in / factor);
-        const pL1 = Math.ceil(pLen_in1 / factor);
-        const pH1 = Math.ceil(pHgt_in1 / factor);
+        const L1 = Math.round(L1_in / factor);
+        const W1 = Math.round(W1_in / factor);
+        const H1 = Math.round(H1_in / factor);
+        const pL1 = Math.round(pLen_in1 / factor);
+        const pH1 = Math.round(pHgt_in1 / factor);
         const pPosIdx1 = Math.max(0, pPos_in1 - 1);
 
+        // --- NEW ALGORITHM: TIERED WALL CALCULATION ---
         let roof1 = L1 * W1; 
         let base1 = L1 * W1; 
         let perim1 = (L1 + W1) * 2;
@@ -1928,8 +1948,6 @@ Note:
         let tL3 = document.getElementById('thickWallL3') ? document.getElementById('thickWallL3').value : "3.0mm";
         let tL4 = document.getElementById('thickWallL4') ? document.getElementById('thickWallL4').value : "1.5mm";
 
-        let pSfx = unit === 'ft' ? " (4'x4')" : " (1x1m)";
-        
         let updateDesc = function(prefix, id, val) { let el = document.getElementById(prefix + id); if(el) el.value = val; };
         
         updateDesc('desc_', 'item_0_0', "Manhole Panel" + pSfx);
@@ -1968,11 +1986,11 @@ Note:
                 let ppos2El = document.getElementById('partPos2'); pPos_in2 = (ppos2El && ppos2El.value) ? parseInt(ppos2El.value) : 1;
             }
 
-            L2 = Math.ceil(L2_in / factor);
-            W2 = Math.ceil(W2_in / factor);
-            H2 = Math.ceil(H2_in / factor);
-            const pL2 = Math.ceil(pLen_in2 / factor);
-            const pH2 = Math.ceil(pHgt_in2 / factor);
+            L2 = Math.round(L2_in / factor);
+            W2 = Math.round(W2_in / factor);
+            H2 = Math.round(H2_in / factor);
+            const pL2 = Math.round(pLen_in2 / factor);
+            const pH2 = Math.round(pHgt_in2 / factor);
             const pPosIdx2 = Math.max(0, pPos_in2 - 1);
 
             roof2 = L2 * W2; base2 = L2 * W2; perim2 = (L2 + W2) * 2; sides2 = perim2 * H2; 
@@ -2047,7 +2065,7 @@ Note:
         setQ('qty_', 'item_0_7', partPanels1); 
 
         // CLEATS AND TRUSSES (Conditional for Metric vs Imperial)
-        if(unit === 'm') {
+        if(!isImperial) {
             let V1 = Math.max(0, perim1 - 4);
             setQ('qty_', 'item_1_0', (H1 * perim1) - 4); // Type A (Metric)
             setQ('qty_', 'item_1_1', perim1 + 4);        // Type B (Metric)
@@ -2077,14 +2095,13 @@ Note:
 
         setQ('qty_', 'item_3_0', H1_in); 
         setQ('qty_', 'item_3_1', H1_in); 
-        setQ('qty_', 'item_3_2', unit === 'm' ? H1_in : 1); // WLI logic
+        setQ('qty_', 'item_3_2', !isImperial ? H1_in : 1); // WLI logic
         setQ('qty_', 'item_3_3', 1); 
 
-        let isImperial = (unit === 'ft');
-        let sealantPerimeter = isImperial ? 4.88 : 4.0;
-        let boltsPerPanel = isImperial ? 16 : 12;
+        let sealantPerimeter = unit === 'ft' ? 4.88 : 4.0;
+        let boltsPerPanel = unit === 'ft' ? 16 : 12;
         
-        if(unit === 'm') {
+        if(!isImperial) {
             setQ('qty_', 'item_3_4', Math.ceil(totalP1 * 0.22)); 
             setQ('qty_', 'item_3_5', Math.ceil(totalP1 * 20));
         } else {
@@ -2108,7 +2125,7 @@ Note:
             setQ('qty2_', 'item_0_6', H2 >= 4 ? perim2 * (H2 - 3) : 0); 
             setQ('qty2_', 'item_0_7', partPanels2); 
 
-            if(unit === 'm') {
+            if(!isImperial) {
                 let V2 = Math.max(0, perim2 - 4);
                 setQ('qty2_', 'item_1_0', (H2 * perim2) - 4); 
                 setQ('qty2_', 'item_1_1', perim2 + 4);        
@@ -2134,10 +2151,10 @@ Note:
             
             setQ('qty2_', 'item_3_0', H2_in); 
             setQ('qty2_', 'item_3_1', H2_in); 
-            setQ('qty2_', 'item_3_2', unit === 'm' ? H2_in : 1); 
+            setQ('qty2_', 'item_3_2', !isImperial ? H2_in : 1); 
             setQ('qty2_', 'item_3_3', 1); 
 
-            if(unit === 'm') {
+            if(!isImperial) {
                 setQ('qty2_', 'item_3_4', Math.ceil(totalP2 * 0.22)); 
                 setQ('qty2_', 'item_3_5', Math.ceil(totalP2 * 20));
             } else {
