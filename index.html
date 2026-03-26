@@ -253,11 +253,11 @@
     </style>
     
     <script>
-        const currentVersion = "V48";
+        const currentVersion = "V49";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=47; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=48; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -369,16 +369,7 @@
                     <div class="card-header"><span>📐</span> 2. Tank Engineering & Dimensions</div>
                     <div class="config-grid">
                         <div class="form-group"><label>Tank 1 Standard</label><select id="stdChoice" onchange="savePrices(); processTankData();"><option>SANS 10329:2020 Approved by SIRIM & SPAN</option><option>SS 22: 1979</option><option>Other</option></select></div>
-                        
-                        <div class="form-group">
-                            <label>Unit System</label>
-                            <select id="unitChoice" onchange="handleUnitChange();" style="border: 2px solid #3b82f6;">
-                                <option value="ft">Imperial Panels (Input in Feet)</option>
-                                <option value="m_122">Imperial Panels (Input in Meters: 1.22m)</option>
-                                <option value="m_100">True Metric Panels (Input in Meters: 1m)</option>
-                            </select>
-                        </div>
-                        
+                        <div class="form-group"><label>Unit System</label><select id="unitChoice" onchange="handleUnitChange();"><option value="ft">Imperial (4'x4')</option><option value="m_122">Imperial Panels (Input in Meters: 1.22m)</option><option value="m_100">True Metric Panels (Input in Meters: 1m)</option></select></div>
                         <div class="form-group" style="grid-column: span 2;"><label>Tank 1 Material / Finish</label><select id="coatChoice" onchange="savePrices(); processTankData();"><option>Hot Dipped Galvanised</option><option>Painted Steel</option><option>Stainless Steel (SS 304)</option><option>Stainless Steel (SS 316)</option></select></div>
                         
                         <div class="form-group" style="grid-column: span 2;">
@@ -1023,7 +1014,7 @@ Note:
         }
     }
 
-    // --- FULL BOM STRUCTURE ---
+    // --- FULL BOM STRUCTURE (UPGRADED VERSION 39 WITH EXACT WEIGHTS) ---
     const systemBaseStructure = [
         { category: "Panels", items: [
             {name: "Manhole Panel", def: 450, wt: 55}, 
@@ -1274,7 +1265,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV48'); // V48 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV49'); // V49 CACHE BUSTER
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1575,11 +1566,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV48', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV49', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV48');
+        let savedData = localStorage.getItem('winkoProDataV49');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1906,7 +1897,6 @@ Note:
         const pH1 = Math.round(pHgt_in1 / factor);
         const pPosIdx1 = Math.max(0, pPos_in1 - 1);
 
-        // --- NEW ALGORITHM: TIERED WALL CALCULATION ---
         let roof1 = L1 * W1; 
         let base1 = L1 * W1; 
         let perim1 = (L1 + W1) * 2;
@@ -2064,50 +2054,26 @@ Note:
         setQ('qty_', 'item_0_6', H1 >= 4 ? perim1 * (H1 - 3) : 0); 
         setQ('qty_', 'item_0_7', partPanels1); 
 
-        // CLEATS AND TRUSSES (Conditional for Metric vs Imperial)
-        if(!isImperial) {
-            let V1 = Math.max(0, perim1 - 4);
-            setQ('qty_', 'item_1_0', (H1 * perim1) - 4); // Type A (Metric)
-            setQ('qty_', 'item_1_1', perim1 + 4);        // Type B (Metric)
-            setQ('qty_', 'item_1_2', perim1 - 4);        // Type C (Metric)
-            setQ('qty_', 'item_1_3', Math.max(0, L1 - 2) * 4); // Pipe
-            setQ('qty_', 'item_1_4', 0); // Angle
-            
-            // ANGLE STAYS (Metric)
-            let s1 = [0, 0, 0, 0];
-            if (H1 >= 1 && H1 <= 4) s1[H1 - 1] = 2 * V1;
-            for (let i = 1; i < H1 && i <= 4; i++) s1[i - 1] = (H1 - i) * V1;
-            
-            // Set metric stays automatically
-            let setStayIfEmpty = function(prefix, id, val) { let el = document.getElementById(prefix + id); if(el && !el.value) el.value = val; };
-            setStayIfEmpty('qty_', 'item_2_0', s1[0]); // L1 Stay
-            setStayIfEmpty('qty_', 'item_2_1', s1[1]); // L2 Stay
-            setStayIfEmpty('qty_', 'item_2_2', s1[2]); // L3 Stay
-            setStayIfEmpty('qty_', 'item_2_3', s1[3]); // L4 Stay
-        } else {
-            setQ('qty_', 'item_1_0', H1 * 4); // Type A (Imperial)
-            setQ('qty_', 'item_1_1', perim1); // Type B (Imperial)
-            setQ('qty_', 'item_1_2', perim1); // Type C (Imperial)
-            setQ('qty_', 'item_1_3', L1_in);  // Pipe
-            setQ('qty_', 'item_1_4', L1_in);  // Angle
-            // Angle stays are left empty for manual input in Imperial
-        }
+        // CLEATS AND TRUSSES Auto-Calc (Unified!)
+        setQ('qty_', 'item_1_0', H1 * 4); // Type A (Corners)
+        setQ('qty_', 'item_1_1', perim1); // Type B (Base/Roof Joints)
+        setQ('qty_', 'item_1_2', perim1); // Type C
+        setQ('qty_', 'item_1_3', L1_in);  // Pipe
+        setQ('qty_', 'item_1_4', L1_in);  // Angle
+
+        // ANGLE STAYS TANK 1 - STRICTLY MANUAL FOR ALL UNITS
+        // We will not touch 'qty_item_2_0' through 'qty_item_2_3'
 
         setQ('qty_', 'item_3_0', H1_in); 
         setQ('qty_', 'item_3_1', H1_in); 
         setQ('qty_', 'item_3_2', !isImperial ? H1_in : 1); // WLI logic
         setQ('qty_', 'item_3_3', 1); 
 
-        let sealantPerimeter = unit === 'ft' ? 4.88 : 4.0;
-        let boltsPerPanel = unit === 'ft' ? 16 : 12;
+        let sealantPerimeter = isImperial ? 4.88 : 4.0;
+        let boltsPerPanel = isImperial ? 16 : 12;
         
-        if(!isImperial) {
-            setQ('qty_', 'item_3_4', Math.ceil(totalP1 * 0.22)); 
-            setQ('qty_', 'item_3_5', Math.ceil(totalP1 * 20));
-        } else {
-            setQ('qty_', 'item_3_4', Math.ceil((totalP1 * sealantPerimeter) / 15)); 
-            setQ('qty_', 'item_3_5', Math.ceil(totalP1 * boltsPerPanel * 1.05)); 
-        }
+        setQ('qty_', 'item_3_4', Math.ceil((totalP1 * sealantPerimeter) / 15)); 
+        setQ('qty_', 'item_3_5', Math.ceil(totalP1 * boltsPerPanel * 1.05)); 
 
         let qty40 = document.getElementById('qty_item_4_0'); 
         if(qty40 && (!qty40.value || qty40.value == "0")) qty40.value = 1;
@@ -2125,42 +2091,22 @@ Note:
             setQ('qty2_', 'item_0_6', H2 >= 4 ? perim2 * (H2 - 3) : 0); 
             setQ('qty2_', 'item_0_7', partPanels2); 
 
-            if(!isImperial) {
-                let V2 = Math.max(0, perim2 - 4);
-                setQ('qty2_', 'item_1_0', (H2 * perim2) - 4); 
-                setQ('qty2_', 'item_1_1', perim2 + 4);        
-                setQ('qty2_', 'item_1_2', perim2 - 4);        
-                setQ('qty2_', 'item_1_3', Math.max(0, L2 - 2) * 4); 
-                setQ('qty2_', 'item_1_4', 0); 
-                
-                let s2 = [0, 0, 0, 0];
-                if (H2 >= 1 && H2 <= 4) s2[H2 - 1] = 2 * V2;
-                for (let i = 1; i < H2 && i <= 4; i++) s2[i - 1] = (H2 - i) * V2;
-                let setStayIfEmpty2 = function(prefix, id, val) { let el = document.getElementById(prefix + id); if(el && !el.value) el.value = val; };
-                setStayIfEmpty2('qty2_', 'item_2_0', s2[0]); 
-                setStayIfEmpty2('qty2_', 'item_2_1', s2[1]); 
-                setStayIfEmpty2('qty2_', 'item_2_2', s2[2]); 
-                setStayIfEmpty2('qty2_', 'item_2_3', s2[3]); 
-            } else {
-                setQ('qty2_', 'item_1_0', H2 * 4); 
-                setQ('qty2_', 'item_1_1', perim2); 
-                setQ('qty2_', 'item_1_2', perim2); 
-                setQ('qty2_', 'item_1_3', L2_in); 
-                setQ('qty2_', 'item_1_4', L2_in); 
-            }
+            // CLEATS AND TRUSSES (Unified!)
+            setQ('qty2_', 'item_1_0', H2 * 4); 
+            setQ('qty2_', 'item_1_1', perim2); 
+            setQ('qty2_', 'item_1_2', perim2); 
+            setQ('qty2_', 'item_1_3', L2_in); 
+            setQ('qty2_', 'item_1_4', L2_in); 
+
+            // ANGLE STAYS TANK 2 - STRICTLY MANUAL FOR ALL UNITS
             
             setQ('qty2_', 'item_3_0', H2_in); 
             setQ('qty2_', 'item_3_1', H2_in); 
             setQ('qty2_', 'item_3_2', !isImperial ? H2_in : 1); 
             setQ('qty2_', 'item_3_3', 1); 
 
-            if(!isImperial) {
-                setQ('qty2_', 'item_3_4', Math.ceil(totalP2 * 0.22)); 
-                setQ('qty2_', 'item_3_5', Math.ceil(totalP2 * 20));
-            } else {
-                setQ('qty2_', 'item_3_4', Math.ceil((totalP2 * sealantPerimeter) / 15)); 
-                setQ('qty2_', 'item_3_5', Math.ceil(totalP2 * boltsPerPanel * 1.05)); 
-            }
+            setQ('qty2_', 'item_3_4', Math.ceil((totalP2 * sealantPerimeter) / 15)); 
+            setQ('qty2_', 'item_3_5', Math.ceil(totalP2 * boltsPerPanel * 1.05)); 
 
             let q2_40 = document.getElementById('qty2_item_4_0'); if(q2_40 && !q2_40.value) q2_40.value = 0;
             let q2_41 = document.getElementById('qty2_item_4_1'); if(q2_41 && !q2_41.value) q2_41.value = 0;
