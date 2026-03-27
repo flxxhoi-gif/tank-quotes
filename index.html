@@ -90,8 +90,9 @@
         .export-btn { background: #334155; } .export-btn:hover { background: #1e293b; box-shadow: 0 8px 15px -3px rgba(15,23,42,0.3);}
         .print-btn { background: #059669; } .print-btn:hover { background: #047857; box-shadow: 0 8px 15px -3px rgba(5,150,105,0.3);}
 
-        .visual-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; justify-items: center; margin-bottom: 15px; }
-        .view-box { text-align: center; background: #f8fafc; padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; width: 100%; max-width: 160px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);} 
+        /* DYNAMIC VISUAL CONTAINERS */
+        .visual-container { display: flex; flex-wrap: wrap; gap: 15px; justify-content: flex-start; margin-bottom: 15px; }
+        .view-box { text-align: center; background: #f8fafc; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; width: 145px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);} 
         .view-title { font-size: 0.75em; font-weight: 800; margin-bottom: 8px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;}
         
         .grid-draft { display: grid; gap: 1px; background: #94a3b8; border: 2px solid #475569; margin: 0 auto; width: 100%; border-radius: 2px; overflow: hidden;} 
@@ -197,7 +198,7 @@
             body.print-internal .tank-section-title { font-size: 11pt !important; margin-bottom: 10px !important; margin-top: 15px !important; color: #0f172a !important; font-weight: 800 !important; text-transform: uppercase !important; border-bottom: 2px solid #0f172a !important; padding-bottom: 5px !important; border-left: none !important; background: transparent !important;}
 
             body.print-internal .visual-container { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; width: 100% !important; margin: 15px 0 25px 0 !important; page-break-inside: avoid !important; clear: both !important;}
-            body.print-internal .view-box { padding: 6px !important; border: 1.5px solid #cbd5e1 !important; background: #f8fafc !important; border-radius: 6px !important; width: 140px !important;}
+            body.print-internal .view-box { padding: 6px !important; border: 1.5px solid #cbd5e1 !important; background: #f8fafc !important; border-radius: 6px !important; width: 120px !important;}
             body.print-internal .grid-draft { gap: 0.5px !important; border: 1.5px solid #0f172a !important; background: #fff !important; width: 100% !important;}
             body.print-internal .panel { background: #e0f2fe !important; border: 0.5px solid #94a3b8 !important; min-height: 12px !important; box-sizing: border-box !important;}
             body.print-internal .view-title { font-size: 7pt !important; margin-bottom: 4px !important; color: #0f172a !important; text-align: center !important; font-weight: 800 !important; text-transform: uppercase !important;}
@@ -253,11 +254,11 @@
     </style>
     
     <script>
-        const currentVersion = "V54";
+        const currentVersion = "V55";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=53; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=54; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -342,7 +343,7 @@
             <strong style="color: #ea580c; display: flex; align-items: center; gap: 8px;">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
                 Project Bank:
-            </strong>
+            </select>
             <select id="memoryDropdown">
                 <option value="">-- Load a Saved Project --</option>
             </select>
@@ -1276,7 +1277,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV54'); // V54 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV55'); // V55 CACHE BUSTER
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1577,11 +1578,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV54', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV55', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV54');
+        let savedData = localStorage.getItem('winkoProDataV55');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1826,6 +1827,35 @@ Note:
         return 0;
     }
 
+    function drawGrid(id, c, r, pType = null, pPos = -1) {
+        const g = document.getElementById(id); 
+        const gp = document.getElementById(id + '_p'); 
+        
+        let html = '';
+        for(let i=0; i<(c*r); i++) {
+            let col = i % c;
+            let row = Math.floor(i / c);
+            let extraStyle = '';
+            
+            if (pType === 'v' && col === pPos) {
+                extraStyle += 'border-right: 3px solid #ef4444 !important; z-index: 10; ';
+            } else if (pType === 'h' && row === pPos) {
+                extraStyle += 'border-bottom: 3px solid #ef4444 !important; z-index: 10; ';
+            }
+
+            html += `<div class="panel" style="aspect-ratio: 1/1; min-height: 15px; border: 0.5px solid #94a3b8; background-color: #e0f2fe; box-sizing: border-box; position: relative; ${extraStyle}"></div>`;
+        }
+        
+        if(g) {
+            g.style.gridTemplateColumns = `repeat(${c}, 1fr)`; 
+            g.innerHTML = html;
+        }
+        if(gp) {
+            gp.style.gridTemplateColumns = `repeat(${c}, 1fr)`; 
+            gp.innerHTML = html;
+        }
+    }
+
     function buildGridHTML(title, c, r, pType = null, pPos = -1, showStays = false) {
         let gridHtml = `<div class="grid-draft" style="grid-template-columns: repeat(${c}, 1fr);">`;
         for(let i=0; i<(c*r); i++) {
@@ -1860,12 +1890,7 @@ Note:
 
         let html = '';
         
-        // Exterior Views
-        html += buildGridHTML('Top View', L, W, pType, pPos, false);
-        html += buildGridHTML('Front View', L, H, pType === 'v' ? 'v' : null, pPos, false);
-        html += buildGridHTML('Side View', W, H, pType === 'h' ? 'v' : null, pPos, false);
-
-        // Internal Stay / Truss Layouts
+        // Only generate Internal Stay / Truss Layouts
         let totalLevels = Math.min(H, 4); // Usually up to 4 tiers of stays/trusses
         for(let i=1; i<=totalLevels; i++) {
             let label = i === H ? `Roof Level (Trusses)` : `Level ${i} (Stays)`;
@@ -1928,14 +1953,32 @@ Note:
         let totalP1 = roof1 + base1 + sides1 + partPanels1;
         window.currentTotalP1 = totalP1;
 
-        let pType1 = null, pPosFinal1 = -1;
+        let pTypeTop1 = null, pPosTop1 = -1;
+        let pTypeFront1 = null, pPosFront1 = -1;
+        let pTypeSide1 = null, pPosSide1 = -1;
+
         if (partChoice1 === 'yes' && pQty1 > 0) {
-            if (pL1 === W1) { pType1 = 'v'; pPosFinal1 = Math.min(L1 - 2, pPosIdx1); } 
-            else if (pL1 === L1) { pType1 = 'h'; pPosFinal1 = Math.min(W1 - 2, pPosIdx1); } 
-            else { pType1 = 'v'; pPosFinal1 = Math.min(L1 - 2, pPosIdx1); }
+            if (pL1 === W1) { 
+                pTypeTop1 = 'v'; pPosTop1 = Math.min(L1 - 2, pPosIdx1);
+                pTypeFront1 = 'v'; pPosFront1 = Math.min(L1 - 2, pPosIdx1);
+            } else if (pL1 === L1) { 
+                pTypeTop1 = 'h'; pPosTop1 = Math.min(W1 - 2, pPosIdx1);
+                pTypeSide1 = 'v'; pPosSide1 = Math.min(W1 - 2, pPosIdx1);
+            } else { 
+                pTypeTop1 = 'v'; pPosTop1 = Math.min(L1 - 2, pPosIdx1);
+                pTypeFront1 = 'v'; pPosFront1 = Math.min(L1 - 2, pPosIdx1);
+            }
         }
 
-        generateViews('visualsArea1', L1, W1, H1, pType1, pPosFinal1);
+        drawGrid('topGrid', L1, W1, pTypeTop1, pPosTop1); 
+        drawGrid('bottomGrid', L1, W1, pTypeTop1, pPosTop1);
+        drawGrid('frontGrid', L1, H1, pTypeFront1, pPosFront1); 
+        drawGrid('backGrid', L1, H1, pTypeFront1, pPosFront1);
+        drawGrid('leftGrid', W1, H1, pTypeSide1, pPosSide1); 
+        drawGrid('rightGrid', W1, H1, pTypeSide1, pPosSide1);
+
+        // Generate Internal Bracing
+        generateViews('visualsArea1', L1, W1, H1, pTypeTop1, pPosTop1);
 
         let tRoof = document.getElementById('thickRoof') ? document.getElementById('thickRoof').value : "1.5mm";
         let tBase = document.getElementById('thickBase') ? document.getElementById('thickBase').value : "4.5mm";
@@ -1988,14 +2031,31 @@ Note:
             let partPanels2 = (partChoice2 === 'yes' && pQty2 > 0) ? (pL2 * pH2 * pQty2) : 0;
             totalP2 = roof2 + base2 + sides2 + partPanels2;
 
-            let pType2 = null, pPosFinal2 = -1;
+            let pTypeTop2 = null, pPosTop2 = -1;
+            let pTypeFront2 = null, pPosFront2 = -1;
+            let pTypeSide2 = null, pPosSide2 = -1;
+
             if (partChoice2 === 'yes' && pQty2 > 0) {
-                if (pL2 === W2) { pType2 = 'v'; pPosFinal2 = Math.min(L2 - 2, pPosIdx2); } 
-                else if (pL2 === L2) { pType2 = 'h'; pPosFinal2 = Math.min(W2 - 2, pPosIdx2); } 
-                else { pType2 = 'v'; pPosFinal2 = Math.min(L2 - 2, pPosIdx2); }
+                if (pL2 === W2) { 
+                    pTypeTop2 = 'v'; pPosTop2 = Math.min(L2 - 2, pPosIdx2);
+                    pTypeFront2 = 'v'; pPosFront2 = Math.min(L2 - 2, pPosIdx2);
+                } else if (pL2 === L2) { 
+                    pTypeTop2 = 'h'; pPosTop2 = Math.min(W2 - 2, pPosIdx2);
+                    pTypeSide2 = 'v'; pPosSide2 = Math.min(W2 - 2, pPosIdx2);
+                } else { 
+                    pTypeTop2 = 'v'; pPosTop2 = Math.min(L2 - 2, pPosIdx2);
+                    pTypeFront2 = 'v'; pPosFront2 = Math.min(L2 - 2, pPosIdx2);
+                }
             }
 
-            generateViews('visualsArea2', L2, W2, H2, pType2, pPosFinal2);
+            drawGrid('topGrid2', L2, W2, pTypeTop2, pPosTop2); 
+            drawGrid('bottomGrid2', L2, W2, pTypeTop2, pPosTop2);
+            drawGrid('frontGrid2', L2, H2, pTypeFront2, pPosFront2); 
+            drawGrid('backGrid2', L2, H2, pTypeFront2, pPosFront2);
+            drawGrid('leftGrid2', W2, H2, pTypeSide2, pPosSide2); 
+            drawGrid('rightGrid2', W2, H2, pTypeSide2, pPosSide2);
+
+            generateViews('visualsArea2', L2, W2, H2, pTypeTop2, pPosTop2);
 
             updateDesc('desc2_', 'item_0_0', "Manhole Panel" + pSfx);
             updateDesc('desc2_', 'item_0_1', tRoof + " Roof Panel" + pSfx);
@@ -2038,14 +2098,14 @@ Note:
         setQ('qty_', 'item_0_6', H1 >= 4 ? perim1 * (H1 - 3) : 0); 
         setQ('qty_', 'item_0_7', partPanels1); 
 
-        // CLEATS AND TRUSSES Auto-Calc
+        // CLEATS AND TRUSSES 
         setQ('qty_', 'item_1_0', H1 * 4); // Type A (Corners)
         setQ('qty_', 'item_1_1', perim1); // Type B (Base/Roof Joints)
         setQ('qty_', 'item_1_2', perim1); // Type C
         setQ('qty_', 'item_1_3', L1_in);  // Pipe
         setQ('qty_', 'item_1_4', L1_in);  // Angle
 
-        // ANGLE STAYS TANK 1 - NO FORCED CALC, ONLY MANUAL INPUT NOW
+        // ANGLE STAYS - Strictly Manual for ALL units 
 
         setQ('qty_', 'item_3_0', H1_in); 
         setQ('qty_', 'item_3_1', H1_in); 
@@ -2081,7 +2141,7 @@ Note:
             setQ('qty2_', 'item_1_3', L2_in); 
             setQ('qty2_', 'item_1_4', L2_in); 
 
-            // ANGLE STAYS TANK 2 - NO FORCED CALC, ONLY MANUAL INPUT NOW
+            // ANGLE STAYS - Strictly Manual for ALL units
             
             setQ('qty2_', 'item_3_0', H2_in); 
             setQ('qty2_', 'item_3_1', H2_in); 
