@@ -253,11 +253,11 @@
     </style>
     
     <script>
-        const currentVersion = "V51";
+        const currentVersion = "V52";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=50; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=51; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -591,8 +591,8 @@ Note:
                             <div class="view-box"><div class="view-title">Front</div><div id="frontGrid" class="grid-draft"></div></div>
                             <div class="view-box"><div class="view-title">Left</div><div id="leftGrid" class="grid-draft"></div></div>
                             <div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid" class="grid-draft"></div></div>
-                            <div class="view-box"><div class="view-title">Back</div><div id="backGrid" class="grid-draft"></div></div>
-                            <div class="view-box"><div class="view-title">Right</div><div id="rightGrid" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Internal Section (L)</div><div id="sectionLGrid" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Internal Section (W)</div><div id="sectionWGrid" class="grid-draft"></div></div>
                         </div>
                     </div>
                     
@@ -603,8 +603,8 @@ Note:
                             <div class="view-box"><div class="view-title">Front</div><div id="frontGrid2" class="grid-draft"></div></div>
                             <div class="view-box"><div class="view-title">Left</div><div id="leftGrid2" class="grid-draft"></div></div>
                             <div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid2" class="grid-draft"></div></div>
-                            <div class="view-box"><div class="view-title">Back</div><div id="backGrid2" class="grid-draft"></div></div>
-                            <div class="view-box"><div class="view-title">Right</div><div id="rightGrid2" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Internal Section (L)</div><div id="sectionLGrid2" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Internal Section (W)</div><div id="sectionWGrid2" class="grid-draft"></div></div>
                         </div>
                     </div>
 
@@ -642,8 +642,8 @@ Note:
                     <div class="view-box"><div class="view-title">Front</div><div id="frontGrid_p" class="grid-draft"></div></div>
                     <div class="view-box"><div class="view-title">Left</div><div id="leftGrid_p" class="grid-draft"></div></div>
                     <div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid_p" class="grid-draft"></div></div>
-                    <div class="view-box"><div class="view-title">Back</div><div id="backGrid_p" class="grid-draft"></div></div>
-                    <div class="view-box"><div class="view-title">Right</div><div id="rightGrid_p" class="grid-draft"></div></div>
+                    <div class="view-box"><div class="view-title">Internal Section (L)</div><div id="sectionLGrid_p" class="grid-draft"></div></div>
+                    <div class="view-box"><div class="view-title">Internal Section (W)</div><div id="sectionWGrid_p" class="grid-draft"></div></div>
                 </div>
                 
                 <div id="tank2VisualsPrint" style="display:none;">
@@ -653,8 +653,8 @@ Note:
                         <div class="view-box"><div class="view-title">Front</div><div id="frontGrid2_p" class="grid-draft"></div></div>
                         <div class="view-box"><div class="view-title">Left</div><div id="leftGrid2_p" class="grid-draft"></div></div>
                         <div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid2_p" class="grid-draft"></div></div>
-                        <div class="view-box"><div class="view-title">Back</div><div id="backGrid2_p" class="grid-draft"></div></div>
-                        <div class="view-box"><div class="view-title">Right</div><div id="rightGrid2_p" class="grid-draft"></div></div>
+                        <div class="view-box"><div class="view-title">Internal Section (L)</div><div id="sectionLGrid2_p" class="grid-draft"></div></div>
+                        <div class="view-box"><div class="view-title">Internal Section (W)</div><div id="sectionWGrid2_p" class="grid-draft"></div></div>
                     </div>
                 </div>
             </div>
@@ -903,13 +903,13 @@ Note:
             document.body.className = 'print-internal';
             syncPrintHeader();
             
-            const grids = ['top', 'front', 'left', 'bottom', 'back', 'right'];
+            const grids = ['top', 'front', 'left', 'bottom', 'sectionL', 'sectionW'];
             grids.forEach(prefix => {
                 let s1 = document.getElementById(prefix + 'Grid'); let t1 = document.getElementById(prefix + 'Grid_p');
-                if(s1 && t1) { t1.innerHTML = s1.innerHTML; t1.style.gridTemplateColumns = s1.style.gridTemplateColumns; }
+                if(s1 && t1) { t1.innerHTML = s1.innerHTML; }
                 
                 let s2 = document.getElementById(prefix + 'Grid2'); let t2 = document.getElementById(prefix + 'Grid2_p');
-                if(s2 && t2) { t2.innerHTML = s2.innerHTML; t2.style.gridTemplateColumns = s2.style.gridTemplateColumns; }
+                if(s2 && t2) { t2.innerHTML = s2.innerHTML; }
             });
             
             setTimeout(() => { window.print(); }, 300);
@@ -1014,7 +1014,7 @@ Note:
         }
     }
 
-    // --- FULL BOM STRUCTURE (UPGRADED VERSION 39 WITH EXACT WEIGHTS) ---
+    // --- FULL BOM STRUCTURE ---
     const systemBaseStructure = [
         { category: "Panels", items: [
             {name: "Manhole Panel", def: 450, wt: 55}, 
@@ -1265,7 +1265,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV51'); // V51 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV52'); // V52 CACHE BUSTER
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1566,11 +1566,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV51', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV52', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV51');
+        let savedData = localStorage.getItem('winkoProDataV52');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1816,7 +1816,7 @@ Note:
         return 0;
     }
 
-    function drawGrid(id, c, r, pType = null, pPos = -1, isSideView = false, activeStays = [false, false, false, false]) {
+    function drawGrid(id, c, r, pType = null, pPos = -1) {
         const g = document.getElementById(id); 
         const gp = document.getElementById(id + '_p'); 
         
@@ -1832,15 +1832,7 @@ Note:
                 extraStyle += 'border-bottom: 3px solid #ef4444 !important; z-index: 10; ';
             }
             
-            let tier = (r - 1) - row; 
-            let stayHtml = '';
-            
-            // Only draw stay lines on internal vertical joints (col > 0)
-            if(isSideView && activeStays[tier] && col > 0) {
-                stayHtml = `<div style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; background-image: linear-gradient(to bottom right, transparent 48%, rgba(234, 88, 12, 0.7) 49%, rgba(234, 88, 12, 0.7) 51%, transparent 52%); z-index: 5;"></div>`;
-            }
-
-            html += `<div class="panel" style="aspect-ratio: 1/1; min-height: 15px; border: 0.5px solid #94a3b8; background-color: #e0f2fe; box-sizing: border-box; position: relative; ${extraStyle}">${stayHtml}</div>`;
+            html += `<div class="panel" style="aspect-ratio: 1/1; min-height: 15px; border: 0.5px solid #94a3b8; background-color: #e0f2fe; box-sizing: border-box; position: relative; ${extraStyle}"></div>`;
         }
         
         if(g) {
@@ -1851,6 +1843,49 @@ Note:
             gp.style.gridTemplateColumns = `repeat(${c}, 1fr)`; 
             gp.innerHTML = html;
         }
+    }
+
+    function drawCrossSectionSVG(id, panelsW, panelsH, activeStays) {
+        const container = document.getElementById(id);
+        const container_p = document.getElementById(id + '_p');
+        if (!container) return;
+
+        // Size of each panel in SVG
+        const pSize = 25; 
+        const svgW = Math.max(panelsW * pSize, 80); 
+        const svgH = Math.max(panelsH * pSize, 80);
+
+        let svgContent = `<svg viewBox="0 0 ${panelsW * pSize} ${panelsH * pSize}" style="width:100%; height:100%; display:block; background:#e0f2fe; border: 2px solid #475569;">`;
+
+        // Draw grid lines
+        for(let i=1; i<panelsW; i++) {
+            svgContent += `<line x1="${i*pSize}" y1="0" x2="${i*pSize}" y2="${panelsH*pSize}" stroke="#94a3b8" stroke-width="1"/>`;
+        }
+        for(let i=1; i<panelsH; i++) {
+            svgContent += `<line x1="0" y1="${i*pSize}" x2="${panelsW*pSize}" y2="${i*pSize}" stroke="#94a3b8" stroke-width="1"/>`;
+        }
+
+        function drawStay(x1, y1, x2, y2) {
+            svgContent += `<line x1="${x1*pSize}" y1="${y1*pSize}" x2="${x2*pSize}" y2="${y2*pSize}" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>`;
+        }
+
+        // Draw Stays based on active selection (Tier 1 is Bottom, Tier 4 is Top)
+        // Left Wall
+        if (activeStays[0] && panelsH >= 1 && panelsW >= 1) drawStay(0, panelsH - 1, 1, panelsH); // L1
+        if (activeStays[1] && panelsH >= 2 && panelsW >= 1) drawStay(0, panelsH - 2, 1, panelsH); // L2
+        if (activeStays[2] && panelsH >= 3 && panelsW >= 2) drawStay(0, panelsH - 3, 2, panelsH); // L3
+        if (activeStays[3] && panelsH >= 4 && panelsW >= 2) drawStay(0, panelsH - 4, 2, panelsH); // L4
+        
+        // Right Wall
+        if (activeStays[0] && panelsH >= 1 && panelsW >= 1) drawStay(panelsW, panelsH - 1, panelsW - 1, panelsH);
+        if (activeStays[1] && panelsH >= 2 && panelsW >= 1) drawStay(panelsW, panelsH - 2, panelsW - 1, panelsH);
+        if (activeStays[2] && panelsH >= 3 && panelsW >= 2) drawStay(panelsW, panelsH - 3, panelsW - 2, panelsH);
+        if (activeStays[3] && panelsH >= 4 && panelsW >= 2) drawStay(panelsW, panelsH - 4, panelsW - 2, panelsH);
+
+        svgContent += `</svg>`;
+
+        container.innerHTML = svgContent;
+        if(container_p) container_p.innerHTML = svgContent;
     }
 
     function processTankData() {
@@ -1924,7 +1959,7 @@ Note:
             }
         }
 
-        // Read Angle Stays inputs dynamically for visual drawing WITHOUT optional chaining
+        // Check active stays for SVG drawing
         let stays1 = [
             getQtyVal('qty_item_2_0') > 0,
             getQtyVal('qty_item_2_1') > 0,
@@ -2017,12 +2052,12 @@ Note:
                 getQtyVal('qty2_item_2_3') > 0
             ];
 
-            drawGrid('topGrid2', L2, W2, pTypeTop2, pPosTop2, false); 
-            drawGrid('bottomGrid2', L2, W2, pTypeTop2, pPosTop2, false);
-            drawGrid('frontGrid2', L2, H2, pTypeFront2, pPosFront2, true, stays2); 
-            drawGrid('backGrid2', L2, H2, pTypeFront2, pPosFront2, true, stays2);
-            drawGrid('leftGrid2', W2, H2, pTypeSide2, pPosSide2, true, stays2); 
-            drawGrid('rightGrid2', W2, H2, pTypeSide2, pPosSide2, true, stays2);
+            drawGrid('topGrid2', L2, W2, pTypeTop2, pPosTop2); 
+            drawGrid('bottomGrid2', L2, W2, pTypeTop2, pPosTop2);
+            drawGrid('frontGrid2', L2, H2, pTypeFront2, pPosFront2); 
+            drawGrid('leftGrid2', W2, H2, pTypeSide2, pPosSide2); 
+            drawCrossSectionSVG('sectionLGrid2', L2, H2, stays2);
+            drawCrossSectionSVG('sectionWGrid2', W2, H2, stays2);
         } else {
             if(document.getElementById('qty2_item_0_0')) {
                  const t2Inputs = document.querySelectorAll('[id^="qty2_"]');
@@ -2062,8 +2097,6 @@ Note:
         setQ('qty_', 'item_1_3', L1_in);  // Pipe
         setQ('qty_', 'item_1_4', L1_in);  // Angle
 
-        // ANGLE STAYS - Strictly Manual for ALL units (No setStayIfEmpty calls)
-
         setQ('qty_', 'item_3_0', H1_in); 
         setQ('qty_', 'item_3_1', H1_in); 
         setQ('qty_', 'item_3_2', !isImperial ? H1_in : 1); // WLI logic
@@ -2072,8 +2105,13 @@ Note:
         let sealantPerimeter = isImperial ? 4.88 : 4.0;
         let boltsPerPanel = isImperial ? 16 : 12;
         
-        setQ('qty_', 'item_3_4', Math.ceil((totalP1 * sealantPerimeter) / 15)); 
-        setQ('qty_', 'item_3_5', Math.ceil(totalP1 * boltsPerPanel * 1.05)); 
+        if(!isImperial) {
+            setQ('qty_', 'item_3_4', Math.ceil(totalP1 * 0.22)); 
+            setQ('qty_', 'item_3_5', Math.ceil(totalP1 * 20));
+        } else {
+            setQ('qty_', 'item_3_4', Math.ceil((totalP1 * sealantPerimeter) / 15)); 
+            setQ('qty_', 'item_3_5', Math.ceil(totalP1 * boltsPerPanel * 1.05)); 
+        }
 
         let qty40 = document.getElementById('qty_item_4_0'); 
         if(qty40 && (!qty40.value || qty40.value == "0")) qty40.value = 1;
@@ -2097,27 +2135,35 @@ Note:
             setQ('qty2_', 'item_1_2', perim2); 
             setQ('qty2_', 'item_1_3', L2_in); 
             setQ('qty2_', 'item_1_4', L2_in); 
-            
-            // ANGLE STAYS - Strictly Manual for ALL units
 
             setQ('qty2_', 'item_3_0', H2_in); 
             setQ('qty2_', 'item_3_1', H2_in); 
             setQ('qty2_', 'item_3_2', !isImperial ? H2_in : 1); 
             setQ('qty2_', 'item_3_3', 1); 
 
-            setQ('qty2_', 'item_3_4', Math.ceil((totalP2 * sealantPerimeter) / 15)); 
-            setQ('qty2_', 'item_3_5', Math.ceil(totalP2 * boltsPerPanel * 1.05)); 
+            if(!isImperial) {
+                setQ('qty2_', 'item_3_4', Math.ceil(totalP2 * 0.22)); 
+                setQ('qty2_', 'item_3_5', Math.ceil(totalP2 * 20));
+            } else {
+                setQ('qty2_', 'item_3_4', Math.ceil((totalP2 * sealantPerimeter) / 15)); 
+                setQ('qty2_', 'item_3_5', Math.ceil(totalP2 * boltsPerPanel * 1.05)); 
+            }
 
             let q2_40 = document.getElementById('qty2_item_4_0'); if(q2_40 && !q2_40.value) q2_40.value = 0;
             let q2_41 = document.getElementById('qty2_item_4_1'); if(q2_41 && !q2_41.value) q2_41.value = 0;
         }
 
-        drawGrid('topGrid', L1, W1, pTypeTop1, pPosTop1, false); 
-        drawGrid('bottomGrid', L1, W1, pTypeTop1, pPosTop1, false);
-        drawGrid('frontGrid', L1, H1, pTypeFront1, pPosFront1, true, stays1); 
-        drawGrid('backGrid', L1, H1, pTypeFront1, pPosFront1, true, stays1);
-        drawGrid('leftGrid', W1, H1, pTypeSide1, pPosSide1, true, stays1); 
-        drawGrid('rightGrid', W1, H1, pTypeSide1, pPosSide1, true, stays1);
+        drawGrid('topGrid', L1, W1, pTypeTop1, pPosTop1); 
+        drawGrid('bottomGrid', L1, W1, pTypeTop1, pPosTop1);
+        drawGrid('frontGrid', L1, H1, pTypeFront1, pPosFront1); 
+        drawGrid('leftGrid', W1, H1, pTypeSide1, pPosSide1); 
+        drawCrossSectionSVG('sectionLGrid', L1, H1, stays1);
+        drawCrossSectionSVG('sectionWGrid', W1, H1, stays1);
+
+        let plinthText = document.getElementById('plinthCalcText');
+        const numPlinths = W1 + 1;
+        const plinthLen = L1_in;
+        if(plinthText) plinthText.innerText = `Recommendation: Require ${numPlinths} rows of concrete plinths, each ${plinthLen}${unitStr} long, spaced at ${spacingStr} C/C.`;
 
         calcTotals();
         savePrices();
