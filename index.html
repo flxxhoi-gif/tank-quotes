@@ -196,8 +196,8 @@
             body.print-internal .drawings-page { page-break-before: always !important; padding-top: 20px !important; }
             body.print-internal .tank-section-title { font-size: 11pt !important; margin-bottom: 10px !important; margin-top: 15px !important; color: #0f172a !important; font-weight: 800 !important; text-transform: uppercase !important; border-bottom: 2px solid #0f172a !important; padding-bottom: 5px !important; border-left: none !important; background: transparent !important;}
 
-            body.print-internal .visual-container { display: grid !important; grid-template-columns: repeat(6, 1fr) !important; gap: 8px !important; width: 100% !important; margin: 15px 0 25px 0 !important; page-break-inside: avoid !important; clear: both !important;}
-            body.print-internal .view-box { padding: 6px !important; border: 1.5px solid #cbd5e1 !important; background: #f8fafc !important; border-radius: 6px !important; }
+            body.print-internal .visual-container { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; width: 100% !important; margin: 15px 0 25px 0 !important; page-break-inside: avoid !important; clear: both !important;}
+            body.print-internal .view-box { padding: 6px !important; border: 1.5px solid #cbd5e1 !important; background: #f8fafc !important; border-radius: 6px !important; width: 140px !important;}
             body.print-internal .grid-draft { gap: 0.5px !important; border: 1.5px solid #0f172a !important; background: #fff !important; width: 100% !important;}
             body.print-internal .panel { background: #e0f2fe !important; border: 0.5px solid #94a3b8 !important; min-height: 12px !important; box-sizing: border-box !important;}
             body.print-internal .view-title { font-size: 7pt !important; margin-bottom: 4px !important; color: #0f172a !important; text-align: center !important; font-weight: 800 !important; text-transform: uppercase !important;}
@@ -253,11 +253,11 @@
     </style>
     
     <script>
-        const currentVersion = "V52";
+        const currentVersion = "V54";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=51; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=53; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -585,27 +585,35 @@ Note:
                     </div>
 
                     <div class="module-card no-print" style="margin-bottom:20px;">
-                        <div class="card-header" style="font-size: 1em;">Tank 1 Assembly Draft</div>
-                        <div class="visual-container" id="visualsArea">
+                        <div class="card-header" style="font-size: 1em;">Tank 1 Assembly Draft (Exterior)</div>
+                        <div class="visual-container">
                             <div class="view-box"><div class="view-title">Top</div><div id="topGrid" class="grid-draft"></div></div>
-                            <div class="view-box"><div class="view-title">Front</div><div id="frontGrid" class="grid-draft"></div></div>
-                            <div class="view-box"><div class="view-title">Left</div><div id="leftGrid" class="grid-draft"></div></div>
                             <div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid" class="grid-draft"></div></div>
-                            <div class="view-box"><div class="view-title">Internal Section (L)</div><div id="sectionLGrid" class="grid-draft"></div></div>
-                            <div class="view-box"><div class="view-title">Internal Section (W)</div><div id="sectionWGrid" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Front</div><div id="frontGrid" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Back</div><div id="backGrid" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Left</div><div id="leftGrid" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Right</div><div id="rightGrid" class="grid-draft"></div></div>
                         </div>
+                        
+                        <div class="card-header" style="font-size: 1em; margin-top:25px; border-top:2px solid #f1f5f9; padding-top:15px;">Tank 1 Internal Bracing (Angle Stays)</div>
+                        <div class="visual-container" id="visualsArea1">
+                            </div>
                     </div>
                     
                     <div class="module-card no-print" id="tank2VisualsCard" style="display:none;">
-                        <div class="card-header" style="font-size: 1em;">Tank 2 Assembly Draft</div>
+                        <div class="card-header" style="font-size: 1em;">Tank 2 Assembly Draft (Exterior)</div>
                         <div class="visual-container">
                             <div class="view-box"><div class="view-title">Top</div><div id="topGrid2" class="grid-draft"></div></div>
-                            <div class="view-box"><div class="view-title">Front</div><div id="frontGrid2" class="grid-draft"></div></div>
-                            <div class="view-box"><div class="view-title">Left</div><div id="leftGrid2" class="grid-draft"></div></div>
                             <div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid2" class="grid-draft"></div></div>
-                            <div class="view-box"><div class="view-title">Internal Section (L)</div><div id="sectionLGrid2" class="grid-draft"></div></div>
-                            <div class="view-box"><div class="view-title">Internal Section (W)</div><div id="sectionWGrid2" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Front</div><div id="frontGrid2" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Back</div><div id="backGrid2" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Left</div><div id="leftGrid2" class="grid-draft"></div></div>
+                            <div class="view-box"><div class="view-title">Right</div><div id="rightGrid2" class="grid-draft"></div></div>
                         </div>
+                        
+                        <div class="card-header" style="font-size: 1em; margin-top:25px; border-top:2px solid #f1f5f9; padding-top:15px;">Tank 2 Internal Bracing (Angle Stays)</div>
+                        <div class="visual-container" id="visualsArea2">
+                            </div>
                     </div>
 
                 </div> </div>
@@ -636,26 +644,32 @@ Note:
             </div>
             
             <div class="drawings-page">
-                <div class="tank-section-title">Tank 1 Assembly Drafts</div>
+                <div class="tank-section-title">Tank 1 Exterior Panels</div>
                 <div class="visual-container">
                     <div class="view-box"><div class="view-title">Top</div><div id="topGrid_p" class="grid-draft"></div></div>
-                    <div class="view-box"><div class="view-title">Front</div><div id="frontGrid_p" class="grid-draft"></div></div>
-                    <div class="view-box"><div class="view-title">Left</div><div id="leftGrid_p" class="grid-draft"></div></div>
                     <div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid_p" class="grid-draft"></div></div>
-                    <div class="view-box"><div class="view-title">Internal Section (L)</div><div id="sectionLGrid_p" class="grid-draft"></div></div>
-                    <div class="view-box"><div class="view-title">Internal Section (W)</div><div id="sectionWGrid_p" class="grid-draft"></div></div>
+                    <div class="view-box"><div class="view-title">Front</div><div id="frontGrid_p" class="grid-draft"></div></div>
+                    <div class="view-box"><div class="view-title">Back</div><div id="backGrid_p" class="grid-draft"></div></div>
+                    <div class="view-box"><div class="view-title">Left</div><div id="leftGrid_p" class="grid-draft"></div></div>
+                    <div class="view-box"><div class="view-title">Right</div><div id="rightGrid_p" class="grid-draft"></div></div>
                 </div>
                 
+                <div class="tank-section-title">Tank 1 Internal Bracing</div>
+                <div class="visual-container" id="visualsArea1_p"></div>
+                
                 <div id="tank2VisualsPrint" style="display:none;">
-                    <div class="tank-section-title">Tank 2 Assembly Drafts</div>
+                    <div class="tank-section-title" style="margin-top:25px;">Tank 2 Exterior Panels</div>
                     <div class="visual-container">
                         <div class="view-box"><div class="view-title">Top</div><div id="topGrid2_p" class="grid-draft"></div></div>
-                        <div class="view-box"><div class="view-title">Front</div><div id="frontGrid2_p" class="grid-draft"></div></div>
-                        <div class="view-box"><div class="view-title">Left</div><div id="leftGrid2_p" class="grid-draft"></div></div>
                         <div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid2_p" class="grid-draft"></div></div>
-                        <div class="view-box"><div class="view-title">Internal Section (L)</div><div id="sectionLGrid2_p" class="grid-draft"></div></div>
-                        <div class="view-box"><div class="view-title">Internal Section (W)</div><div id="sectionWGrid2_p" class="grid-draft"></div></div>
+                        <div class="view-box"><div class="view-title">Front</div><div id="frontGrid2_p" class="grid-draft"></div></div>
+                        <div class="view-box"><div class="view-title">Back</div><div id="backGrid2_p" class="grid-draft"></div></div>
+                        <div class="view-box"><div class="view-title">Left</div><div id="leftGrid2_p" class="grid-draft"></div></div>
+                        <div class="view-box"><div class="view-title">Right</div><div id="rightGrid2_p" class="grid-draft"></div></div>
                     </div>
+                    
+                    <div class="tank-section-title">Tank 2 Internal Bracing</div>
+                    <div class="visual-container" id="visualsArea2_p"></div>
                 </div>
             </div>
 
@@ -903,14 +917,11 @@ Note:
             document.body.className = 'print-internal';
             syncPrintHeader();
             
-            const grids = ['top', 'front', 'left', 'bottom', 'sectionL', 'sectionW'];
-            grids.forEach(prefix => {
-                let s1 = document.getElementById(prefix + 'Grid'); let t1 = document.getElementById(prefix + 'Grid_p');
-                if(s1 && t1) { t1.innerHTML = s1.innerHTML; }
-                
-                let s2 = document.getElementById(prefix + 'Grid2'); let t2 = document.getElementById(prefix + 'Grid2_p');
-                if(s2 && t2) { t2.innerHTML = s2.innerHTML; }
-            });
+            let s1 = document.getElementById('visualsArea1'); let t1 = document.getElementById('visualsArea1_p');
+            if(s1 && t1) { t1.innerHTML = s1.innerHTML; }
+            
+            let s2 = document.getElementById('visualsArea2'); let t2 = document.getElementById('visualsArea2_p');
+            if(s2 && t2) { t2.innerHTML = s2.innerHTML; }
             
             setTimeout(() => { window.print(); }, 300);
         } catch(e) { alert("Internal Print Error: " + e.message); }
@@ -1265,7 +1276,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV52'); // V52 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV54'); // V54 CACHE BUSTER
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1566,11 +1577,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV52', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV54', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV52');
+        let savedData = localStorage.getItem('winkoProDataV54');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1777,15 +1788,14 @@ Note:
         // Output to CUSTOMER PDF (Split Cost if 2 Tanks / Custom)
         let t1 = window.currentTotalP1 || 1;
         let t2 = window.currentTotalP2 || 0;
-        let totalPanels = t1 + t2;
-        if (totalPanels === 0) totalPanels = 1;
+        if (totalExactPanels === 0) totalExactPanels = 1;
         
         let price1 = netTotal;
         let price2 = 0;
         
         if (mode === "2" && t2 > 0) {
-            price1 = netTotal * (t1 / totalPanels);
-            price2 = netTotal * (t2 / totalPanels);
+            price1 = netTotal * (t1 / totalExactPanels);
+            price2 = netTotal * (t2 / totalExactPanels);
         } else if (mode === "custom") {
             let customMarkupAmt = customCost * (markupPct / 100);
             let customSub = customCost + customMarkupAmt;
@@ -1816,11 +1826,8 @@ Note:
         return 0;
     }
 
-    function drawGrid(id, c, r, pType = null, pPos = -1) {
-        const g = document.getElementById(id); 
-        const gp = document.getElementById(id + '_p'); 
-        
-        let html = '';
+    function buildGridHTML(title, c, r, pType = null, pPos = -1, showStays = false) {
+        let gridHtml = `<div class="grid-draft" style="grid-template-columns: repeat(${c}, 1fr);">`;
         for(let i=0; i<(c*r); i++) {
             let col = i % c;
             let row = Math.floor(i / c);
@@ -1832,60 +1839,41 @@ Note:
                 extraStyle += 'border-bottom: 3px solid #ef4444 !important; z-index: 10; ';
             }
             
-            html += `<div class="panel" style="aspect-ratio: 1/1; min-height: 15px; border: 0.5px solid #94a3b8; background-color: #e0f2fe; box-sizing: border-box; position: relative; ${extraStyle}"></div>`;
+            let stayHtml = '';
+            if (showStays) {
+                // Drawing internal bracing lines
+                if (col > 0) stayHtml += `<div style="position:absolute; left:-1px; top:0; width:2px; height:100%; background:#eab308; z-index:5;"></div>`;
+                if (row > 0) stayHtml += `<div style="position:absolute; top:-1px; left:0; width:100%; height:2px; background:#06b6d4; z-index:5;"></div>`;
+            }
+
+            gridHtml += `<div class="panel" style="aspect-ratio: 1/1; min-height: 15px; border: 0.5px solid #94a3b8; background-color: #e0f2fe; box-sizing: border-box; position: relative; ${extraStyle}">${stayHtml}</div>`;
         }
+        gridHtml += `</div>`;
         
-        if(g) {
-            g.style.gridTemplateColumns = `repeat(${c}, 1fr)`; 
-            g.innerHTML = html;
-        }
-        if(gp) {
-            gp.style.gridTemplateColumns = `repeat(${c}, 1fr)`; 
-            gp.innerHTML = html;
-        }
+        return `<div class="view-box"><div class="view-title">${title}</div>${gridHtml}</div>`;
     }
 
-    function drawCrossSectionSVG(id, panelsW, panelsH, activeStays) {
-        const container = document.getElementById(id);
-        const container_p = document.getElementById(id + '_p');
-        if (!container) return;
+    function generateViews(containerId, L, W, H, pType, pPos) {
+        const container = document.getElementById(containerId);
+        const container_p = document.getElementById(containerId + '_p');
+        if(!container) return;
 
-        // Size of each panel in SVG
-        const pSize = 25; 
-        const svgW = Math.max(panelsW * pSize, 80); 
-        const svgH = Math.max(panelsH * pSize, 80);
-
-        let svgContent = `<svg viewBox="0 0 ${panelsW * pSize} ${panelsH * pSize}" style="width:100%; height:100%; display:block; background:#e0f2fe; border: 2px solid #475569;">`;
-
-        // Draw grid lines
-        for(let i=1; i<panelsW; i++) {
-            svgContent += `<line x1="${i*pSize}" y1="0" x2="${i*pSize}" y2="${panelsH*pSize}" stroke="#94a3b8" stroke-width="1"/>`;
-        }
-        for(let i=1; i<panelsH; i++) {
-            svgContent += `<line x1="0" y1="${i*pSize}" x2="${panelsW*pSize}" y2="${i*pSize}" stroke="#94a3b8" stroke-width="1"/>`;
-        }
-
-        function drawStay(x1, y1, x2, y2) {
-            svgContent += `<line x1="${x1*pSize}" y1="${y1*pSize}" x2="${x2*pSize}" y2="${y2*pSize}" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>`;
-        }
-
-        // Draw Stays based on active selection (Tier 1 is Bottom, Tier 4 is Top)
-        // Left Wall
-        if (activeStays[0] && panelsH >= 1 && panelsW >= 1) drawStay(0, panelsH - 1, 1, panelsH); // L1
-        if (activeStays[1] && panelsH >= 2 && panelsW >= 1) drawStay(0, panelsH - 2, 1, panelsH); // L2
-        if (activeStays[2] && panelsH >= 3 && panelsW >= 2) drawStay(0, panelsH - 3, 2, panelsH); // L3
-        if (activeStays[3] && panelsH >= 4 && panelsW >= 2) drawStay(0, panelsH - 4, 2, panelsH); // L4
+        let html = '';
         
-        // Right Wall
-        if (activeStays[0] && panelsH >= 1 && panelsW >= 1) drawStay(panelsW, panelsH - 1, panelsW - 1, panelsH);
-        if (activeStays[1] && panelsH >= 2 && panelsW >= 1) drawStay(panelsW, panelsH - 2, panelsW - 1, panelsH);
-        if (activeStays[2] && panelsH >= 3 && panelsW >= 2) drawStay(panelsW, panelsH - 3, panelsW - 2, panelsH);
-        if (activeStays[3] && panelsH >= 4 && panelsW >= 2) drawStay(panelsW, panelsH - 4, panelsW - 2, panelsH);
+        // Exterior Views
+        html += buildGridHTML('Top View', L, W, pType, pPos, false);
+        html += buildGridHTML('Front View', L, H, pType === 'v' ? 'v' : null, pPos, false);
+        html += buildGridHTML('Side View', W, H, pType === 'h' ? 'v' : null, pPos, false);
 
-        svgContent += `</svg>`;
+        // Internal Stay / Truss Layouts
+        let totalLevels = Math.min(H, 4); // Usually up to 4 tiers of stays/trusses
+        for(let i=1; i<=totalLevels; i++) {
+            let label = i === H ? `Roof Level (Trusses)` : `Level ${i} (Stays)`;
+            html += buildGridHTML(label, L, W, pType, pPos, true);
+        }
 
-        container.innerHTML = svgContent;
-        if(container_p) container_p.innerHTML = svgContent;
+        container.innerHTML = html;
+        if(container_p) container_p.innerHTML = html;
     }
 
     function processTankData() {
@@ -1932,7 +1920,6 @@ Note:
         const pH1 = Math.round(pHgt_in1 / factor);
         const pPosIdx1 = Math.max(0, pPos_in1 - 1);
 
-        // --- NEW ALGORITHM: TIERED WALL CALCULATION ---
         let roof1 = L1 * W1; 
         let base1 = L1 * W1; 
         let perim1 = (L1 + W1) * 2;
@@ -1941,31 +1928,14 @@ Note:
         let totalP1 = roof1 + base1 + sides1 + partPanels1;
         window.currentTotalP1 = totalP1;
 
-        // Partition Drawing Logic T1
-        let pTypeTop1 = null, pPosTop1 = -1;
-        let pTypeFront1 = null, pPosFront1 = -1;
-        let pTypeSide1 = null, pPosSide1 = -1;
-
+        let pType1 = null, pPosFinal1 = -1;
         if (partChoice1 === 'yes' && pQty1 > 0) {
-            if (pL1 === W1) { 
-                pTypeTop1 = 'v'; pPosTop1 = Math.min(L1 - 2, pPosIdx1);
-                pTypeFront1 = 'v'; pPosFront1 = Math.min(L1 - 2, pPosIdx1);
-            } else if (pL1 === L1) { 
-                pTypeTop1 = 'h'; pPosTop1 = Math.min(W1 - 2, pPosIdx1);
-                pTypeSide1 = 'v'; pPosSide1 = Math.min(W1 - 2, pPosIdx1);
-            } else { 
-                pTypeTop1 = 'v'; pPosTop1 = Math.min(L1 - 2, pPosIdx1);
-                pTypeFront1 = 'v'; pPosFront1 = Math.min(L1 - 2, pPosIdx1);
-            }
+            if (pL1 === W1) { pType1 = 'v'; pPosFinal1 = Math.min(L1 - 2, pPosIdx1); } 
+            else if (pL1 === L1) { pType1 = 'h'; pPosFinal1 = Math.min(W1 - 2, pPosIdx1); } 
+            else { pType1 = 'v'; pPosFinal1 = Math.min(L1 - 2, pPosIdx1); }
         }
 
-        // Check active stays for SVG drawing
-        let stays1 = [
-            getQtyVal('qty_item_2_0') > 0,
-            getQtyVal('qty_item_2_1') > 0,
-            getQtyVal('qty_item_2_2') > 0,
-            getQtyVal('qty_item_2_3') > 0
-        ];
+        generateViews('visualsArea1', L1, W1, H1, pType1, pPosFinal1);
 
         let tRoof = document.getElementById('thickRoof') ? document.getElementById('thickRoof').value : "1.5mm";
         let tBase = document.getElementById('thickBase') ? document.getElementById('thickBase').value : "4.5mm";
@@ -1986,20 +1956,15 @@ Note:
         updateDesc('desc_', 'item_0_7', "Partition Panel" + pSfx);
 
         // TANK 2 DATA
-        let volLiters2 = 0, effLiters2 = 0;
-        let roof2 = 0, base2 = 0, perim2 = 0, sides2 = 0, partPanels2 = 0, totalP2 = 0;
-        let H2_in = 0, L2_in = 0, L2 = 0, W2 = 0, H2 = 0;
-        
-        let pTypeTop2 = null, pPosTop2 = -1;
-        let pTypeFront2 = null, pPosFront2 = -1;
-        let pTypeSide2 = null, pPosSide2 = -1;
+        let effLiters2 = 0;
+        let totalP2 = 0;
 
         if (mode === "2") {
-            let l2El = document.getElementById('length2'); L2_in = (l2El && l2El.value) ? parseFloat(l2El.value) : 0;
+            let l2El = document.getElementById('length2'); let L2_in = (l2El && l2El.value) ? parseFloat(l2El.value) : 0;
             let w2El = document.getElementById('width2'); let W2_in = (w2El && w2El.value) ? parseFloat(w2El.value) : 0;
-            let h2El = document.getElementById('height2'); H2_in = (h2El && h2El.value) ? parseFloat(h2El.value) : 0;
+            let h2El = document.getElementById('height2'); let H2_in = (h2El && h2El.value) ? parseFloat(h2El.value) : 0;
             
-            volLiters2 = (unit === 'ft') ? (L2_in * W2_in * H2_in * 28.3168) : (L2_in * W2_in * H2_in * 1000);
+            let volLiters2 = (unit === 'ft') ? (L2_in * W2_in * H2_in * 28.3168) : (L2_in * W2_in * H2_in * 1000);
             effLiters2 = volLiters2 * 0.9; 
 
             let pc2El = document.getElementById('partChoice2');
@@ -2012,29 +1977,25 @@ Note:
                 let ppos2El = document.getElementById('partPos2'); pPos_in2 = (ppos2El && ppos2El.value) ? parseInt(ppos2El.value) : 1;
             }
 
-            L2 = Math.ceil(L2_in / factor);
-            W2 = Math.ceil(W2_in / factor);
-            H2 = Math.ceil(H2_in / factor);
-            const pL2 = Math.ceil(pLen_in2 / factor);
-            const pH2 = Math.ceil(pHgt_in2 / factor);
+            const L2 = Math.round(L2_in / factor);
+            const W2 = Math.round(W2_in / factor);
+            const H2 = Math.round(H2_in / factor);
+            const pL2 = Math.round(pLen_in2 / factor);
+            const pH2 = Math.round(pHgt_in2 / factor);
             const pPosIdx2 = Math.max(0, pPos_in2 - 1);
 
-            roof2 = L2 * W2; base2 = L2 * W2; perim2 = (L2 + W2) * 2; sides2 = perim2 * H2; 
-            partPanels2 = (partChoice2 === 'yes' && pQty2 > 0) ? (pL2 * pH2 * pQty2) : 0;
+            let roof2 = L2 * W2; let base2 = L2 * W2; let perim2 = (L2 + W2) * 2; let sides2 = perim2 * H2; 
+            let partPanels2 = (partChoice2 === 'yes' && pQty2 > 0) ? (pL2 * pH2 * pQty2) : 0;
             totalP2 = roof2 + base2 + sides2 + partPanels2;
 
+            let pType2 = null, pPosFinal2 = -1;
             if (partChoice2 === 'yes' && pQty2 > 0) {
-                if (pL2 === W2) { 
-                    pTypeTop2 = 'v'; pPosTop2 = Math.min(L2 - 2, pPosIdx2);
-                    pTypeFront2 = 'v'; pPosFront2 = Math.min(L2 - 2, pPosIdx2);
-                } else if (pL2 === L2) { 
-                    pTypeTop2 = 'h'; pPosTop2 = Math.min(W2 - 2, pPosIdx2);
-                    pTypeSide2 = 'v'; pPosSide2 = Math.min(W2 - 2, pPosIdx2);
-                } else { 
-                    pTypeTop2 = 'v'; pPosTop2 = Math.min(L2 - 2, pPosIdx2);
-                    pTypeFront2 = 'v'; pPosFront2 = Math.min(L2 - 2, pPosIdx2);
-                }
+                if (pL2 === W2) { pType2 = 'v'; pPosFinal2 = Math.min(L2 - 2, pPosIdx2); } 
+                else if (pL2 === L2) { pType2 = 'h'; pPosFinal2 = Math.min(W2 - 2, pPosIdx2); } 
+                else { pType2 = 'v'; pPosFinal2 = Math.min(L2 - 2, pPosIdx2); }
             }
+
+            generateViews('visualsArea2', L2, W2, H2, pType2, pPosFinal2);
 
             updateDesc('desc2_', 'item_0_0', "Manhole Panel" + pSfx);
             updateDesc('desc2_', 'item_0_1', tRoof + " Roof Panel" + pSfx);
@@ -2045,19 +2006,6 @@ Note:
             updateDesc('desc2_', 'item_0_6', tL4 + " Wall Panel (L4)" + pSfx);
             updateDesc('desc2_', 'item_0_7', "Partition Panel" + pSfx);
 
-            let stays2 = [
-                getQtyVal('qty2_item_2_0') > 0,
-                getQtyVal('qty2_item_2_1') > 0,
-                getQtyVal('qty2_item_2_2') > 0,
-                getQtyVal('qty2_item_2_3') > 0
-            ];
-
-            drawGrid('topGrid2', L2, W2, pTypeTop2, pPosTop2); 
-            drawGrid('bottomGrid2', L2, W2, pTypeTop2, pPosTop2);
-            drawGrid('frontGrid2', L2, H2, pTypeFront2, pPosFront2); 
-            drawGrid('leftGrid2', W2, H2, pTypeSide2, pPosSide2); 
-            drawCrossSectionSVG('sectionLGrid2', L2, H2, stays2);
-            drawCrossSectionSVG('sectionWGrid2', W2, H2, stays2);
         } else {
             if(document.getElementById('qty2_item_0_0')) {
                  const t2Inputs = document.querySelectorAll('[id^="qty2_"]');
@@ -2090,12 +2038,14 @@ Note:
         setQ('qty_', 'item_0_6', H1 >= 4 ? perim1 * (H1 - 3) : 0); 
         setQ('qty_', 'item_0_7', partPanels1); 
 
-        // CLEATS AND TRUSSES (Restored to original uniform Excel math)
+        // CLEATS AND TRUSSES Auto-Calc
         setQ('qty_', 'item_1_0', H1 * 4); // Type A (Corners)
         setQ('qty_', 'item_1_1', perim1); // Type B (Base/Roof Joints)
         setQ('qty_', 'item_1_2', perim1); // Type C
         setQ('qty_', 'item_1_3', L1_in);  // Pipe
         setQ('qty_', 'item_1_4', L1_in);  // Angle
+
+        // ANGLE STAYS TANK 1 - NO FORCED CALC, ONLY MANUAL INPUT NOW
 
         setQ('qty_', 'item_3_0', H1_in); 
         setQ('qty_', 'item_3_1', H1_in); 
@@ -2105,13 +2055,8 @@ Note:
         let sealantPerimeter = isImperial ? 4.88 : 4.0;
         let boltsPerPanel = isImperial ? 16 : 12;
         
-        if(!isImperial) {
-            setQ('qty_', 'item_3_4', Math.ceil(totalP1 * 0.22)); 
-            setQ('qty_', 'item_3_5', Math.ceil(totalP1 * 20));
-        } else {
-            setQ('qty_', 'item_3_4', Math.ceil((totalP1 * sealantPerimeter) / 15)); 
-            setQ('qty_', 'item_3_5', Math.ceil(totalP1 * boltsPerPanel * 1.05)); 
-        }
+        setQ('qty_', 'item_3_4', Math.ceil((totalP1 * sealantPerimeter) / 15)); 
+        setQ('qty_', 'item_3_5', Math.ceil(totalP1 * boltsPerPanel * 1.05)); 
 
         let qty40 = document.getElementById('qty_item_4_0'); 
         if(qty40 && (!qty40.value || qty40.value == "0")) qty40.value = 1;
@@ -2129,36 +2074,26 @@ Note:
             setQ('qty2_', 'item_0_6', H2 >= 4 ? perim2 * (H2 - 3) : 0); 
             setQ('qty2_', 'item_0_7', partPanels2); 
 
-            // CLEATS AND TRUSSES (Restored to original uniform Excel math)
+            // CLEATS AND TRUSSES
             setQ('qty2_', 'item_1_0', H2 * 4); 
             setQ('qty2_', 'item_1_1', perim2); 
             setQ('qty2_', 'item_1_2', perim2); 
             setQ('qty2_', 'item_1_3', L2_in); 
             setQ('qty2_', 'item_1_4', L2_in); 
 
+            // ANGLE STAYS TANK 2 - NO FORCED CALC, ONLY MANUAL INPUT NOW
+            
             setQ('qty2_', 'item_3_0', H2_in); 
             setQ('qty2_', 'item_3_1', H2_in); 
             setQ('qty2_', 'item_3_2', !isImperial ? H2_in : 1); 
             setQ('qty2_', 'item_3_3', 1); 
 
-            if(!isImperial) {
-                setQ('qty2_', 'item_3_4', Math.ceil(totalP2 * 0.22)); 
-                setQ('qty2_', 'item_3_5', Math.ceil(totalP2 * 20));
-            } else {
-                setQ('qty2_', 'item_3_4', Math.ceil((totalP2 * sealantPerimeter) / 15)); 
-                setQ('qty2_', 'item_3_5', Math.ceil(totalP2 * boltsPerPanel * 1.05)); 
-            }
+            setQ('qty2_', 'item_3_4', Math.ceil((totalP2 * sealantPerimeter) / 15)); 
+            setQ('qty2_', 'item_3_5', Math.ceil(totalP2 * boltsPerPanel * 1.05)); 
 
             let q2_40 = document.getElementById('qty2_item_4_0'); if(q2_40 && !q2_40.value) q2_40.value = 0;
             let q2_41 = document.getElementById('qty2_item_4_1'); if(q2_41 && !q2_41.value) q2_41.value = 0;
         }
-
-        drawGrid('topGrid', L1, W1, pTypeTop1, pPosTop1); 
-        drawGrid('bottomGrid', L1, W1, pTypeTop1, pPosTop1);
-        drawGrid('frontGrid', L1, H1, pTypeFront1, pPosFront1); 
-        drawGrid('leftGrid', W1, H1, pTypeSide1, pPosSide1); 
-        drawCrossSectionSVG('sectionLGrid', L1, H1, stays1);
-        drawCrossSectionSVG('sectionWGrid', W1, H1, stays1);
 
         let plinthText = document.getElementById('plinthCalcText');
         const numPlinths = W1 + 1;
