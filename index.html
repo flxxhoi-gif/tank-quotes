@@ -95,8 +95,8 @@
         .view-box { text-align: center; background: #f8fafc; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; width: 145px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);} 
         .view-title { font-size: 0.75em; font-weight: 800; margin-bottom: 8px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;}
         
-        .grid-draft { display: grid; gap: 1px; background: #94a3b8; border: 2px solid #475569; margin: 0 auto; width: 100%; border-radius: 2px; overflow: hidden;} 
-        .panel { background: #e0f2fe; padding-bottom: 100%; height: 0; box-sizing: border-box; position: relative;}
+        .grid-draft { display: grid; gap: 1px; background: #94a3b8; border: 2px solid #475569; margin: 0 auto; border-radius: 2px; overflow: hidden;} 
+        .panel { background: #e0f2fe; box-sizing: border-box; position: relative; aspect-ratio: 1 / 1;}
 
         .tank-section-title { background: #e2e8f0; padding: 6px 12px; border-radius: 6px; font-weight: 800; color: #0f172a; margin-bottom: 10px; font-size: 0.9em; text-transform: uppercase; border-left: 4px solid #3b82f6;}
 
@@ -199,7 +199,7 @@
 
             body.print-internal .visual-container { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; width: 100% !important; margin: 15px 0 25px 0 !important; page-break-inside: avoid !important; clear: both !important;}
             body.print-internal .view-box { padding: 6px !important; border: 1.5px solid #cbd5e1 !important; background: #f8fafc !important; border-radius: 6px !important; width: 120px !important;}
-            body.print-internal .grid-draft { gap: 0.5px !important; border: 1.5px solid #0f172a !important; background: #fff !important; width: 100% !important;}
+            body.print-internal .grid-draft { gap: 0.5px !important; border: 1.5px solid #0f172a !important; background: #fff !important;}
             body.print-internal .panel { background: #e0f2fe !important; border: 0.5px solid #94a3b8 !important; min-height: 12px !important; box-sizing: border-box !important;}
             body.print-internal .view-title { font-size: 7pt !important; margin-bottom: 4px !important; color: #0f172a !important; text-align: center !important; font-weight: 800 !important; text-transform: uppercase !important;}
 
@@ -254,11 +254,11 @@
     </style>
     
     <script>
-        const currentVersion = "V55";
+        const currentVersion = "V57";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=54; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=56; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -343,7 +343,7 @@
             <strong style="color: #ea580c; display: flex; align-items: center; gap: 8px;">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
                 Project Bank:
-            </select>
+            </strong>
             <select id="memoryDropdown">
                 <option value="">-- Load a Saved Project --</option>
             </select>
@@ -1277,7 +1277,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV55'); // V55 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV57'); // V57 CACHE BUSTER
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1578,11 +1578,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV55', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV57', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV55');
+        let savedData = localStorage.getItem('winkoProDataV57');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -1827,9 +1827,11 @@ Note:
         return 0;
     }
 
-    function drawGrid(id, c, r, pType = null, pPos = -1) {
+    function drawGrid(id, c, r, maxDim, pType = null, pPos = -1) {
         const g = document.getElementById(id); 
         const gp = document.getElementById(id + '_p'); 
+        
+        let widthPct = maxDim > 0 ? (c / maxDim) * 100 : 100;
         
         let html = '';
         for(let i=0; i<(c*r); i++) {
@@ -1843,21 +1845,25 @@ Note:
                 extraStyle += 'border-bottom: 3px solid #ef4444 !important; z-index: 10; ';
             }
 
-            html += `<div class="panel" style="aspect-ratio: 1/1; min-height: 15px; border: 0.5px solid #94a3b8; background-color: #e0f2fe; box-sizing: border-box; position: relative; ${extraStyle}"></div>`;
+            html += `<div class="panel" style="${extraStyle}"></div>`;
         }
         
         if(g) {
             g.style.gridTemplateColumns = `repeat(${c}, 1fr)`; 
+            g.style.width = `${widthPct}%`; 
             g.innerHTML = html;
         }
         if(gp) {
             gp.style.gridTemplateColumns = `repeat(${c}, 1fr)`; 
+            gp.style.width = `${widthPct}%`; 
             gp.innerHTML = html;
         }
     }
 
-    function buildGridHTML(title, c, r, pType = null, pPos = -1, showStays = false) {
-        let gridHtml = `<div class="grid-draft" style="grid-template-columns: repeat(${c}, 1fr);">`;
+    function buildGridHTML(title, c, r, maxDim, pType = null, pPos = -1, showStays = false) {
+        let widthPct = maxDim > 0 ? (c / maxDim) * 100 : 100;
+        let gridHtml = `<div class="grid-draft" style="grid-template-columns: repeat(${c}, 1fr); width: ${widthPct}%;">`;
+        
         for(let i=0; i<(c*r); i++) {
             let col = i % c;
             let row = Math.floor(i / c);
@@ -1871,12 +1877,11 @@ Note:
             
             let stayHtml = '';
             if (showStays) {
-                // Drawing internal bracing lines
                 if (col > 0) stayHtml += `<div style="position:absolute; left:-1px; top:0; width:2px; height:100%; background:#eab308; z-index:5;"></div>`;
                 if (row > 0) stayHtml += `<div style="position:absolute; top:-1px; left:0; width:100%; height:2px; background:#06b6d4; z-index:5;"></div>`;
             }
 
-            gridHtml += `<div class="panel" style="aspect-ratio: 1/1; min-height: 15px; border: 0.5px solid #94a3b8; background-color: #e0f2fe; box-sizing: border-box; position: relative; ${extraStyle}">${stayHtml}</div>`;
+            gridHtml += `<div class="panel" style="${extraStyle}">${stayHtml}</div>`;
         }
         gridHtml += `</div>`;
         
@@ -1889,12 +1894,13 @@ Note:
         if(!container) return;
 
         let html = '';
+        const maxDim = Math.max(L, W, H);
         
         // Only generate Internal Stay / Truss Layouts
         let totalLevels = Math.min(H, 4); // Usually up to 4 tiers of stays/trusses
         for(let i=1; i<=totalLevels; i++) {
             let label = i === H ? `Roof Level (Trusses)` : `Level ${i} (Stays)`;
-            html += buildGridHTML(label, L, W, pType, pPos, true);
+            html += buildGridHTML(label, L, W, maxDim, pType, pPos, true);
         }
 
         container.innerHTML = html;
@@ -1970,12 +1976,13 @@ Note:
             }
         }
 
-        drawGrid('topGrid', L1, W1, pTypeTop1, pPosTop1); 
-        drawGrid('bottomGrid', L1, W1, pTypeTop1, pPosTop1);
-        drawGrid('frontGrid', L1, H1, pTypeFront1, pPosFront1); 
-        drawGrid('backGrid', L1, H1, pTypeFront1, pPosFront1);
-        drawGrid('leftGrid', W1, H1, pTypeSide1, pPosSide1); 
-        drawGrid('rightGrid', W1, H1, pTypeSide1, pPosSide1);
+        const maxDim1 = Math.max(L1, W1, H1);
+        drawGrid('topGrid', L1, W1, maxDim1, pTypeTop1, pPosTop1); 
+        drawGrid('bottomGrid', L1, W1, maxDim1, pTypeTop1, pPosTop1);
+        drawGrid('frontGrid', L1, H1, maxDim1, pTypeFront1, pPosFront1); 
+        drawGrid('backGrid', L1, H1, maxDim1, pTypeFront1, pPosFront1);
+        drawGrid('leftGrid', W1, H1, maxDim1, pTypeSide1, pPosSide1); 
+        drawGrid('rightGrid', W1, H1, maxDim1, pTypeSide1, pPosSide1);
 
         // Generate Internal Bracing
         generateViews('visualsArea1', L1, W1, H1, pTypeTop1, pPosTop1);
@@ -2048,12 +2055,13 @@ Note:
                 }
             }
 
-            drawGrid('topGrid2', L2, W2, pTypeTop2, pPosTop2); 
-            drawGrid('bottomGrid2', L2, W2, pTypeTop2, pPosTop2);
-            drawGrid('frontGrid2', L2, H2, pTypeFront2, pPosFront2); 
-            drawGrid('backGrid2', L2, H2, pTypeFront2, pPosFront2);
-            drawGrid('leftGrid2', W2, H2, pTypeSide2, pPosSide2); 
-            drawGrid('rightGrid2', W2, H2, pTypeSide2, pPosSide2);
+            const maxDim2 = Math.max(L2, W2, H2);
+            drawGrid('topGrid2', L2, W2, maxDim2, pTypeTop2, pPosTop2); 
+            drawGrid('bottomGrid2', L2, W2, maxDim2, pTypeTop2, pPosTop2);
+            drawGrid('frontGrid2', L2, H2, maxDim2, pTypeFront2, pPosFront2); 
+            drawGrid('backGrid2', L2, H2, maxDim2, pTypeFront2, pPosFront2);
+            drawGrid('leftGrid2', W2, H2, maxDim2, pTypeSide2, pPosSide2); 
+            drawGrid('rightGrid2', W2, H2, maxDim2, pTypeSide2, pPosSide2);
 
             generateViews('visualsArea2', L2, W2, H2, pTypeTop2, pPosTop2);
 
