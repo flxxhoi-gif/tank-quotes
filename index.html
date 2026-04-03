@@ -23,7 +23,7 @@
         .login-card button:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(234, 88, 12, 0.3); }
         
         #mainContent, #adminContent { display: none; }
-        #customerPrintView { display: none; } 
+        #customerPrintView, #checklistPrintView { display: none; } 
         .print-only { display: none; }
 
         /* --- DASHBOARD STYLES (SCREEN) --- */
@@ -84,7 +84,7 @@
         .sum-row.total { font-size: 1.8em; font-weight: 800; color: #fbbf24; border-bottom: none; border-top: 2px solid rgba(255,255,255,0.2); padding-top: 15px; margin-top: 15px;}
         .sum-row.total span:last-child { color: #fbbf24; }
 
-        .btn-group { display: flex; gap: 12px; }
+        .btn-group { display: flex; gap: 12px; flex-wrap: wrap; }
         .action-btn { flex: 1; padding: 14px; background: #ea580c; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 700; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;}
         .action-btn:hover { background: #c2410c; transform: translateY(-2px); box-shadow: 0 8px 15px -3px rgba(234,88,12,0.3);}
         .export-btn { background: #334155; } .export-btn:hover { background: #1e293b; box-shadow: 0 8px 15px -3px rgba(15,23,42,0.3);}
@@ -114,7 +114,7 @@
         .admin-input.text-left { text-align: left; }
 
         /* ========================================================================== */
-        /* --- PROFESSIONAL PRINT STYLES (DUAL MODE) --- */
+        /* --- PROFESSIONAL PRINT STYLES (MULTI-MODE) --- */
         /* ========================================================================== */
         @media print {
             @page { size: A4; margin: 10mm 15mm; }
@@ -129,6 +129,7 @@
             /* ------------------------------------------------ */
             body.print-internal #mainContent { display: block !important; }
             body.print-internal #customerPrintView { display: none !important; }
+            body.print-internal #checklistPrintView { display: none !important; }
 
             body.print-internal .internal-hide { display: none !important; }
             
@@ -193,7 +194,6 @@
             body.print-internal .summary-table .border-bottom td { border-bottom: 1.5px solid #cbd5e1 !important; padding-bottom: 6px; margin-bottom: 3px; }
             body.print-internal .summary-table .grand-total-row td { font-size: 12.5pt; padding-top: 10px; }
 
-            /* PAGE BREAK FOR DRAWINGS */
             body.print-internal .drawings-page { page-break-before: always !important; padding-top: 20px !important; }
             body.print-internal .tank-section-title { font-size: 11pt !important; margin-bottom: 10px !important; margin-top: 15px !important; color: #0f172a !important; font-weight: 800 !important; text-transform: uppercase !important; border-bottom: 2px solid #0f172a !important; padding-bottom: 5px !important; border-left: none !important; background: transparent !important;}
 
@@ -207,6 +207,7 @@
             /* MODE 2: CUSTOMER PRINT                           */
             /* ------------------------------------------------ */
             body.print-customer #mainContent { display: none !important; }
+            body.print-customer #checklistPrintView { display: none !important; }
             body.print-customer #customerPrintView { display: block !important; }
 
             .cp-header { display: flex; margin-bottom: 15px;}
@@ -250,15 +251,45 @@
             .cp-signoff { display: flex; justify-content: space-between; margin-top: 15px; page-break-inside: avoid;}
             .cp-signoff-left { width: 50%; }
             .cp-signoff-left p { margin: 2px 0; font-size: 8.5pt;}
+
+            /* ------------------------------------------------ */
+            /* MODE 3: SALES ORDER CHECKLIST                    */
+            /* ------------------------------------------------ */
+            body.print-checklist #mainContent { display: none !important; }
+            body.print-checklist #customerPrintView { display: none !important; }
+            body.print-checklist #checklistPrintView { display: block !important; }
+
+            #checklistPrintView { font-family: Arial, sans-serif; color: #000; font-size: 10pt; line-height: 1.4; padding: 10px; }
+            .chk-title { font-size: 12pt; font-weight: bold; text-decoration: underline; margin-bottom: 20px; }
+            .chk-top-flex { display: flex; justify-content: space-between; margin-bottom: 15px; }
+            .chk-box { display: inline-block; width: 14px; height: 14px; border: 1px solid #000; text-align: center; vertical-align: middle; line-height: 14px; font-size: 10pt; margin-right: 5px; font-weight:bold;}
+            .chk-line { display: inline-block; border-bottom: 1px solid #000; min-width: 100px; padding: 0 5px; }
+            
+            .chk-table { width: 100%; border-collapse: collapse; margin-bottom: 10px;}
+            .chk-table td { padding: 4px 2px; vertical-align: bottom; border:none;}
+            .chk-table .label { width: 110px; }
+            
+            .chk-section { border-top: 2px solid #000; border-bottom: 2px solid #000; padding: 8px 0; margin-bottom: 10px; }
+            .chk-section-title { font-weight: bold; text-transform: uppercase; font-size: 9pt; margin-bottom: 5px;}
+            
+            .chk-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+            .chk-grid-3 { display: grid; grid-template-columns: auto auto auto; gap: 10px; align-items:center; margin-bottom:4px;}
+            .chk-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom:4px;}
+            
+            .chk-box-container { border: 1px solid #000; padding: 1px 4px; display:inline-block; min-width:30px; text-align:center;}
+
+            .chk-footer { display: flex; justify-content: space-between; margin-top: 40px; }
+            .chk-sig-block { width: 30%; font-size: 9pt;}
+            .chk-sig-line { border-top: 1px solid #000; margin-bottom: 5px; padding-top: 2px;}
         }
     </style>
     
     <script>
-        const currentVersion = "V57";
+        const currentVersion = "V58";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=56; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=57; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -583,6 +614,9 @@ Note:
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
                             Customer
                         </button>
+                        <button class="action-btn print-btn" style="background: #0284c7;" onclick="printChecklist()">
+                            📋 Sales Order
+                        </button>
                     </div>
 
                     <div class="module-card no-print" style="margin-bottom:20px;">
@@ -847,6 +881,149 @@ Note:
     </div>
 </div>
 
+<div id="checklistPrintView">
+    <div class="chk-title">Pressed Steel Tank Sales Order Checklist</div>
+    
+    <div class="chk-top-flex">
+        <div style="width: 48%;">
+            <table class="chk-table">
+                <tr><td class="label">Customer:</td><td class="chk-line" id="chk_customer"></td></tr>
+                <tr><td class="label">Customer PO No:</td><td class="chk-line"></td></tr>
+                <tr><td class="label">Project Name:</td><td class="chk-line" id="chk_project"></td></tr>
+            </table>
+        </div>
+        <div style="width: 48%;">
+            <table class="chk-table">
+                <tr><td class="label">Project No.:</td><td class="chk-line"></td></tr>
+                <tr><td class="label">Job. Number:</td><td class="chk-line"></td></tr>
+                <tr><td class="label">Issued Date:</td><td class="chk-line" id="chk_issued"></td></tr>
+                <tr><td class="label">Delivery Date:</td><td class="chk-line"></td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="chk-section">
+        <div class="chk-grid-2">
+            <div>
+                <span class="chk-section-title" style="margin-right:20px;">TANK DESCRIPTION</span>
+                <span class="chk-box" id="box_sans">&nbsp;</span> SANS 10329:2020
+            </div>
+            <div>
+                <span class="chk-box" id="box_ss22">&nbsp;</span> SS 22: 1979
+            </div>
+        </div>
+        <table class="chk-table" style="margin-top:5px;">
+            <tr>
+                <td style="width:70px;">Tank Size:</td><td class="chk-line" id="chk_tanksize" style="width:40%;"></td>
+                <td style="width:60px;">Tank Qty:</td><td class="chk-line" id="chk_tankqty" style="width:15%; text-align:center;"></td>
+                <td style="width:75px;">Total Panel:</td><td class="chk-line" id="chk_totalpanel" style="width:15%; text-align:center;"></td>
+            </tr>
+        </table>
+        <div style="display:flex; align-items:center; margin-top:5px; gap: 15px;">
+            <div style="width:70px;">Partition:</div>
+            <div><span class="chk-box" id="box_part_no">&nbsp;</span> No</div>
+            <div><span class="chk-box" id="box_part_yes">&nbsp;</span> YES</div>
+        </div>
+        <div style="display:flex; align-items:center; margin-top:10px; gap: 15px;">
+            <div style="width:70px;">Coating</div>
+            <div><span class="chk-box" id="box_coat_hdg">&nbsp;</span> HDG</div>
+            <div><span class="chk-box" id="box_coat_paint">&nbsp;</span> Painted</div>
+            <div><span class="chk-box" id="box_coat_ms">&nbsp;</span> MS</div>
+            <div style="flex-grow:1;">Remark: <span class="chk-line" style="width:80%;"></span></div>
+        </div>
+    </div>
+
+    <div class="chk-section">
+        <div class="chk-section-title">Panel Thickness</div>
+        <div class="chk-grid-2">
+            <div>
+                <table class="chk-table" style="width:80%;">
+                    <tr><td style="width:40px;">Roof</td><td class="chk-box-container" id="chk_t_roof"></td><td>mm</td><td class="chk-line" style="width:40%;"></td></tr>
+                    <tr><td>Base</td><td class="chk-box-container" id="chk_t_base"></td><td>mm</td><td class="chk-line" style="width:40%;"></td></tr>
+                </table>
+            </div>
+            <div>
+                <table class="chk-table" style="width:80%;">
+                    <tr><td style="width:45px;">Wall 1</td><td class="chk-box-container" id="chk_t_w1"></td><td>mm</td><td class="chk-line" style="width:40%;"></td></tr>
+                    <tr><td>Wall 2</td><td class="chk-box-container" id="chk_t_w2"></td><td>mm</td><td class="chk-line" style="width:40%;"></td></tr>
+                    <tr><td>Wall 3</td><td class="chk-box-container" id="chk_t_w3"></td><td>mm</td><td class="chk-line" style="width:40%;"></td></tr>
+                    <tr><td>Wall 4</td><td class="chk-box-container" id="chk_t_w4"></td><td>mm</td><td class="chk-line" style="width:40%;"></td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="chk-section">
+        <div class="chk-section-title">WLI & LADDER</div>
+        <div class="chk-grid-4">
+            <div>Manhole</div>
+            <div><span class="chk-box-container" id="chk_qty_manhole"></span> Qty</div>
+            <div style="grid-column: span 2;"><span class="chk-box">&#10003;</span> Normal</div>
+
+            <div>Internal ladder</div>
+            <div><span class="chk-box-container" id="chk_qty_int_lad"></span> Qty</div>
+            <div><span class="chk-box" id="box_int_hdg">&nbsp;</span> HDG</div>
+            <div><span class="chk-box" id="box_int_304">&nbsp;</span> SS304 &nbsp;&nbsp;&nbsp;&nbsp; <span class="chk-box" id="box_int_316">&nbsp;</span> SS316</div>
+
+            <div>External ladder</div>
+            <div><span class="chk-box-container" id="chk_qty_ext_lad"></span> Qty</div>
+            <div><span class="chk-box" id="box_ext_hdg">&nbsp;</span> HDG</div>
+            <div><span class="chk-box" id="box_ext_304">&nbsp;</span> SS304 &nbsp;&nbsp;&nbsp;&nbsp; <span class="chk-box" id="box_ext_316">&nbsp;</span> SS316</div>
+
+            <div>Water Level Indicator</div>
+            <div><span class="chk-box-container" id="chk_qty_wli"></span> Qty</div>
+            <div><span class="chk-box" id="box_wli_ball">&nbsp;</span> Ball Float Type</div>
+            <div><span class="chk-box" id="box_wli_tube">&nbsp;</span> Tube Type</div>
+
+            <div>Air vent</div>
+            <div><span class="chk-box-container" id="chk_qty_vent"></span> Qty</div>
+            <div><span class="chk-box" id="box_vent_hdg">&nbsp;</span> HDG Steel</div>
+            <div><span class="chk-box" id="box_vent_abs">&nbsp;</span> ABS</div>
+        </div>
+    </div>
+
+    <div class="chk-section">
+        <div class="chk-section-title">TANK FOUNDATION</div>
+        <div class="chk-grid-3">
+            <div>Steel C-Channel / I Beam</div>
+            <div><span class="chk-box">&nbsp;</span> Yes</div>
+            <div><span class="chk-box">&nbsp;</span> No</div>
+            
+            <div>Size</div>
+            <div><span class="chk-line" style="width:100%;"></span></div>
+            <div><span class="chk-box">&nbsp;</span> 1m RC &nbsp;&nbsp;&nbsp;&nbsp; <span class="chk-box">&nbsp;</span> 2m RC</div>
+
+            <div>Coating</div>
+            <div><span class="chk-box">&nbsp;</span> HDG</div>
+            <div><span class="chk-box">&nbsp;</span> Painted</div>
+        </div>
+    </div>
+
+    <div class="chk-section" style="border-bottom:none;">
+        <div class="chk-section-title">OTHER ACCESSORIES & REQUIREMENTS</div>
+        <div class="chk-line" style="width:100%; margin-top:20px;"></div>
+        <div class="chk-line" style="width:100%; margin-top:20px;"></div>
+        <div class="chk-line" style="width:100%; margin-top:20px;"></div>
+        <div class="chk-line" style="width:100%; margin-top:20px;"></div>
+        <div class="chk-line" style="width:100%; margin-top:20px;"></div>
+    </div>
+
+    <div class="chk-footer">
+        <div class="chk-sig-block">
+            <div class="chk-sig-line">Prepared by:</div>
+            <div>Date:</div>
+        </div>
+        <div class="chk-sig-block">
+            <div class="chk-sig-line">Approved by:</div>
+            <div>Date:</div>
+        </div>
+        <div class="chk-sig-block">
+            <div class="chk-sig-line">Received by:</div>
+            <div>Date:<br><br>(Production)</div>
+        </div>
+    </div>
+</div>
+
 <script>
     // --- SECURITY LOGIC ---
     const SECRET_PASSWORD = "winko2026";
@@ -934,6 +1111,81 @@ Note:
             syncPrintHeader(); 
             setTimeout(() => { window.print(); }, 300);
         } catch(e) { alert("Customer Print Error: " + e.message); }
+    }
+
+    function printChecklist() {
+        try {
+            // Sync text fields
+            document.getElementById('chk_customer').innerText = document.getElementById('custCompany').value || '';
+            document.getElementById('chk_project').innerText = document.getElementById('projectName').value || '';
+            document.getElementById('chk_issued').innerText = new Date().toLocaleDateString('en-MY');
+            
+            // Tank Size & Panels
+            let uChoice = document.getElementById('unitChoice');
+            let u = (uChoice && uChoice.value === 'ft') ? 'ft' : 'm';
+            let l1 = document.getElementById('length').value || 0;
+            let w1 = document.getElementById('width').value || 0;
+            let h1 = document.getElementById('height').value || 0;
+            document.getElementById('chk_tanksize').innerText = `${l1}${u} x ${w1}${u} x ${h1}${u}`;
+            document.getElementById('chk_tankqty').innerText = document.getElementById('numTanks').value === '2' ? '2' : '1';
+            document.getElementById('chk_totalpanel').innerText = document.getElementById('sumPanels_screen').innerText;
+
+            // Checkboxes (Helper)
+            const setBox = (id, condition) => { document.getElementById(id).innerHTML = condition ? '&#10003;' : '&nbsp;'; };
+
+            // Standard
+            let std = document.getElementById('stdChoice').value;
+            setBox('box_sans', std.includes('SANS'));
+            setBox('box_ss22', std.includes('SS 22'));
+
+            // Partition
+            let part = document.getElementById('partChoice').value;
+            setBox('box_part_no', part === 'no');
+            setBox('box_part_yes', part === 'yes');
+
+            // Coating
+            let coat = document.getElementById('coatChoice').value;
+            setBox('box_coat_hdg', coat.includes('Galvanised'));
+            setBox('box_coat_paint', coat.includes('Painted'));
+            setBox('box_coat_ms', coat.includes('MS'));
+
+            // Thicknesses
+            document.getElementById('chk_t_roof').innerText = document.getElementById('thickRoof').value.replace('mm', '');
+            document.getElementById('chk_t_base').innerText = document.getElementById('thickBase').value.replace('mm', '');
+            document.getElementById('chk_t_w1').innerText = document.getElementById('thickWallL1').value.replace('mm', '');
+            document.getElementById('chk_t_w2').innerText = document.getElementById('thickWallL2').value.replace('mm', '');
+            document.getElementById('chk_t_w3').innerText = document.getElementById('thickWallL3').value.replace('mm', '');
+            document.getElementById('chk_t_w4').innerText = document.getElementById('thickWallL4').value.replace('mm', '');
+
+            // Accessories Qty (extracting from BOM inputs based on standard IDs)
+            document.getElementById('chk_qty_manhole').innerText = document.getElementById('qty_item_0_0') ? document.getElementById('qty_item_0_0').value : '';
+            document.getElementById('chk_qty_ext_lad').innerText = document.getElementById('qty_item_3_0') ? document.getElementById('qty_item_3_0').value : '';
+            document.getElementById('chk_qty_int_lad').innerText = document.getElementById('qty_item_3_1') ? document.getElementById('qty_item_3_1').value : '';
+            document.getElementById('chk_qty_wli').innerText = document.getElementById('qty_item_3_2') ? document.getElementById('qty_item_3_2').value : '';
+            document.getElementById('chk_qty_vent').innerText = document.getElementById('qty_item_3_3') ? document.getElementById('qty_item_3_3').value : '';
+            
+            // Acc Checkboxes
+            let intLadMat = document.getElementById('intLadMat') ? document.getElementById('intLadMat').value : '';
+            setBox('box_int_hdg', intLadMat === 'HDG');
+            setBox('box_int_304', intLadMat === 'SS 304');
+            setBox('box_int_316', intLadMat === 'SS 316');
+
+            let extLadMat = document.getElementById('extLadMat') ? document.getElementById('extLadMat').value : '';
+            setBox('box_ext_hdg', extLadMat === 'HDG');
+            setBox('box_ext_304', extLadMat === 'SS 304');
+            setBox('box_ext_316', extLadMat === 'SS 316');
+
+            let wliMat = document.getElementById('wliType') ? document.getElementById('wliType').value : '';
+            setBox('box_wli_ball', wliMat.includes('Ball'));
+            setBox('box_wli_tube', wliMat.includes('Tube'));
+
+            let ventMat = document.getElementById('ventType') ? document.getElementById('ventType').value : '';
+            setBox('box_vent_hdg', ventMat.includes('Steel'));
+            setBox('box_vent_abs', ventMat.includes('ABS'));
+
+            document.body.className = 'print-checklist';
+            setTimeout(() => { window.print(); }, 300);
+        } catch(e) { alert("Checklist Print Error: " + e.message); }
     }
 
     window.addEventListener('afterprint', () => { document.body.className = ''; });
@@ -1277,7 +1529,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV57'); // V57 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV58'); // V58 CACHE BUSTER
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1578,11 +1830,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV57', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV58', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV57');
+        let savedData = localStorage.getItem('winkoProDataV58');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
