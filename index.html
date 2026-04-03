@@ -33,10 +33,10 @@
         .app-header-bar h2 { color: #0f172a; margin: 0; font-weight: 900; font-size: 1.8em; letter-spacing: -0.5px;}
         .live-clock { font-size: 0.9em; color: #64748b; font-weight: 600; background: #e2e8f0; padding: 6px 12px; border-radius: 20px;}
         
-        .memory-panel { background: #fff7ed; border: 1px dashed #fed7aa; padding: 12px 20px; border-radius: 10px; display: flex; gap: 15px; align-items: center; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(234,88,12,0.05); }
-        .memory-panel select { flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #fdba74; font-weight: 600; color: #ea580c; outline: none;}
+        .memory-panel { background: #fff7ed; border: 1px dashed #fed7aa; padding: 12px 20px; border-radius: 10px; display: flex; gap: 15px; align-items: center; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(234,88,12,0.05); flex-wrap: wrap;}
+        .memory-panel select { flex: 1; min-width: 200px; padding: 10px; border-radius: 6px; border: 1px solid #fdba74; font-weight: 600; color: #ea580c; outline: none;}
         .memory-panel select:focus { box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1); }
-        .memory-btn { padding: 10px 18px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; color: white; transition: all 0.2s;}
+        .memory-btn { padding: 10px 18px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; color: white; transition: all 0.2s; white-space: nowrap;}
         .btn-save { background: #10b981; } .btn-save:hover { background: #059669; transform: translateY(-1px);}
         .btn-del { background: #f43f5e; } .btn-del:hover { background: #e11d48; transform: translateY(-1px);}
 
@@ -44,7 +44,14 @@
         .col-left { flex: 1.4; min-width: 500px; display: flex; flex-direction: column; gap: 20px; }
         .col-right { flex: 0.9; min-width: 400px; display: flex; flex-direction: column; gap: 20px; position: sticky; top: 20px; }
 
-        .module-card { background: #ffffff; border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        @media (max-width: 1024px) {
+            .col-left, .col-right { flex: 100%; min-width: 100%; }
+            .col-right { position: relative; top: 0; }
+            .dim-grid, .config-grid { grid-template-columns: 1fr; }
+        }
+
+        .module-card { background: #ffffff; border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; transition: box-shadow 0.3s;}
+        .module-card:hover { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
         .card-header { font-size: 1.15em; font-weight: 800; color: #0f172a; margin-top: 0; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; }
         .card-header span { color: #ea580c; margin-right: 6px; }
 
@@ -96,7 +103,7 @@
         .view-title { font-size: 0.75em; font-weight: 800; margin-bottom: 8px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;}
         
         .grid-draft { display: grid; gap: 1px; background: #94a3b8; border: 2px solid #475569; margin: 0 auto; border-radius: 2px; overflow: hidden;} 
-        .panel { background: #e0f2fe; box-sizing: border-box; position: relative; border: 1px solid transparent;}
+        .panel { background: #e0f2fe !important; box-sizing: border-box; position: relative; border: 0.5px solid #94a3b8 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;}
         /* Bulletproof Aspect Ratio for PDF Printing */
         .panel::before { content: ""; display: block; padding-top: 100%; }
 
@@ -120,11 +127,17 @@
         /* ========================================================================== */
         @media print {
             @page { size: A4; margin: 10mm 15mm; }
-            body { background: white; padding: 0; font-size: 9pt; color: #0f172a; font-family: Arial, Helvetica, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            body { background: white; padding: 0; font-size: 9pt; color: #0f172a; font-family: Arial, Helvetica, sans-serif; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             
             .no-print { display: none !important; }
             .print-only { display: block !important; }
             .container { box-shadow: none; max-width: 100%; padding: 0; border: none; }
+            
+            /* GLOBAL GRID PRINT OVERRIDES */
+            .visual-container { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; width: 100% !important; margin: 10px 0 20px 0 !important; page-break-inside: avoid !important; clear: both !important;}
+            .view-box { padding: 4px !important; border: 1.5px solid #cbd5e1 !important; background: #f8fafc !important; border-radius: 6px !important; width: 120px !important;}
+            .grid-draft { gap: 0.5px !important; border: 1.5px solid #0f172a !important; background: #fff !important;}
+            .view-title { font-size: 7pt !important; margin-bottom: 4px !important; color: #0f172a !important; text-align: center !important; font-weight: 800 !important; text-transform: uppercase !important;}
             
             /* ------------------------------------------------ */
             /* MODE 1: INTERNAL PRINT                           */
@@ -199,11 +212,6 @@
             body.print-internal .drawings-page { page-break-before: always !important; padding-top: 20px !important; }
             body.print-internal .tank-section-title { font-size: 11pt !important; margin-bottom: 10px !important; margin-top: 15px !important; color: #0f172a !important; font-weight: 800 !important; text-transform: uppercase !important; border-bottom: 2px solid #0f172a !important; padding-bottom: 5px !important; border-left: none !important; background: transparent !important;}
 
-            body.print-internal .visual-container { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; width: 100% !important; margin: 15px 0 25px 0 !important; page-break-inside: avoid !important; clear: both !important;}
-            body.print-internal .view-box { padding: 6px !important; border: 1.5px solid #cbd5e1 !important; background: #f8fafc !important; border-radius: 6px !important; width: 120px !important;}
-            body.print-internal .grid-draft { gap: 0.5px !important; border: 1.5px solid #0f172a !important; background: #fff !important;}
-            body.print-internal .panel { background: #e0f2fe !important; min-height: 12px !important;}
-            body.print-internal .view-title { font-size: 7pt !important; margin-bottom: 4px !important; color: #0f172a !important; text-align: center !important; font-weight: 800 !important; text-transform: uppercase !important;}
 
             /* ------------------------------------------------ */
             /* MODE 2: CUSTOMER PRINT                           */
@@ -261,44 +269,39 @@
             body.print-checklist #customerPrintView { display: none !important; }
             body.print-checklist #checklistPrintView { display: block !important; }
 
-            #checklistPrintView { font-family: Arial, sans-serif; color: #000; font-size: 10pt; line-height: 1.4; padding: 10px; }
-            .chk-title { font-size: 12pt; font-weight: bold; text-decoration: underline; margin-bottom: 20px; }
-            .chk-top-flex { display: flex; justify-content: space-between; margin-bottom: 15px; }
-            .chk-box { display: inline-block; width: 14px; height: 14px; border: 1px solid #000; text-align: center; vertical-align: middle; line-height: 14px; font-size: 10pt; margin-right: 5px; font-weight:bold;}
+            #checklistPrintView { font-family: Arial, sans-serif; color: #000; font-size: 9pt; line-height: 1.2; padding: 0 10px; }
+            .chk-title { font-size: 11pt; font-weight: bold; text-decoration: underline; margin-bottom: 10px; }
+            
+            .chk-market-tag { text-align: right; font-weight: bold; margin-bottom: 5px; }
+            .chk-top-flex { display: flex; justify-content: space-between; margin-bottom: 5px; }
+            .chk-box { display: inline-block; width: 12px; height: 12px; border: 1px solid #000; text-align: center; vertical-align: middle; line-height: 12px; font-size: 9pt; margin-right: 4px; font-weight:bold; -webkit-print-color-adjust: exact !important;}
             .chk-line { display: inline-block; border-bottom: 1px solid #000; min-width: 100px; padding: 0 5px; }
             
-            .chk-table { width: 100%; border-collapse: collapse; margin-bottom: 10px;}
-            .chk-table td { padding: 4px 2px; vertical-align: bottom; border:none;}
-            .chk-table .label { width: 110px; }
+            .chk-table { width: 100%; border-collapse: collapse; margin-bottom: 5px;}
+            .chk-table td { padding: 2px 2px; vertical-align: bottom; border:none;}
+            .chk-table .label { width: 110px; font-weight:bold;}
             
-            .chk-section { border-top: 2px solid #000; border-bottom: 2px solid #000; padding: 8px 0; margin-bottom: 10px; }
-            .chk-section-title { font-weight: bold; text-transform: uppercase; font-size: 9pt; margin-bottom: 5px;}
+            .chk-section { border-top: 1.5px solid #000; border-bottom: 1.5px solid #000; padding: 5px 0; margin-bottom: 5px; page-break-inside: avoid;}
+            .chk-section-title { font-weight: bold; text-transform: uppercase; font-size: 8.5pt; margin-bottom: 3px;}
             
-            .chk-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-            .chk-grid-3 { display: grid; grid-template-columns: auto auto auto; gap: 10px; align-items:center; margin-bottom:4px;}
-            .chk-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom:4px;}
+            .chk-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+            .chk-grid-3 { display: grid; grid-template-columns: auto auto auto; gap: 8px; align-items:center; margin-bottom:2px;}
+            .chk-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom:2px;}
             
-            .chk-box-container { border: 1px solid #000; padding: 1px 4px; display:inline-block; min-width:30px; text-align:center;}
+            .chk-box-container { border: 1px solid #000; padding: 1px 4px; display:inline-block; min-width:25px; text-align:center; font-weight:bold;}
 
-            .chk-footer { display: flex; justify-content: space-between; margin-top: 40px; }
-            .chk-sig-block { width: 30%; font-size: 9pt;}
-            .chk-sig-line { border-top: 1px solid #000; margin-bottom: 5px; padding-top: 2px;}
-
-            /* Visual grids inside Checklist */
-            body.print-checklist .visual-container { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; width: 100% !important; margin: 15px 0 25px 0 !important; page-break-inside: avoid !important; clear: both !important;}
-            body.print-checklist .view-box { padding: 6px !important; border: 1.5px solid #cbd5e1 !important; background: #f8fafc !important; border-radius: 6px !important; width: 120px !important;}
-            body.print-checklist .grid-draft { gap: 0.5px !important; border: 1.5px solid #0f172a !important; background: #fff !important;}
-            body.print-checklist .panel { background: #e0f2fe !important; min-height: 12px !important;}
-            body.print-checklist .view-title { font-size: 7pt !important; margin-bottom: 4px !important; color: #0f172a !important; text-align: center !important; font-weight: 800 !important; text-transform: uppercase !important;}
+            .chk-footer { display: flex; justify-content: space-between; margin-top: 20px; page-break-inside: avoid; }
+            .chk-sig-block { width: 30%; font-size: 8.5pt;}
+            .chk-sig-line { border-top: 1px solid #000; margin-bottom: 5px; padding-top: 2px; font-weight:bold;}
         }
     </style>
     
     <script>
-        const currentVersion = "V59";
+        const currentVersion = "V60";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=58; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=59; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -508,6 +511,7 @@
 
                     <div class="config-grid" style="background: #f8fafc; padding:15px; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:15px;">
                         <div class="form-group" style="grid-column: span 2;"><label>Quotation Validity</label><input type="text" id="tcValidity" value="14 Days from the date of quotation, subject to stock availability and our confirmation." oninput="syncPrintHeader(); savePrices();"></div>
+                        <div class="form-group" style="grid-column: span 2;"><label>Market</label><select id="marketChoice" onchange="savePrices();"><option value="local">Local (Malaysia)</option><option value="export">Export</option></select></div>
                         <div class="form-group" style="grid-column: span 2;"><label>Delivery Lead-time</label><input type="text" id="tcLead" value="6 - 10 weeks from official confirmation order, non-refundable down payment received and all technical details in good order. (NO Retention sump and LAD will be entertained)" oninput="syncPrintHeader(); savePrices();"></div>
                         <div class="form-group" style="grid-column: span 2;"><label>Delivery Location</label><input type="text" id="tcDelivery" value="Deliver to site exclude unloading, materials handling at site and hoisting." oninput="syncPrintHeader(); savePrices();"></div>
                         <div class="form-group" style="grid-column: span 2;"><label>Payment Terms (Each line gets underlined on PDF)</label><textarea id="tcPayment" rows="3" oninput="syncPrintHeader(); savePrices();">30% down payment upon confirmation of order
@@ -893,6 +897,10 @@ Note:
 </div>
 
 <div id="checklistPrintView">
+    <div class="chk-market-tag">
+        <span class="chk-box" id="box_local">&nbsp;</span> LOCAL &nbsp;&nbsp;&nbsp;&nbsp;
+        <span class="chk-box" id="box_export">&nbsp;</span> EXPORT
+    </div>
     <div class="chk-title">Pressed Steel Tank Sales Order Checklist</div>
     
     <div class="chk-top-flex">
@@ -923,19 +931,19 @@ Note:
                 <span class="chk-box" id="box_ss22">&nbsp;</span> SS 22: 1979
             </div>
         </div>
-        <table class="chk-table" style="margin-top:5px;">
+        <table class="chk-table" style="margin-top:2px;">
             <tr>
                 <td style="width:70px;">Tank Size:</td><td class="chk-line" id="chk_tanksize" style="width:40%;"></td>
                 <td style="width:60px;">Tank Qty:</td><td class="chk-line" id="chk_tankqty" style="width:15%; text-align:center;"></td>
                 <td style="width:75px;">Total Panel:</td><td class="chk-line" id="chk_totalpanel" style="width:15%; text-align:center;"></td>
             </tr>
         </table>
-        <div style="display:flex; align-items:center; margin-top:5px; gap: 15px;">
+        <div style="display:flex; align-items:center; margin-top:2px; gap: 15px;">
             <div style="width:70px;">Partition:</div>
             <div><span class="chk-box" id="box_part_no">&nbsp;</span> No</div>
             <div><span class="chk-box" id="box_part_yes">&nbsp;</span> YES</div>
         </div>
-        <div style="display:flex; align-items:center; margin-top:10px; gap: 15px;">
+        <div style="display:flex; align-items:center; margin-top:4px; gap: 15px;">
             <div style="width:70px;">Coating</div>
             <div><span class="chk-box" id="box_coat_hdg">&nbsp;</span> HDG</div>
             <div><span class="chk-box" id="box_coat_paint">&nbsp;</span> Painted</div>
@@ -1012,11 +1020,10 @@ Note:
 
     <div class="chk-section" style="border-bottom:none;">
         <div class="chk-section-title">OTHER ACCESSORIES & REQUIREMENTS</div>
-        <div class="chk-line" style="width:100%; margin-top:20px;"></div>
-        <div class="chk-line" style="width:100%; margin-top:20px;"></div>
-        <div class="chk-line" style="width:100%; margin-top:20px;"></div>
-        <div class="chk-line" style="width:100%; margin-top:20px;"></div>
-        <div class="chk-line" style="width:100%; margin-top:20px;"></div>
+        <div class="chk-line" style="width:100%; margin-top:12px;"></div>
+        <div class="chk-line" style="width:100%; margin-top:12px;"></div>
+        <div class="chk-line" style="width:100%; margin-top:12px;"></div>
+        <div class="chk-line" style="width:100%; margin-top:12px;"></div>
     </div>
 
     <div class="chk-footer">
@@ -1177,6 +1184,10 @@ Note:
             // Checkboxes (Helper)
             const setBox = (id, condition) => { document.getElementById(id).innerHTML = condition ? '&#10003;' : '&nbsp;'; };
 
+            let mkt = document.getElementById('marketChoice').value;
+            setBox('box_local', mkt === 'local');
+            setBox('box_export', mkt === 'export');
+
             // Standard
             let std = document.getElementById('stdChoice').value;
             setBox('box_sans', std.includes('SANS'));
@@ -1201,7 +1212,7 @@ Note:
             document.getElementById('chk_t_w3').innerText = document.getElementById('thickWallL3').value.replace('mm', '');
             document.getElementById('chk_t_w4').innerText = document.getElementById('thickWallL4').value.replace('mm', '');
 
-            // Accessories Qty (extracting from BOM inputs based on standard IDs)
+            // Accessories Qty
             document.getElementById('chk_qty_manhole').innerText = document.getElementById('qty_item_0_0') ? document.getElementById('qty_item_0_0').value : '';
             document.getElementById('chk_qty_ext_lad').innerText = document.getElementById('qty_item_3_0') ? document.getElementById('qty_item_3_0').value : '';
             document.getElementById('chk_qty_int_lad').innerText = document.getElementById('qty_item_3_1') ? document.getElementById('qty_item_3_1').value : '';
@@ -1388,7 +1399,7 @@ Note:
     let bomStructure = JSON.parse(JSON.stringify(systemBaseStructure));
     let customRowCounts = JSON.parse(localStorage.getItem('winkoCustomCounts')) || [0,0,0,0,0];
 
-    const configIDs = ['quoteIdInput', 'custPoNo', 'custDelDate', 'numTanks', 'customItemName', 'customItemCost', 'stdChoice','stdChoice2','unitChoice','coatChoice','coatChoice2',
+    const configIDs = ['quoteIdInput', 'custPoNo', 'custDelDate', 'marketChoice', 'numTanks', 'customItemName', 'customItemCost', 'stdChoice','stdChoice2','unitChoice','coatChoice','coatChoice2',
                        'length','width','height', 'partChoice', 'partQty','partLen','partHgt','partPos','partType',
                        'length2','width2','height2', 'partChoice2', 'partQty2','partLen2','partHgt2','partPos2','partType2',
                        'thickRoof', 'thickWallL1', 'thickWallL2', 'thickWallL3', 'thickWallL4', 'thickBase', 'markupPct','discountPct','sstPct', 
@@ -1584,7 +1595,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV59'); // V59 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV60'); // V60 CACHE BUSTER
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1885,11 +1896,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV59', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV60', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV59');
+        let savedData = localStorage.getItem('winkoProDataV60');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
