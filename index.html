@@ -25,7 +25,6 @@
         #mainContent, #adminContent { display: none; }
         #customerPrintView, #checklistPrintView { display: none; } 
         .print-only { display: none; }
-        .internal-only-tag { display: none; } /* Hidden by default */
 
         /* --- DASHBOARD STYLES (SCREEN) --- */
         .container { max-width: 1550px; margin: auto; padding: 10px; }
@@ -104,7 +103,7 @@
         .view-title { font-size: 0.75em; font-weight: 800; margin-bottom: 8px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;}
         
         .grid-draft { display: grid; gap: 1px; background: #94a3b8; border: 2px solid #475569; margin: 0 auto; border-radius: 2px; overflow: hidden;} 
-        .panel { background: #e0f2fe; box-sizing: border-box; position: relative; border: 1px solid transparent;}
+        .panel { background: #e0f2fe !important; box-sizing: border-box; position: relative; border: 0.5px solid #94a3b8 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;}
         /* Bulletproof Aspect Ratio for PDF Printing */
         .panel::before { content: ""; display: block; padding-top: 100%; }
 
@@ -146,8 +145,8 @@
             body.print-internal #mainContent { display: block !important; }
             body.print-internal #customerPrintView { display: none !important; }
             body.print-internal #checklistPrintView { display: none !important; }
+
             body.print-internal .internal-hide { display: none !important; }
-            body.print-internal .internal-only-tag { display: block !important; }
             
             body.print-internal .app-layout { display: block !important; }
             body.print-internal .col-left { width: 100% !important; display: block !important; }
@@ -157,19 +156,6 @@
             
             body.print-internal .card-header { display: block !important; border-bottom: 2px solid #0f172a !important; margin-bottom: 8px !important; font-size: 11pt !important; color: #0f172a !important; text-transform: uppercase; padding: 0 0 5px 0 !important; background: transparent !important;}
             body.print-internal .card-header span, body.print-internal .card-header button { display: none !important; }
-
-            /* NEW: Confidentiality Watermark Tag */
-            body.print-internal .internal-only-tag {
-                text-align: center;
-                color: #ef4444;
-                font-weight: 900;
-                font-size: 12pt;
-                letter-spacing: 4px;
-                border: 2px solid #ef4444;
-                padding: 4px;
-                margin-bottom: 15px;
-                text-transform: uppercase;
-            }
 
             body.print-internal .print-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #ea580c; padding-bottom: 10px; margin-bottom: 15px; }
             body.print-internal .header-left { display: flex; align-items: center; gap: 20px; }
@@ -207,25 +193,21 @@
             body.print-internal .col-uprice { width: 15% !important; }
             body.print-internal .col-itotal { width: 15% !important; }
             
-            /* --- REFINED INTERNAL FOOTER --- */
-            body.print-internal .footer-flex { display: flex !important; justify-content: space-between !important; align-items: flex-start !important; margin-top: 15px !important; page-break-inside: avoid !important; }
-            
-            /* Upgraded Signature Block */
-            body.print-internal .internal-approval-grid { display: flex; flex-direction: column; width: 50%; gap: 30px; margin-top: 10px; }
-            body.print-internal .internal-sig-box { width: 100%; border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 9pt; color: #0f172a; display: flex; justify-content: space-between;}
-            body.print-internal .internal-sig-box strong { font-weight: 800; text-transform: uppercase; }
+            /* --- REFINED INTERNAL FOOTER: SIDE-BY-SIDE --- */
+            body.print-internal .footer-flex { display: flex !important; justify-content: space-between !important; align-items: flex-end !important; margin-top: 15px !important; page-break-inside: avoid !important; }
+            body.print-internal .sig-box { width: 40% !important; text-align: left !important; margin-bottom: 10px !important;}
+            body.print-internal .sig-box p { font-size: 9pt !important; margin: 0 !important; color: #0f172a !important; }
+            body.print-internal .sig-line { border-bottom: 1.5px solid #0f172a !important; margin: 40px 0 5px 0 !important; }
+            body.print-internal .sig-box strong { font-size: 10pt !important; color: #0f172a !important; text-transform: uppercase !important;}
 
-            /* Upgraded Financial Ledger Box */
-            body.print-internal .summary-box { background: #fff !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 0 !important; padding: 0 !important; margin-top: 0 !important; width: 320px !important; float: none !important; box-shadow: none !important;}
-            body.print-internal .summary-table { width: 100%; border-collapse: collapse; font-size: 9.5pt; margin-bottom: 0 !important; border: none !important;}
-            body.print-internal .summary-table td { padding: 5px 10px; border: none; color: #0f172a; font-weight: 700; text-align: right !important;}
-            body.print-internal .summary-table td:first-child { text-align: left !important; color: #475569; }
-            body.print-internal .summary-table .border-top td { border-top: 1.5px solid #cbd5e1 !important; }
-            body.print-internal .summary-table .border-bottom td { border-bottom: 1.5px solid #cbd5e1 !important; }
-            body.print-internal .summary-table .grand-total-row td { font-size: 11pt; padding: 8px 10px; background: #e2e8f0 !important; font-weight: 900; color: #0f172a !important; }
+            body.print-internal .summary-box { background: #fff !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 8px !important; padding: 15px !important; margin-top: 0 !important; width: 350px !important; float: none !important; box-shadow: 4px 4px 0px rgba(0,0,0,0.1) !important;}
             
-            /* Make profit markup green in internal print */
-            body.print-internal .markup-print-val { color: #059669 !important; font-weight: 800; }
+            body.print-internal .summary-table { width: 100%; border-collapse: collapse; font-size: 9.5pt; margin-bottom: 0 !important; border: none !important;}
+            body.print-internal .summary-table td { padding: 4px 0; border: none; color: #0f172a; font-weight: 700; text-align: right !important;}
+            body.print-internal .summary-table td:first-child { text-align: left !important; }
+            body.print-internal .summary-table .border-top td { border-top: 1.5px solid #cbd5e1 !important; padding-top: 6px; margin-top: 3px; }
+            body.print-internal .summary-table .border-bottom td { border-bottom: 1.5px solid #cbd5e1 !important; padding-bottom: 6px; margin-bottom: 3px; }
+            body.print-internal .summary-table .grand-total-row td { font-size: 12.5pt; padding-top: 10px; }
 
             body.print-internal .drawings-page { page-break-before: always !important; padding-top: 20px !important; }
             body.print-internal .tank-section-title { font-size: 11pt !important; margin-bottom: 10px !important; margin-top: 15px !important; color: #0f172a !important; font-weight: 800 !important; text-transform: uppercase !important; border-bottom: 2px solid #0f172a !important; padding-bottom: 5px !important; border-left: none !important; background: transparent !important;}
@@ -311,22 +293,15 @@
             .chk-footer { display: flex; justify-content: space-between; margin-top: 20px; page-break-inside: avoid; }
             .chk-sig-block { width: 30%; font-size: 8.5pt;}
             .chk-sig-line { border-top: 1px solid #000; margin-bottom: 5px; padding-top: 2px; font-weight:bold;}
-
-            /* Visual grids inside Checklist */
-            body.print-checklist .visual-container { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; width: 100% !important; margin: 15px 0 25px 0 !important; page-break-inside: avoid !important; clear: both !important;}
-            body.print-checklist .view-box { padding: 6px !important; border: 1.5px solid #cbd5e1 !important; background: #f8fafc !important; border-radius: 6px !important; width: 120px !important;}
-            body.print-checklist .grid-draft { gap: 0.5px !important; border: 1.5px solid #0f172a !important; background: #fff !important;}
-            body.print-checklist .panel { background: #e0f2fe !important; min-height: 12px !important;}
-            body.print-checklist .view-title { font-size: 7pt !important; margin-bottom: 4px !important; color: #0f172a !important; text-align: center !important; font-weight: 800 !important; text-transform: uppercase !important;}
         }
     </style>
     
     <script>
-        const currentVersion = "V61";
+        const currentVersion = "V60";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=60; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=59; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -376,8 +351,6 @@
             <h2>Winko Configurator</h2>
             <div class="live-clock">System Time: <span id="liveClock">Loading...</span></div>
         </div>
-
-        <div class="print-only internal-only-tag">Strictly Confidential - Internal Costing</div>
 
         <div class="print-header print-only">
             <div class="header-left">
@@ -699,10 +672,10 @@ Note:
         <div class="print-only" id="internalPrintFooter">
             
             <div class="footer-flex">
-                <div class="internal-approval-grid">
-                    <div class="internal-sig-box"><span>Costing Prepared By:</span> <strong><span id="intSigSales"></span></strong></div>
-                    <div class="internal-sig-box"><span>Engineering Check:</span> <strong>__________________</strong></div>
-                    <div class="internal-sig-box"><span>Management Approval:</span> <strong>__________________</strong></div>
+                <div class="sig-box">
+                    <p>Prepared By:</p>
+                    <div class="sig-line"></div>
+                    <p><strong>JUTARAMA INDUSTRIES (M) SDN BHD</strong></p>
                 </div>
 
                 <div class="summary-box">
@@ -710,12 +683,12 @@ Note:
                         <tr><td>Est. Capacity:</td><td id="sumCapacity_print">0 L</td></tr>
                         <tr><td>Total Panels:</td><td id="sumPanels_print">0</td></tr>
                         <tr><td>Est. Total Wt:</td><td id="sumWeight_print">0 kg</td></tr>
-                        <tr class="border-top"><td>Raw Base Cost:</td><td>RM <span id="sumBaseCost_print">0.00</span></td></tr>
-                        <tr><td>Profit Margin:</td><td class="markup-print-val">+ RM <span id="sumMarkup_print">0.00</span></td></tr>
+                        <tr class="border-top"><td>Base Cost:</td><td>RM <span id="sumBaseCost_print">0.00</span></td></tr>
+                        <tr><td>Mark-Up:</td><td style="color:#059669;">+ RM <span id="sumMarkup_print">0.00</span></td></tr>
                         <tr><td>Gross Subtotal:</td><td style="font-weight:800;">RM <span id="sumSubtotal_print">0.00</span></td></tr>
                         <tr><td>Discount:</td><td style="color:#b91c1c;">- RM <span id="sumDiscount_print">0.00</span></td></tr>
                         <tr class="border-bottom"><td>SST Tax:</td><td>+ RM <span id="sumSST_print">0.00</span></td></tr>
-                        <tr class="grand-total-row"><td>FINAL QUOTE PRICE:</td><td>RM <span id="grandTotal_print">0.00</span></td></tr>
+                        <tr class="grand-total-row"><td>GRAND TOTAL:</td><td>RM <span id="grandTotal_print">0.00</span></td></tr>
                     </table>
                 </div>
             </div>
@@ -1239,7 +1212,7 @@ Note:
             document.getElementById('chk_t_w3').innerText = document.getElementById('thickWallL3').value.replace('mm', '');
             document.getElementById('chk_t_w4').innerText = document.getElementById('thickWallL4').value.replace('mm', '');
 
-            // Accessories Qty (extracting from BOM inputs based on standard IDs)
+            // Accessories Qty
             document.getElementById('chk_qty_manhole').innerText = document.getElementById('qty_item_0_0') ? document.getElementById('qty_item_0_0').value : '';
             document.getElementById('chk_qty_ext_lad').innerText = document.getElementById('qty_item_3_0') ? document.getElementById('qty_item_3_0').value : '';
             document.getElementById('chk_qty_int_lad').innerText = document.getElementById('qty_item_3_1') ? document.getElementById('qty_item_3_1').value : '';
@@ -1622,7 +1595,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV61'); // V61 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV60'); // V60 CACHE BUSTER
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1891,10 +1864,6 @@ Note:
             let cpSignName = document.getElementById('cpSignName');
             if(cpSignName) cpSignName.innerText = (signNameEl && signNameEl.value) ? signNameEl.value : "";
             
-            // Update Internal Signature Print tag
-            let intSigSales = document.getElementById('intSigSales');
-            if(intSigSales) intSigSales.innerText = (signNameEl && signNameEl.value) ? signNameEl.value : "_______________";
-            
             let signPhoneEl = document.getElementById('signPhone');
             let cpSignPhone = document.getElementById('cpSignPhone');
             if(cpSignPhone) cpSignPhone.innerText = (signPhoneEl && signPhoneEl.value) ? signPhoneEl.value : "";
@@ -1927,11 +1896,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV61', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV60', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV61');
+        let savedData = localStorage.getItem('winkoProDataV60');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
