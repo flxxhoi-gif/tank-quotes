@@ -172,9 +172,7 @@
             body.print-internal #mainContent { display: block !important; }
             body.print-internal #customerPreviewContainer { display: none !important; }
             body.print-internal #checklistPrintView { display: none !important; }
-
             body.print-internal .internal-hide { display: none !important; }
-            body.print-internal .internal-only-tag { display: block !important; }
             
             body.print-internal .app-layout { display: block !important; }
             body.print-internal .col-left { width: 100% !important; display: block !important; }
@@ -185,18 +183,28 @@
             body.print-internal .card-header { display: block !important; border-bottom: 2px solid #0f172a !important; margin-bottom: 8px !important; font-size: 11pt !important; color: #0f172a !important; text-transform: uppercase; padding: 0 0 5px 0 !important; background: transparent !important;}
             body.print-internal .card-header span, body.print-internal .card-header button { display: none !important; }
 
-            body.print-internal .internal-only-tag {
-                text-align: center; color: #ef4444; font-weight: 900; font-size: 12pt; letter-spacing: 4px;
-                border: 2px solid #ef4444; padding: 4px; margin-bottom: 15px; text-transform: uppercase;
+            /* MEGA WATERMARK */
+            body.print-internal::before {
+                content: "INTERNAL USE ONLY - STRICTLY CONFIDENTIAL";
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) rotate(-45deg);
+                font-size: 60pt;
+                font-weight: 900;
+                color: rgba(239, 68, 68, 0.08); /* Faint Red */
+                z-index: -1;
+                white-space: nowrap;
+                pointer-events: none;
             }
 
-            body.print-internal .print-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #ea580c; padding-bottom: 10px; margin-bottom: 15px; }
+            body.print-internal .print-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #0f172a; padding-bottom: 10px; margin-bottom: 15px; }
             body.print-internal .header-left { display: flex; align-items: center; gap: 20px; }
             body.print-internal .header-left img { width: 120px; height: auto; object-fit: contain; }
-            body.print-internal .header-text h1 { margin: 0 0 5px 0; font-size: 14pt; color: #0f172a; font-weight: 800; letter-spacing: 0.5px; }
+            body.print-internal .header-text h1 { margin: 0 0 5px 0; font-size: 14pt; color: #0f172a; font-weight: 900; letter-spacing: 0.5px; }
             body.print-internal .header-text p { margin: 2px 0; font-size: 8pt; color: #475569; font-weight: 500;}
             body.print-internal .header-right { text-align: right; }
-            body.print-internal .header-right h2 { margin: 0 0 5px 0; font-size: 22pt; color: #ea580c; font-weight: 800; letter-spacing: 1px;}
+            body.print-internal .header-right h2 { margin: 0 0 5px 0; font-size: 18pt; color: #ef4444; font-weight: 900; letter-spacing: 1px;}
             body.print-internal .header-right p { margin: 2px 0; font-size: 9pt; color: #1e293b; font-weight: 600;}
             
             body.print-internal .quote-meta { display: flex; gap: 15px; margin-bottom: 15px; }
@@ -205,10 +213,11 @@
             body.print-internal .meta-label { font-weight: 700; color: #64748b; width: 90px; text-transform: uppercase;}
             body.print-internal .meta-value { font-weight: 700; color: #0f172a; }
             
+            /* Zebra Striped Internal BOM Table */
             body.print-internal table { font-size: 8.5pt; margin-bottom: 10px; border-collapse: collapse; width: 100%; border: 1px solid #0f172a; border-radius: 0;}
             body.print-internal tr { border-bottom: 1px solid #cbd5e1; page-break-inside: avoid; }
-            body.print-internal tr:nth-child(even):not(.section-header-row) { background-color: #f8fafc !important; }
-            body.print-internal th { background-color: #1e293b !important; color: #ffffff !important; padding: 6px 8px; border: 1px solid #1e293b; font-weight: 700; text-transform: uppercase;}
+            body.print-internal tr:nth-child(even):not(.section-header-row) { background-color: #f1f5f9 !important; }
+            body.print-internal th { background-color: #0f172a !important; color: #ffffff !important; padding: 6px 8px; border: 1px solid #0f172a; font-weight: 700; text-transform: uppercase;}
             body.print-internal td { border-right: 1px solid #cbd5e1; padding: 4px 8px; color: #0f172a;}
             body.print-internal td:last-child { border-right: none; }
             body.print-internal td.text-center { text-align: center; } body.print-internal td.text-right { text-align: right; font-weight: 700; color: #0f172a !important;}
@@ -226,25 +235,28 @@
             body.print-internal .col-uprice { width: 15% !important; }
             body.print-internal .col-itotal { width: 15% !important; }
             
-            /* --- REFINED INTERNAL FOOTER --- */
+            /* --- REFINED INTERNAL FOOTER WITH BOXES --- */
             body.print-internal .footer-flex { display: flex !important; justify-content: space-between !important; align-items: flex-start !important; margin-top: 15px !important; page-break-inside: avoid !important; }
             
-            body.print-internal .internal-approval-grid { display: flex; flex-direction: column; width: 50%; gap: 30px; margin-top: 10px; }
-            body.print-internal .internal-sig-box { width: 100%; border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 9pt; color: #0f172a; display: flex; justify-content: space-between;}
-            body.print-internal .internal-sig-box strong { font-weight: 800; text-transform: uppercase; }
+            /* Formal Approval Grid */
+            body.print-internal .internal-approval-grid { display: flex; flex-direction: row; width: 60%; gap: 15px; margin-top: 0; }
+            body.print-internal .internal-sig-box { flex: 1; border: 1.5px solid #0f172a; border-radius: 6px; padding: 8px; height: 80px; font-size: 8pt; color: #0f172a; display: flex; flex-direction: column; justify-content: space-between; background: #fff;}
+            body.print-internal .internal-sig-box span { font-weight: 800; text-transform: uppercase; color: #475569;}
+            body.print-internal .internal-sig-box strong { font-weight: 700; border-top: 1px dashed #cbd5e1; padding-top: 4px; text-align: center;}
 
-            body.print-internal .summary-box { background: #fff !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 0 !important; padding: 0 !important; margin-top: 0 !important; width: 320px !important; float: none !important; box-shadow: none !important;}
-            body.print-internal .summary-table { width: 100%; border-collapse: collapse; font-size: 9.5pt; margin-bottom: 0 !important; border: none !important;}
-            body.print-internal .summary-table td { padding: 5px 10px; border: none; color: #0f172a; font-weight: 700; text-align: right !important;}
-            body.print-internal .summary-table td:first-child { text-align: left !important; color: #475569; }
-            body.print-internal .summary-table .border-top td { border-top: 1.5px solid #cbd5e1 !important; }
-            body.print-internal .summary-table .border-bottom td { border-bottom: 1.5px solid #cbd5e1 !important; }
+            /* Color-Coded Financial Ledger Box */
+            body.print-internal .summary-box { background: #fff !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 8px !important; padding: 0 !important; margin-top: 0 !important; width: 35% !important; float: none !important; box-shadow: 4px 4px 0px rgba(0,0,0,0.1) !important; overflow: hidden;}
+            body.print-internal .summary-table { width: 100%; border-collapse: collapse; font-size: 9pt; margin-bottom: 0 !important; border: none !important;}
+            body.print-internal .summary-table td { padding: 4px 10px; border: none; font-weight: 700; text-align: right !important;}
+            body.print-internal .summary-table td:first-child { text-align: left !important; color: #475569; font-weight: 800; text-transform: uppercase; font-size: 7.5pt;}
+            
+            body.print-internal .summary-table .border-top td { border-top: 1.5px solid #cbd5e1 !important; padding-top: 6px; }
+            body.print-internal .summary-table .border-bottom td { border-bottom: 1.5px solid #cbd5e1 !important; padding-bottom: 6px; }
             body.print-internal .summary-table .grand-total-row td { font-size: 11pt; padding: 8px 10px; background: #e2e8f0 !important; font-weight: 900; color: #0f172a !important; }
             
-            body.print-internal .markup-print-val { color: #059669 !important; font-weight: 800; }
-
             body.print-internal .drawings-page { page-break-before: always !important; padding-top: 20px !important; }
             body.print-internal .tank-section-title { font-size: 11pt !important; margin-bottom: 10px !important; margin-top: 15px !important; color: #0f172a !important; font-weight: 800 !important; text-transform: uppercase !important; border-bottom: 2px solid #0f172a !important; padding-bottom: 5px !important; border-left: none !important; background: transparent !important;}
+
 
             /* ------------------------------------------------ */
             /* MODE 2: CUSTOMER PRINT                           */
@@ -340,11 +352,11 @@
     </style>
     
     <script>
-        const currentVersion = "V65";
+        const currentVersion = "V66";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=64; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=65; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -423,8 +435,6 @@
             <h2>Project Workspace</h2>
             <div class="live-clock">System Time: <span id="liveClock">Loading...</span></div>
         </div>
-
-        <div class="print-only internal-only-tag">Strictly Confidential - Internal Costing</div>
 
         <div class="print-header print-only">
             <div class="header-left">
@@ -747,6 +757,7 @@ Note:
         </div>
 
         <div class="print-only" id="internalPrintFooter">
+            
             <div class="footer-flex">
                 <div class="internal-approval-grid">
                     <div class="internal-sig-box"><span>Costing Prepared By:</span> <strong><span id="intSigSales"></span></strong></div>
@@ -756,13 +767,13 @@ Note:
 
                 <div class="summary-box">
                     <table class="summary-table">
-                        <tr><td>Est. Capacity:</td><td id="sumCapacity_print">0 L</td></tr>
-                        <tr><td>Total Panels:</td><td id="sumPanels_print">0</td></tr>
-                        <tr><td>Est. Total Wt:</td><td id="sumWeight_print">0 kg</td></tr>
+                        <tr><td>Est. Capacity:</td><td id="sumCapacity_print" style="color: #0284c7;">0 L</td></tr>
+                        <tr><td>Total Panels:</td><td id="sumPanels_print" style="color: #9333ea;">0</td></tr>
+                        <tr><td>Est. Total Wt:</td><td id="sumWeight_print" style="color: #ea580c;">0 kg</td></tr>
                         <tr class="border-top"><td>Raw Base Cost:</td><td>RM <span id="sumBaseCost_print">0.00</span></td></tr>
-                        <tr><td>Profit Margin:</td><td class="markup-print-val">+ RM <span id="sumMarkup_print">0.00</span></td></tr>
+                        <tr><td>Profit Margin:</td><td class="markup-print-val" style="color: #059669;">+ RM <span id="sumMarkup_print">0.00</span></td></tr>
                         <tr><td>Gross Subtotal:</td><td style="font-weight:800;">RM <span id="sumSubtotal_print">0.00</span></td></tr>
-                        <tr><td>Discount:</td><td style="color:#b91c1c;">- RM <span id="sumDiscount_print">0.00</span></td></tr>
+                        <tr><td>Discount:</td><td style="color:#d97706;">- RM <span id="sumDiscount_print">0.00</span></td></tr>
                         <tr class="border-bottom"><td>SST Tax:</td><td>+ RM <span id="sumSST_print">0.00</span></td></tr>
                         <tr class="grand-total-row"><td>FINAL QUOTE PRICE:</td><td>RM <span id="grandTotal_print">0.00</span></td></tr>
                     </table>
@@ -1356,6 +1367,7 @@ Note:
         }
     }
 
+
     // --- PRINT TOGGLE LOGIC ---
     function printInternal() {
         try {
@@ -1721,7 +1733,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV65'); // V65 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV66'); // V66 CACHE BUSTER
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -2026,11 +2038,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV65', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV66', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV65');
+        let savedData = localStorage.getItem('winkoProDataV66');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -2065,6 +2077,287 @@ Note:
                 });
             });
         }
+    }
+
+    function buildBOMTable() {
+        const tbody = document.getElementById('bomBody');
+        const tbody2 = document.getElementById('bomBody2');
+        let html = '';
+        let html2 = '';
+        
+        try {
+            bomStructure.forEach((sec, sIdx) => {
+                let secHeader1 = `<tr class="section-header-row"><td colspan="5" class="section-header" style="padding:0;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px;">
+                        <span>${sec.category}</span>
+                        <div class="no-print">
+                            <button type="button" onclick="addCategoryRow(${sIdx})" style="padding:4px 8px; font-size:11px; background:#fff; border:1px solid #ea580c; color:#ea580c; border-radius:4px; cursor:pointer; font-weight:700;">+ Add Row</button>
+                            <button type="button" onclick="removeCategoryRow(${sIdx})" style="padding:4px 8px; font-size:11px; background:#fff; border:1px solid #e11d48; color:#e11d48; border-radius:4px; cursor:pointer; margin-left:6px; font-weight:700;">- Remove</button>
+                        </div>
+                    </div>
+                </td></tr>`;
+                html += secHeader1;
+                
+                let secHeader2 = `<tr class="section-header-row"><td colspan="5" class="section-header" style="padding:8px 12px;">
+                    <span>${sec.category}</span>
+                </td></tr>`;
+                html2 += secHeader2;
+                
+                let isStay = (sec.category === "Angle Stay");
+                let inputTrigger = isStay ? "calcTotals(); savePrices(); debouncedProcessTankData();" : "calcTotals(); savePrices();";
+
+                sec.items.forEach((it, iIdx) => {
+                    const id = `item_${sIdx}_${iIdx}`;
+                    let safeWt = (it.wt !== undefined && it.wt !== null && !isNaN(it.wt)) ? it.wt : 0;
+
+                    let nameHtml = `<div style="display:flex; align-items:center; flex-wrap:wrap; gap:4px;">
+                                      <input type="text" id="desc_${id}" class="desc-input" value="${it.name}" onchange="savePrices()">`;
+                    if(it.selectId) {
+                        nameHtml += ` <select id="${it.selectId}" class="bom-inline-select" onchange="savePrices()">` +
+                                    it.options.map(o => `<option value="${o}">${o}</option>`).join('') +
+                                    `</select>`;
+                    }
+                    nameHtml += `</div>`;
+
+                    html += `<tr>
+                        <td class="col-item">${nameHtml}</td>
+                        <td class="col-input col-qty"><input type="number" value="0" id="qty_${id}" oninput="${inputTrigger}"></td>
+                        <td class="col-input col-wt"><input type="number" step="0.1" value="${safeWt}" id="wt_${id}" oninput="calcTotals(); savePrices();"></td>
+                        <td class="col-input col-uprice"><input type="number" step="0.01" value="${it.def.toFixed(2)}" id="price_${id}" oninput="calcTotals(); savePrices();"></td>
+                        <td class="col-total col-itotal" id="total_${id}">0.00</td>
+                    </tr>`;
+
+                    let nameHtml2 = `<div style="display:flex; align-items:center; flex-wrap:wrap; gap:4px;">
+                                      <input type="text" id="desc2_${id}" class="desc-input" value="${it.name}" onchange="savePrices()">`;
+                    if(it.selectId) {
+                        nameHtml2 += ` <select id="sel2_${it.selectId}" class="bom-inline-select" onchange="savePrices()">` +
+                                    it.options.map(o => `<option value="${o}">${o}</option>`).join('') +
+                                    `</select>`;
+                    }
+                    nameHtml2 += `</div>`;
+
+                    html2 += `<tr>
+                        <td class="col-item">${nameHtml2}</td>
+                        <td class="col-input col-qty"><input type="number" value="0" id="qty2_${id}" oninput="${inputTrigger}"></td>
+                        <td class="col-input col-wt"><input type="number" step="0.1" value="${safeWt}" id="wt2_${id}" oninput="calcTotals(); savePrices();"></td>
+                        <td class="col-input col-uprice"><input type="number" step="0.01" value="${it.def.toFixed(2)}" id="price2_${id}" oninput="calcTotals(); savePrices();"></td>
+                        <td class="col-total col-itotal" id="total2_${id}">0.00</td>
+                    </tr>`;
+                });
+            });
+            if(tbody) tbody.innerHTML = html;
+            if(tbody2) tbody2.innerHTML = html2;
+        } catch(e) { console.error("Error building BOM:", e); }
+    }
+
+    function calcTotals() {
+        let baseCost = 0;
+        let totalWeight = 0;
+        let ntEl = document.getElementById('numTanks');
+        let mode = (ntEl && ntEl.value) ? ntEl.value : "1";
+
+        try {
+            bomStructure.forEach((sec, sIdx) => {
+                sec.items.forEach((it, iIdx) => {
+                    const id = `item_${sIdx}_${iIdx}`;
+                    
+                    const qtyEl1 = document.getElementById(`qty_${id}`);
+                    const priceEl1 = document.getElementById(`price_${id}`);
+                    const wtEl1 = document.getElementById(`wt_${id}`);
+                    if(qtyEl1 && priceEl1 && wtEl1) {
+                        const q = parseFloat(qtyEl1.value) || 0;
+                        const p = parseFloat(priceEl1.value) || 0;
+                        const w = parseFloat(wtEl1.value) || 0; 
+                        const total = q * p;
+                        const totalEl = document.getElementById(`total_${id}`);
+                        if(totalEl) totalEl.innerText = total.toLocaleString('en-MY', {minimumFractionDigits:2});
+                        baseCost += total;
+                        totalWeight += (q * w);
+                    }
+
+                    if (mode === "2") {
+                        const qtyEl2 = document.getElementById(`qty2_${id}`);
+                        const priceEl2 = document.getElementById(`price2_${id}`);
+                        const wtEl2 = document.getElementById(`wt2_${id}`);
+                        if(qtyEl2 && priceEl2 && wtEl2) {
+                            const q2 = parseFloat(qtyEl2.value) || 0;
+                            const p2 = parseFloat(priceEl2.value) || 0;
+                            const w2 = parseFloat(wtEl2.value) || 0; 
+                            const total2 = q2 * p2;
+                            const totalEl2 = document.getElementById(`total2_${id}`);
+                            if(totalEl2) totalEl2.innerText = total2.toLocaleString('en-MY', {minimumFractionDigits:2});
+                            baseCost += total2;
+                            totalWeight += (q2 * w2);
+                        }
+                    }
+                });
+            });
+
+            let customCostEl = document.getElementById('customItemCost');
+            let customCost = (mode === 'custom' && customCostEl && customCostEl.value) ? parseFloat(customCostEl.value) : 0;
+            if(isNaN(customCost)) customCost = 0;
+            
+            baseCost += customCost;
+
+            let markupInput = document.getElementById('markupPct');
+            let discInput = document.getElementById('discountPct');
+            let sstInput = document.getElementById('sstPct');
+            
+            let markupPct = (markupInput && markupInput.value) ? parseFloat(markupInput.value) : 0;
+            let markupAmt = baseCost * (markupPct / 100);
+            let subtotal = baseCost + markupAmt; 
+            
+            let discPct = (discInput && discInput.value) ? parseFloat(discInput.value) : 0;
+            let discAmt = subtotal * (discPct / 100);
+            let netTotal = subtotal - discAmt;
+            
+            let sstPct = (sstInput && sstInput.value) ? parseFloat(sstInput.value) : 0;
+            let sstAmt = netTotal * (sstPct / 100);
+            let grand = netTotal + sstAmt;
+
+            let exactT1 = window.currentTotalP1 || 0;
+            let exactT2 = window.currentTotalP2 || 0;
+            let totalExactPanels = exactT1 + exactT2;
+            
+            if(document.getElementById('sumPanels_screen')) document.getElementById('sumPanels_screen').innerText = totalExactPanels;
+            if(document.getElementById('sumBaseCost_screen')) document.getElementById('sumBaseCost_screen').innerText = baseCost.toLocaleString('en-MY', {minimumFractionDigits: 2});
+            if(document.getElementById('sumMarkup_screen')) document.getElementById('sumMarkup_screen').innerText = markupAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
+            if(document.getElementById('sumSubtotal_screen')) document.getElementById('sumSubtotal_screen').innerText = subtotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
+            if(document.getElementById('sumDiscount_screen')) document.getElementById('sumDiscount_screen').innerText = discAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
+            if(document.getElementById('sumSST_screen')) document.getElementById('sumSST_screen').innerText = sstAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
+            if(document.getElementById('grandTotal_screen')) document.getElementById('grandTotal_screen').innerText = grand.toLocaleString('en-MY', {minimumFractionDigits: 2});
+
+            if(document.getElementById('sumPanels_print')) document.getElementById('sumPanels_print').innerText = totalExactPanels;
+            if(document.getElementById('sumBaseCost_print')) document.getElementById('sumBaseCost_print').innerText = baseCost.toLocaleString('en-MY', {minimumFractionDigits: 2});
+            if(document.getElementById('sumMarkup_print')) document.getElementById('sumMarkup_print').innerText = markupAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
+            if(document.getElementById('sumSubtotal_print')) document.getElementById('sumSubtotal_print').innerText = subtotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
+            if(document.getElementById('sumDiscount_print')) document.getElementById('sumDiscount_print').innerText = discAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
+            if(document.getElementById('sumSST_print')) document.getElementById('sumSST_print').innerText = sstAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
+            if(document.getElementById('grandTotal_print')) document.getElementById('grandTotal_print').innerText = grand.toLocaleString('en-MY', {minimumFractionDigits: 2});
+            
+            let weightStr = totalWeight.toLocaleString('en-MY', {maximumFractionDigits: 1}) + " kg";
+            if(document.getElementById('sumWeight_screen')) document.getElementById('sumWeight_screen').innerText = weightStr;
+            if(document.getElementById('sumWeight_print')) document.getElementById('sumWeight_print').innerText = weightStr;
+
+            let t1 = window.currentTotalP1 || 1;
+            let t2 = window.currentTotalP2 || 0;
+            if (totalExactPanels === 0) totalExactPanels = 1;
+            
+            let price1 = netTotal;
+            let price2 = 0;
+            
+            if (mode === "2" && t2 > 0) {
+                price1 = netTotal * (t1 / totalExactPanels);
+                price2 = netTotal * (t2 / totalExactPanels);
+            } else if (mode === "custom") {
+                let customMarkupAmt = customCost * (markupPct / 100);
+                let customSub = customCost + customMarkupAmt;
+                let customDiscAmt = customSub * (discPct / 100);
+                price2 = customSub - customDiscAmt;
+                price1 = netTotal - price2;
+            }
+            
+            if(document.getElementById('cpUnitPrice2')) document.getElementById('cpUnitPrice2').innerText = price2.toLocaleString('en-MY', {minimumFractionDigits: 2});
+            if(document.getElementById('cpTotalPrice2')) document.getElementById('cpTotalPrice2').innerText = price2.toLocaleString('en-MY', {minimumFractionDigits: 2});
+            
+            if(document.getElementById('cpUnitPrice')) document.getElementById('cpUnitPrice').innerText = price1.toLocaleString('en-MY', {minimumFractionDigits: 2});
+            if(document.getElementById('cpTotalPrice')) document.getElementById('cpTotalPrice').innerText = price1.toLocaleString('en-MY', {minimumFractionDigits: 2});
+
+            if(document.getElementById('cpSstPct')) document.getElementById('cpSstPct').innerText = sstPct || 0;
+            if(document.getElementById('cpSstAmt')) document.getElementById('cpSstAmt').innerText = sstAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
+            if(document.getElementById('cpGrandTotal')) document.getElementById('cpGrandTotal').innerText = grand.toLocaleString('en-MY', {minimumFractionDigits: 2});
+
+            syncPrintHeader(); 
+        } catch(e) {}
+    }
+
+    function drawGrid(id, c, r, maxDim, pType = null, pPos = -1) {
+        const g = document.getElementById(id); 
+        const gp = document.getElementById(id + '_p'); 
+        const gc = document.getElementById(id + '_c'); 
+        
+        if (!g) return; 
+
+        if ((c * r) > 2500) {
+            let msg = '<div style="grid-column: 1 / -1; padding: 20px; font-size:12px; color:#ef4444; font-weight:bold; background:#fef2f2; border:1px dashed #ef4444; width:100%;">Grid too large to render visually. Dimensions tracked safely in BOM.</div>';
+            g.style.display = 'block'; g.innerHTML = msg;
+            if(gp){ gp.style.display = 'block'; gp.innerHTML = msg; }
+            if(gc){ gc.style.display = 'block'; gc.innerHTML = msg; }
+            return;
+        }
+        
+        let widthPct = maxDim > 0 ? (c / maxDim) * 100 : 100;
+        
+        let html = '';
+        for(let i=0; i<(c*r); i++) {
+            let col = i % c;
+            let row = Math.floor(i / c);
+            let extraStyle = '';
+            
+            if (pType === 'v' && col === pPos) {
+                extraStyle += 'border-right: 3px solid #ef4444 !important; z-index: 10; ';
+            } else if (pType === 'h' && row === pPos) {
+                extraStyle += 'border-bottom: 3px solid #ef4444 !important; z-index: 10; ';
+            }
+
+            html += `<div class="panel" style="${extraStyle}"></div>`;
+        }
+        
+        if(g) { g.style.display = 'grid'; g.style.gridTemplateColumns = `repeat(${c}, 1fr)`; g.style.width = `${widthPct}%`; g.innerHTML = html; }
+        if(gp) { gp.style.display = 'grid'; gp.style.gridTemplateColumns = `repeat(${c}, 1fr)`; gp.style.width = `${widthPct}%`; gp.innerHTML = html; }
+        if(gc) { gc.style.display = 'grid'; gc.style.gridTemplateColumns = `repeat(${c}, 1fr)`; gc.style.width = `${widthPct}%`; gc.innerHTML = html; }
+    }
+
+    function buildGridHTML(title, c, r, maxDim, pType = null, pPos = -1, showStays = false) {
+        if ((c * r) > 2500) {
+            return `<div class="view-box"><div class="view-title">${title}</div><div style="padding: 10px; font-size:12px; color: #ef4444; font-weight:bold;">Too large</div></div>`;
+        }
+
+        let widthPct = maxDim > 0 ? (c / maxDim) * 100 : 100;
+        let gridHtml = `<div class="grid-draft" style="display:grid; grid-template-columns: repeat(${c}, 1fr); width: ${widthPct}%;">`;
+        
+        for(let i=0; i<(c*r); i++) {
+            let col = i % c;
+            let row = Math.floor(i / c);
+            let extraStyle = '';
+            
+            if (pType === 'v' && col === pPos) {
+                extraStyle += 'border-right: 3px solid #ef4444 !important; z-index: 10; ';
+            } else if (pType === 'h' && row === pPos) {
+                extraStyle += 'border-bottom: 3px solid #ef4444 !important; z-index: 10; ';
+            }
+            
+            let stayHtml = '';
+            if (showStays) {
+                if (col > 0) stayHtml += `<div style="position:absolute; left:-1px; top:0; width:2px; height:100%; background:#eab308; z-index:5;"></div>`;
+                if (row > 0) stayHtml += `<div style="position:absolute; top:-1px; left:0; width:100%; height:2px; background:#06b6d4; z-index:5;"></div>`;
+            }
+
+            gridHtml += `<div class="panel" style="${extraStyle}">${stayHtml}</div>`;
+        }
+        gridHtml += `</div>`;
+        
+        return `<div class="view-box"><div class="view-title">${title}</div>${gridHtml}</div>`;
+    }
+
+    function generateViews(containerId, L, W, H, pType, pPos) {
+        const container = document.getElementById(containerId);
+        const container_p = document.getElementById(containerId + '_p');
+        const container_c = document.getElementById(containerId + '_c');
+        if(!container) return;
+
+        let html = '';
+        const maxDim = Math.max(L, W, H);
+        
+        let totalLevels = Math.min(H, 4); 
+        for(let i=1; i<=totalLevels; i++) {
+            let label = i === H ? `Roof Level (Trusses)` : `Level ${i} (Stays)`;
+            html += buildGridHTML(label, L, W, maxDim, pType, pPos, true);
+        }
+
+        container.innerHTML = html;
+        if(container_p) container_p.innerHTML = html;
+        if(container_c) container_c.innerHTML = html;
     }
 
     function exportCSV() {
