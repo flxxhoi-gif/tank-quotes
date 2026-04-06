@@ -115,7 +115,7 @@
         .view-title { font-size: 0.75em; font-weight: 800; margin-bottom: 8px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;}
         
         .grid-draft { display: grid; gap: 1px; background: #94a3b8; border: 2px solid #475569; margin: 0 auto; border-radius: 2px; overflow: hidden;} 
-        .panel { background: #e0f2fe; box-sizing: border-box; position: relative; border: 1px solid transparent;}
+        .panel { background: #e0f2fe; box-sizing: border-box; position: relative; border: 0.5px solid #94a3b8;}
         .panel::before { content: ""; display: block; padding-top: 100%; }
 
         .tank-section-title { background: #e2e8f0; padding: 6px 12px; border-radius: 6px; font-weight: 800; color: #0f172a; margin-bottom: 10px; font-size: 0.9em; text-transform: uppercase; border-left: 4px solid #3b82f6;}
@@ -172,7 +172,9 @@
             body.print-internal #mainContent { display: block !important; }
             body.print-internal #customerPreviewContainer { display: none !important; }
             body.print-internal #checklistPrintView { display: none !important; }
+
             body.print-internal .internal-hide { display: none !important; }
+            body.print-internal .internal-only-tag { display: block !important; }
             
             body.print-internal .app-layout { display: block !important; }
             body.print-internal .col-left { width: 100% !important; display: block !important; }
@@ -183,28 +185,18 @@
             body.print-internal .card-header { display: block !important; border-bottom: 2px solid #0f172a !important; margin-bottom: 8px !important; font-size: 11pt !important; color: #0f172a !important; text-transform: uppercase; padding: 0 0 5px 0 !important; background: transparent !important;}
             body.print-internal .card-header span, body.print-internal .card-header button { display: none !important; }
 
-            /* MEGA WATERMARK */
-            body.print-internal::before {
-                content: "INTERNAL USE ONLY - STRICTLY CONFIDENTIAL";
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%) rotate(-45deg);
-                font-size: 60pt;
-                font-weight: 900;
-                color: rgba(239, 68, 68, 0.08); /* Faint Red */
-                z-index: -1;
-                white-space: nowrap;
-                pointer-events: none;
+            body.print-internal .internal-only-tag {
+                text-align: center; color: #ef4444; font-weight: 900; font-size: 12pt; letter-spacing: 4px;
+                border: 2px solid #ef4444; padding: 4px; margin-bottom: 15px; text-transform: uppercase;
             }
 
-            body.print-internal .print-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #0f172a; padding-bottom: 10px; margin-bottom: 15px; }
+            body.print-internal .print-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #ea580c; padding-bottom: 10px; margin-bottom: 15px; }
             body.print-internal .header-left { display: flex; align-items: center; gap: 20px; }
             body.print-internal .header-left img { width: 120px; height: auto; object-fit: contain; }
-            body.print-internal .header-text h1 { margin: 0 0 5px 0; font-size: 14pt; color: #0f172a; font-weight: 900; letter-spacing: 0.5px; }
+            body.print-internal .header-text h1 { margin: 0 0 5px 0; font-size: 14pt; color: #0f172a; font-weight: 800; letter-spacing: 0.5px; }
             body.print-internal .header-text p { margin: 2px 0; font-size: 8pt; color: #475569; font-weight: 500;}
             body.print-internal .header-right { text-align: right; }
-            body.print-internal .header-right h2 { margin: 0 0 5px 0; font-size: 18pt; color: #ef4444; font-weight: 900; letter-spacing: 1px;}
+            body.print-internal .header-right h2 { margin: 0 0 5px 0; font-size: 22pt; color: #ea580c; font-weight: 800; letter-spacing: 1px;}
             body.print-internal .header-right p { margin: 2px 0; font-size: 9pt; color: #1e293b; font-weight: 600;}
             
             body.print-internal .quote-meta { display: flex; gap: 15px; margin-bottom: 15px; }
@@ -213,7 +205,6 @@
             body.print-internal .meta-label { font-weight: 700; color: #64748b; width: 90px; text-transform: uppercase;}
             body.print-internal .meta-value { font-weight: 700; color: #0f172a; }
             
-            /* Zebra Striped Internal BOM Table */
             body.print-internal table { font-size: 8.5pt; margin-bottom: 10px; border-collapse: collapse; width: 100%; border: 1px solid #0f172a; border-radius: 0;}
             body.print-internal tr { border-bottom: 1px solid #cbd5e1; page-break-inside: avoid; }
             body.print-internal tr:nth-child(even):not(.section-header-row) { background-color: #f1f5f9 !important; }
@@ -235,16 +226,14 @@
             body.print-internal .col-uprice { width: 15% !important; }
             body.print-internal .col-itotal { width: 15% !important; }
             
-            /* --- REFINED INTERNAL FOOTER WITH BOXES --- */
+            /* --- REFINED INTERNAL FOOTER --- */
             body.print-internal .footer-flex { display: flex !important; justify-content: space-between !important; align-items: flex-start !important; margin-top: 15px !important; page-break-inside: avoid !important; }
             
-            /* Formal Approval Grid */
             body.print-internal .internal-approval-grid { display: flex; flex-direction: row; width: 60%; gap: 15px; margin-top: 0; }
             body.print-internal .internal-sig-box { flex: 1; border: 1.5px solid #0f172a; border-radius: 6px; padding: 8px; height: 80px; font-size: 8pt; color: #0f172a; display: flex; flex-direction: column; justify-content: space-between; background: #fff;}
             body.print-internal .internal-sig-box span { font-weight: 800; text-transform: uppercase; color: #475569;}
             body.print-internal .internal-sig-box strong { font-weight: 700; border-top: 1px dashed #cbd5e1; padding-top: 4px; text-align: center;}
 
-            /* Color-Coded Financial Ledger Box */
             body.print-internal .summary-box { background: #fff !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 8px !important; padding: 0 !important; margin-top: 0 !important; width: 35% !important; float: none !important; box-shadow: 4px 4px 0px rgba(0,0,0,0.1) !important; overflow: hidden;}
             body.print-internal .summary-table { width: 100%; border-collapse: collapse; font-size: 9pt; margin-bottom: 0 !important; border: none !important;}
             body.print-internal .summary-table td { padding: 4px 10px; border: none; font-weight: 700; text-align: right !important;}
@@ -256,6 +245,21 @@
             
             body.print-internal .drawings-page { page-break-before: always !important; padding-top: 20px !important; }
             body.print-internal .tank-section-title { font-size: 11pt !important; margin-bottom: 10px !important; margin-top: 15px !important; color: #0f172a !important; font-weight: 800 !important; text-transform: uppercase !important; border-bottom: 2px solid #0f172a !important; padding-bottom: 5px !important; border-left: none !important; background: transparent !important;}
+
+            /* MEGA WATERMARK */
+            body.print-internal::before {
+                content: "INTERNAL USE ONLY - STRICTLY CONFIDENTIAL";
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) rotate(-45deg);
+                font-size: 60pt;
+                font-weight: 900;
+                color: rgba(239, 68, 68, 0.08); /* Faint Red */
+                z-index: -1;
+                white-space: nowrap;
+                pointer-events: none;
+            }
 
 
             /* ------------------------------------------------ */
@@ -352,11 +356,11 @@
     </style>
     
     <script>
-        const currentVersion = "V66";
+        const currentVersion = "V67";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=65; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=66; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -435,6 +439,8 @@
             <h2>Project Workspace</h2>
             <div class="live-clock">System Time: <span id="liveClock">Loading...</span></div>
         </div>
+
+        <div class="print-only internal-only-tag">Strictly Confidential - Internal Costing</div>
 
         <div class="print-header print-only">
             <div class="header-left">
@@ -757,7 +763,6 @@ Note:
         </div>
 
         <div class="print-only" id="internalPrintFooter">
-            
             <div class="footer-flex">
                 <div class="internal-approval-grid">
                     <div class="internal-sig-box"><span>Costing Prepared By:</span> <strong><span id="intSigSales"></span></strong></div>
@@ -1176,14 +1181,13 @@ Note:
     const SECRET_PASSWORD = "winko2026";
     const ADMIN_PASSWORD = "adminmaster99";
 
-    // Debounce timer for performance (prevents screen freezing on fast typing)
     let tankDataTimer;
     function debouncedProcessTankData() {
         clearTimeout(tankDataTimer);
         tankDataTimer = setTimeout(() => {
             processTankData();
             savePrices();
-        }, 500); // Wait 0.5s after user stops typing
+        }, 500); 
     }
 
     function checkPassword() {
@@ -1232,7 +1236,7 @@ Note:
             document.getElementById('mainContent').style.display = 'block';
             document.getElementById('btnTabQuote').classList.add('active');
         } else if(tabId === 'preview') {
-            syncPrintHeader(); // Sync latest math to UI
+            syncPrintHeader(); 
             document.getElementById('customerPreviewContainer').style.display = 'flex';
             document.getElementById('btnTabPreview').classList.add('active');
         } else if(tabId === 'inventory') {
@@ -1246,7 +1250,6 @@ Note:
         }
     }
 
-    // --- INVENTORY MANAGEMENT LOGIC ---
     let winkoInventory = {};
     try {
         winkoInventory = JSON.parse(localStorage.getItem('winkoInventoryDB')) || {};
@@ -1367,116 +1370,105 @@ Note:
         }
     }
 
-
-    // --- PRINT TOGGLE LOGIC ---
     function printInternal() {
-        try {
-            document.body.className = 'print-internal';
-            syncPrintHeader();
-            let s1 = document.getElementById('visualsArea1'); let t1 = document.getElementById('visualsArea1_p');
-            if(s1 && t1) { t1.innerHTML = s1.innerHTML; }
-            let s2 = document.getElementById('visualsArea2'); let t2 = document.getElementById('visualsArea2_p');
-            if(s2 && t2) { t2.innerHTML = s2.innerHTML; }
-            setTimeout(() => { window.print(); }, 300);
-        } catch(e) { alert("Internal Print Error: " + e.message); }
+        document.body.className = 'print-internal';
+        syncPrintHeader();
+        let s1 = document.getElementById('visualsArea1'); let t1 = document.getElementById('visualsArea1_p');
+        if(s1 && t1) { t1.innerHTML = s1.innerHTML; }
+        let s2 = document.getElementById('visualsArea2'); let t2 = document.getElementById('visualsArea2_p');
+        if(s2 && t2) { t2.innerHTML = s2.innerHTML; }
+        setTimeout(() => { window.print(); }, 300);
     }
     
     function printCustomer() {
-        try {
-            document.body.className = 'print-customer';
-            syncPrintHeader(); 
-            setTimeout(() => { window.print(); }, 300);
-        } catch(e) { alert("Customer Print Error: " + e.message); }
+        document.body.className = 'print-customer';
+        syncPrintHeader(); 
+        setTimeout(() => { window.print(); }, 300);
     }
 
     function printCustomerFromPreview() {
-        try {
-            document.body.className = 'print-customer';
-            setTimeout(() => { window.print(); }, 300);
-        } catch(e) { alert("Customer Print Error: " + e.message); }
+        document.body.className = 'print-customer';
+        setTimeout(() => { window.print(); }, 300);
     }
 
     function printChecklist() {
-        try {
-            document.getElementById('chk_customer').innerText = document.getElementById('custCompany').value || '';
-            document.getElementById('chk_project').innerText = document.getElementById('projectName').value || '';
-            document.getElementById('chk_projno').innerText = document.getElementById('quoteIdInput').value || '';
-            document.getElementById('chk_custpo').innerText = document.getElementById('custPoNo').value || '';
-            document.getElementById('chk_deldate').innerText = document.getElementById('custDelDate').value || '';
-            document.getElementById('chk_issued').innerText = new Date().toLocaleDateString('en-MY');
-            
-            let uChoice = document.getElementById('unitChoice');
-            let u = (uChoice && uChoice.value === 'ft') ? 'ft' : 'm';
-            let l1 = document.getElementById('length').value || 0;
-            let w1 = document.getElementById('width').value || 0;
-            let h1 = document.getElementById('height').value || 0;
-            document.getElementById('chk_tanksize').innerText = `${l1}${u} x ${w1}${u} x ${h1}${u}`;
-            document.getElementById('chk_tankqty').innerText = document.getElementById('numTanks').value === '2' ? '2' : '1';
-            document.getElementById('chk_totalpanel').innerText = document.getElementById('sumPanels_screen').innerText;
+        document.getElementById('chk_customer').innerText = document.getElementById('custCompany').value || '';
+        document.getElementById('chk_project').innerText = document.getElementById('projectName').value || '';
+        document.getElementById('chk_projno').innerText = document.getElementById('quoteIdInput').value || '';
+        document.getElementById('chk_custpo').innerText = document.getElementById('custPoNo').value || '';
+        document.getElementById('chk_deldate').innerText = document.getElementById('custDelDate').value || '';
+        document.getElementById('chk_issued').innerText = new Date().toLocaleDateString('en-MY');
+        
+        let uChoice = document.getElementById('unitChoice');
+        let u = (uChoice && uChoice.value === 'ft') ? 'ft' : 'm';
+        let l1 = document.getElementById('length').value || 0;
+        let w1 = document.getElementById('width').value || 0;
+        let h1 = document.getElementById('height').value || 0;
+        document.getElementById('chk_tanksize').innerText = `${l1}${u} x ${w1}${u} x ${h1}${u}`;
+        document.getElementById('chk_tankqty').innerText = document.getElementById('numTanks').value === '2' ? '2' : '1';
+        document.getElementById('chk_totalpanel').innerText = document.getElementById('sumPanels_screen').innerText;
 
-            const setBox = (id, condition) => { document.getElementById(id).innerHTML = condition ? '&#10003;' : '&nbsp;'; };
+        const setBox = (id, condition) => { document.getElementById(id).innerHTML = condition ? '&#10003;' : '&nbsp;'; };
 
-            let mkt = document.getElementById('marketChoice').value;
-            setBox('box_local', mkt === 'local');
-            setBox('box_export', mkt === 'export');
+        let mkt = document.getElementById('marketChoice').value;
+        setBox('box_local', mkt === 'local');
+        setBox('box_export', mkt === 'export');
 
-            let std = document.getElementById('stdChoice').value;
-            setBox('box_sans', std.includes('SANS'));
-            setBox('box_ss22', std.includes('SS 22'));
+        let std = document.getElementById('stdChoice').value;
+        setBox('box_sans', std.includes('SANS'));
+        setBox('box_ss22', std.includes('SS 22'));
 
-            let part = document.getElementById('partChoice').value;
-            setBox('box_part_no', part === 'no');
-            setBox('box_part_yes', part === 'yes');
+        let part = document.getElementById('partChoice').value;
+        setBox('box_part_no', part === 'no');
+        setBox('box_part_yes', part === 'yes');
 
-            let coat = document.getElementById('coatChoice').value;
-            setBox('box_coat_hdg', coat.includes('Galvanised'));
-            setBox('box_coat_paint', coat.includes('Painted'));
-            setBox('box_coat_ms', coat.includes('MS'));
+        let coat = document.getElementById('coatChoice').value;
+        setBox('box_coat_hdg', coat.includes('Galvanised'));
+        setBox('box_coat_paint', coat.includes('Painted'));
+        setBox('box_coat_ms', coat.includes('MS'));
 
-            document.getElementById('chk_t_roof').innerText = document.getElementById('thickRoof').value.replace('mm', '');
-            document.getElementById('chk_t_base').innerText = document.getElementById('thickBase').value.replace('mm', '');
-            document.getElementById('chk_t_w1').innerText = document.getElementById('thickWallL1').value.replace('mm', '');
-            document.getElementById('chk_t_w2').innerText = document.getElementById('thickWallL2').value.replace('mm', '');
-            document.getElementById('chk_t_w3').innerText = document.getElementById('thickWallL3').value.replace('mm', '');
-            document.getElementById('chk_t_w4').innerText = document.getElementById('thickWallL4').value.replace('mm', '');
+        document.getElementById('chk_t_roof').innerText = document.getElementById('thickRoof').value.replace('mm', '');
+        document.getElementById('chk_t_base').innerText = document.getElementById('thickBase').value.replace('mm', '');
+        document.getElementById('chk_t_w1').innerText = document.getElementById('thickWallL1').value.replace('mm', '');
+        document.getElementById('chk_t_w2').innerText = document.getElementById('thickWallL2').value.replace('mm', '');
+        document.getElementById('chk_t_w3').innerText = document.getElementById('thickWallL3').value.replace('mm', '');
+        document.getElementById('chk_t_w4').innerText = document.getElementById('thickWallL4').value.replace('mm', '');
 
-            document.getElementById('chk_qty_manhole').innerText = document.getElementById('qty_item_0_0') ? document.getElementById('qty_item_0_0').value : '';
-            document.getElementById('chk_qty_ext_lad').innerText = document.getElementById('qty_item_3_0') ? document.getElementById('qty_item_3_0').value : '';
-            document.getElementById('chk_qty_int_lad').innerText = document.getElementById('qty_item_3_1') ? document.getElementById('qty_item_3_1').value : '';
-            document.getElementById('chk_qty_wli').innerText = document.getElementById('qty_item_3_2') ? document.getElementById('qty_item_3_2').value : '';
-            document.getElementById('chk_qty_vent').innerText = document.getElementById('qty_item_3_3') ? document.getElementById('qty_item_3_3').value : '';
-            
-            let intLadMat = document.getElementById('intLadMat') ? document.getElementById('intLadMat').value : '';
-            setBox('box_int_hdg', intLadMat === 'HDG');
-            setBox('box_int_304', intLadMat === 'SS 304');
-            setBox('box_int_316', intLadMat === 'SS 316');
+        document.getElementById('chk_qty_manhole').innerText = document.getElementById('qty_item_0_0') ? document.getElementById('qty_item_0_0').value : '';
+        document.getElementById('chk_qty_ext_lad').innerText = document.getElementById('qty_item_3_0') ? document.getElementById('qty_item_3_0').value : '';
+        document.getElementById('chk_qty_int_lad').innerText = document.getElementById('qty_item_3_1') ? document.getElementById('qty_item_3_1').value : '';
+        document.getElementById('chk_qty_wli').innerText = document.getElementById('qty_item_3_2') ? document.getElementById('qty_item_3_2').value : '';
+        document.getElementById('chk_qty_vent').innerText = document.getElementById('qty_item_3_3') ? document.getElementById('qty_item_3_3').value : '';
+        
+        let intLadMat = document.getElementById('intLadMat') ? document.getElementById('intLadMat').value : '';
+        setBox('box_int_hdg', intLadMat === 'HDG');
+        setBox('box_int_304', intLadMat === 'SS 304');
+        setBox('box_int_316', intLadMat === 'SS 316');
 
-            let extLadMat = document.getElementById('extLadMat') ? document.getElementById('extLadMat').value : '';
-            setBox('box_ext_hdg', extLadMat === 'HDG');
-            setBox('box_ext_304', extLadMat === 'SS 304');
-            setBox('box_ext_316', extLadMat === 'SS 316');
+        let extLadMat = document.getElementById('extLadMat') ? document.getElementById('extLadMat').value : '';
+        setBox('box_ext_hdg', extLadMat === 'HDG');
+        setBox('box_ext_304', extLadMat === 'SS 304');
+        setBox('box_ext_316', extLadMat === 'SS 316');
 
-            let wliMat = document.getElementById('wliType') ? document.getElementById('wliType').value : '';
-            setBox('box_wli_ball', wliMat.includes('Ball'));
-            setBox('box_wli_tube', wliMat.includes('Tube'));
+        let wliMat = document.getElementById('wliType') ? document.getElementById('wliType').value : '';
+        setBox('box_wli_ball', wliMat.includes('Ball'));
+        setBox('box_wli_tube', wliMat.includes('Tube'));
 
-            let ventMat = document.getElementById('ventType') ? document.getElementById('ventType').value : '';
-            setBox('box_vent_hdg', ventMat.includes('Steel'));
-            setBox('box_vent_abs', ventMat.includes('ABS'));
+        let ventMat = document.getElementById('ventType') ? document.getElementById('ventType').value : '';
+        setBox('box_vent_hdg', ventMat.includes('Steel'));
+        setBox('box_vent_abs', ventMat.includes('ABS'));
 
-            let s1 = document.getElementById('visualsArea1'); let c1 = document.getElementById('visualsArea1_c');
-            if(s1 && c1) { c1.innerHTML = s1.innerHTML; }
-            let s2 = document.getElementById('visualsArea2'); let c2 = document.getElementById('visualsArea2_c');
-            if(s2 && c2) { c2.innerHTML = s2.innerHTML; }
+        let s1 = document.getElementById('visualsArea1'); let c1 = document.getElementById('visualsArea1_c');
+        if(s1 && c1) { c1.innerHTML = s1.innerHTML; }
+        let s2 = document.getElementById('visualsArea2'); let c2 = document.getElementById('visualsArea2_c');
+        if(s2 && c2) { c2.innerHTML = s2.innerHTML; }
 
-            document.body.className = 'print-checklist';
-            
-            setTimeout(() => { 
-                window.print(); 
-                setTimeout(deductInventoryFromSO, 1000); 
-            }, 300);
-
-        } catch(e) { alert("Checklist Print Error: " + e.message); }
+        document.body.className = 'print-checklist';
+        
+        setTimeout(() => { 
+            window.print(); 
+            setTimeout(deductInventoryFromSO, 1000); 
+        }, 300);
     }
 
     window.addEventListener('afterprint', () => { 
@@ -1487,7 +1479,97 @@ Note:
         }
     });
 
-    // --- FULL BOM STRUCTURE ---
+    function updateClock() {
+        const now = new Date();
+        const str = now.toLocaleDateString('en-MY').replace(/\//g, '-');
+        const elements = ['liveClock', 'metaDate', 'cpDate'];
+        for(let i=0; i<elements.length; i++) {
+            let el = document.getElementById(elements[i]);
+            if(el) {
+                if(elements[i] === 'liveClock') el.innerText = str + " " + now.toLocaleTimeString('en-MY');
+                else el.innerText = str;
+            }
+        }
+    }
+    setInterval(updateClock, 1000); updateClock();
+
+    function updateLabels() {
+        let uChoice = document.getElementById('unitChoice');
+        let newUnit = uChoice ? uChoice.value : 'ft';
+        
+        const unitLabel = newUnit === 'ft' ? 'Ft' : 'Meter';
+        let labels = document.querySelectorAll('.unitLabel');
+        for(let i=0; i<labels.length; i++) {
+            labels[i].innerText = unitLabel;
+        }
+    }
+    
+    function toggleTank2() {
+        let nTanks = document.getElementById('numTanks');
+        const mode = nTanks ? nTanks.value : "1";
+        
+        let t2Sec = document.getElementById('tank2Section');
+        let customSec = document.getElementById('customItemSection');
+        let t2VisCard = document.getElementById('tank2VisualsCard');
+        let t2VisPrint = document.getElementById('tank2VisualsPrint');
+        let t2VisChecklist = document.getElementById('tank2VisualsPrint_c');
+        let cpNum = document.getElementById('cpNumTanks');
+        let bCard2 = document.getElementById('bomCard2');
+
+        if(mode === "2") {
+            if(t2Sec) t2Sec.style.display = 'block';
+            if(customSec) customSec.style.display = 'none';
+            if(t2VisCard) t2VisCard.style.display = 'block';
+            if(t2VisPrint) t2VisPrint.style.display = 'block';
+            if(t2VisChecklist) t2VisChecklist.style.display = 'block';
+            if(cpNum) cpNum.innerText = "1 LOT"; 
+            if(bCard2) bCard2.style.display = 'block'; 
+        } else if (mode === "custom") {
+            if(t2Sec) t2Sec.style.display = 'none';
+            if(customSec) customSec.style.display = 'block';
+            if(t2VisCard) t2VisCard.style.display = 'none';
+            if(t2VisPrint) t2VisPrint.style.display = 'none';
+            if(t2VisChecklist) t2VisChecklist.style.display = 'none';
+            if(cpNum) cpNum.innerText = "1 LOT"; 
+            if(bCard2) bCard2.style.display = 'none'; 
+        } else {
+            if(t2Sec) t2Sec.style.display = 'none';
+            if(customSec) customSec.style.display = 'none';
+            if(t2VisCard) t2VisCard.style.display = 'none';
+            if(t2VisPrint) t2VisPrint.style.display = 'none';
+            if(t2VisChecklist) t2VisChecklist.style.display = 'none';
+            if(cpNum) cpNum.innerText = "1";
+            if(bCard2) bCard2.style.display = 'none'; 
+        }
+        togglePartitionDetails();
+    }
+
+    function togglePartitionDetails() {
+        let pChoice1 = document.getElementById('partChoice');
+        let partChoice = pChoice1 ? pChoice1.value : 'no';
+        let detailsRow = document.getElementById('partitionDetailsRow');
+        let pQty1 = document.getElementById('partQty');
+        
+        if(partChoice === 'yes') { 
+            if(detailsRow) detailsRow.style.display = 'flex'; 
+        } else { 
+            if(detailsRow) detailsRow.style.display = 'none'; 
+            if(pQty1) pQty1.value = 0; 
+        }
+        
+        let pChoice2 = document.getElementById('partChoice2');
+        let partChoice2 = pChoice2 ? pChoice2.value : 'no';
+        let detailsRow2 = document.getElementById('partitionDetailsRow2');
+        let pQty2 = document.getElementById('partQty2');
+
+        if(partChoice2 === 'yes') { 
+            if(detailsRow2) detailsRow2.style.display = 'flex'; 
+        } else { 
+            if(detailsRow2) detailsRow2.style.display = 'none'; 
+            if(pQty2) pQty2.value = 0; 
+        }
+    }
+
     const systemBaseStructure = [
         { category: "Panels", items: [
             {name: "Manhole Panel", def: 450, wt: 55}, 
@@ -1733,7 +1815,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV66'); // V66 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV67'); // V67 CACHE BUSTER
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1752,265 +1834,261 @@ Note:
     }
 
     function syncPrintHeader() {
-        try {
-            // Internal Dashboard Meta Sync
-            let metaQ = document.getElementById('metaQuoteId');
-            let qInput = document.getElementById('quoteIdInput');
-            if(metaQ) metaQ.innerText = (qInput && qInput.value) ? qInput.value : "N/A";
-            
-            let metaP = document.getElementById('metaProject');
-            let pInput = document.getElementById('projectName');
-            if(metaP) metaP.innerText = (pInput && pInput.value) ? pInput.value : "_____________________";
-            
-            let metaS = document.getElementById('metaStd');
-            let sInput = document.getElementById('stdChoice');
-            if(metaS) metaS.innerText = (sInput && sInput.value) ? sInput.value : "";
-            
-            let sumStd = document.getElementById('sumStd');
-            if(sumStd && sInput) sumStd.innerText = sInput.value || "-";
+        let metaQ = document.getElementById('metaQuoteId');
+        let qInput = document.getElementById('quoteIdInput');
+        if(metaQ) metaQ.innerText = (qInput && qInput.value) ? qInput.value : "N/A";
+        
+        let metaP = document.getElementById('metaProject');
+        let pInput = document.getElementById('projectName');
+        if(metaP) metaP.innerText = (pInput && pInput.value) ? pInput.value : "_____________________";
+        
+        let metaS = document.getElementById('metaStd');
+        let sInput = document.getElementById('stdChoice');
+        if(metaS) metaS.innerText = (sInput && sInput.value) ? sInput.value : "";
+        
+        let sumStd = document.getElementById('sumStd');
+        if(sumStd && sInput) sumStd.innerText = sInput.value || "-";
 
-            let sumUnit = document.getElementById('sumUnit');
-            let unitChoice = document.getElementById('unitChoice');
-            let u = (unitChoice && unitChoice.value === 'ft') ? 'ft' : 'm';
-            if(sumUnit && unitChoice) {
-                sumUnit.innerText = unitChoice.options[unitChoice.selectedIndex] ? unitChoice.options[unitChoice.selectedIndex].text : "-";
-            }
+        let sumUnit = document.getElementById('sumUnit');
+        let unitChoice = document.getElementById('unitChoice');
+        let u = (unitChoice && unitChoice.value === 'ft') ? 'ft' : 'm';
+        if(sumUnit && unitChoice) {
+            sumUnit.innerText = unitChoice.options[unitChoice.selectedIndex] ? unitChoice.options[unitChoice.selectedIndex].text : "-";
+        }
 
-            let sumCoat = document.getElementById('sumCoat');
-            let coatChoice = document.getElementById('coatChoice');
-            let matStr = (coatChoice && coatChoice.value) ? coatChoice.value : "";
-            if(sumCoat) sumCoat.innerText = matStr || "-";
+        let sumCoat = document.getElementById('sumCoat');
+        let coatChoice = document.getElementById('coatChoice');
+        let matStr = (coatChoice && coatChoice.value) ? coatChoice.value : "";
+        if(sumCoat) sumCoat.innerText = matStr || "-";
 
-            let numTanksEl = document.getElementById('numTanks');
-            let mode = (numTanksEl && numTanksEl.value) ? numTanksEl.value : "1";
-            
-            let elL1 = document.getElementById('length'); let l1 = (elL1 && elL1.value) ? (parseFloat(elL1.value)||0) : 0;
-            let elW1 = document.getElementById('width'); let w1 = (elW1 && elW1.value) ? (parseFloat(elW1.value)||0) : 0;
-            let elH1 = document.getElementById('height'); let h1 = (elH1 && elH1.value) ? (parseFloat(elH1.value)||0) : 0;
-            let dimsStr = `Tank 1: ${l1}${u} (L) x ${w1}${u} (W) x ${h1}${u} (H)`;
-            
-            if(mode === "2") {
-                let elL2 = document.getElementById('length2'); let l2 = (elL2 && elL2.value) ? (parseFloat(elL2.value)||0) : 0;
-                let elW2 = document.getElementById('width2'); let w2 = (elW2 && elW2.value) ? (parseFloat(elW2.value)||0) : 0;
-                let elH2 = document.getElementById('height2'); let h2 = (elH2 && elH2.value) ? (parseFloat(elH2.value)||0) : 0;
-                dimsStr += ` | Tank 2: ${l2}${u} (L) x ${w2}${u} (W) x ${h2}${u} (H)`;
-            } else if (mode === "custom") {
-                let cNameEl = document.getElementById('customItemName');
-                let cName = (cNameEl && cNameEl.value) ? cNameEl.value : "Custom Item";
-                dimsStr += ` | Item 2: ${cName}`;
-            }
-            let metaDims = document.getElementById('metaDims');
-            if(metaDims) metaDims.innerText = dimsStr;
-            
-            let metaCoat = document.getElementById('metaCoat');
-            if(metaCoat) metaCoat.innerText = matStr;
-            
-            // Build Partition string
-            let elPQ1 = document.getElementById('partQty'); let pQty1 = (elPQ1 && elPQ1.value) ? parseInt(elPQ1.value) : 0;
-            let elPC1 = document.getElementById('partChoice'); let partChoice1 = (elPC1 && elPC1.value) ? elPC1.value : 'no';
-            let elPT1 = document.getElementById('partType'); let pt1 = (elPT1 && elPT1.value) ? elPT1.value : '';
-            let elPL1 = document.getElementById('partLen'); let pl1 = (elPL1 && elPL1.value) ? elPL1.value : 0;
-            let elPH1 = document.getElementById('partHgt'); let ph1 = (elPH1 && elPH1.value) ? elPH1.value : 0;
+        let numTanksEl = document.getElementById('numTanks');
+        let mode = (numTanksEl && numTanksEl.value) ? numTanksEl.value : "1";
+        
+        let elL1 = document.getElementById('length'); let l1 = (elL1 && elL1.value) ? (parseFloat(elL1.value)||0) : 0;
+        let elW1 = document.getElementById('width'); let w1 = (elW1 && elW1.value) ? (parseFloat(elW1.value)||0) : 0;
+        let elH1 = document.getElementById('height'); let h1 = (elH1 && elH1.value) ? (parseFloat(elH1.value)||0) : 0;
+        let dimsStr = `Tank 1: ${l1}${u} (L) x ${w1}${u} (W) x ${h1}${u} (H)`;
+        
+        if(mode === "2") {
+            let elL2 = document.getElementById('length2'); let l2 = (elL2 && elL2.value) ? (parseFloat(elL2.value)||0) : 0;
+            let elW2 = document.getElementById('width2'); let w2 = (elW2 && elW2.value) ? (parseFloat(elW2.value)||0) : 0;
+            let elH2 = document.getElementById('height2'); let h2 = (elH2 && elH2.value) ? (parseFloat(elH2.value)||0) : 0;
+            dimsStr += ` | Tank 2: ${l2}${u} (L) x ${w2}${u} (W) x ${h2}${u} (H)`;
+        } else if (mode === "custom") {
+            let cNameEl = document.getElementById('customItemName');
+            let cName = (cNameEl && cNameEl.value) ? cNameEl.value : "Custom Item";
+            dimsStr += ` | Item 2: ${cName}`;
+        }
+        let metaDims = document.getElementById('metaDims');
+        if(metaDims) metaDims.innerText = dimsStr;
+        
+        let metaCoat = document.getElementById('metaCoat');
+        if(metaCoat) metaCoat.innerText = matStr;
+        
+        // Build Partition string
+        let elPQ1 = document.getElementById('partQty'); let pQty1 = (elPQ1 && elPQ1.value) ? (parseInt(elPQ1.value)||0) : 0;
+        let elPC1 = document.getElementById('partChoice'); let partChoice1 = (elPC1 && elPC1.value) ? elPC1.value : 'no';
+        let elPT1 = document.getElementById('partType'); let pt1 = (elPT1 && elPT1.value) ? elPT1.value : '';
+        let elPL1 = document.getElementById('partLen'); let pl1 = (elPL1 && elPL1.value) ? (parseFloat(elPL1.value)||0) : 0;
+        let elPH1 = document.getElementById('partHgt'); let ph1 = (elPH1 && elPH1.value) ? (parseFloat(elPH1.value)||0) : 0;
 
-            let part1Str = (partChoice1 === 'yes' && pQty1 > 0) ? `${pQty1}x ${pt1} (${pl1}${u} x ${ph1}${u})` : '';
-            let partDisplay = part1Str || 'None';
-            
-            if(mode === "2") {
-                let elPQ2 = document.getElementById('partQty2'); let pQty2 = (elPQ2 && elPQ2.value) ? parseInt(elPQ2.value) : 0;
-                let elPC2 = document.getElementById('partChoice2'); let partChoice2 = (elPC2 && elPC2.value) ? elPC2.value : 'no';
-                let elPT2 = document.getElementById('partType2'); let pt2 = (elPT2 && elPT2.value) ? elPT2.value : '';
-                let elPL2 = document.getElementById('partLen2'); let pl2 = (elPL2 && elPL2.value) ? elPL2.value : 0;
-                let elPH2 = document.getElementById('partHgt2'); let ph2 = (elPH2 && elPH2.value) ? elPH2.value : 0;
+        let part1Str = (partChoice1 === 'yes' && pQty1 > 0) ? `${pQty1}x ${pt1} (${pl1}${u} x ${ph1}${u})` : '';
+        let partDisplay = part1Str || 'None';
+        
+        if(mode === "2") {
+            let elPQ2 = document.getElementById('partQty2'); let pQty2 = (elPQ2 && elPQ2.value) ? (parseInt(elPQ2.value)||0) : 0;
+            let elPC2 = document.getElementById('partChoice2'); let partChoice2 = (elPC2 && elPC2.value) ? elPC2.value : 'no';
+            let elPT2 = document.getElementById('partType2'); let pt2 = (elPT2 && elPT2.value) ? elPT2.value : '';
+            let elPL2 = document.getElementById('partLen2'); let pl2 = (elPL2 && elPL2.value) ? (parseFloat(elPL2.value)||0) : 0;
+            let elPH2 = document.getElementById('partHgt2'); let ph2 = (elPH2 && elPH2.value) ? (parseFloat(elPH2.value)||0) : 0;
 
-                let part2Str = (partChoice2 === 'yes' && pQty2 > 0) ? `${pQty2}x ${pt2} (${pl2}${u} x ${ph2}${u})` : '';
-                if(part1Str && part2Str) partDisplay = `T1: ${part1Str} | T2: ${part2Str}`;
-                else if (part2Str) partDisplay = `T2: ${part2Str}`;
-            }
-            
-            let metaPart = document.getElementById('metaPart');
-            if(metaPart) metaPart.innerText = partDisplay;
+            let part2Str = (partChoice2 === 'yes' && pQty2 > 0) ? `${pQty2}x ${pt2} (${pl2}${u} x ${ph2}${u})` : '';
+            if(part1Str && part2Str) partDisplay = `T1: ${part1Str} | T2: ${part2Str}`;
+            else if (part2Str) partDisplay = `T2: ${part2Str}`;
+        }
+        
+        let metaPart = document.getElementById('metaPart');
+        if(metaPart) metaPart.innerText = partDisplay;
 
-            let sumPart = document.getElementById('sumPart');
-            if(sumPart) sumPart.innerText = partDisplay;
-            
-            // CUSTOMER FORMAL PRINT SYNC
-            let cpCustName = document.getElementById('cpCustName');
-            let custCompany = document.getElementById('custCompany');
-            if(cpCustName) cpCustName.innerText = (custCompany && custCompany.value) ? custCompany.value : ((pInput && pInput.value) ? pInput.value : "Client Name");
-            
-            let cpCustAddr = document.getElementById('cpCustAddress');
-            let custAddr = document.getElementById('custAddr');
-            if(cpCustAddr) cpCustAddr.innerHTML = (custAddr && custAddr.value) ? custAddr.value.replace(/\n/g, '<br>') : '';
-            
-            let cpAttn = document.getElementById('cpAttention');
-            let custAttn = document.getElementById('custAttn');
-            if(cpAttn) cpAttn.innerText = (custAttn && custAttn.value) ? custAttn.value : "";
-            
-            let cpProject = document.getElementById('cpProject');
-            if(cpProject) cpProject.innerText = (pInput && pInput.value) ? pInput.value : "";
-            
-            let cpRef = document.getElementById('cpRef');
-            if(cpRef) cpRef.innerText = (qInput && qInput.value) ? qInput.value : "";
+        let sumPart = document.getElementById('sumPart');
+        if(sumPart) sumPart.innerText = partDisplay;
+        
+        // CUSTOMER FORMAL PRINT SYNC
+        let cpCustName = document.getElementById('cpCustName');
+        let custCompany = document.getElementById('custCompany');
+        if(cpCustName) cpCustName.innerText = (custCompany && custCompany.value) ? custCompany.value : ((pInput && pInput.value) ? pInput.value : "Client Name");
+        
+        let cpCustAddr = document.getElementById('cpCustAddress');
+        let custAddr = document.getElementById('custAddr');
+        if(cpCustAddr) cpCustAddr.innerHTML = (custAddr && custAddr.value) ? custAddr.value.replace(/\n/g, '<br>') : '';
+        
+        let cpAttn = document.getElementById('cpAttention');
+        let custAttn = document.getElementById('custAttn');
+        if(cpAttn) cpAttn.innerText = (custAttn && custAttn.value) ? custAttn.value : "";
+        
+        let cpProject = document.getElementById('cpProject');
+        if(cpProject) cpProject.innerText = (pInput && pInput.value) ? pInput.value : "";
+        
+        let cpRef = document.getElementById('cpRef');
+        if(cpRef) cpRef.innerText = (qInput && qInput.value) ? qInput.value : "";
 
-            let cpMat1 = document.getElementById('cpMaterial'); if(cpMat1) cpMat1.innerText = matStr;
-            
-            let t1Panels = window.currentTotalP1 || 0;
-            let cpDims1 = document.getElementById('cpDims');
-            if(cpDims1) cpDims1.innerText = `${l1}${u} (L) x ${w1}${u} (W) x ${h1}${u} (H) (Total: ${t1Panels} Panels)`;
+        let cpMat1 = document.getElementById('cpMaterial'); if(cpMat1) cpMat1.innerText = matStr;
+        
+        let t1Panels = window.currentTotalP1 || 0;
+        let cpDims1 = document.getElementById('cpDims');
+        if(cpDims1) cpDims1.innerText = `${l1}${u} (L) x ${w1}${u} (W) x ${h1}${u} (H) (Total: ${t1Panels} Panels)`;
 
-            let cpStd1 = document.getElementById('cpStd'); if(cpStd1) cpStd1.innerText = (sInput && sInput.value) ? sInput.value : "";
-            
-            let tRoof = document.getElementById('thickRoof'); let valRoof = (tRoof && tRoof.value) ? tRoof.value : "";
-            let tBase = document.getElementById('thickBase'); let valBase = (tBase && tBase.value) ? tBase.value : "";
-            let cpTRoof = document.getElementById('cpThickRoof'); if(cpTRoof) cpTRoof.innerText = valRoof;
-            let cpTBase = document.getElementById('cpThickBase'); if(cpTBase) cpTBase.innerText = valBase;
-            
-            let tL1 = document.getElementById('thickWallL1'); let valL1 = (tL1 && tL1.value) ? tL1.value : "-";
-            let tL2 = document.getElementById('thickWallL2'); let valL2 = (tL2 && tL2.value) ? tL2.value : "-";
-            let tL3 = document.getElementById('thickWallL3'); let valL3 = (tL3 && tL3.value) ? tL3.value : "-";
-            let tL4 = document.getElementById('thickWallL4'); let valL4 = (tL4 && tL4.value) ? tL4.value : "-";
-            let wallStr = `L1: ${valL1} | L2: ${valL2} | L3: ${valL3} | L4: ${valL4}`;
-            
-            let cpTWall = document.getElementById('cpThickWall'); if(cpTWall) cpTWall.innerText = wallStr;
+        let cpStd1 = document.getElementById('cpStd'); if(cpStd1) cpStd1.innerText = (sInput && sInput.value) ? sInput.value : "";
+        
+        let tRoof = document.getElementById('thickRoof'); let valRoof = (tRoof && tRoof.value) ? tRoof.value : "";
+        let tBase = document.getElementById('thickBase'); let valBase = (tBase && tBase.value) ? tBase.value : "";
+        let cpTRoof = document.getElementById('cpThickRoof'); if(cpTRoof) cpTRoof.innerText = valRoof;
+        let cpTBase = document.getElementById('cpThickBase'); if(cpTBase) cpTBase.innerText = valBase;
+        
+        let tL1 = document.getElementById('thickWallL1'); let valL1 = (tL1 && tL1.value) ? tL1.value : "-";
+        let tL2 = document.getElementById('thickWallL2'); let valL2 = (tL2 && tL2.value) ? tL2.value : "-";
+        let tL3 = document.getElementById('thickWallL3'); let valL3 = (tL3 && tL3.value) ? tL3.value : "-";
+        let tL4 = document.getElementById('thickWallL4'); let valL4 = (tL4 && tL4.value) ? tL4.value : "-";
+        let wallStr = `L1: ${valL1} | L2: ${valL2} | L3: ${valL3} | L4: ${valL4}`;
+        
+        let cpTWall = document.getElementById('cpThickWall'); if(cpTWall) cpTWall.innerText = wallStr;
 
-            let cpPartRow = document.getElementById('cpPartRow');
-            let cpPartSec = document.getElementById('cpPartSection');
-            if(cpPartRow) {
-                if(part1Str !== '') {
-                    cpPartRow.style.display = 'table-row';
-                    if(cpPartSec) cpPartSec.innerText = part1Str;
-                } else {
-                    cpPartRow.style.display = 'none';
-                }
-            }
-
-            let extLadMatEl = document.getElementById('extLadMat'); let extLadMat = (extLadMatEl && extLadMatEl.value) ? extLadMatEl.value : 'External Ladder';
-            let intLadMatEl = document.getElementById('intLadMat'); let intLadMat = (intLadMatEl && intLadMatEl.value) ? intLadMatEl.value : 'Internal Ladder';
-            let qtyExtEl = document.getElementById('qty_item_3_0'); let qtyExt = (qtyExtEl && qtyExtEl.value) ? qtyExtEl.value : '0';
-            let qtyIntEl = document.getElementById('qty_item_3_1'); let qtyInt = (qtyIntEl && qtyIntEl.value) ? qtyIntEl.value : '0';
-
-            let cpLaddersInt = document.getElementById('cpLaddersInt'); if(cpLaddersInt) cpLaddersInt.innerText = `${intLadMat} Internal Ladder - ${qtyInt} sets`;
-            let cpLaddersExt = document.getElementById('cpLaddersExt'); if(cpLaddersExt) cpLaddersExt.innerText = `${extLadMat} External Ladder with safety cage - ${qtyExt} sets`;
-
-            let wliTypeEl = document.getElementById('wliType'); let wliType = (wliTypeEl && wliTypeEl.value) ? wliTypeEl.value : 'Water Level Indicator';
-            let wliQtyEl = document.getElementById('qty_item_3_2'); let wliQty = (wliQtyEl && wliQtyEl.value) ? wliQtyEl.value : '0';
-            let cpWLI = document.getElementById('cpWLI'); if(cpWLI) cpWLI.innerText = `${wliType} - ${wliQty} sets`;
-
-            // TANK 2 DATA SYNC (If Applicable)
-            let cpTank2Row = document.getElementById('cpTank2Row'); 
-            let cpTank2Specs = document.getElementById('cpTank2Specs');
-            let cpTank2CustomDesc = document.getElementById('cpTank2CustomDesc');
-
-            if(mode === "2") {
-                if(cpTank2Row) cpTank2Row.style.display = 'table-row';
-                if(cpTank2Specs) cpTank2Specs.style.display = 'block';
-                if(cpTank2CustomDesc) cpTank2CustomDesc.style.display = 'none';
-
-                let elL2 = document.getElementById('length2'); let l2 = (elL2 && elL2.value) ? (parseFloat(elL2.value)||0) : 0;
-                let elW2 = document.getElementById('width2'); let w2 = (elW2 && elW2.value) ? (parseFloat(elW2.value)||0) : 0;
-                let elH2 = document.getElementById('height2'); let h2 = (elH2 && elH2.value) ? (parseFloat(elH2.value)||0) : 0;
-
-                let coatChoice2 = document.getElementById('coatChoice2');
-                let matStr2 = (coatChoice2 && coatChoice2.value) ? coatChoice2.value : matStr;
-                let cpMat2 = document.getElementById('cpMaterial2'); if(cpMat2) cpMat2.innerText = matStr2;
-
-                let t2Panels = window.currentTotalP2 || 0;
-                let cpDims2 = document.getElementById('cpDims2'); 
-                if(cpDims2) cpDims2.innerText = `${l2}${u} (L) x ${w2}${u} (W) x ${h2}${u} (H) (Total: ${t2Panels} Panels)`;
-                
-                let sInput2 = document.getElementById('stdChoice2');
-                let cpStd2 = document.getElementById('cpStd2'); if(cpStd2) cpStd2.innerText = (sInput2 && sInput2.value) ? sInput2.value : "";
-                
-                let cpTRoof2 = document.getElementById('cpThickRoof2'); if(cpTRoof2) cpTRoof2.innerText = valRoof;
-                let cpTBase2 = document.getElementById('cpThickBase2'); if(cpTBase2) cpTBase2.innerText = valBase;
-                let cpTWall2 = document.getElementById('cpThickWall2'); if(cpTWall2) cpTWall2.innerText = wallStr;
-                
-                let elPQ2 = document.getElementById('partQty2'); let pQty2 = (elPQ2 && elPQ2.value) ? parseInt(elPQ2.value) : 0;
-                let elPC2 = document.getElementById('partChoice2'); let partChoice2 = (elPC2 && elPC2.value) ? elPC2.value : 'no';
-                let elPT2 = document.getElementById('partType2'); let pt2 = (elPT2 && elPT2.value) ? elPT2.value : '';
-                let elPL2 = document.getElementById('partLen2'); let pl2 = (elPL2 && elPL2.value) ? elPL2.value : 0;
-                let elPH2 = document.getElementById('partHgt2'); let ph2 = (elPH2 && elPH2.value) ? elPH2.value : 0;
-                
-                let part2Str = (partChoice2 === 'yes' && pQty2 > 0) ? `${pQty2}x ${pt2} (${pl2}${u} x ${ph2}${u})` : '';
-                
-                let cpPartRow2 = document.getElementById('cpPartRow2');
-                let cpPartSec2 = document.getElementById('cpPartSection2');
-                if(cpPartRow2) {
-                    if(part2Str !== '') {
-                        cpPartRow2.style.display = 'table-row';
-                        if(cpPartSec2) cpPartSec2.innerText = part2Str;
-                    } else {
-                        cpPartRow2.style.display = 'none';
-                    }
-                }
-                
-                let extLadMatEl2 = document.getElementById('sel2_extLadMat'); let extLadMat2 = (extLadMatEl2 && extLadMatEl2.value) ? extLadMatEl2.value : 'External Ladder';
-                let intLadMatEl2 = document.getElementById('sel2_intLadMat'); let intLadMat2 = (intLadMatEl2 && intLadMatEl2.value) ? intLadMatEl2.value : 'Internal Ladder';
-                let qtyExtEl2 = document.getElementById('qty2_item_3_0'); let qtyExt2 = (qtyExtEl2 && qtyExtEl2.value) ? qtyExtEl2.value : '0';
-                let qtyIntEl2 = document.getElementById('qty2_item_3_1'); let qtyInt2 = (qtyIntEl2 && qtyIntEl2.value) ? qtyIntEl2.value : '0';
-
-                let cpLaddersInt2 = document.getElementById('cpLaddersInt2'); if(cpLaddersInt2) cpLaddersInt2.innerText = `${intLadMat2} Internal Ladder - ${qtyInt2} sets`;
-                let cpLaddersExt2 = document.getElementById('cpLaddersExt2'); if(cpLaddersExt2) cpLaddersExt2.innerText = `${extLadMat2} External Ladder with safety cage - ${qtyExt2} sets`;
-
-                let wliTypeEl2 = document.getElementById('sel2_wliType'); let wliType2 = (wliTypeEl2 && wliTypeEl2.value) ? wliTypeEl2.value : 'Water Level Indicator';
-                let wliQtyEl2 = document.getElementById('qty2_item_3_2'); let wliQty2 = (wliQtyEl2 && wliQtyEl2.value) ? wliQtyEl2.value : '0';
-                let cpWLI2 = document.getElementById('cpWLI2'); if(cpWLI2) cpWLI2.innerText = `${wliType2} - ${wliQty2} sets`;
-
-            } else if (mode === "custom") {
-                if(cpTank2Row) cpTank2Row.style.display = 'table-row';
-                if(cpTank2Specs) cpTank2Specs.style.display = 'none';
-                if(cpTank2CustomDesc) {
-                    cpTank2CustomDesc.style.display = 'block';
-                    let cNameEl = document.getElementById('customItemName');
-                    cpTank2CustomDesc.innerText = (cNameEl && cNameEl.value) ? cNameEl.value : "Custom Item";
-                }
+        let cpPartRow = document.getElementById('cpPartRow');
+        let cpPartSec = document.getElementById('cpPartSection');
+        if(cpPartRow) {
+            if(part1Str !== '') {
+                cpPartRow.style.display = 'table-row';
+                if(cpPartSec) cpPartSec.innerText = part1Str;
             } else {
-                if(cpTank2Row) cpTank2Row.style.display = 'none';
+                cpPartRow.style.display = 'none';
             }
+        }
 
-            // GLOBAL T&C
-            let shortExcEl = document.getElementById('shortExclusions');
-            let cpShortExc = document.getElementById('cpShortExclusionsText');
-            if(cpShortExc) cpShortExc.innerHTML = (shortExcEl && shortExcEl.value) ? shortExcEl.value.replace(/\n/g, '<br>') : '';
-            
-            let fullTermsEl = document.getElementById('fullTermsNotes');
-            let cpFullTerms = document.getElementById('cpFullTermsText');
-            if(cpFullTerms) cpFullTerms.innerHTML = (fullTermsEl && fullTermsEl.value) ? fullTermsEl.value : '';
-            
-            let valEl = document.getElementById('tcValidity');
-            let cpVal = document.getElementById('cpValidity');
-            if(cpVal) cpVal.innerHTML = `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${(valEl && valEl.value) ? valEl.value : ""}</span>`;
-            
-            let payEl = document.getElementById('tcPayment');
-            let cpPay = document.getElementById('cpPayment');
-            let payText = (payEl && payEl.value) ? payEl.value : '';
-            let formattedPay = payText.split('\n').map(line => {
-                if(line.trim() === '') return '';
-                return `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${line}</span>`;
-            }).join('');
-            if(cpPay) cpPay.innerHTML = formattedPay;
-            
-            let delEl = document.getElementById('tcDelivery');
-            let cpDel = document.getElementById('cpDeliveryTerm');
-            if(cpDel) cpDel.innerHTML = `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${(delEl && delEl.value) ? delEl.value : ""}</span>`;
-            
-            let leadEl = document.getElementById('tcLead');
-            let cpLead = document.getElementById('cpLeadTime');
-            if(cpLead) cpLead.innerHTML = `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${(leadEl && leadEl.value) ? leadEl.value : ""}</span>`;
+        let extLadMatEl = document.getElementById('extLadMat'); let extLadMat = (extLadMatEl && extLadMatEl.value) ? extLadMatEl.value : 'External Ladder';
+        let intLadMatEl = document.getElementById('intLadMat'); let intLadMat = (intLadMatEl && intLadMatEl.value) ? intLadMatEl.value : 'Internal Ladder';
+        let qtyExtEl = document.getElementById('qty_item_3_0'); let qtyExt = (qtyExtEl && qtyExtEl.value) ? qtyExtEl.value : '0';
+        let qtyIntEl = document.getElementById('qty_item_3_1'); let qtyInt = (qtyIntEl && qtyIntEl.value) ? qtyIntEl.value : '0';
 
-            let signNameEl = document.getElementById('signName');
-            let cpSignName = document.getElementById('cpSignName');
-            if(cpSignName) cpSignName.innerText = (signNameEl && signNameEl.value) ? signNameEl.value : "";
+        let cpLaddersInt = document.getElementById('cpLaddersInt'); if(cpLaddersInt) cpLaddersInt.innerText = `${intLadMat} Internal Ladder - ${qtyInt} sets`;
+        let cpLaddersExt = document.getElementById('cpLaddersExt'); if(cpLaddersExt) cpLaddersExt.innerText = `${extLadMat} External Ladder with safety cage - ${qtyExt} sets`;
+
+        let wliTypeEl = document.getElementById('wliType'); let wliType = (wliTypeEl && wliTypeEl.value) ? wliTypeEl.value : 'Water Level Indicator';
+        let wliQtyEl = document.getElementById('qty_item_3_2'); let wliQty = (wliQtyEl && wliQtyEl.value) ? wliQtyEl.value : '0';
+        let cpWLI = document.getElementById('cpWLI'); if(cpWLI) cpWLI.innerText = `${wliType} - ${wliQty} sets`;
+
+        // TANK 2 DATA SYNC (If Applicable)
+        let cpTank2Row = document.getElementById('cpTank2Row'); 
+        let cpTank2Specs = document.getElementById('cpTank2Specs');
+        let cpTank2CustomDesc = document.getElementById('cpTank2CustomDesc');
+
+        if(mode === "2") {
+            if(cpTank2Row) cpTank2Row.style.display = 'table-row';
+            if(cpTank2Specs) cpTank2Specs.style.display = 'block';
+            if(cpTank2CustomDesc) cpTank2CustomDesc.style.display = 'none';
+
+            let elL2 = document.getElementById('length2'); let l2 = (elL2 && elL2.value) ? (parseFloat(elL2.value)||0) : 0;
+            let elW2 = document.getElementById('width2'); let w2 = (elW2 && elW2.value) ? (parseFloat(elW2.value)||0) : 0;
+            let elH2 = document.getElementById('height2'); let h2 = (elH2 && elH2.value) ? (parseFloat(elH2.value)||0) : 0;
+
+            let coatChoice2 = document.getElementById('coatChoice2');
+            let matStr2 = (coatChoice2 && coatChoice2.value) ? coatChoice2.value : matStr;
+            let cpMat2 = document.getElementById('cpMaterial2'); if(cpMat2) cpMat2.innerText = matStr2;
+
+            let t2Panels = window.currentTotalP2 || 0;
+            let cpDims2 = document.getElementById('cpDims2'); 
+            if(cpDims2) cpDims2.innerText = `${l2}${u} (L) x ${w2}${u} (W) x ${h2}${u} (H) (Total: ${t2Panels} Panels)`;
             
-            // Update Internal Signature Print tag
-            let intSigSales = document.getElementById('intSigSales');
-            if(intSigSales) intSigSales.innerText = (signNameEl && signNameEl.value) ? signNameEl.value : "_______________";
+            let sInput2 = document.getElementById('stdChoice2');
+            let cpStd2 = document.getElementById('cpStd2'); if(cpStd2) cpStd2.innerText = (sInput2 && sInput2.value) ? sInput2.value : "";
             
-            let signPhoneEl = document.getElementById('signPhone');
-            let cpSignPhone = document.getElementById('cpSignPhone');
-            if(cpSignPhone) cpSignPhone.innerText = (signPhoneEl && signPhoneEl.value) ? signPhoneEl.value : "";
+            let cpTRoof2 = document.getElementById('cpThickRoof2'); if(cpTRoof2) cpTRoof2.innerText = valRoof;
+            let cpTBase2 = document.getElementById('cpThickBase2'); if(cpTBase2) cpTBase2.innerText = valBase;
+            let cpTWall2 = document.getElementById('cpThickWall2'); if(cpTWall2) cpTWall2.innerText = wallStr;
             
-        } catch(e) { console.log("Sync Print Warning: ", e.message); }
+            let elPQ2 = document.getElementById('partQty2'); let pQty2 = (elPQ2 && elPQ2.value) ? (parseInt(elPQ2.value)||0) : 0;
+            let elPC2 = document.getElementById('partChoice2'); let partChoice2 = (elPC2 && elPC2.value) ? elPC2.value : 'no';
+            let elPT2 = document.getElementById('partType2'); let pt2 = (elPT2 && elPT2.value) ? elPT2.value : '';
+            let elPL2 = document.getElementById('partLen2'); let pl2 = (elPL2 && elPL2.value) ? (parseFloat(elPL2.value)||0) : 0;
+            let elPH2 = document.getElementById('partHgt2'); let ph2 = (elPH2 && elPH2.value) ? (parseFloat(elPH2.value)||0) : 0;
+            
+            let part2Str = (partChoice2 === 'yes' && pQty2 > 0) ? `${pQty2}x ${pt2} (${pl2}${u} x ${ph2}${u})` : '';
+            
+            let cpPartRow2 = document.getElementById('cpPartRow2');
+            let cpPartSec2 = document.getElementById('cpPartSection2');
+            if(cpPartRow2) {
+                if(part2Str !== '') {
+                    cpPartRow2.style.display = 'table-row';
+                    if(cpPartSec2) cpPartSec2.innerText = part2Str;
+                } else {
+                    cpPartRow2.style.display = 'none';
+                }
+            }
+            
+            let extLadMatEl2 = document.getElementById('sel2_extLadMat'); let extLadMat2 = (extLadMatEl2 && extLadMatEl2.value) ? extLadMatEl2.value : 'External Ladder';
+            let intLadMatEl2 = document.getElementById('sel2_intLadMat'); let intLadMat2 = (intLadMatEl2 && intLadMatEl2.value) ? intLadMatEl2.value : 'Internal Ladder';
+            let qtyExtEl2 = document.getElementById('qty2_item_3_0'); let qtyExt2 = (qtyExtEl2 && qtyExtEl2.value) ? qtyExtEl2.value : '0';
+            let qtyIntEl2 = document.getElementById('qty2_item_3_1'); let qtyInt2 = (qtyIntEl2 && qtyIntEl2.value) ? qtyIntEl2.value : '0';
+
+            let cpLaddersInt2 = document.getElementById('cpLaddersInt2'); if(cpLaddersInt2) cpLaddersInt2.innerText = `${intLadMat2} Internal Ladder - ${qtyInt2} sets`;
+            let cpLaddersExt2 = document.getElementById('cpLaddersExt2'); if(cpLaddersExt2) cpLaddersExt2.innerText = `${extLadMat2} External Ladder with safety cage - ${qtyExt2} sets`;
+
+            let wliTypeEl2 = document.getElementById('sel2_wliType'); let wliType2 = (wliTypeEl2 && wliTypeEl2.value) ? wliTypeEl2.value : 'Water Level Indicator';
+            let wliQtyEl2 = document.getElementById('qty2_item_3_2'); let wliQty2 = (wliQtyEl2 && wliQtyEl2.value) ? wliQtyEl2.value : '0';
+            let cpWLI2 = document.getElementById('cpWLI2'); if(cpWLI2) cpWLI2.innerText = `${wliType2} - ${wliQty2} sets`;
+
+        } else if (mode === "custom") {
+            if(cpTank2Row) cpTank2Row.style.display = 'table-row';
+            if(cpTank2Specs) cpTank2Specs.style.display = 'none';
+            if(cpTank2CustomDesc) {
+                cpTank2CustomDesc.style.display = 'block';
+                let cNameEl = document.getElementById('customItemName');
+                cpTank2CustomDesc.innerText = (cNameEl && cNameEl.value) ? cNameEl.value : "Custom Item";
+            }
+        } else {
+            if(cpTank2Row) cpTank2Row.style.display = 'none';
+        }
+
+        // GLOBAL T&C
+        let shortExcEl = document.getElementById('shortExclusions');
+        let cpShortExc = document.getElementById('cpShortExclusionsText');
+        if(cpShortExc) cpShortExc.innerHTML = (shortExcEl && shortExcEl.value) ? shortExcEl.value.replace(/\n/g, '<br>') : '';
+        
+        let fullTermsEl = document.getElementById('fullTermsNotes');
+        let cpFullTerms = document.getElementById('cpFullTermsText');
+        if(cpFullTerms) cpFullTerms.innerHTML = (fullTermsEl && fullTermsEl.value) ? fullTermsEl.value : '';
+        
+        let valEl = document.getElementById('tcValidity');
+        let cpVal = document.getElementById('cpValidity');
+        if(cpVal) cpVal.innerHTML = `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${(valEl && valEl.value) ? valEl.value : ""}</span>`;
+        
+        let payEl = document.getElementById('tcPayment');
+        let cpPay = document.getElementById('cpPayment');
+        let payText = (payEl && payEl.value) ? payEl.value : '';
+        let formattedPay = payText.split('\n').map(line => {
+            if(line.trim() === '') return '';
+            return `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${line}</span>`;
+        }).join('');
+        if(cpPay) cpPay.innerHTML = formattedPay;
+        
+        let delEl = document.getElementById('tcDelivery');
+        let cpDel = document.getElementById('cpDeliveryTerm');
+        if(cpDel) cpDel.innerHTML = `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${(delEl && delEl.value) ? delEl.value : ""}</span>`;
+        
+        let leadEl = document.getElementById('tcLead');
+        let cpLead = document.getElementById('cpLeadTime');
+        if(cpLead) cpLead.innerHTML = `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${(leadEl && leadEl.value) ? leadEl.value : ""}</span>`;
+
+        let signNameEl = document.getElementById('signName');
+        let cpSignName = document.getElementById('cpSignName');
+        if(cpSignName) cpSignName.innerText = (signNameEl && signNameEl.value) ? signNameEl.value : "";
+        
+        // Update Internal Signature Print tag
+        let intSigSales = document.getElementById('intSigSales');
+        if(intSigSales) intSigSales.innerText = (signNameEl && signNameEl.value) ? signNameEl.value : "_______________";
+        
+        let signPhoneEl = document.getElementById('signPhone');
+        let cpSignPhone = document.getElementById('cpSignPhone');
+        if(cpSignPhone) cpSignPhone.innerText = (signPhoneEl && signPhoneEl.value) ? signPhoneEl.value : "";
     }
 
     function savePrices() {
@@ -2023,14 +2101,12 @@ Note:
         bomStructure.forEach((sec, sIdx) => {
             sec.items.forEach((it, iIdx) => {
                 let uId = `item_${sIdx}_${iIdx}`;
-                // T1
                 let d1 = document.getElementById(`desc_${uId}`); if(d1) data[`desc_${uId}`] = d1.value;
                 let w1 = document.getElementById(`wt_${uId}`); if(w1) data[`wt_${uId}`] = w1.value;
                 let p1 = document.getElementById(`price_${uId}`); if(p1) data[`price_${uId}`] = p1.value;
                 let q1 = document.getElementById(`qty_${uId}`); if(q1) data[`qty_${uId}`] = q1.value;
                 if(it.selectId) { let s1 = document.getElementById(it.selectId); if(s1) data[it.selectId] = s1.value; }
                 
-                // T2
                 let d2 = document.getElementById(`desc2_${uId}`); if(d2) data[`desc2_${uId}`] = d2.value;
                 let w2 = document.getElementById(`wt2_${uId}`); if(w2) data[`wt2_${uId}`] = w2.value;
                 let p2 = document.getElementById(`price2_${uId}`); if(p2) data[`price2_${uId}`] = p2.value;
@@ -2038,11 +2114,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV66', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV67', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV66');
+        let savedData = localStorage.getItem('winkoProDataV67');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -2061,14 +2137,12 @@ Note:
             bomStructure.forEach((sec, sIdx) => {
                 sec.items.forEach((it, iIdx) => {
                     let uId = `item_${sIdx}_${iIdx}`;
-                    // T1
                     let d1 = document.getElementById(`desc_${uId}`); if(savedData[`desc_${uId}`] && d1) d1.value = savedData[`desc_${uId}`]; 
                     let w1 = document.getElementById(`wt_${uId}`); if(savedData[`wt_${uId}`] && w1) w1.value = savedData[`wt_${uId}`]; 
                     let p1 = document.getElementById(`price_${uId}`); if(savedData[`price_${uId}`] && p1) p1.value = savedData[`price_${uId}`];
                     let q1 = document.getElementById(`qty_${uId}`); if(savedData[`qty_${uId}`] && q1) q1.value = savedData[`qty_${uId}`];
                     if(it.selectId) { let s1 = document.getElementById(it.selectId); if(savedData[it.selectId] && s1) s1.value = savedData[it.selectId]; }
                     
-                    // T2
                     let d2 = document.getElementById(`desc2_${uId}`); if(savedData[`desc2_${uId}`] && d2) d2.value = savedData[`desc2_${uId}`]; 
                     let w2 = document.getElementById(`wt2_${uId}`); if(savedData[`wt2_${uId}`] && w2) w2.value = savedData[`wt2_${uId}`]; 
                     let p2 = document.getElementById(`price2_${uId}`); if(savedData[`price2_${uId}`] && p2) p2.value = savedData[`price2_${uId}`];
@@ -2085,69 +2159,67 @@ Note:
         let html = '';
         let html2 = '';
         
-        try {
-            bomStructure.forEach((sec, sIdx) => {
-                let secHeader1 = `<tr class="section-header-row"><td colspan="5" class="section-header" style="padding:0;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px;">
-                        <span>${sec.category}</span>
-                        <div class="no-print">
-                            <button type="button" onclick="addCategoryRow(${sIdx})" style="padding:4px 8px; font-size:11px; background:#fff; border:1px solid #ea580c; color:#ea580c; border-radius:4px; cursor:pointer; font-weight:700;">+ Add Row</button>
-                            <button type="button" onclick="removeCategoryRow(${sIdx})" style="padding:4px 8px; font-size:11px; background:#fff; border:1px solid #e11d48; color:#e11d48; border-radius:4px; cursor:pointer; margin-left:6px; font-weight:700;">- Remove</button>
-                        </div>
-                    </div>
-                </td></tr>`;
-                html += secHeader1;
-                
-                let secHeader2 = `<tr class="section-header-row"><td colspan="5" class="section-header" style="padding:8px 12px;">
+        bomStructure.forEach((sec, sIdx) => {
+            let secHeader1 = `<tr class="section-header-row"><td colspan="5" class="section-header" style="padding:0;">
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px;">
                     <span>${sec.category}</span>
-                </td></tr>`;
-                html2 += secHeader2;
-                
-                let isStay = (sec.category === "Angle Stay");
-                let inputTrigger = isStay ? "calcTotals(); savePrices(); debouncedProcessTankData();" : "calcTotals(); savePrices();";
+                    <div class="no-print">
+                        <button type="button" onclick="addCategoryRow(${sIdx})" style="padding:4px 8px; font-size:11px; background:#fff; border:1px solid #ea580c; color:#ea580c; border-radius:4px; cursor:pointer; font-weight:700;">+ Add Row</button>
+                        <button type="button" onclick="removeCategoryRow(${sIdx})" style="padding:4px 8px; font-size:11px; background:#fff; border:1px solid #e11d48; color:#e11d48; border-radius:4px; cursor:pointer; margin-left:6px; font-weight:700;">- Remove</button>
+                    </div>
+                </div>
+            </td></tr>`;
+            html += secHeader1;
+            
+            let secHeader2 = `<tr class="section-header-row"><td colspan="5" class="section-header" style="padding:8px 12px;">
+                <span>${sec.category}</span>
+            </td></tr>`;
+            html2 += secHeader2;
+            
+            let isStay = (sec.category === "Angle Stay");
+            let inputTrigger = isStay ? "calcTotals(); savePrices(); debouncedProcessTankData();" : "calcTotals(); savePrices();";
 
-                sec.items.forEach((it, iIdx) => {
-                    const id = `item_${sIdx}_${iIdx}`;
-                    let safeWt = (it.wt !== undefined && it.wt !== null && !isNaN(it.wt)) ? it.wt : 0;
+            sec.items.forEach((it, iIdx) => {
+                const id = `item_${sIdx}_${iIdx}`;
+                let safeWt = (it.wt !== undefined && it.wt !== null && !isNaN(it.wt)) ? it.wt : 0;
 
-                    let nameHtml = `<div style="display:flex; align-items:center; flex-wrap:wrap; gap:4px;">
-                                      <input type="text" id="desc_${id}" class="desc-input" value="${it.name}" onchange="savePrices()">`;
-                    if(it.selectId) {
-                        nameHtml += ` <select id="${it.selectId}" class="bom-inline-select" onchange="savePrices()">` +
-                                    it.options.map(o => `<option value="${o}">${o}</option>`).join('') +
-                                    `</select>`;
-                    }
-                    nameHtml += `</div>`;
+                let nameHtml = `<div style="display:flex; align-items:center; flex-wrap:wrap; gap:4px;">
+                                  <input type="text" id="desc_${id}" class="desc-input" value="${it.name}" onchange="savePrices()">`;
+                if(it.selectId) {
+                    nameHtml += ` <select id="${it.selectId}" class="bom-inline-select" onchange="savePrices()">` +
+                                it.options.map(o => `<option value="${o}">${o}</option>`).join('') +
+                                `</select>`;
+                }
+                nameHtml += `</div>`;
 
-                    html += `<tr>
-                        <td class="col-item">${nameHtml}</td>
-                        <td class="col-input col-qty"><input type="number" value="0" id="qty_${id}" oninput="${inputTrigger}"></td>
-                        <td class="col-input col-wt"><input type="number" step="0.1" value="${safeWt}" id="wt_${id}" oninput="calcTotals(); savePrices();"></td>
-                        <td class="col-input col-uprice"><input type="number" step="0.01" value="${it.def.toFixed(2)}" id="price_${id}" oninput="calcTotals(); savePrices();"></td>
-                        <td class="col-total col-itotal" id="total_${id}">0.00</td>
-                    </tr>`;
+                html += `<tr>
+                    <td class="col-item">${nameHtml}</td>
+                    <td class="col-input col-qty"><input type="number" value="0" id="qty_${id}" oninput="${inputTrigger}"></td>
+                    <td class="col-input col-wt"><input type="number" step="0.1" value="${safeWt}" id="wt_${id}" oninput="calcTotals(); savePrices();"></td>
+                    <td class="col-input col-uprice"><input type="number" step="0.01" value="${it.def.toFixed(2)}" id="price_${id}" oninput="calcTotals(); savePrices();"></td>
+                    <td class="col-total col-itotal" id="total_${id}">0.00</td>
+                </tr>`;
 
-                    let nameHtml2 = `<div style="display:flex; align-items:center; flex-wrap:wrap; gap:4px;">
-                                      <input type="text" id="desc2_${id}" class="desc-input" value="${it.name}" onchange="savePrices()">`;
-                    if(it.selectId) {
-                        nameHtml2 += ` <select id="sel2_${it.selectId}" class="bom-inline-select" onchange="savePrices()">` +
-                                    it.options.map(o => `<option value="${o}">${o}</option>`).join('') +
-                                    `</select>`;
-                    }
-                    nameHtml2 += `</div>`;
+                let nameHtml2 = `<div style="display:flex; align-items:center; flex-wrap:wrap; gap:4px;">
+                                  <input type="text" id="desc2_${id}" class="desc-input" value="${it.name}" onchange="savePrices()">`;
+                if(it.selectId) {
+                    nameHtml2 += ` <select id="sel2_${it.selectId}" class="bom-inline-select" onchange="savePrices()">` +
+                                it.options.map(o => `<option value="${o}">${o}</option>`).join('') +
+                                `</select>`;
+                }
+                nameHtml2 += `</div>`;
 
-                    html2 += `<tr>
-                        <td class="col-item">${nameHtml2}</td>
-                        <td class="col-input col-qty"><input type="number" value="0" id="qty2_${id}" oninput="${inputTrigger}"></td>
-                        <td class="col-input col-wt"><input type="number" step="0.1" value="${safeWt}" id="wt2_${id}" oninput="calcTotals(); savePrices();"></td>
-                        <td class="col-input col-uprice"><input type="number" step="0.01" value="${it.def.toFixed(2)}" id="price2_${id}" oninput="calcTotals(); savePrices();"></td>
-                        <td class="col-total col-itotal" id="total2_${id}">0.00</td>
-                    </tr>`;
-                });
+                html2 += `<tr>
+                    <td class="col-item">${nameHtml2}</td>
+                    <td class="col-input col-qty"><input type="number" value="0" id="qty2_${id}" oninput="${inputTrigger}"></td>
+                    <td class="col-input col-wt"><input type="number" step="0.1" value="${safeWt}" id="wt2_${id}" oninput="calcTotals(); savePrices();"></td>
+                    <td class="col-input col-uprice"><input type="number" step="0.01" value="${it.def.toFixed(2)}" id="price2_${id}" oninput="calcTotals(); savePrices();"></td>
+                    <td class="col-total col-itotal" id="total2_${id}">0.00</td>
+                </tr>`;
             });
-            if(tbody) tbody.innerHTML = html;
-            if(tbody2) tbody2.innerHTML = html2;
-        } catch(e) { console.error("Error building BOM:", e); }
+        });
+        if(tbody) tbody.innerHTML = html;
+        if(tbody2) tbody2.innerHTML = html2;
     }
 
     function calcTotals() {
@@ -2156,119 +2228,115 @@ Note:
         let ntEl = document.getElementById('numTanks');
         let mode = (ntEl && ntEl.value) ? ntEl.value : "1";
 
-        try {
-            bomStructure.forEach((sec, sIdx) => {
-                sec.items.forEach((it, iIdx) => {
-                    const id = `item_${sIdx}_${iIdx}`;
-                    
-                    const qtyEl1 = document.getElementById(`qty_${id}`);
-                    const priceEl1 = document.getElementById(`price_${id}`);
-                    const wtEl1 = document.getElementById(`wt_${id}`);
-                    if(qtyEl1 && priceEl1 && wtEl1) {
-                        const q = parseFloat(qtyEl1.value) || 0;
-                        const p = parseFloat(priceEl1.value) || 0;
-                        const w = parseFloat(wtEl1.value) || 0; 
-                        const total = q * p;
-                        const totalEl = document.getElementById(`total_${id}`);
-                        if(totalEl) totalEl.innerText = total.toLocaleString('en-MY', {minimumFractionDigits:2});
-                        baseCost += total;
-                        totalWeight += (q * w);
-                    }
+        bomStructure.forEach((sec, sIdx) => {
+            sec.items.forEach((it, iIdx) => {
+                const id = `item_${sIdx}_${iIdx}`;
+                
+                const qtyEl1 = document.getElementById(`qty_${id}`);
+                const priceEl1 = document.getElementById(`price_${id}`);
+                const wtEl1 = document.getElementById(`wt_${id}`);
+                if(qtyEl1 && priceEl1 && wtEl1) {
+                    const q = parseFloat(qtyEl1.value) || 0;
+                    const p = parseFloat(priceEl1.value) || 0;
+                    const w = parseFloat(wtEl1.value) || 0; 
+                    const total = q * p;
+                    const totalEl = document.getElementById(`total_${id}`);
+                    if(totalEl) totalEl.innerText = total.toLocaleString('en-MY', {minimumFractionDigits:2});
+                    baseCost += total;
+                    totalWeight += (q * w);
+                }
 
-                    if (mode === "2") {
-                        const qtyEl2 = document.getElementById(`qty2_${id}`);
-                        const priceEl2 = document.getElementById(`price2_${id}`);
-                        const wtEl2 = document.getElementById(`wt2_${id}`);
-                        if(qtyEl2 && priceEl2 && wtEl2) {
-                            const q2 = parseFloat(qtyEl2.value) || 0;
-                            const p2 = parseFloat(priceEl2.value) || 0;
-                            const w2 = parseFloat(wtEl2.value) || 0; 
-                            const total2 = q2 * p2;
-                            const totalEl2 = document.getElementById(`total2_${id}`);
-                            if(totalEl2) totalEl2.innerText = total2.toLocaleString('en-MY', {minimumFractionDigits:2});
-                            baseCost += total2;
-                            totalWeight += (q2 * w2);
-                        }
+                if (mode === "2") {
+                    const qtyEl2 = document.getElementById(`qty2_${id}`);
+                    const priceEl2 = document.getElementById(`price2_${id}`);
+                    const wtEl2 = document.getElementById(`wt2_${id}`);
+                    if(qtyEl2 && priceEl2 && wtEl2) {
+                        const q2 = parseFloat(qtyEl2.value) || 0;
+                        const p2 = parseFloat(priceEl2.value) || 0;
+                        const w2 = parseFloat(wtEl2.value) || 0; 
+                        const total2 = q2 * p2;
+                        const totalEl2 = document.getElementById(`total2_${id}`);
+                        if(totalEl2) totalEl2.innerText = total2.toLocaleString('en-MY', {minimumFractionDigits:2});
+                        baseCost += total2;
+                        totalWeight += (q2 * w2);
                     }
-                });
+                }
             });
+        });
 
-            let customCostEl = document.getElementById('customItemCost');
-            let customCost = (mode === 'custom' && customCostEl && customCostEl.value) ? parseFloat(customCostEl.value) : 0;
-            if(isNaN(customCost)) customCost = 0;
-            
-            baseCost += customCost;
+        let customCostEl = document.getElementById('customItemCost');
+        let customCost = (mode === 'custom' && customCostEl && customCostEl.value) ? (parseFloat(customCostEl.value) || 0) : 0;
+        baseCost += customCost;
 
-            let markupInput = document.getElementById('markupPct');
-            let discInput = document.getElementById('discountPct');
-            let sstInput = document.getElementById('sstPct');
-            
-            let markupPct = (markupInput && markupInput.value) ? parseFloat(markupInput.value) : 0;
-            let markupAmt = baseCost * (markupPct / 100);
-            let subtotal = baseCost + markupAmt; 
-            
-            let discPct = (discInput && discInput.value) ? parseFloat(discInput.value) : 0;
-            let discAmt = subtotal * (discPct / 100);
-            let netTotal = subtotal - discAmt;
-            
-            let sstPct = (sstInput && sstInput.value) ? parseFloat(sstInput.value) : 0;
-            let sstAmt = netTotal * (sstPct / 100);
-            let grand = netTotal + sstAmt;
+        let markupInput = document.getElementById('markupPct');
+        let discInput = document.getElementById('discountPct');
+        let sstInput = document.getElementById('sstPct');
+        
+        let markupPct = (markupInput && markupInput.value) ? (parseFloat(markupInput.value) || 0) : 0;
+        let markupAmt = baseCost * (markupPct / 100);
+        let subtotal = baseCost + markupAmt; 
+        
+        let discPct = (discInput && discInput.value) ? (parseFloat(discInput.value) || 0) : 0;
+        let discAmt = subtotal * (discPct / 100);
+        let netTotal = subtotal - discAmt;
+        
+        let sstPct = (sstInput && sstInput.value) ? (parseFloat(sstInput.value) || 0) : 0;
+        let sstAmt = netTotal * (sstPct / 100);
+        let grand = netTotal + sstAmt;
 
-            let exactT1 = window.currentTotalP1 || 0;
-            let exactT2 = window.currentTotalP2 || 0;
-            let totalExactPanels = exactT1 + exactT2;
-            
-            if(document.getElementById('sumPanels_screen')) document.getElementById('sumPanels_screen').innerText = totalExactPanels;
-            if(document.getElementById('sumBaseCost_screen')) document.getElementById('sumBaseCost_screen').innerText = baseCost.toLocaleString('en-MY', {minimumFractionDigits: 2});
-            if(document.getElementById('sumMarkup_screen')) document.getElementById('sumMarkup_screen').innerText = markupAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
-            if(document.getElementById('sumSubtotal_screen')) document.getElementById('sumSubtotal_screen').innerText = subtotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
-            if(document.getElementById('sumDiscount_screen')) document.getElementById('sumDiscount_screen').innerText = discAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
-            if(document.getElementById('sumSST_screen')) document.getElementById('sumSST_screen').innerText = sstAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
-            if(document.getElementById('grandTotal_screen')) document.getElementById('grandTotal_screen').innerText = grand.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        let exactT1 = window.currentTotalP1 || 0;
+        let exactT2 = window.currentTotalP2 || 0;
+        let totalExactPanels = exactT1 + exactT2;
+        
+        if(document.getElementById('sumPanels_screen')) document.getElementById('sumPanels_screen').innerText = totalExactPanels;
+        if(document.getElementById('sumBaseCost_screen')) document.getElementById('sumBaseCost_screen').innerText = baseCost.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumMarkup_screen')) document.getElementById('sumMarkup_screen').innerText = markupAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumSubtotal_screen')) document.getElementById('sumSubtotal_screen').innerText = subtotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumDiscount_screen')) document.getElementById('sumDiscount_screen').innerText = discAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumSST_screen')) document.getElementById('sumSST_screen').innerText = sstAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('grandTotal_screen')) document.getElementById('grandTotal_screen').innerText = grand.toLocaleString('en-MY', {minimumFractionDigits: 2});
 
-            if(document.getElementById('sumPanels_print')) document.getElementById('sumPanels_print').innerText = totalExactPanels;
-            if(document.getElementById('sumBaseCost_print')) document.getElementById('sumBaseCost_print').innerText = baseCost.toLocaleString('en-MY', {minimumFractionDigits: 2});
-            if(document.getElementById('sumMarkup_print')) document.getElementById('sumMarkup_print').innerText = markupAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
-            if(document.getElementById('sumSubtotal_print')) document.getElementById('sumSubtotal_print').innerText = subtotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
-            if(document.getElementById('sumDiscount_print')) document.getElementById('sumDiscount_print').innerText = discAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
-            if(document.getElementById('sumSST_print')) document.getElementById('sumSST_print').innerText = sstAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
-            if(document.getElementById('grandTotal_print')) document.getElementById('grandTotal_print').innerText = grand.toLocaleString('en-MY', {minimumFractionDigits: 2});
-            
-            let weightStr = totalWeight.toLocaleString('en-MY', {maximumFractionDigits: 1}) + " kg";
-            if(document.getElementById('sumWeight_screen')) document.getElementById('sumWeight_screen').innerText = weightStr;
-            if(document.getElementById('sumWeight_print')) document.getElementById('sumWeight_print').innerText = weightStr;
+        if(document.getElementById('sumPanels_print')) document.getElementById('sumPanels_print').innerText = totalExactPanels;
+        if(document.getElementById('sumBaseCost_print')) document.getElementById('sumBaseCost_print').innerText = baseCost.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumMarkup_print')) document.getElementById('sumMarkup_print').innerText = markupAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumSubtotal_print')) document.getElementById('sumSubtotal_print').innerText = subtotal.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumDiscount_print')) document.getElementById('sumDiscount_print').innerText = discAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('sumSST_print')) document.getElementById('sumSST_print').innerText = sstAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('grandTotal_print')) document.getElementById('grandTotal_print').innerText = grand.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        
+        let weightStr = totalWeight.toLocaleString('en-MY', {maximumFractionDigits: 1}) + " kg";
+        if(document.getElementById('sumWeight_screen')) document.getElementById('sumWeight_screen').innerText = weightStr;
+        if(document.getElementById('sumWeight_print')) document.getElementById('sumWeight_print').innerText = weightStr;
 
-            let t1 = window.currentTotalP1 || 1;
-            let t2 = window.currentTotalP2 || 0;
-            if (totalExactPanels === 0) totalExactPanels = 1;
-            
-            let price1 = netTotal;
-            let price2 = 0;
-            
-            if (mode === "2" && t2 > 0) {
-                price1 = netTotal * (t1 / totalExactPanels);
-                price2 = netTotal * (t2 / totalExactPanels);
-            } else if (mode === "custom") {
-                let customMarkupAmt = customCost * (markupPct / 100);
-                let customSub = customCost + customMarkupAmt;
-                let customDiscAmt = customSub * (discPct / 100);
-                price2 = customSub - customDiscAmt;
-                price1 = netTotal - price2;
-            }
-            
-            if(document.getElementById('cpUnitPrice2')) document.getElementById('cpUnitPrice2').innerText = price2.toLocaleString('en-MY', {minimumFractionDigits: 2});
-            if(document.getElementById('cpTotalPrice2')) document.getElementById('cpTotalPrice2').innerText = price2.toLocaleString('en-MY', {minimumFractionDigits: 2});
-            
-            if(document.getElementById('cpUnitPrice')) document.getElementById('cpUnitPrice').innerText = price1.toLocaleString('en-MY', {minimumFractionDigits: 2});
-            if(document.getElementById('cpTotalPrice')) document.getElementById('cpTotalPrice').innerText = price1.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        let t1 = window.currentTotalP1 || 1;
+        let t2 = window.currentTotalP2 || 0;
+        if (totalExactPanels === 0) totalExactPanels = 1;
+        
+        let price1 = netTotal;
+        let price2 = 0;
+        
+        if (mode === "2" && t2 > 0) {
+            price1 = netTotal * (t1 / totalExactPanels);
+            price2 = netTotal * (t2 / totalExactPanels);
+        } else if (mode === "custom") {
+            let customMarkupAmt = customCost * (markupPct / 100);
+            let customSub = customCost + customMarkupAmt;
+            let customDiscAmt = customSub * (discPct / 100);
+            price2 = customSub - customDiscAmt;
+            price1 = netTotal - price2;
+        }
+        
+        if(document.getElementById('cpUnitPrice2')) document.getElementById('cpUnitPrice2').innerText = price2.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('cpTotalPrice2')) document.getElementById('cpTotalPrice2').innerText = price2.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        
+        if(document.getElementById('cpUnitPrice')) document.getElementById('cpUnitPrice').innerText = price1.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('cpTotalPrice')) document.getElementById('cpTotalPrice').innerText = price1.toLocaleString('en-MY', {minimumFractionDigits: 2});
 
-            if(document.getElementById('cpSstPct')) document.getElementById('cpSstPct').innerText = sstPct || 0;
-            if(document.getElementById('cpSstAmt')) document.getElementById('cpSstAmt').innerText = sstAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
-            if(document.getElementById('cpGrandTotal')) document.getElementById('cpGrandTotal').innerText = grand.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('cpSstPct')) document.getElementById('cpSstPct').innerText = sstPct || 0;
+        if(document.getElementById('cpSstAmt')) document.getElementById('cpSstAmt').innerText = sstAmt.toLocaleString('en-MY', {minimumFractionDigits: 2});
+        if(document.getElementById('cpGrandTotal')) document.getElementById('cpGrandTotal').innerText = grand.toLocaleString('en-MY', {minimumFractionDigits: 2});
 
-            syncPrintHeader(); 
-        } catch(e) {}
+        syncPrintHeader(); 
     }
 
     function drawGrid(id, c, r, maxDim, pType = null, pPos = -1) {
@@ -2296,215 +2364,3 @@ Note:
             
             if (pType === 'v' && col === pPos) {
                 extraStyle += 'border-right: 3px solid #ef4444 !important; z-index: 10; ';
-            } else if (pType === 'h' && row === pPos) {
-                extraStyle += 'border-bottom: 3px solid #ef4444 !important; z-index: 10; ';
-            }
-
-            html += `<div class="panel" style="${extraStyle}"></div>`;
-        }
-        
-        if(g) { g.style.display = 'grid'; g.style.gridTemplateColumns = `repeat(${c}, 1fr)`; g.style.width = `${widthPct}%`; g.innerHTML = html; }
-        if(gp) { gp.style.display = 'grid'; gp.style.gridTemplateColumns = `repeat(${c}, 1fr)`; gp.style.width = `${widthPct}%`; gp.innerHTML = html; }
-        if(gc) { gc.style.display = 'grid'; gc.style.gridTemplateColumns = `repeat(${c}, 1fr)`; gc.style.width = `${widthPct}%`; gc.innerHTML = html; }
-    }
-
-    function buildGridHTML(title, c, r, maxDim, pType = null, pPos = -1, showStays = false) {
-        if ((c * r) > 2500) {
-            return `<div class="view-box"><div class="view-title">${title}</div><div style="padding: 10px; font-size:12px; color: #ef4444; font-weight:bold;">Too large</div></div>`;
-        }
-
-        let widthPct = maxDim > 0 ? (c / maxDim) * 100 : 100;
-        let gridHtml = `<div class="grid-draft" style="display:grid; grid-template-columns: repeat(${c}, 1fr); width: ${widthPct}%;">`;
-        
-        for(let i=0; i<(c*r); i++) {
-            let col = i % c;
-            let row = Math.floor(i / c);
-            let extraStyle = '';
-            
-            if (pType === 'v' && col === pPos) {
-                extraStyle += 'border-right: 3px solid #ef4444 !important; z-index: 10; ';
-            } else if (pType === 'h' && row === pPos) {
-                extraStyle += 'border-bottom: 3px solid #ef4444 !important; z-index: 10; ';
-            }
-            
-            let stayHtml = '';
-            if (showStays) {
-                if (col > 0) stayHtml += `<div style="position:absolute; left:-1px; top:0; width:2px; height:100%; background:#eab308; z-index:5;"></div>`;
-                if (row > 0) stayHtml += `<div style="position:absolute; top:-1px; left:0; width:100%; height:2px; background:#06b6d4; z-index:5;"></div>`;
-            }
-
-            gridHtml += `<div class="panel" style="${extraStyle}">${stayHtml}</div>`;
-        }
-        gridHtml += `</div>`;
-        
-        return `<div class="view-box"><div class="view-title">${title}</div>${gridHtml}</div>`;
-    }
-
-    function generateViews(containerId, L, W, H, pType, pPos) {
-        const container = document.getElementById(containerId);
-        const container_p = document.getElementById(containerId + '_p');
-        const container_c = document.getElementById(containerId + '_c');
-        if(!container) return;
-
-        let html = '';
-        const maxDim = Math.max(L, W, H);
-        
-        let totalLevels = Math.min(H, 4); 
-        for(let i=1; i<=totalLevels; i++) {
-            let label = i === H ? `Roof Level (Trusses)` : `Level ${i} (Stays)`;
-            html += buildGridHTML(label, L, W, maxDim, pType, pPos, true);
-        }
-
-        container.innerHTML = html;
-        if(container_p) container_p.innerHTML = html;
-        if(container_c) container_c.innerHTML = html;
-    }
-
-    function exportCSV() {
-        try {
-            let csv = "\uFEFFWINKO INDUSTRIAL SDN BHD\n";
-            csv += "OFFICIAL TECHNICAL QUOTATION\n\n";
-            
-            let qInput = document.getElementById('quoteIdInput');
-            let qid = (qInput && qInput.value) ? qInput.value : "N/A";
-            
-            let pInput = document.getElementById('projectName');
-            let proj = (pInput && pInput.value) ? pInput.value : "Unnamed Project";
-            
-            let d = new Date().toLocaleDateString('en-MY');
-            let dimEl = document.getElementById('metaDims');
-            let dim = dimEl ? dimEl.innerText : "";
-            
-            let cChoice = document.getElementById('coatChoice');
-            let mat = (cChoice && cChoice.value) ? cChoice.value : "";
-            
-            let cChoice2 = document.getElementById('coatChoice2');
-            let mat2 = (cChoice2 && cChoice2.value) ? cChoice2.value : "";
-            
-            let ntEl = document.getElementById('numTanks');
-            let mode = (ntEl && ntEl.value) ? ntEl.value : "1";
-            
-            if(mode === "2" && mat2) mat += ` | Tank 2: ${mat2}`;
-            
-            let pChoice = document.getElementById('partChoice');
-            let partChoice = (pChoice && pChoice.value) ? pChoice.value : 'no';
-            
-            let ptQty = document.getElementById('partQty');
-            let pQty = (ptQty && ptQty.value) ? parseInt(ptQty.value) : 0;
-            
-            let ptType = document.getElementById('partType');
-            let pType = (ptType && ptType.value) ? ptType.value : 'Standard';
-            
-            let ptLen = document.getElementById('partLen');
-            let pLen = (ptLen && ptLen.value) ? ptLen.value : 0;
-            
-            let ptHgt = document.getElementById('partHgt');
-            let pHgt = (ptHgt && ptHgt.value) ? ptHgt.value : 0;
-            
-            let uChoice = document.getElementById('unitChoice');
-            let u = (uChoice && uChoice.value === 'ft') ? 'ft' : 'm';
-            
-            let part = (partChoice === 'yes' && pQty > 0) ? `${pQty}x ${pType} (${pLen}${u} x ${pHgt}${u})` : 'None';
-            
-            let tPanels = document.getElementById('sumPanels_screen') ? document.getElementById('sumPanels_screen').innerText : "0";
-
-            csv += `"Quote No:","${qid}"\n`;
-            csv += `"Project / Client:","${proj.replace(/"/g, '""')}"\n`;
-            csv += `"Date:","${d}"\n`;
-            csv += `"Dimensions:","${dim}"\n`;
-            csv += `"Total Panels:","${tPanels} pcs"\n`;
-            csv += `"Material:","${mat}"\n`;
-            csv += `"Partition (Tank 1):","${part}"\n\n`;
-
-            csv += "TANK 1 BILL OF MATERIALS\n";
-            csv += "Category,Item Description,Qty,Unit Wt (kg),Unit Price (RM),Total (RM)\n";
-            
-            bomStructure.forEach((s, si) => { s.items.forEach((it, ii) => {
-                let id = `item_${si}_${ii}`;
-                let descEl = document.getElementById(`desc_${id}`);
-                if(!descEl) return;
-                
-                let label = descEl.value.replace(/"/g, '""');
-                if(it.selectId) {
-                    let sEl = document.getElementById(it.selectId);
-                    if(sEl) label += " (" + sEl.value + ")"; 
-                }
-                
-                let qEl = document.getElementById(`qty_${id}`); let q = qEl ? qEl.value : 0;
-                let wEl = document.getElementById(`wt_${id}`); let w = wEl ? wEl.value : 0;
-                let pEl = document.getElementById(`price_${id}`); let p = pEl ? pEl.value : 0;
-                let totEl = document.getElementById(`total_${id}`); let t = totEl ? totEl.innerText.replace(/,/g, '') : 0;
-                
-                if(q > 0) csv += `"${s.category}","${label}",${q},${w},${p},${t}\n`;
-            })});
-            
-            if(mode === "2") {
-                csv += `\nTANK 2 BILL OF MATERIALS\n`;
-                csv += "Category,Item Description,Qty,Unit Wt (kg),Unit Price (RM),Total (RM)\n";
-                bomStructure.forEach((s, si) => { s.items.forEach((it, ii) => {
-                    let id = `item_${si}_${ii}`;
-                    let desc2El = document.getElementById(`desc2_${id}`);
-                    if(!desc2El) return;
-                    
-                    let label = desc2El.value.replace(/"/g, '""');
-                    if(it.selectId) {
-                        let s2El = document.getElementById(`sel2_${it.selectId}`);
-                        if(s2El) label += " (" + s2El.value + ")"; 
-                    }
-                    
-                    let qEl = document.getElementById(`qty2_${id}`); let q = qEl ? qEl.value : 0;
-                    let wEl = document.getElementById(`wt2_${id}`); let w = wEl ? wEl.value : 0;
-                    let pEl = document.getElementById(`price2_${id}`); let p = pEl ? pEl.value : 0;
-                    let totEl = document.getElementById(`total2_${id}`); let t = totEl ? totEl.innerText.replace(/,/g, '') : 0;
-                    
-                    if(q > 0) csv += `"${s.category}","${label}",${q},${w},${p},${t}\n`;
-                })});
-            } else if (mode === "custom") {
-                let cName = document.getElementById('customItemName')?.value || "";
-                let cCost = document.getElementById('customItemCost')?.value || 0;
-                csv += `\nCUSTOM ITEM (ITEM 2)\n`;
-                csv += `"Description","Qty","Unit Base Cost (RM)","Total (RM)"\n`;
-                csv += `"${cName.replace(/"/g, '""')}",1,${cCost},${cCost}\n`;
-            }
-
-            csv += `\n`;
-            
-            let bEl = document.getElementById('sumBaseCost_screen'); let base = bEl ? bEl.innerText.replace(/,/g, '') : "0";
-            let mEl = document.getElementById('sumMarkup_screen'); let markup = mEl ? mEl.innerText.replace(/,/g, '') : "0";
-            let sEl = document.getElementById('sumSubtotal_screen'); let sub = sEl ? sEl.innerText.replace(/,/g, '') : "0";
-            let dEl = document.getElementById('sumDiscount_screen'); let disc = dEl ? dEl.innerText.replace(/,/g, '') : "0";
-            let sstEl = document.getElementById('sumSST_screen'); let sst = sstEl ? sstEl.innerText.replace(/,/g, '') : "0";
-            let gEl = document.getElementById('grandTotal_screen'); let grand = gEl ? gEl.innerText.replace(/,/g, '') : "0";
-            let wEl = document.getElementById('sumWeight_screen'); let wt = wEl ? wEl.innerText.replace(' kg', '').replace(/,/g, '') : "0";
-
-            csv += `,,,,"Est. Total Weight (kg)",${wt}\n`;
-            csv += `,,,,"Base Cost (RM)",${base}\n`;
-            csv += `,,,,"Mark-Up (RM)",+${markup}\n`;
-            csv += `,,,,"Gross Subtotal (RM)",${sub}\n`;
-            csv += `,,,,"Discount (RM)",-${disc}\n`;
-            csv += `,,,,"SST Tax (RM)",${sst}\n`;
-            csv += `,,,,"GRAND TOTAL (RM)",${grand}\n`;
-
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a'); 
-            a.href = url; 
-            a.download = `Jutarama_Quote_${qid}.csv`; 
-            
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            
-        } catch(e) {
-            alert("Error generating Excel file: " + e.message);
-        }
-    }
-
-    // Initialize Base Data Before Unlock
-    applyCustomRows();
-    buildBOMTable();
-    loadPrices();
-</script>
-
-</body>
-</html>
