@@ -5,24 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Winko / Jutarama - Enterprise Quoting ERP</title>
     <style>
-        /* --- MODERN RESET & TYPOGRAPHY --- */
         * { box-sizing: border-box; }
-        body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f8fafc; padding: 0; color: #334155; margin: 0; line-height: 1.5; }
+        body { font-family: system-ui, -apple-system, sans-serif; background-color: #f8fafc; padding: 0; color: #334155; margin: 0; line-height: 1.5; }
         
-        /* --- SECURITY OVERLAY --- */
-        #securityOverlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(5px);
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 9999; color: white; text-align: center;
-        }
+        #securityOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(5px); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; color: white; text-align: center; }
         .login-card { background: white; padding: 50px 40px; border-radius: 16px; color: #333; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); width: 90%; max-width: 420px; display: flex; flex-direction: column; align-items: center;}
         .login-card input { width: 100%; padding: 14px; margin: 25px 0 15px 0; border: 2px solid #e2e8f0; border-radius: 8px; text-align: center; font-size: 18px; outline: none; transition: border-color 0.3s; }
         .login-card input:focus { border-color: #ea580c; box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1); }
         .login-card button { width: 100%; padding: 14px; background: linear-gradient(135deg, #ea580c, #c2410c); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; transition: transform 0.2s, box-shadow 0.2s;}
         .login-card button:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(234, 88, 12, 0.3); }
         
-        /* --- TOP NAVBAR --- */
         #topNav { display: none; background: #0f172a; padding: 10px 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;}
         .nav-links { display: flex; gap: 10px; flex-wrap: wrap; }
         .nav-btn { background: transparent; color: #cbd5e1; border: none; font-size: 14px; font-weight: 700; cursor: pointer; padding: 8px 14px; border-radius: 6px; transition: 0.2s; }
@@ -35,9 +27,7 @@
         .print-only { display: none; }
         .internal-only-tag { display: none; }
 
-        /* --- DASHBOARD STYLES (SCREEN) --- */
         .container { max-width: 1550px; margin: auto; }
-        
         .app-header-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #cbd5e1; padding-bottom: 15px; margin-bottom: 20px; }
         .app-header-bar h2 { color: #0f172a; margin: 0; font-weight: 900; font-size: 1.8em; letter-spacing: -0.5px;}
         .live-clock { font-size: 0.9em; color: #64748b; font-weight: 600; background: #e2e8f0; padding: 6px 12px; border-radius: 20px;}
@@ -88,7 +78,6 @@
         
         .desc-input { flex: 1 1 100px; min-width: 80px; padding: 6px; border: 1px solid transparent; background: transparent; font-weight: 600; font-family: inherit; font-size: 1em; color: #0f172a; transition: 0.2s; border-radius: 4px; }
         .desc-input:focus, .desc-input:hover { border-color: #ea580c; background: #fff; outline: none; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-
         .col-input input { width: 100%; padding: 6px; text-align: center; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc; font-weight: 600; color: #0f172a; transition: 0.2s;}
         .col-input input:focus { background: #fff; border-color: #ea580c; outline: none; box-shadow: 0 0 0 2px rgba(234,88,12,0.1);}
         
@@ -113,13 +102,12 @@
         .visual-container { display: flex; flex-wrap: wrap; gap: 15px; justify-content: flex-start; margin-bottom: 15px; }
         .view-box { text-align: center; background: #f8fafc; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; width: 145px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);} 
         .view-title { font-size: 0.75em; font-weight: 800; margin-bottom: 8px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;}
-        
         .grid-draft { display: grid; gap: 1px; background: #94a3b8; border: 2px solid #475569; margin: 0 auto; border-radius: 2px; overflow: hidden;} 
-        .panel { background: #e0f2fe !important; box-sizing: border-box; position: relative; border: 1px solid #94a3b8 !important; aspect-ratio: 1 / 1; min-height: 12px; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;}
-
+        .panel { background: #e0f2fe; box-sizing: border-box; position: relative; border: 1px solid transparent;}
+        .panel::before { content: ""; display: block; padding-top: 100%; }
         .tank-section-title { background: #e2e8f0; padding: 6px 12px; border-radius: 6px; font-weight: 800; color: #0f172a; margin-bottom: 10px; font-size: 0.9em; text-transform: uppercase; border-left: 4px solid #3b82f6;}
 
-        /* --- INVENTORY DASHBOARD STYLES --- */
+        /* --- INVENTORY & ADMIN DASHBOARD --- */
         .inv-status { padding: 4px 8px; border-radius: 4px; font-size: 0.85em; font-weight: bold; text-align: center; }
         .inv-ok { background: #dcfce7; color: #059669; }
         .inv-low { background: #fef9c3; color: #d97706; }
@@ -127,12 +115,11 @@
         .stock-row-warning { background: #fef2f2 !important; border-left: 4px solid #ef4444; }
         .inv-input { width: 100%; max-width: 120px; padding: 10px; border: 2px solid #cbd5e1; border-radius: 6px; font-weight: 800; text-align: center; font-size: 16px; background: #fff; color: #0f172a; }
         .inv-input:focus { border-color: #3b82f6; outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
-
-        /* --- ADMIN DASHBOARD STYLES --- */
         .admin-header { background: #0f172a; color: white; padding: 25px 30px; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center;}
         .admin-header h2 { color: white; border: none; margin: 0; padding: 0; font-weight: 800;}
         .admin-btn { padding: 12px 24px; background: #e11d48; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s;}
         .admin-btn.save { background: #10b981; }
+        .admin-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.2);}
         .admin-container { background: #1e293b; padding: 30px; border-radius: 0 0 12px 12px; color: white;}
         .admin-table { width: 100%; border-collapse: collapse; background: white; color: #0f172a; border-radius: 8px; overflow: hidden; box-shadow: 0 10px 15px rgba(0,0,0,0.3);}
         .admin-table th { background: #334155; color: white; border-color: #475569; padding: 15px; font-size: 0.9em; text-transform: uppercase; letter-spacing: 0.5px;}
@@ -153,7 +140,6 @@
         @media print {
             @page { size: A4; margin: 10mm 15mm; }
             body { background: white; padding: 0; font-size: 9pt; color: #0f172a; font-family: Arial, Helvetica, sans-serif; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            
             #topNav { display: none !important; }
             .no-print { display: none !important; }
             .print-only { display: block !important; }
@@ -171,33 +157,17 @@
             body.print-internal #mainContent { display: block !important; }
             body.print-internal #customerPreviewContainer { display: none !important; }
             body.print-internal #checklistPrintView { display: none !important; }
-
             body.print-internal .internal-hide { display: none !important; }
             body.print-internal .internal-only-tag { display: block !important; }
-            
             body.print-internal .app-layout { display: block !important; }
             body.print-internal .col-left { width: 100% !important; display: block !important; }
             body.print-internal .col-right { display: none !important; } 
-            
             body.print-internal .module-card { border: none !important; padding: 0 !important; margin-bottom: 20px !important; box-shadow: none !important; }
-            
             body.print-internal .card-header { display: block !important; border-bottom: 2px solid #0f172a !important; margin-bottom: 8px !important; font-size: 11pt !important; color: #0f172a !important; text-transform: uppercase; padding: 0 0 5px 0 !important; background: transparent !important;}
             body.print-internal .card-header span, body.print-internal .card-header button { display: none !important; }
 
             /* MEGA WATERMARK */
-            body.print-internal::before {
-                content: "INTERNAL USE ONLY - STRICTLY CONFIDENTIAL";
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%) rotate(-45deg);
-                font-size: 60pt;
-                font-weight: 900;
-                color: rgba(239, 68, 68, 0.08);
-                z-index: -1;
-                white-space: nowrap;
-                pointer-events: none;
-            }
+            body.print-internal::before { content: "INTERNAL USE ONLY - STRICTLY CONFIDENTIAL"; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 60pt; font-weight: 900; color: rgba(239, 68, 68, 0.08); z-index: -1; white-space: nowrap; pointer-events: none; }
 
             body.print-internal .print-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #ea580c; padding-bottom: 10px; margin-bottom: 15px; }
             body.print-internal .header-left { display: flex; align-items: center; gap: 20px; }
@@ -229,35 +199,28 @@
             body.print-internal input[type="number"] { width: 100% !important; text-align: center !important; }
             body.print-internal .col-uprice input { text-align: right !important; }
             body.print-internal .bom-inline-select { margin-left: 4px; color: #475569 !important; font-weight: 700;}
-
             body.print-internal .col-item { width: 45% !important; }
             body.print-internal .col-qty { width: 10% !important; }
             body.print-internal .col-wt { width: 15% !important; }
             body.print-internal .col-uprice { width: 15% !important; }
             body.print-internal .col-itotal { width: 15% !important; }
             
-            /* --- REFINED INTERNAL FOOTER WITH BOXES --- */
             body.print-internal .footer-flex { display: flex !important; justify-content: space-between !important; align-items: flex-start !important; margin-top: 15px !important; page-break-inside: avoid !important; }
-            
-            /* Formal Approval Grid */
             body.print-internal .internal-approval-grid { display: flex; flex-direction: row; width: 60%; gap: 15px; margin-top: 0; }
             body.print-internal .internal-sig-box { flex: 1; border: 1.5px solid #0f172a; border-radius: 6px; padding: 8px; height: 80px; font-size: 8pt; color: #0f172a; display: flex; flex-direction: column; justify-content: space-between; background: #fff;}
             body.print-internal .internal-sig-box span { font-weight: 800; text-transform: uppercase; color: #475569;}
             body.print-internal .internal-sig-box strong { font-weight: 700; border-top: 1px dashed #cbd5e1; padding-top: 4px; text-align: center;}
 
-            /* Color-Coded Financial Ledger Box */
             body.print-internal .summary-box { background: #fff !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 8px !important; padding: 0 !important; margin-top: 0 !important; width: 35% !important; float: none !important; box-shadow: 4px 4px 0px rgba(0,0,0,0.1) !important; overflow: hidden;}
             body.print-internal .summary-table { width: 100%; border-collapse: collapse; font-size: 9pt; margin-bottom: 0 !important; border: none !important;}
             body.print-internal .summary-table td { padding: 4px 10px; border: none; font-weight: 700; text-align: right !important;}
             body.print-internal .summary-table td:first-child { text-align: left !important; color: #475569; font-weight: 800; text-transform: uppercase; font-size: 7.5pt;}
-            
             body.print-internal .summary-table .border-top td { border-top: 1.5px solid #cbd5e1 !important; padding-top: 6px; }
             body.print-internal .summary-table .border-bottom td { border-bottom: 1.5px solid #cbd5e1 !important; padding-bottom: 6px; }
             body.print-internal .summary-table .grand-total-row td { font-size: 11pt; padding: 8px 10px; background: #e2e8f0 !important; font-weight: 900; color: #0f172a !important; }
-            
+            body.print-internal .markup-print-val { color: #059669 !important; font-weight: 800; }
             body.print-internal .drawings-page { page-break-before: always !important; padding-top: 20px !important; }
             body.print-internal .tank-section-title { font-size: 11pt !important; margin-bottom: 10px !important; margin-top: 15px !important; color: #0f172a !important; font-weight: 800 !important; text-transform: uppercase !important; border-bottom: 2px solid #0f172a !important; padding-bottom: 5px !important; border-left: none !important; background: transparent !important;}
-
 
             /* ------------------------------------------------ */
             /* MODE 2: CUSTOMER PRINT                           */
@@ -272,16 +235,13 @@
             .cp-header { display: flex; margin-bottom: 15px;}
             .cp-header-left { width: 35%; display: flex; align-items: center; justify-content: center; background: transparent; padding: 5px;}
             .cp-header-right { width: 65%; padding-left: 20px;}
-            
             .cp-meta-layout { display: flex; justify-content: space-between; align-items: stretch; margin-bottom: 10px;}
             .cp-meta-left { width: 55%; font-size: 8.5pt;}
             .cp-meta-left table { width: 100%; border: none; margin: 0;}
             .cp-meta-left td { border: none; padding: 2px 5px 2px 0; vertical-align: top;}
             .cp-meta-left td:first-child { width: 70px; font-weight: normal; color: #000;}
-            
             .cp-meta-center { width: 15%; text-align: center; display: flex; align-items: center; justify-content: center;}
             .cp-quotation-box { border: 2px solid #000; padding: 4px 10px; font-weight: bold; font-size: 10pt; letter-spacing: 1px;}
-            
             .cp-meta-right { width: 30%; font-size: 8.5pt; text-align: right;}
             .cp-meta-right table { width: 100%; border: none; margin: 0;}
             .cp-meta-right td { border: none; padding: 2px 0 2px 5px; vertical-align: top; text-align: left;}
@@ -292,21 +252,16 @@
             .cp-table td { border: 1px solid #000; padding: 4px 6px !important; vertical-align: top; color: #000; line-height: 1.3 !important;}
             .cp-table .td-center { text-align: center;}
             .cp-table .td-right { text-align: right;}
-            
             .cp-short-exclusions { display: flex; align-items: stretch; margin-bottom: 15px !important; font-size: 8pt; line-height: 1.4; border: 1px solid #000;}
             .cp-short-exclusions .label { background: #d1d5db !important; color: #000; padding: 6px 10px; font-weight: bold; border-right: 1px solid #000; -webkit-print-color-adjust: exact; width: 100px; text-align: center; display: flex; align-items: center; justify-content: center;}
             .cp-short-exclusions .content { padding: 6px 10px; background: #fff; flex: 1;}
-
             .page-break-section { page-break-before: always; padding-top: 10px; }
-            
             .cp-full-terms { font-size: 8pt !important; line-height: 1.3 !important; white-space: pre-wrap; margin-bottom: 15px !important; color: #000;}
-
             .cp-tnc { font-size: 8pt !important; margin-bottom: 15px !important; page-break-inside: avoid;}
             .cp-tnc-title { font-weight: bold; text-decoration: underline; margin-bottom: 5px; font-size: 8.5pt;}
             .cp-tnc table { width: 100%; border: none; border-collapse: collapse;}
             .cp-tnc td { border: none; padding: 3px 5px; vertical-align: top;}
             .cp-tnc td:first-child { width: 140px; font-weight: bold; color: #000;}
-
             .cp-signoff { display: flex; justify-content: space-between; margin-top: 15px; page-break-inside: avoid;}
             .cp-signoff-left { width: 50%; }
             .cp-signoff-left p { margin: 2px 0; font-size: 8.5pt;}
@@ -320,43 +275,37 @@
 
             #checklistPrintView { font-family: Arial, sans-serif; color: #000; font-size: 9pt; line-height: 1.2; padding: 0 10px; }
             .chk-title { font-size: 11pt; font-weight: bold; text-decoration: underline; margin-bottom: 10px; }
-            
             .chk-market-tag { text-align: right; font-weight: bold; margin-bottom: 5px; }
             .chk-top-flex { display: flex; justify-content: space-between; margin-bottom: 5px; }
             .chk-box { display: inline-block; width: 12px; height: 12px; border: 1px solid #000; text-align: center; vertical-align: middle; line-height: 12px; font-size: 9pt; margin-right: 4px; font-weight:bold; -webkit-print-color-adjust: exact !important;}
             .chk-line { display: inline-block; border-bottom: 1px solid #000; min-width: 100px; padding: 0 5px; }
-            
             .chk-table { width: 100%; border-collapse: collapse; margin-bottom: 5px;}
             .chk-table td { padding: 2px 2px; vertical-align: bottom; border:none;}
             .chk-table .label { width: 110px; font-weight:bold;}
-            
             .chk-section { border-top: 1.5px solid #000; border-bottom: 1.5px solid #000; padding: 5px 0; margin-bottom: 5px; page-break-inside: avoid;}
             .chk-section-title { font-weight: bold; text-transform: uppercase; font-size: 8.5pt; margin-bottom: 3px;}
-            
             .chk-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
             .chk-grid-3 { display: grid; grid-template-columns: auto auto auto; gap: 8px; align-items:center; margin-bottom:2px;}
             .chk-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom:2px;}
-            
             .chk-box-container { border: 1px solid #000; padding: 1px 4px; display:inline-block; min-width:25px; text-align:center; font-weight:bold;}
-
             .chk-footer { display: flex; justify-content: space-between; margin-top: 20px; page-break-inside: avoid; }
             .chk-sig-block { width: 30%; font-size: 8.5pt;}
             .chk-sig-line { border-top: 1px solid #000; margin-bottom: 5px; padding-top: 2px; font-weight:bold;}
 
-            /* Visual grids inside Checklist */
             body.print-checklist .visual-container { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; width: 100% !important; margin: 15px 0 25px 0 !important; page-break-inside: avoid !important; clear: both !important;}
             body.print-checklist .view-box { padding: 6px !important; border: 1.5px solid #cbd5e1 !important; background: #f8fafc !important; border-radius: 6px !important; width: 120px !important;}
             body.print-checklist .grid-draft { gap: 0.5px !important; border: 1.5px solid #0f172a !important; background: #fff !important;}
+            body.print-checklist .panel { background: #e0f2fe !important; min-height: 12px !important;}
             body.print-checklist .view-title { font-size: 7pt !important; margin-bottom: 4px !important; color: #0f172a !important; text-align: center !important; font-weight: 800 !important; text-transform: uppercase !important;}
         }
     </style>
     
     <script>
-        const currentVersion = "V69";
+        const currentVersion = "V70";
         if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
             localStorage.setItem("winkoAppVersion", currentVersion);
             localStorage.removeItem("winkoProData");
-            for(let i=13; i<=68; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=69; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -430,14 +379,12 @@
 
 <div id="mainContent">
     <div class="container">
-        
         <div class="app-header-bar no-print">
             <h2>Project Workspace</h2>
             <div class="live-clock">System Time: <span id="liveClock">Loading...</span></div>
         </div>
 
         <div class="print-only internal-only-tag">Strictly Confidential - Internal Costing</div>
-
         <div class="print-header print-only">
             <div class="header-left">
                 <img src="winko logo.png" alt="Winko Logo">
@@ -483,7 +430,6 @@
 
         <div class="app-layout">
             <div class="col-left">
-                
                 <div class="module-card internal-hide no-print">
                     <div class="card-header"><span>📋</span> 1. Project & Client Info</div>
                     <div class="config-grid">
@@ -503,7 +449,6 @@
                         <div class="form-group"><label>Tank 1 Standard</label><select id="stdChoice" onchange="debouncedProcessTankData()"><option>SANS 10329:2020 Approved by SIRIM & SPAN</option><option>SS 22: 1979</option><option>Other</option></select></div>
                         <div class="form-group"><label>Unit System</label><select id="unitChoice" onchange="handleUnitChange()"><option value="ft">Imperial (4'x4')</option><option value="m_122">Imperial Panels (Input in Meters: 1.22m)</option><option value="m_100">True Metric Panels (Input in Meters: 1m)</option></select></div>
                         <div class="form-group" style="grid-column: span 2;"><label>Tank 1 Material / Finish</label><select id="coatChoice" onchange="debouncedProcessTankData()"><option>Hot Dipped Galvanised</option><option>Painted Steel</option><option>Stainless Steel (SS 304)</option><option>Stainless Steel (SS 316)</option></select></div>
-                        
                         <div class="form-group" style="grid-column: span 2;">
                             <label style="color:#2563eb;">Number of Tanks in Project</label>
                             <select id="numTanks" onchange="toggleTank2(); debouncedProcessTankData();" style="border: 2px solid #93c5fd;">
@@ -545,7 +490,6 @@
                             <div class="form-group"><label>Tank Width (<span class="unitLabel">Ft</span>)</label><input type="number" id="width2" value="4" step="0.01" oninput="debouncedProcessTankData()"></div>
                             <div class="form-group"><label>Tank Height (<span class="unitLabel">Ft</span>)</label><input type="number" id="height2" value="4" step="0.01" oninput="debouncedProcessTankData()"></div>
                         </div>
-                        
                         <div class="config-grid" style="margin-bottom:15px;">
                             <div class="form-group" style="grid-column: span 2;"><label>Tank 2 Partition</label><select id="partChoice2" onchange="togglePartitionDetails(); debouncedProcessTankData();"><option value="no">No Partition</option><option value="yes">Yes (Internal Wall)</option></select></div>
                         </div>
@@ -582,8 +526,6 @@
                             <div class="form-group"><label>Wall L4 Thick.</label><input type="text" id="thickWallL4" value="1.5mm" oninput="debouncedProcessTankData()"></div>
                         </div>
                     </div>
-
-                    <button class="action-btn" onclick="processTankData()" style="width:100%; background: #0f172a; margin-top: 10px;">⚙️ Calculate Internal BOM</button>
                 </div>
                 
                 <div class="module-card internal-hide no-print">
@@ -682,11 +624,9 @@ Note:
                         <tbody id="bomBody2"></tbody>
                     </table>
                 </div>
-
             </div>
 
             <div class="col-right">
-                
                 <div style="position: sticky; top: 80px;">
                     <div class="summary-box no-print">
                         <div class="sum-row"><span>Standard:</span> <span id="sumStd">-</span></div>
@@ -733,10 +673,8 @@ Note:
                             <div class="view-box"><div class="view-title">Left</div><div id="leftGrid" class="grid-draft"></div></div>
                             <div class="view-box"><div class="view-title">Right</div><div id="rightGrid" class="grid-draft"></div></div>
                         </div>
-                        
                         <div class="card-header" style="font-size: 1em; margin-top:25px; border-top:2px solid #f1f5f9; padding-top:15px;">Tank 1 Internal Bracing (Angle Stays)</div>
-                        <div class="visual-container" id="visualsArea1">
-                            </div>
+                        <div class="visual-container" id="visualsArea1"></div>
                     </div>
                     
                     <div class="module-card no-print" id="tank2VisualsCard" style="display:none;">
@@ -749,17 +687,14 @@ Note:
                             <div class="view-box"><div class="view-title">Left</div><div id="leftGrid2" class="grid-draft"></div></div>
                             <div class="view-box"><div class="view-title">Right</div><div id="rightGrid2" class="grid-draft"></div></div>
                         </div>
-                        
                         <div class="card-header" style="font-size: 1em; margin-top:25px; border-top:2px solid #f1f5f9; padding-top:15px;">Tank 2 Internal Bracing (Angle Stays)</div>
-                        <div class="visual-container" id="visualsArea2">
-                            </div>
+                        <div class="visual-container" id="visualsArea2"></div>
                     </div>
-
-                </div> </div>
+                </div> 
+            </div>
         </div>
 
         <div class="print-only" id="internalPrintFooter">
-            
             <div class="footer-flex">
                 <div class="internal-approval-grid">
                     <div class="internal-sig-box"><span>Costing Prepared By:</span> <strong><span id="intSigSales"></span></strong></div>
@@ -953,7 +888,6 @@ Note:
         </table>
 
         <div class="page-break-section">
-            
             <div class="cp-short-exclusions editable-section" contenteditable="true">
                 <div class="label" contenteditable="false">Exclusion</div>
                 <div class="content" id="cpShortExclusionsText"></div>
@@ -1174,11 +1108,9 @@ Note:
 </div>
 
 <script>
-    // --- SECURITY LOGIC ---
     const SECRET_PASSWORD = "winko2026";
     const ADMIN_PASSWORD = "adminmaster99";
 
-    // Debounce timer for performance
     let tankDataTimer;
     function debouncedProcessTankData() {
         clearTimeout(tankDataTimer);
@@ -1247,19 +1179,14 @@ Note:
         }
     }
 
-    // --- INVENTORY MANAGEMENT LOGIC ---
     let winkoInventory = {};
-    try {
-        winkoInventory = JSON.parse(localStorage.getItem('winkoInventoryDB')) || {};
-    } catch(e) { winkoInventory = {}; }
+    try { winkoInventory = JSON.parse(localStorage.getItem('winkoInventoryDB')) || {}; } catch(e) { winkoInventory = {}; }
 
     function initInventory() {
         bomStructure.forEach(sec => {
             sec.items.forEach(it => {
                 let baseName = it.name.replace(/ \(1x1m\)| \(1\.22x1\.22m\)| \(4'x4'\)/g, '');
-                if(!winkoInventory[baseName]) {
-                    winkoInventory[baseName] = { stock: 0, alert: 10 };
-                }
+                if(!winkoInventory[baseName]) { winkoInventory[baseName] = { stock: 0, alert: 10 }; }
             });
         });
         localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory));
@@ -1268,31 +1195,21 @@ Note:
     function renderInventoryTable() {
         const tbody = document.getElementById('invBody');
         let html = '';
-        
         Object.keys(winkoInventory).sort().forEach(itemName => {
             let data = winkoInventory[itemName];
-            let statusHtml = '';
-            let rowClass = '';
+            let statusHtml = ''; let rowClass = '';
             
-            if(data.stock <= 0) {
-                statusHtml = '<span class="inv-status inv-out">OUT OF STOCK</span>';
-                rowClass = 'stock-row-warning';
-            } else if (data.stock <= data.alert) {
-                statusHtml = '<span class="inv-status inv-low">LOW STOCK</span>';
-                rowClass = 'stock-row-warning';
-            } else {
-                statusHtml = '<span class="inv-status inv-ok">OK</span>';
-            }
+            if(data.stock <= 0) { statusHtml = '<span class="inv-status inv-out">OUT OF STOCK</span>'; rowClass = 'stock-row-warning'; } 
+            else if (data.stock <= data.alert) { statusHtml = '<span class="inv-status inv-low">LOW STOCK</span>'; rowClass = 'stock-row-warning'; } 
+            else { statusHtml = '<span class="inv-status inv-ok">OK</span>'; }
 
             let sId = itemName.replace(/[^a-zA-Z0-9]/g, '');
-
             html += `<tr class="${rowClass}">
                 <td style="font-weight:700;">${itemName} <div style="margin-top:4px;">${statusHtml}</div></td>
                 <td class="text-center"><input type="number" class="inv-input" id="inv_stock_${sId}" value="${data.stock}"></td>
                 <td class="text-center"><input type="number" class="inv-input" id="inv_alert_${sId}" value="${data.alert}"></td>
             </tr>`;
         });
-        
         if(tbody) tbody.innerHTML = html;
     }
 
@@ -1301,7 +1218,6 @@ Note:
             let sId = itemName.replace(/[^a-zA-Z0-9]/g, '');
             let sVal = document.getElementById(`inv_stock_${sId}`);
             let aVal = document.getElementById(`inv_alert_${sId}`);
-            
             if(sVal) winkoInventory[itemName].stock = parseInt(sVal.value) || 0;
             if(aVal) winkoInventory[itemName].alert = parseInt(aVal.value) || 0;
         });
@@ -1312,33 +1228,24 @@ Note:
 
     function checkStockAvailability() {
         let missingItems = [];
-        
         bomStructure.forEach((sec, sIdx) => {
             sec.items.forEach((it, iIdx) => {
                 let id1 = `item_${sIdx}_${iIdx}`;
-                let q1El = document.getElementById(`qty_${id1}`);
-                let q2El = document.getElementById(`qty2_${id1}`);
-                
+                let q1El = document.getElementById(`qty_${id1}`); let q2El = document.getElementById(`qty2_${id1}`);
                 let totalReq = 0;
                 if(q1El) totalReq += parseInt(q1El.value) || 0;
                 if(q2El && document.getElementById('numTanks').value === "2") totalReq += parseInt(q2El.value) || 0;
                 
                 if(totalReq > 0) {
                     let baseName = it.name.replace(/ \(1x1m\)| \(1\.22x1\.22m\)| \(4'x4'\)/g, '');
-                    if(winkoInventory[baseName]) {
-                        if(winkoInventory[baseName].stock < totalReq) {
-                            missingItems.push(`${baseName} (Need: ${totalReq}, Have: ${winkoInventory[baseName].stock})`);
-                        }
+                    if(winkoInventory[baseName] && winkoInventory[baseName].stock < totalReq) {
+                        missingItems.push(`${baseName} (Need: ${totalReq}, Have: ${winkoInventory[baseName].stock})`);
                     }
                 }
             });
         });
-
-        if(missingItems.length > 0) {
-            alert("⚠️ WARNING: INSUFFICIENT STOCK FOR THIS QUOTE!\n\n" + missingItems.join("\n"));
-        } else {
-            alert("✅ ALL ITEMS IN STOCK! You have sufficient inventory to fulfill this quote.");
-        }
+        if(missingItems.length > 0) { alert("⚠️ WARNING: INSUFFICIENT STOCK FOR THIS QUOTE!\n\n" + missingItems.join("\n")); } 
+        else { alert("✅ ALL ITEMS IN STOCK! You have sufficient inventory to fulfill this quote."); }
     }
 
     function deductInventoryFromSO() {
@@ -1347,19 +1254,14 @@ Note:
             bomStructure.forEach((sec, sIdx) => {
                 sec.items.forEach((it, iIdx) => {
                     let id1 = `item_${sIdx}_${iIdx}`;
-                    let q1El = document.getElementById(`qty_${id1}`);
-                    let q2El = document.getElementById(`qty2_${id1}`);
-                    
+                    let q1El = document.getElementById(`qty_${id1}`); let q2El = document.getElementById(`qty2_${id1}`);
                     let totalReq = 0;
                     if(q1El) totalReq += parseInt(q1El.value) || 0;
                     if(q2El && document.getElementById('numTanks').value === "2") totalReq += parseInt(q2El.value) || 0;
                     
                     if(totalReq > 0) {
                         let baseName = it.name.replace(/ \(1x1m\)| \(1\.22x1\.22m\)| \(4'x4'\)/g, '');
-                        if(winkoInventory[baseName]) {
-                            winkoInventory[baseName].stock -= totalReq;
-                            deductCount++;
-                        }
+                        if(winkoInventory[baseName]) { winkoInventory[baseName].stock -= totalReq; deductCount++; }
                     }
                 });
             });
@@ -1368,7 +1270,6 @@ Note:
         }
     }
 
-    // --- PRINT TOGGLE LOGIC ---
     function printInternal() {
         try {
             document.body.className = 'print-internal';
@@ -1398,7 +1299,6 @@ Note:
 
     function printChecklist() {
         try {
-            // Sync text fields
             document.getElementById('chk_customer').innerText = document.getElementById('custCompany').value || '';
             document.getElementById('chk_project').innerText = document.getElementById('projectName').value || '';
             document.getElementById('chk_projno').innerText = document.getElementById('quoteIdInput').value || '';
@@ -1406,7 +1306,6 @@ Note:
             document.getElementById('chk_deldate').innerText = document.getElementById('custDelDate').value || '';
             document.getElementById('chk_issued').innerText = new Date().toLocaleDateString('en-MY');
             
-            // Tank Size & Panels
             let uChoice = document.getElementById('unitChoice');
             let u = (uChoice && uChoice.value === 'ft') ? 'ft' : 'm';
             let l1 = document.getElementById('length').value || 0;
@@ -1416,7 +1315,6 @@ Note:
             document.getElementById('chk_tankqty').innerText = document.getElementById('numTanks').value === '2' ? '2' : '1';
             document.getElementById('chk_totalpanel').innerText = document.getElementById('sumPanels_screen').innerText;
 
-            // Checkboxes (Helper)
             const setBox = (id, condition) => { document.getElementById(id).innerHTML = condition ? '&#10003;' : '&nbsp;'; };
 
             let mkt = document.getElementById('marketChoice').value;
@@ -1507,7 +1405,6 @@ Note:
     function updateLabels() {
         let uChoice = document.getElementById('unitChoice');
         let newUnit = uChoice ? uChoice.value : 'ft';
-        
         const unitLabel = newUnit === 'ft' ? 'Ft' : 'Meter';
         let labels = document.querySelectorAll('.unitLabel');
         for(let i=0; i<labels.length; i++) {
@@ -1826,7 +1723,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV69'); // V69 CACHE BUSTER
+            localStorage.removeItem('winkoProDataV70'); 
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1897,7 +1794,6 @@ Note:
             let metaCoat = document.getElementById('metaCoat');
             if(metaCoat) metaCoat.innerText = matStr;
             
-            // Build Partition string
             let elPQ1 = document.getElementById('partQty'); let pQty1 = (elPQ1 && elPQ1.value) ? (parseInt(elPQ1.value)||0) : 0;
             let elPC1 = document.getElementById('partChoice'); let partChoice1 = (elPC1 && elPC1.value) ? elPC1.value : 'no';
             let elPT1 = document.getElementById('partType'); let pt1 = (elPT1 && elPT1.value) ? elPT1.value : '';
@@ -1925,7 +1821,6 @@ Note:
             let sumPart = document.getElementById('sumPart');
             if(sumPart) sumPart.innerText = partDisplay;
             
-            // CUSTOMER FORMAL PRINT SYNC
             let cpCustName = document.getElementById('cpCustName');
             let custCompany = document.getElementById('custCompany');
             if(cpCustName) cpCustName.innerText = (custCompany && custCompany.value) ? custCompany.value : ((pInput && pInput.value) ? pInput.value : "Client Name");
@@ -2093,6 +1988,7 @@ Note:
             let cpSignName = document.getElementById('cpSignName');
             if(cpSignName) cpSignName.innerText = (signNameEl && signNameEl.value) ? signNameEl.value : "";
             
+            // Update Internal Signature Print tag
             let intSigSales = document.getElementById('intSigSales');
             if(intSigSales) intSigSales.innerText = (signNameEl && signNameEl.value) ? signNameEl.value : "_______________";
             
@@ -2126,11 +2022,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV69', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV70', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV69');
+        let savedData = localStorage.getItem('winkoProDataV70');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -2444,6 +2340,264 @@ Note:
         if(container_c) container_c.innerHTML = html;
     }
 
+    function processTankData() {
+        try {
+            let ntEl = document.getElementById('numTanks');
+            let mode = (ntEl && ntEl.value) ? ntEl.value : "1";
+            
+            let ucEl = document.getElementById('unitChoice');
+            const unit = (ucEl && ucEl.value) ? ucEl.value : 'ft';
+            
+            let factor = 1;
+            if (unit === 'ft') factor = 4;
+            else if (unit === 'm_122') factor = 1.22;
+            else if (unit === 'm_100') factor = 1;
+            
+            const isImperial = (unit === 'ft' || unit === 'm_122');
+            const pSfx = isImperial ? (unit === 'ft' ? " (4'x4')" : " (1.22x1.22m)") : " (1x1m)";
+            
+            const unitStr = unit === 'ft' ? 'ft' : 'm';
+            const spacingStr = isImperial ? '4ft (1220mm)' : '1m (1000mm)';
+
+            let l1El = document.getElementById('length'); const L1_in = (l1El && l1El.value) ? (parseFloat(l1El.value) || 0) : 0;
+            let w1El = document.getElementById('width'); const W1_in = (w1El && w1El.value) ? (parseFloat(w1El.value) || 0) : 0;
+            let h1El = document.getElementById('height'); const H1_in = (h1El && h1El.value) ? (parseFloat(h1El.value) || 0) : 0;
+            
+            let volLiters1 = (unit === 'ft') ? (L1_in * W1_in * H1_in * 28.3168) : (L1_in * W1_in * H1_in * 1000);
+            let effLiters1 = volLiters1 * 0.9; 
+
+            const pc1El = document.getElementById('partChoice');
+            const partChoice1 = (pc1El && pc1El.value) ? pc1El.value : 'no';
+            let pQty1 = 0; let pLen_in1 = 0; let pHgt_in1 = 0; let pPos_in1 = 1;
+            
+            if(partChoice1 === 'yes') {
+                let pq1El = document.getElementById('partQty'); pQty1 = (pq1El && pq1El.value) ? (parseInt(pq1El.value) || 0) : 0;
+                let pl1El = document.getElementById('partLen'); pLen_in1 = (pl1El && pl1El.value) ? (parseFloat(pl1El.value) || 0) : 0;
+                let ph1El = document.getElementById('partHgt'); pHgt_in1 = (ph1El && ph1El.value) ? (parseFloat(ph1El.value) || 0) : 0;
+                let ppos1El = document.getElementById('partPos'); pPos_in1 = (ppos1El && ppos1El.value) ? (parseInt(ppos1El.value) || 1) : 1;
+            }
+
+            const L1 = Math.round(L1_in / factor);
+            const W1 = Math.round(W1_in / factor);
+            const H1 = Math.round(H1_in / factor);
+            const pL1 = Math.round(pLen_in1 / factor);
+            const pH1 = Math.round(pHgt_in1 / factor);
+            const pPosIdx1 = Math.max(0, pPos_in1 - 1);
+
+            let roof1 = L1 * W1; 
+            let base1 = L1 * W1; 
+            let perim1 = (L1 + W1) * 2;
+            let sides1 = perim1 * H1; 
+            let partPanels1 = (partChoice1 === 'yes' && pQty1 > 0) ? (pL1 * pH1 * pQty1) : 0;
+            let totalP1 = roof1 + base1 + sides1 + partPanels1;
+            window.currentTotalP1 = totalP1;
+
+            let pTypeTop1 = null, pPosTop1 = -1;
+            let pTypeFront1 = null, pPosFront1 = -1;
+            let pTypeSide1 = null, pPosSide1 = -1;
+
+            if (partChoice1 === 'yes' && pQty1 > 0) {
+                if (pL1 === W1) { 
+                    pTypeTop1 = 'v'; pPosTop1 = Math.min(L1 - 2, pPosIdx1);
+                    pTypeFront1 = 'v'; pPosFront1 = Math.min(L1 - 2, pPosIdx1);
+                } else if (pL1 === L1) { 
+                    pTypeTop1 = 'h'; pPosTop1 = Math.min(W1 - 2, pPosIdx1);
+                    pTypeSide1 = 'v'; pPosSide1 = Math.min(W1 - 2, pPosIdx1);
+                } else { 
+                    pTypeTop1 = 'v'; pPosTop1 = Math.min(L1 - 2, pPosIdx1);
+                    pTypeFront1 = 'v'; pPosFront1 = Math.min(L1 - 2, pPosIdx1);
+                }
+            }
+
+            const maxDim1 = Math.max(L1, W1, H1);
+            drawGrid('topGrid', L1, W1, maxDim1, pTypeTop1, pPosTop1); 
+            drawGrid('bottomGrid', L1, W1, maxDim1, pTypeTop1, pPosTop1);
+            drawGrid('frontGrid', L1, H1, maxDim1, pTypeFront1, pPosFront1); 
+            drawGrid('backGrid', L1, H1, maxDim1, pTypeFront1, pPosFront1);
+            drawGrid('leftGrid', W1, H1, maxDim1, pTypeSide1, pPosSide1); 
+            drawGrid('rightGrid', W1, H1, maxDim1, pTypeSide1, pPosSide1);
+
+            generateViews('visualsArea1', L1, W1, H1, pTypeTop1, pPosTop1);
+
+            let tRoof = document.getElementById('thickRoof') ? document.getElementById('thickRoof').value : "1.5mm";
+            let tBase = document.getElementById('thickBase') ? document.getElementById('thickBase').value : "4.5mm";
+            let tL1 = document.getElementById('thickWallL1') ? document.getElementById('thickWallL1').value : "4.5mm";
+            let tL2 = document.getElementById('thickWallL2') ? document.getElementById('thickWallL2').value : "3.0mm";
+            let tL3 = document.getElementById('thickWallL3') ? document.getElementById('thickWallL3').value : "3.0mm";
+            let tL4 = document.getElementById('thickWallL4') ? document.getElementById('thickWallL4').value : "1.5mm";
+
+            let updateDesc = function(prefix, id, val) { let el = document.getElementById(prefix + id); if(el) el.value = val; };
+            
+            updateDesc('desc_', 'item_0_0', "Manhole Panel" + pSfx);
+            updateDesc('desc_', 'item_0_1', tRoof + " Roof Panel" + pSfx);
+            updateDesc('desc_', 'item_0_2', tBase + " Base Panel" + pSfx);
+            updateDesc('desc_', 'item_0_3', tL1 + " Wall Panel (L1)" + pSfx);
+            updateDesc('desc_', 'item_0_4', tL2 + " Wall Panel (L2)" + pSfx);
+            updateDesc('desc_', 'item_0_5', tL3 + " Wall Panel (L3)" + pSfx);
+            updateDesc('desc_', 'item_0_6', tL4 + " Wall Panel (L4)" + pSfx);
+            updateDesc('desc_', 'item_0_7', "Partition Panel" + pSfx);
+
+            // TANK 2 DATA
+            let effLiters2 = 0;
+            let totalP2 = 0;
+
+            if (mode === "2") {
+                let l2El = document.getElementById('length2'); let L2_in = (l2El && l2El.value) ? (parseFloat(l2El.value) || 0) : 0;
+                let w2El = document.getElementById('width2'); let W2_in = (w2El && w2El.value) ? (parseFloat(w2El.value) || 0) : 0;
+                let h2El = document.getElementById('height2'); let H2_in = (h2El && h2El.value) ? (parseFloat(h2El.value) || 0) : 0;
+                
+                let volLiters2 = (unit === 'ft') ? (L2_in * W2_in * H2_in * 28.3168) : (L2_in * W2_in * H2_in * 1000);
+                effLiters2 = volLiters2 * 0.9; 
+
+                let pc2El = document.getElementById('partChoice2');
+                const partChoice2 = (pc2El && pc2El.value) ? pc2El.value : 'no';
+                let pQty2 = 0; let pLen_in2 = 0; let pHgt_in2 = 0; let pPos_in2 = 1;
+                if(partChoice2 === 'yes') {
+                    let pq2El = document.getElementById('partQty2'); pQty2 = (pq2El && pq2El.value) ? (parseInt(pq2El.value) || 0) : 0;
+                    let pl2El = document.getElementById('partLen2'); pLen_in2 = (pl2El && pl2El.value) ? (parseFloat(pl2El.value) || 0) : 0;
+                    let ph2El = document.getElementById('partHgt2'); pHgt_in2 = (ph2El && ph2El.value) ? (parseFloat(ph2El.value) || 0) : 0;
+                    let ppos2El = document.getElementById('partPos2'); pPos_in2 = (ppos2El && ppos2El.value) ? (parseInt(ppos2El.value) || 1) : 1;
+                }
+
+                const L2 = Math.round(L2_in / factor);
+                const W2 = Math.round(W2_in / factor);
+                const H2 = Math.round(H2_in / factor);
+                const pL2 = Math.round(pLen_in2 / factor);
+                const pH2 = Math.round(pHgt_in2 / factor);
+                const pPosIdx2 = Math.max(0, pPos_in2 - 1);
+
+                let roof2 = L2 * W2; let base2 = L2 * W2; let perim2 = (L2 + W2) * 2; let sides2 = perim2 * H2; 
+                let partPanels2 = (partChoice2 === 'yes' && pQty2 > 0) ? (pL2 * pH2 * pQty2) : 0;
+                totalP2 = roof2 + base2 + sides2 + partPanels2;
+
+                let pTypeTop2 = null, pPosTop2 = -1;
+                let pTypeFront2 = null, pPosFront2 = -1;
+                let pTypeSide2 = null, pPosSide2 = -1;
+
+                if (partChoice2 === 'yes' && pQty2 > 0) {
+                    if (pL2 === W2) { 
+                        pTypeTop2 = 'v'; pPosTop2 = Math.min(L2 - 2, pPosIdx2);
+                        pTypeFront2 = 'v'; pPosFront2 = Math.min(L2 - 2, pPosIdx2);
+                    } else if (pL2 === L2) { 
+                        pTypeTop2 = 'h'; pPosTop2 = Math.min(W2 - 2, pPosIdx2);
+                        pTypeSide2 = 'v'; pPosSide2 = Math.min(W2 - 2, pPosIdx2);
+                    } else { 
+                        pTypeTop2 = 'v'; pPosTop2 = Math.min(L2 - 2, pPosIdx2);
+                        pTypeFront2 = 'v'; pPosFront2 = Math.min(L2 - 2, pPosIdx2);
+                    }
+                }
+
+                const maxDim2 = Math.max(L2, W2, H2);
+                drawGrid('topGrid2', L2, W2, maxDim2, pTypeTop2, pPosTop2); 
+                drawGrid('bottomGrid2', L2, W2, maxDim2, pTypeTop2, pPosTop2);
+                drawGrid('frontGrid2', L2, H2, maxDim2, pTypeFront2, pPosFront2); 
+                drawGrid('backGrid2', L2, H2, maxDim2, pTypeFront2, pPosFront2);
+                drawGrid('leftGrid2', W2, H2, maxDim2, pTypeSide2, pPosSide2); 
+                drawGrid('rightGrid2', W2, H2, maxDim2, pTypeSide2, pPosSide2);
+
+                generateViews('visualsArea2', L2, W2, H2, pTypeTop2, pPosTop2);
+
+                updateDesc('desc2_', 'item_0_0', "Manhole Panel" + pSfx);
+                updateDesc('desc2_', 'item_0_1', tRoof + " Roof Panel" + pSfx);
+                updateDesc('desc2_', 'item_0_2', tBase + " Base Panel" + pSfx);
+                updateDesc('desc2_', 'item_0_3', tL1 + " Wall Panel (L1)" + pSfx);
+                updateDesc('desc2_', 'item_0_4', tL2 + " Wall Panel (L2)" + pSfx);
+                updateDesc('desc2_', 'item_0_5', tL3 + " Wall Panel (L3)" + pSfx);
+                updateDesc('desc2_', 'item_0_6', tL4 + " Wall Panel (L4)" + pSfx);
+                updateDesc('desc2_', 'item_0_7', "Partition Panel" + pSfx);
+
+            } else {
+                if(document.getElementById('qty2_item_0_0')) {
+                     const t2Inputs = document.querySelectorAll('[id^="qty2_"]');
+                     for(let i=0; i<t2Inputs.length; i++) {
+                         t2Inputs[i].value = 0;
+                     }
+                }
+            }
+            window.currentTotalP2 = (mode === "2") ? totalP2 : 0;
+
+            let totalEffLiters = effLiters1 + effLiters2;
+            let capScreen = document.getElementById('sumCapacity_screen');
+            if(capScreen) capScreen.innerText = totalEffLiters.toLocaleString('en-MY', {maximumFractionDigits: 0}) + " L";
+            let capPrint = document.getElementById('sumCapacity_print');
+            if(capPrint && capScreen) capPrint.innerText = capScreen.innerText;
+
+            let combinedTotalP = totalP1 + totalP2;
+            let tpCount = document.getElementById('totalPanelsCount');
+            if(tpCount) tpCount.innerText = combinedTotalP;
+
+            let setQ = function(prefix, id, val) { let el = document.getElementById(prefix + id); if(el) el.value = val; };
+            
+            setQ('qty_', 'item_0_0', 1); 
+            setQ('qty_', 'item_0_1', Math.max(0, roof1 - 1)); 
+            setQ('qty_', 'item_0_2', base1); 
+            setQ('qty_', 'item_0_3', H1 >= 1 ? perim1 : 0); 
+            setQ('qty_', 'item_0_4', H1 >= 2 ? perim1 : 0); 
+            setQ('qty_', 'item_0_5', H1 >= 3 ? perim1 : 0); 
+            setQ('qty_', 'item_0_6', H1 >= 4 ? perim1 * (H1 - 3) : 0); 
+            setQ('qty_', 'item_0_7', partPanels1); 
+
+            setQ('qty_', 'item_1_0', H1 * 4); 
+            setQ('qty_', 'item_1_1', perim1); 
+            setQ('qty_', 'item_1_2', perim1); 
+            setQ('qty_', 'item_1_3', L1_in);  
+            setQ('qty_', 'item_1_4', L1_in);  
+
+            setQ('qty_', 'item_3_0', H1_in); 
+            setQ('qty_', 'item_3_1', H1_in); 
+            setQ('qty_', 'item_3_2', !isImperial ? H1_in : 1); 
+            setQ('qty_', 'item_3_3', 1); 
+
+            let sealantPerimeter = isImperial ? 4.88 : 4.0;
+            let boltsPerPanel = isImperial ? 16 : 12;
+            
+            setQ('qty_', 'item_3_4', Math.ceil((totalP1 * sealantPerimeter) / 15)); 
+            setQ('qty_', 'item_3_5', Math.ceil(totalP1 * boltsPerPanel * 1.05)); 
+
+            let qty40 = document.getElementById('qty_item_4_0'); 
+            if(qty40 && (!qty40.value || qty40.value == "0")) qty40.value = 1;
+            let qty41 = document.getElementById('qty_item_4_1');
+            if(qty41 && (!qty41.value || qty41.value == "0")) qty41.value = 1;
+
+            if(mode === "2") {
+                setQ('qty2_', 'item_0_0', 1); 
+                setQ('qty2_', 'item_0_1', Math.max(0, roof2 - 1)); 
+                setQ('qty2_', 'item_0_2', base2); 
+                setQ('qty2_', 'item_0_3', H2 >= 1 ? perim2 : 0); 
+                setQ('qty2_', 'item_0_4', H2 >= 2 ? perim2 : 0); 
+                setQ('qty2_', 'item_0_5', H2 >= 3 ? perim2 : 0); 
+                setQ('qty2_', 'item_0_6', H2 >= 4 ? perim2 * (H2 - 3) : 0); 
+                setQ('qty2_', 'item_0_7', partPanels2); 
+
+                setQ('qty2_', 'item_1_0', H2 * 4); 
+                setQ('qty2_', 'item_1_1', perim2); 
+                setQ('qty2_', 'item_1_2', perim2); 
+                setQ('qty2_', 'item_1_3', L2_in); 
+                setQ('qty2_', 'item_1_4', L2_in); 
+                
+                setQ('qty2_', 'item_3_0', H2_in); 
+                setQ('qty2_', 'item_3_1', H2_in); 
+                setQ('qty2_', 'item_3_2', !isImperial ? H2_in : 1); 
+                setQ('qty2_', 'item_3_3', 1); 
+
+                setQ('qty2_', 'item_3_4', Math.ceil((totalP2 * sealantPerimeter) / 15)); 
+                setQ('qty2_', 'item_3_5', Math.ceil(totalP2 * boltsPerPanel * 1.05)); 
+
+                let q2_40 = document.getElementById('qty2_item_4_0'); if(q2_40 && !q2_40.value) q2_40.value = 0;
+                let q2_41 = document.getElementById('qty2_item_4_1'); if(q2_41 && !q2_41.value) q2_41.value = 0;
+            }
+
+            let plinthText = document.getElementById('plinthCalcText');
+            const numPlinths = W1 + 1;
+            const plinthLen = L1_in;
+            if(plinthText) plinthText.innerText = `Recommendation: Require ${numPlinths} rows of concrete plinths, each ${plinthLen}${unitStr} long, spaced at ${spacingStr} C/C.`;
+
+            calcTotals();
+        } catch (e) {
+            console.error("Tank Calculation Fallback executed.", e);
+        }
+    }
+
     function exportCSV() {
         try {
             let csv = "\uFEFFWINKO INDUSTRIAL SDN BHD\n";
@@ -2584,16 +2738,17 @@ Note:
         }
     }
 
-    // AUTOMATIC INITIALIZATION
+    // AUTOMATIC INITIALIZATION ON LOAD
     document.addEventListener("DOMContentLoaded", function() {
         applyCustomRows();
         buildBOMTable();
         loadPrices();
         
-        // Force calculation & draw grids immediately on load (in the background)
+        // Force calculation & draw grids immediately on load
         setTimeout(() => {
             toggleTank2();
             processTankData();
+            console.log("Winko ERP System initialized successfully");
         }, 150);
     });
 
