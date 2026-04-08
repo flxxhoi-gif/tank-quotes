@@ -7,24 +7,19 @@
     <style>
         * { box-sizing: border-box; font-family: system-ui, sans-serif; }
         body { background-color: #f8fafc; padding: 0; color: #334155; margin: 0; line-height: 1.5; }
-        
         #securityOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.95); backdrop-filter: blur(5px); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; color: white; text-align: center; }
         .login-card { background: white; padding: 40px; border-radius: 12px; color: #333; box-shadow: 0 20px 40px rgba(0,0,0,0.5); width: 90%; max-width: 400px; display: flex; flex-direction: column; align-items: center; }
         .login-card input { width: 100%; padding: 12px; margin: 20px 0 15px 0; border: 2px solid #e2e8f0; border-radius: 6px; text-align: center; font-size: 18px; outline: none; }
         .login-card input:focus { border-color: #ea580c; box-shadow: 0 0 0 3px rgba(234,88,12,0.1); }
-        .login-card button { width: 100%; padding: 12px; background: #ea580c; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px; transition: transform 0.2s; }
-        .login-card button:hover { transform: translateY(-2px); }
-        
+        .login-card button { width: 100%; padding: 12px; background: #ea580c; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px; }
         #topNav { display: none; background: #0f172a; padding: 10px 20px; position: sticky; top: 0; z-index: 1000; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;}
         .nav-links { display: flex; gap: 8px; flex-wrap: wrap; }
         .nav-btn { background: transparent; color: #cbd5e1; border: none; font-size: 13px; font-weight: 700; cursor: pointer; padding: 8px 12px; border-radius: 4px; }
         .nav-btn.active, .nav-btn:hover { background: #ea580c; color: white; }
         .nav-logo { color: white; font-weight: 900; font-size: 1.1em; }
-        
         #mainContent, #adminContent, #inventoryContent, #customerPreviewContainer { display: none; padding: 20px; }
         #checklistPrintView, .print-only, .internal-only-tag { display: none; }
-        
-        .container { max-width: 1500px; margin: auto; }
+        .container { max-width: 1400px; margin: auto; }
         .app-header-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #cbd5e1; padding-bottom: 10px; margin-bottom: 20px; }
         .app-header-bar h2 { margin: 0; font-weight: 900; color: #0f172a; }
         .live-clock { font-size: 0.85em; color: #64748b; font-weight: 600; background: #e2e8f0; padding: 4px 10px; border-radius: 15px; }
@@ -32,64 +27,53 @@
         .memory-panel select { flex: 1; min-width: 180px; padding: 8px; border-radius: 4px; border: 1px solid #fdba74; font-weight: 600; color: #ea580c; outline: none; }
         .memory-btn { padding: 8px 14px; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; color: white; }
         .btn-save { background: #10b981; } .btn-del { background: #f43f5e; }
-        
         .app-layout { display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; }
-        .col-left { flex: 1.4; min-width: 480px; display: flex; flex-direction: column; gap: 15px; }
-        .col-right { flex: 0.9; min-width: 350px; display: flex; flex-direction: column; gap: 15px; position: sticky; top: 70px; }
-        @media (max-width: 1024px) { .col-left, .col-right { flex: 100%; min-width: 100%; position: relative; top: 0; } }
-        
+        .col-left { flex: 1.5; min-width: 450px; display: flex; flex-direction: column; gap: 15px; }
+        .col-right { flex: 1; min-width: 350px; display: flex; flex-direction: column; gap: 15px; position: sticky; top: 70px; }
+        @media (max-width: 900px) { .col-left, .col-right { flex: 100%; min-width: 100%; position: relative; top: 0; } }
         .module-card { background: #fff; border-radius: 8px; padding: 20px; border: 1px solid #e2e8f0; }
         .card-header { font-size: 1.1em; font-weight: 800; color: #0f172a; margin: 0 0 15px 0; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; }
         .reset-btn, .stock-check-btn { color: white; border: none; padding: 5px 10px; font-size: 11px; border-radius: 4px; cursor: pointer; font-weight: 600; }
         .reset-btn { background: #94a3b8; } .stock-check-btn { background: #3b82f6; margin-right: 5px; }
-        
         .config-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 10px; }
         .dim-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px; width: 100%; }
         .form-group { display: flex; flex-direction: column; }
         .form-group label { font-size: 0.75em; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase; }
         .form-group input, .form-group select, .form-group textarea { padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px; font-weight: 600; background: #f8fafc; }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #ea580c; background: #fff; outline: none; }
-        
         table { width: 100%; border-collapse: separate; border-spacing: 0; margin-bottom: 10px; font-size: 0.85em; border-radius: 6px; overflow: hidden; border: 1px solid #e2e8f0; }
         th { background: #f1f5f9; color: #475569; padding: 10px; text-align: left; border-bottom: 2px solid #e2e8f0; text-transform: uppercase; font-size: 0.75em; }
         th.text-center { text-align: center; } th.text-right { text-align: right; }
         td { padding: 6px 8px; border-bottom: 1px solid #f1f5f9; }
-        .col-item { background: #fff; font-weight: 600; width: 40%; color: #1e293b; }
-        .col-input { width: 14%; } .col-total { text-align: right; font-weight: 700; width: 18%; background: #fafafa; color: #b91c1c; }
+        .col-item { background: #fff; font-weight: 600; width: 45%; color: #1e293b; }
+        .col-input { width: 12%; } .col-total { text-align: right; font-weight: 700; width: 19%; background: #fafafa; color: #b91c1c; }
         .desc-input { width: 100%; padding: 4px; border: 1px solid transparent; background: transparent; font-weight: 600; font-size: 1em; color: #0f172a; }
         .col-input input { width: 100%; padding: 4px; text-align: center; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc; font-weight: 600; color: #0f172a; }
         .bom-inline-select { max-width: 100px; margin-left: 4px; padding: 2px 4px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.8em; font-weight: 600; color: #ea580c; background: #fff; }
-        
         .summary-box { background: linear-gradient(145deg, #0f172a, #1e293b); color: white; padding: 20px; border-radius: 10px; }
         .sum-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95em; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; color: #cbd5e1; }
         .sum-row span:last-child { font-weight: 600; color: white; }
-        .sum-row.total { font-size: 1.6em; font-weight: 800; color: #fbbf24; border-bottom: none; border-top: 2px solid rgba(255,255,255,0.2); padding-top: 12px; margin-top: 12px; }
+        .sum-row.total { font-size: 1.5em; font-weight: 800; color: #fbbf24; border-bottom: none; border-top: 2px solid rgba(255,255,255,0.2); padding-top: 12px; margin-top: 12px; }
         .sum-row.total span:last-child { color: #fbbf24; }
-        
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
-        .action-btn { flex: 1; min-width: 110px; padding: 12px; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 700; background: #ea580c; display: flex; align-items: center; justify-content: center; gap: 6px;}
+        .action-btn { flex: 1; min-width: 110px; padding: 12px; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 700; background: #ea580c;}
         .export-btn { background: #334155; } .print-btn { background: #059669; }
-        
         .visual-container { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-start; margin-bottom: 10px; }
-        .view-box { text-align: center; background: #f8fafc; padding: 8px; border: 1px solid #e2e8f0; border-radius: 6px; width: 135px; } 
+        .view-box { text-align: center; background: #f8fafc; padding: 8px; border: 1px solid #e2e8f0; border-radius: 6px; width: 130px; } 
         .view-title { font-size: 0.7em; font-weight: 800; margin-bottom: 6px; color: #64748b; text-transform: uppercase; }
         .grid-draft { display: grid; gap: 1px; background: #94a3b8; border: 2px solid #475569; margin: 0 auto; overflow: hidden; } 
-        .panel { background: #e0f2fe; position: relative; border: 1px solid transparent; box-sizing: border-box; }
-        .panel::before { content: ""; display: block; padding-top: 100%; }
+        .panel { background: #e0f2fe; position: relative; aspect-ratio: 1/1; border: 0.5px solid #cbd5e1; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
         .tank-section-title { background: #e2e8f0; padding: 5px 10px; border-radius: 4px; font-weight: 800; color: #0f172a; margin-bottom: 8px; font-size: 0.85em; text-transform: uppercase; border-left: 4px solid #3b82f6; }
-        
         .inv-status { padding: 3px 6px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
         .inv-ok { background: #dcfce7; color: #059669; } .inv-low { background: #fef9c3; color: #d97706; } .inv-out { background: #fee2e2; color: #e11d48; }
         .stock-row-warning { background: #fef2f2 !important; border-left: 4px solid #ef4444; }
         .inv-input { width: 100%; max-width: 100px; padding: 8px; border: 2px solid #cbd5e1; border-radius: 4px; font-weight: 800; text-align: center; font-size: 14px; }
-        
         .admin-header { background: #0f172a; color: white; padding: 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;}
         .admin-btn { padding: 10px 20px; background: #e11d48; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;}
         .admin-table { width: 100%; border-collapse: collapse; background: white; color: #0f172a; border-radius: 8px;}
         .admin-table th { background: #334155; color: white; padding: 12px; font-size: 0.85em; text-transform: uppercase;}
         .admin-table td { border-color: #e2e8f0; padding: 8px;}
         .admin-input { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-weight: bold; text-align: center;}
-        
         #customerPreviewContainer { background: #94a3b8; padding: 20px; overflow-y: auto; flex-direction: column; align-items: center; }
         .preview-toolbar { background: #0f172a; padding: 10px 20px; border-radius: 6px; margin-bottom: 15px; color: white; display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 210mm;}
         #customerPrintViewEditor { display: block; background: white; width: 100%; max-width: 210mm; min-height: 297mm; padding: 15mm; box-shadow: 0 10px 20px rgba(0,0,0,0.2); margin: 0 auto; color: #000; font-family: Arial, sans-serif; font-size: 9pt; }
@@ -105,8 +89,8 @@
             .visual-container { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; width: 100% !important; margin: 10px 0 20px 0 !important; page-break-inside: avoid !important;}
             .view-box { padding: 4px !important; border: 1.5px solid #cbd5e1 !important; background: #f8fafc !important; border-radius: 6px !important; width: 120px !important;}
             .grid-draft { gap: 0.5px !important; border: 1.5px solid #0f172a !important; background: #fff !important;}
-            .panel { background: #e0f2fe !important; position: relative; border: 1px solid #94a3b8 !important; aspect-ratio: 1/1; min-height: 12px;}
             
+            /* MODE 1: INTERNAL */
             body.print-internal #mainContent { display: block !important; }
             body.print-internal #customerPreviewContainer, body.print-internal #checklistPrintView, body.print-internal .col-right { display: none !important; }
             body.print-internal .app-layout, body.print-internal .col-left { display: block !important; width: 100% !important; }
@@ -117,11 +101,11 @@
             body.print-internal table { font-size: 8.5pt; margin-bottom: 10px; border-collapse: collapse; width: 100%; border: 1px solid #0f172a; }
             body.print-internal th { background-color: #0f172a !important; color: #ffffff !important; padding: 6px 8px;}
             body.print-internal td { border-right: 1px solid #cbd5e1; padding: 4px 8px; border-bottom: 1px solid #cbd5e1;}
-            body.print-internal td.text-right { text-align: right; font-weight: 700;}
             body.print-internal input, body.print-internal .desc-input, body.print-internal .bom-inline-select { border: none !important; background: transparent !important; padding: 0 !important; width: auto;}
             body.print-internal .summary-box { background: #fff !important; border: 2px solid #0f172a !important; border-radius: 8px !important; padding: 0 !important; width: 35% !important; float: right !important;}
             body.print-internal .drawings-page { page-break-before: always !important; padding-top: 20px !important; clear: both !important;}
 
+            /* MODE 2: CUSTOMER */
             body.print-customer #mainContent, body.print-customer #inventoryContent, body.print-customer #adminContent { display: none !important; }
             body.print-customer #customerPreviewContainer { display: block !important; padding: 0 !important; background: none !important; }
             body.print-customer #customerPrintViewEditor { max-width: none !important; padding: 0 !important; margin: 0 !important; }
@@ -133,6 +117,7 @@
             .cp-short-exclusions .label { background: #d1d5db !important; padding: 6px 10px; font-weight: bold; border-right: 1px solid #000; width: 100px; text-align: center; }
             .page-break-section { page-break-before: always; padding-top: 10px; }
 
+            /* MODE 3: CHECKLIST */
             body.print-checklist #mainContent, body.print-checklist #customerPreviewContainer { display: none !important; }
             body.print-checklist #checklistPrintView { display: block !important; font-size: 9pt; padding: 0 10px; }
             .chk-title { font-size: 11pt; font-weight: bold; text-decoration: underline; margin-bottom: 10px; }
@@ -140,13 +125,14 @@
             .chk-line { display: inline-block; border-bottom: 1px solid #000; min-width: 100px; padding: 0 5px; }
             .chk-section { border-top: 1.5px solid #000; border-bottom: 1.5px solid #000; padding: 5px 0; margin-bottom: 5px; page-break-inside: avoid;}
             .chk-box-container { border: 1px solid #000; padding: 1px 4px; display:inline-block; min-width:25px; text-align:center; font-weight:bold;}
+            body.print-checklist .panel { background: #e0f2fe !important; min-height: 12px !important;}
         }
     </style>
     <script>
-        const cv = "V78";
+        const cv = "V79";
         if(localStorage.getItem("winkoAppVersion") !== cv) {
             localStorage.setItem("winkoAppVersion", cv);
-            for(let i=13; i<=77; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=78; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -238,7 +224,7 @@
                         <div class="form-group"><label>Width</label><input type="number" id="width" value="4" step="0.01" oninput="safeProcess()"></div>
                         <div class="form-group"><label>Height</label><input type="number" id="height" value="4" step="0.01" oninput="safeProcess()"></div>
                     </div>
-                    <div class="config-grid"><div class="form-group" style="grid-column: span 2;"><label>Partition</label><select id="partChoice" onchange="togglePartitionDetails(); safeProcess();"><option value="no">No Partition</option><option value="yes">Yes</option></select></div></div>
+                    <div class="config-grid"><div class="form-group" style="grid-column: span 2;"><label>Partition</label><select id="partChoice" onchange="togglePartitionDetails(); safeProcess();"><option value="no">No</option><option value="yes">Yes</option></select></div></div>
                     <div id="partitionDetailsRow" style="display: none; background: #fff7ed; padding: 15px; border-radius: 8px; margin-bottom: 15px;"><div style="display:flex; gap:10px;"><div class="form-group"><label>Qty</label><input type="number" id="partQty" value="0" min="0" oninput="safeProcess()"></div><div class="form-group"><label>L/W</label><input type="number" id="partLen" value="0" step="0.01" oninput="safeProcess()"></div><div class="form-group"><label>Hgt</label><input type="number" id="partHgt" value="0" step="0.01" oninput="safeProcess()"></div><div class="form-group"><label>Pos</label><input type="number" id="partPos" value="1" min="1" oninput="safeProcess()"></div><div class="form-group" style="flex:1.5;"><label>Type</label><input type="text" id="partType" placeholder="Divider" oninput="safeProcess()"></div></div></div>
 
                     <div id="tank2Section" style="display: none; margin-top: 20px;">
@@ -408,7 +394,7 @@ Note:
 <div id="customerPreviewContainer">
     <div class="preview-toolbar no-print">
         <div style="flex:1;"><h3 style="margin:0;">Customer Quote Editor</h3><p style="margin:0; font-size:12px;">Click to overwrite text before printing.</p></div>
-        <button class="action-btn" style="width: auto; background:#059669;" onclick="printCustomerFromPreview()">Print Final PDF</button>
+        <button class="action-btn print-btn" style="width: auto; background:#059669;" onclick="printCustomerFromPreview()">Print Final PDF</button>
     </div>
     
     <div id="customerPrintViewEditor">
@@ -528,25 +514,34 @@ Note:
     </div>
 
     <div style="border-top:1.5px solid #000; border-bottom:1.5px solid #000; padding:5px 0; margin-bottom:5px;">
-        <div style="font-weight:bold; text-transform:uppercase; font-size:8.5pt; margin-bottom:3px;">Accessories</div>
+        <div style="font-weight:bold; text-transform:uppercase; font-size:8.5pt; margin-bottom:3px;">WLI & LADDER</div>
         <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:4px;">
             <div>Manhole</div><div><span style="border:1px solid #000; padding:1px 4px; display:inline-block; min-width:25px; text-align:center; font-weight:bold;" id="chk_qty_manhole"></span> Qty</div><div style="grid-column: span 2;"><span class="chk-box">&#10003;</span> Normal</div>
-            <div>Int Ladder</div><div><span style="border:1px solid #000; padding:1px 4px; display:inline-block; min-width:25px; text-align:center; font-weight:bold;" id="chk_qty_int_lad"></span> Qty</div><div><span class="chk-box" id="box_int_hdg"></span> HDG</div><div><span class="chk-box" id="box_int_304"></span> SS304 &nbsp; <span class="chk-box" id="box_int_316"></span> SS316</div>
-            <div>Ext Ladder</div><div><span style="border:1px solid #000; padding:1px 4px; display:inline-block; min-width:25px; text-align:center; font-weight:bold;" id="chk_qty_ext_lad"></span> Qty</div><div><span class="chk-box" id="box_ext_hdg"></span> HDG</div><div><span class="chk-box" id="box_ext_304"></span> SS304 &nbsp; <span class="chk-box" id="box_ext_316"></span> SS316</div>
-            <div>WLI</div><div><span style="border:1px solid #000; padding:1px 4px; display:inline-block; min-width:25px; text-align:center; font-weight:bold;" id="chk_qty_wli"></span> Qty</div><div><span class="chk-box" id="box_wli_ball"></span> Ball</div><div><span class="chk-box" id="box_wli_tube"></span> Tube</div>
-            <div>Air vent</div><div><span style="border:1px solid #000; padding:1px 4px; display:inline-block; min-width:25px; text-align:center; font-weight:bold;" id="chk_qty_vent"></span> Qty</div><div><span class="chk-box" id="box_vent_hdg"></span> Steel</div><div><span class="chk-box" id="box_vent_abs"></span> ABS</div>
+            <div>Internal ladder</div><div><span style="border:1px solid #000; padding:1px 4px; display:inline-block; min-width:25px; text-align:center; font-weight:bold;" id="chk_qty_int_lad"></span> Qty</div><div><span class="chk-box" id="box_int_hdg"></span> HDG</div><div><span class="chk-box" id="box_int_304"></span> SS304 &nbsp; <span class="chk-box" id="box_int_316"></span> SS316</div>
+            <div>External ladder</div><div><span style="border:1px solid #000; padding:1px 4px; display:inline-block; min-width:25px; text-align:center; font-weight:bold;" id="chk_qty_ext_lad"></span> Qty</div><div><span class="chk-box" id="box_ext_hdg"></span> HDG</div><div><span class="chk-box" id="box_ext_304"></span> SS304 &nbsp; <span class="chk-box" id="box_ext_316"></span> SS316</div>
+            <div>Water Level Indicator</div><div><span style="border:1px solid #000; padding:1px 4px; display:inline-block; min-width:25px; text-align:center; font-weight:bold;" id="chk_qty_wli"></span> Qty</div><div><span class="chk-box" id="box_wli_ball"></span> Ball Float Type</div><div><span class="chk-box" id="box_wli_tube"></span> Tube Type</div>
+            <div>Air vent</div><div><span style="border:1px solid #000; padding:1px 4px; display:inline-block; min-width:25px; text-align:center; font-weight:bold;" id="chk_qty_vent"></span> Qty</div><div><span class="chk-box" id="box_vent_hdg"></span> HDG Steel</div><div><span class="chk-box" id="box_vent_abs"></span> ABS</div>
         </div>
     </div>
 
     <div style="border-top:1.5px solid #000; border-bottom:1.5px solid #000; padding:5px 0; margin-bottom:5px;">
-        <div style="font-weight:bold; text-transform:uppercase; font-size:8.5pt; margin-bottom:3px;">OTHER REQUIREMENTS</div>
+        <div style="font-weight:bold; text-transform:uppercase; font-size:8.5pt; margin-bottom:3px;">TANK FOUNDATION</div>
+        <div style="display:grid; grid-template-columns:auto auto auto; gap:8px;">
+            <div>Steel C-Channel / I Beam</div><div><span class="chk-box"></span> Yes</div><div><span class="chk-box"></span> No</div>
+            <div>Size</div><div><span style="display:inline-block; border-bottom:1px solid #000; width:100%;"></span></div><div><span class="chk-box"></span> 1m RC &nbsp; <span class="chk-box"></span> 2m RC</div>
+            <div>Coating</div><div><span class="chk-box"></span> HDG</div><div><span class="chk-box"></span> Painted</div>
+        </div>
+    </div>
+
+    <div style="border-top:1.5px solid #000; border-bottom:1.5px solid #000; padding:5px 0; margin-bottom:5px;">
+        <div style="font-weight:bold; text-transform:uppercase; font-size:8.5pt; margin-bottom:3px;">OTHER ACCESSORIES & REQUIREMENTS</div>
         <div style="border-bottom:1px solid #000; width:100%; margin-top:12px;"></div><div style="border-bottom:1px solid #000; width:100%; margin-top:12px;"></div>
     </div>
 
     <div style="display:flex; justify-content:space-between; margin-top:20px;">
-        <div style="width:30%;"><div style="border-top:1px solid #000; font-weight:bold; padding-top:2px;">Prepared:</div></div>
-        <div style="width:30%;"><div style="border-top:1px solid #000; font-weight:bold; padding-top:2px;">Approved:</div></div>
-        <div style="width:30%;"><div style="border-top:1px solid #000; font-weight:bold; padding-top:2px;">Received (Production):</div></div>
+        <div style="width:30%; font-size:8.5pt;"><div style="border-top:1px solid #000; font-weight:bold; padding-top:2px;">Prepared by:</div></div>
+        <div style="width:30%; font-size:8.5pt;"><div style="border-top:1px solid #000; font-weight:bold; padding-top:2px;">Approved by:</div></div>
+        <div style="width:30%; font-size:8.5pt;"><div style="border-top:1px solid #000; font-weight:bold; padding-top:2px;">Received by:<br><br>(Production)</div></div>
     </div>
 
     <div style="page-break-before: always; padding-top: 10px;">
@@ -560,6 +555,7 @@ Note:
             <div style="padding:4px; border:1.5px solid #000; border-radius:6px; width:120px; text-align:center;"><div style="font-size:7pt; font-weight:800; text-transform:uppercase;">Right</div><div id="rightGrid_c"></div></div>
         </div>
         <div style="font-size:10pt; font-weight:bold; margin-top:25px;">Tank 1 - Internal Bracing</div><div style="display:flex; flex-wrap:wrap; gap:8px; width:100%;" id="visualsArea1_c"></div>
+        
         <div id="tank2VisualsPrint_c" style="display:none;">
             <div style="font-size:11pt; font-weight:bold; text-decoration:underline; margin:30px 0 10px 0;">Tank 2 - Production Drawings</div>
             <div style="display:flex; flex-wrap:wrap; gap:8px; width:100%;">
@@ -709,6 +705,20 @@ Note:
         let p2 = getVal('partChoice2'); setDisp('partitionDetailsRow2', p2 === 'yes'); if(p2!=='yes') setVal('partQty2', 0);
     }
 
+    function handleUnitChange() {
+        let uc = getVal('unitChoice') || 'ft'; let ou = window.currentUnit || 'ft';
+        if(ou !== uc) {
+            ['length', 'width', 'height', 'partLen', 'partHgt', 'length2', 'width2', 'height2', 'partLen2', 'partHgt2'].forEach(id => {
+                let e = document.getElementById(id);
+                if(e && e.value > 0) {
+                    let v = parseFloat(e.value); let p = ou === 'ft' ? v/4 : (ou === 'm_122' ? v/1.22 : v/1);
+                    if(uc === 'ft') e.value = (p*4); else if(uc === 'm_122') e.value = +(p*1.22).toFixed(2); else e.value = Math.round(p);
+                }
+            }); window.currentUnit = uc;
+        }
+        updateLabels(); savePrices(); processTankData();
+    }
+
     const systemBaseStructure = [
         { category: "Panels", items: [{name: "Manhole Panel", def: 450, wt: 55}, {name: "Roof Panel", def: 220, wt: 26}, {name: "Base Panel", def: 350, wt: 68}, {name: "Wall Panel (L1)", def: 350, wt: 68}, {name: "Wall Panel (L2)", def: 280, wt: 48}, {name: "Wall Panel (L3)", def: 280, wt: 48}, {name: "Wall Panel (L4)", def: 220, wt: 26}, {name: "Partition Panel", def: 280, wt: 48}] },
         { category: "Cleat & Trusses", items: [{name: "Type A Cleat", def: 25, wt: 1.2}, {name: "Type B Cleat", def: 28, wt: 1.8}, {name: "Type C Cleat", def: 30, wt: 2.5}, {name: "Ø1\" Pipe", def: 12, wt: 1.6}, {name: "2\" x 2\" angle", def: 15, wt: 2.2}] },
@@ -719,7 +729,7 @@ Note:
 
     try {
         let md = JSON.parse(localStorage.getItem('winkoMasterDefaults'));
-        if(md) md.forEach((sec, s) => sec.items.forEach((it, i) => { if(systemBaseStructure[s].items[i]) { systemBaseStructure[s].items[i].name = it.name; systemBaseStructure[s].items[i].def = it.def; systemBaseStructure[s].items[i].wt = it.wt; } }));
+        if(md) md.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { if(systemBaseStructure[sIdx] && systemBaseStructure[sIdx].items[iIdx]) { systemBaseStructure[sIdx].items[iIdx].name = it.name; systemBaseStructure[sIdx].items[iIdx].def = it.def; systemBaseStructure[sIdx].items[iIdx].wt = it.wt; } }); });
     } catch(e) {}
 
     let bomStructure = JSON.parse(JSON.stringify(systemBaseStructure));
@@ -730,67 +740,76 @@ Note:
 
     function buildAdminTable() {
         let h = '';
-        systemBaseStructure.forEach((sec, s) => sec.items.forEach((it, i) => { h += `<tr><td>${sec.category}</td><td><input type="text" class="admin-input text-left" id="adm_name_${s}_${i}" value="${it.name}"></td><td><input type="number" step="0.1" class="admin-input" id="adm_wt_${s}_${i}" value="${it.wt}"></td><td><input type="number" step="0.01" class="admin-input" id="adm_price_${s}_${i}" value="${it.def.toFixed(2)}"></td></tr>`; }));
-        setHtml('adminBody', h);
+        systemBaseStructure.forEach((sec, sIdx) => {
+            sec.items.forEach((it, iIdx) => { h += `<tr><td style="font-weight:800; background:#f1f5f9; text-align:left;">${sec.category}</td><td><input type="text" class="admin-input text-left" id="adm_name_${sIdx}_${iIdx}" value="${it.name}"></td><td><input type="number" step="0.1" class="admin-input" id="adm_wt_${sIdx}_${iIdx}" value="${it.wt || 0}"></td><td><input type="number" step="0.01" class="admin-input" id="adm_price_${sIdx}_${iIdx}" value="${it.def.toFixed(2)}"></td></tr>`; });
+        }); setHtml('adminBody', h);
     }
 
     function saveAdminDefaults() {
-        let n = JSON.parse(JSON.stringify(systemBaseStructure));
-        n.forEach((sec, s) => sec.items.forEach((it, i) => { it.name = getVal(`adm_name_${s}_${i}`); it.wt = getNum(`adm_wt_${s}_${i}`); it.def = getNum(`adm_price_${s}_${i}`); }));
-        localStorage.setItem('winkoMasterDefaults', JSON.stringify(n)); alert("Master Defaults updated."); location.reload(); 
+        let nd = JSON.parse(JSON.stringify(systemBaseStructure));
+        nd.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { it.name = getVal(`adm_name_${sIdx}_${iIdx}`); it.wt = getNum(`adm_wt_${sIdx}_${iIdx}`); it.def = getNum(`adm_price_${sIdx}_${iIdx}`); }); });
+        localStorage.setItem('winkoMasterDefaults', JSON.stringify(nd)); alert("Success! Master Defaults updated."); location.reload(); 
     }
 
     function applyCustomRows() {
         bomStructure = JSON.parse(JSON.stringify(systemBaseStructure));
-        for(let i=0; i<Math.min(customRowCounts.length, bomStructure.length); i++) { for(let j=0; j<customRowCounts[i]; j++) { bomStructure[i].items.push({name: "Custom Item", def: 0, wt: 0}); } }
+        for(let i=0; i < Math.min(customRowCounts.length, bomStructure.length); i++) { for(let j=0; j < customRowCounts[i]; j++) { bomStructure[i].items.push({name: "Custom Added Item", def: 0, wt: 0}); } }
     }
 
-    function addCategoryRow(s) { savePrices(); customRowCounts[s]++; localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts)); applyCustomRows(); buildBOMTable(); loadPrices(); }
-    function removeCategoryRow(s) { if(customRowCounts[s] > 0) { savePrices(); customRowCounts[s]--; localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts)); applyCustomRows(); buildBOMTable(); loadPrices(); } }
+    function addCategoryRow(sIdx) { savePrices(); customRowCounts[sIdx]++; localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts)); applyCustomRows(); buildBOMTable(); loadPrices(); }
+    function removeCategoryRow(sIdx) { if(customRowCounts[sIdx] > 0) { savePrices(); customRowCounts[sIdx]--; localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts)); applyCustomRows(); buildBOMTable(); loadPrices(); } }
 
     function refreshMemoryDropdown() {
         let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; let s = document.getElementById('memoryDropdown');
-        if(s) { s.innerHTML = '<option value="">-- Load Saved Project --</option>'; Object.keys(m).forEach(k => s.innerHTML += `<option value="${k}">${k}</option>`); }
+        if(s) { s.innerHTML = '<option value="">-- Load a Saved Project --</option>'; Object.keys(m).forEach(k => { s.innerHTML += `<option value="${k}">${k}</option>`; }); }
     }
 
     function saveToMemory() {
-        let p = getVal('projectName').trim(); if(!p) { alert("Type a Project Name."); return; }
-        let d = { customRowCounts: JSON.parse(JSON.stringify(customRowCounts)) }; configIDs.forEach(id => d[id] = getVal(id));
-        bomStructure.forEach((sec, s) => sec.items.forEach((it, i) => {
-            let uId = `item_${s}_${i}`; d[`desc_${uId}`]=getVal(`desc_${uId}`); d[`wt_${uId}`]=getVal(`wt_${uId}`); d[`price_${uId}`]=getVal(`price_${uId}`); d[`qty_${uId}`]=getVal(`qty_${uId}`); if(it.selectId) d[it.selectId] = getVal(it.selectId);
-            d[`desc2_${uId}`]=getVal(`desc2_${uId}`); d[`wt2_${uId}`]=getVal(`wt2_${uId}`); d[`price2_${uId}`]=getVal(`price2_${uId}`); d[`qty2_${uId}`]=getVal(`qty2_${uId}`); if(it.selectId) d[`sel2_${it.selectId}`] = getVal(`sel2_${it.selectId}`);
-        }));
-        let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; m[p] = d; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); alert("Saved to memory."); refreshMemoryDropdown(); setVal('memoryDropdown', p); syncPrintHeader();
+        let p = getVal('projectName').trim(); if(!p) { alert("Please type a Project Name first."); return; }
+        let d = { customRowCounts: JSON.parse(JSON.stringify(customRowCounts)) }; configIDs.forEach(id => { d[id] = getVal(id); });
+        bomStructure.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => {
+            let uId = `item_${sIdx}_${iIdx}`; d[`desc_${uId}`]=getVal(`desc_${uId}`); d[`wt_${uId}`]=getVal(`wt_${uId}`); d[`price_${uId}`]=getVal(`price_${uId}`); d[`qty_${uId}`]=getVal(`qty_${uId}`); if(it.selectId) d[it.selectId]=getVal(it.selectId);
+            d[`desc2_${uId}`]=getVal(`desc2_${uId}`); d[`wt2_${uId}`]=getVal(`wt2_${uId}`); d[`price2_${uId}`]=getVal(`price2_${uId}`); d[`qty2_${uId}`]=getVal(`qty2_${uId}`); if(it.selectId) d[`sel2_${it.selectId}`]=getVal(`sel2_${it.selectId}`);
+        }); });
+        let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; m[p] = d; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); alert("Project '" + p + "' saved."); refreshMemoryDropdown(); setVal('memoryDropdown', p); syncPrintHeader();
     }
 
     function loadFromMemory() {
         let p = getVal('memoryDropdown'); if(!p) return; let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; let d = m[p];
         if (d) {
             customRowCounts = d.customRowCounts || [0,0,0,0,0]; localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts)); applyCustomRows(); buildBOMTable();
-            setVal('projectName', p); configIDs.forEach(id => { if(d[id] !== undefined) setVal(id, d[id]); });
+            setVal('projectName', p); configIDs.forEach(id => { if (d[id] !== undefined) setVal(id, d[id]); });
             if(getVal('unitChoice')) window.currentUnit = getVal('unitChoice'); updateLabels(); toggleTank2();
-            bomStructure.forEach((sec, s) => sec.items.forEach((it, i) => {
-                let u = `item_${s}_${i}`; setVal(`desc_${u}`, d[`desc_${u}`]); setVal(`wt_${u}`, d[`wt_${u}`]); setVal(`price_${u}`, d[`price_${u}`]); setVal(`qty_${u}`, d[`qty_${u}`]); if(it.selectId) setVal(it.selectId, d[it.selectId]);
-                setVal(`desc2_${u}`, d[`desc2_${u}`]); setVal(`wt2_${u}`, d[`wt2_${u}`]); setVal(`price2_${u}`, d[`price2_${u}`]); setVal(`qty2_${u}`, d[`qty2_${u}`]); if(it.selectId) setVal(`sel2_${it.selectId}`, d[`sel2_${it.selectId}`]);
-            }));
+            bomStructure.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => {
+                let uId = `item_${sIdx}_${iIdx}`; setVal(`desc_${uId}`, d[`desc_${uId}`]); setVal(`wt_${uId}`, d[`wt_${uId}`]); setVal(`price_${uId}`, d[`price_${uId}`]); setVal(`qty_${uId}`, d[`qty_${uId}`]); if(it.selectId) setVal(it.selectId, d[it.selectId]);
+                setVal(`desc2_${uId}`, d[`desc2_${uId}`]); setVal(`wt2_${uId}`, d[`wt2_${uId}`]); setVal(`price2_${uId}`, d[`price2_${uId}`]); setVal(`qty2_${uId}`, d[`qty2_${uId}`]); if(it.selectId) setVal(`sel2_${it.selectId}`, d[`sel2_${it.selectId}`]);
+            }); });
             processTankData(); 
         }
     }
 
-    function deleteFromMemory() { let p = getVal('memoryDropdown'); if(!p) return; if(confirm("Delete '" + p + "'?")) { let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; delete m[p]; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); refreshMemoryDropdown(); setVal('projectName', ''); } }
+    function deleteFromMemory() {
+        let p = getVal('memoryDropdown'); if(!p) { alert("Select a project to delete."); return; }
+        if(confirm("Permanently delete '" + p + "'?")) { let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; delete m[p]; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); refreshMemoryDropdown(); setVal('projectName', ""); }
+    }
 
-    function resetDefaultPrices() { if(confirm("Reset to Master Template?")) { customRowCounts = [0,0,0,0,0]; localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts)); localStorage.removeItem('winkoProDataV78'); location.reload(); } }
+    function resetDefaultPrices() {
+        if(confirm("Reset to Master Template?")) { customRowCounts = [0,0,0,0,0]; localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts)); localStorage.removeItem('winkoProDataV78'); location.reload(); }
+    }
 
     function syncPrintHeader() {
         try {
-            let u = getVal('unitChoice') === 'ft' ? 'ft' : 'm'; let md = getVal('numTanks'); let dStr = `Tank 1: ${getNum('length')}${u} (L) x ${getNum('width')}${u} (W) x ${getNum('height')}${u} (H)`;
+            setTxt('metaQuoteId', getVal('quoteIdInput') || "N/A"); setTxt('metaProject', getVal('projectName') || "_____________________"); setTxt('metaStd', getVal('stdChoice')); setTxt('sumStd', getVal('stdChoice') || "-");
+            let u = getVal('unitChoice') === 'ft' ? 'ft' : 'm'; setTxt('sumUnit', document.getElementById('unitChoice').options[document.getElementById('unitChoice').selectedIndex].text || "-"); setTxt('sumCoat', getVal('coatChoice') || "-");
+            
+            let md = getVal('numTanks'); let dStr = `Tank 1: ${getNum('length')}${u} (L) x ${getNum('width')}${u} (W) x ${getNum('height')}${u} (H)`;
             if(md === "2") dStr += ` | Tank 2: ${getNum('length2')}${u} (L) x ${getNum('width2')}${u} (W) x ${getNum('height2')}${u} (H)`; else if (md === "custom") dStr += ` | Item 2: ${getVal('customItemName') || 'Custom Item'}`;
+            setTxt('metaDims', dStr); setTxt('metaCoat', getVal('coatChoice'));
             
             let p1Str = getVal('partChoice') === 'yes' && getNum('partQty') > 0 ? `${getNum('partQty')}x ${getVal('partType')} (${getNum('partLen')}${u} x ${getNum('partHgt')}${u})` : '';
             let p2Str = md === '2' && getVal('partChoice2') === 'yes' && getNum('partQty2') > 0 ? `${getNum('partQty2')}x ${getVal('partType2')} (${getNum('partLen2')}${u} x ${getNum('partHgt2')}${u})` : '';
             let pDisp = (p1Str && p2Str) ? `T1: ${p1Str} | T2: ${p2Str}` : (p2Str ? `T2: ${p2Str}` : (p1Str || 'None'));
-
-            setTxt('metaQuoteId', getVal('quoteIdInput') || "N/A"); setTxt('metaProject', getVal('projectName') || "_____________________"); setTxt('metaStd', getVal('stdChoice')); setTxt('sumStd', getVal('stdChoice') || "-"); setTxt('sumUnit', document.getElementById('unitChoice').options[document.getElementById('unitChoice').selectedIndex].text || "-"); setTxt('sumCoat', getVal('coatChoice') || "-"); setTxt('metaDims', dStr); setTxt('metaCoat', getVal('coatChoice')); setTxt('metaPart', pDisp); setTxt('sumPart', pDisp);
+            setTxt('metaPart', pDisp); setTxt('sumPart', pDisp);
             
             setTxt('cpCustName', getVal('custCompany') || getVal('projectName') || "Client Name"); document.getElementById('cpCustAddress').innerHTML = (getVal('custAddr') || '').replace(/\n/g, '<br>'); setTxt('cpAttention', getVal('custAttn')); setTxt('cpProject', getVal('projectName')); setTxt('cpRef', getVal('quoteIdInput')); setTxt('cpMaterial', getVal('coatChoice')); setTxt('cpDims', `${getNum('length')}${u} (L) x ${getNum('width')}${u} (W) x ${getNum('height')}${u} (H) (Total: ${window.currentTotalP1 || 0} Panels)`); setTxt('cpStd', getVal('stdChoice')); 
             
@@ -869,6 +888,7 @@ Note:
 
     function calcTotals() {
         let baseCost = 0; let totalWeight = 0; let mode = getVal('numTanks') || "1";
+
         try {
             bomStructure.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => {
                 const id = `item_${sIdx}_${iIdx}`;
@@ -909,6 +929,7 @@ Note:
             setTxt('cpUnitPrice', p1.toLocaleString('en-MY', {minimumFractionDigits: 2})); setTxt('cpTotalPrice', p1.toLocaleString('en-MY', {minimumFractionDigits: 2}));
             setTxt('cpUnitPrice2', p2.toLocaleString('en-MY', {minimumFractionDigits: 2})); setTxt('cpTotalPrice2', p2.toLocaleString('en-MY', {minimumFractionDigits: 2}));
             setTxt('cpSstPct', sst || 0); setTxt('cpSstAmt', sstAmt.toLocaleString('en-MY', {minimumFractionDigits: 2})); setTxt('cpGrandTotal', grand.toLocaleString('en-MY', {minimumFractionDigits: 2}));
+
             syncPrintHeader(); 
         } catch(e) { console.error(e); }
     }
