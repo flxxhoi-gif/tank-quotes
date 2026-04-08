@@ -1220,4 +1220,61 @@ Note:
                 const mx2 = Math.max(L2, W2, H2);
                 drawGrid('topGrid2', L2, W2, mx2, pTT2, pPT2); drawGrid('bottomGrid2', L2, W2, mx2, pTT2, pPT2);
                 drawGrid('frontGrid2', L2, H2, mx2, pTF2, pPF2); drawGrid('backGrid2', L2, H2, mx2, pTF2, pPF2);
-                drawGrid('leftGrid2', W2, H
+                drawGrid('leftGrid2', W2, H2, mx2, pTS2, pPS2); drawGrid('rightGrid2', W2, H2, mx2, pTS2, pPS2);
+                generateViews('visualsArea2', L2, W2, H2, pTT2, pPT2);
+
+                setDesc('desc2_', 'item_0_0', "Manhole Panel" + pSfx); setDesc('desc2_', 'item_0_1', getVal('thickRoof') + " Roof Panel" + pSfx); setDesc('desc2_', 'item_0_2', getVal('thickBase') + " Base Panel" + pSfx); setDesc('desc2_', 'item_0_3', getVal('thickWallL1') + " Wall Panel (L1)" + pSfx); setDesc('desc2_', 'item_0_4', getVal('thickWallL2') + " Wall Panel (L2)" + pSfx); setDesc('desc2_', 'item_0_5', getVal('thickWallL3') + " Wall Panel (L3)" + pSfx); setDesc('desc2_', 'item_0_6', getVal('thickWallL4') + " Wall Panel (L4)" + pSfx); setDesc('desc2_', 'item_0_7', "Partition Panel" + pSfx);
+            } else { window.currentTotalP2 = 0; document.querySelectorAll('[id^="qty2_"]').forEach(e=>e.value=0); }
+
+            let tel = effLiters1 + effLiters2; setTxt('sumCapacity_screen', isNaN(tel) ? "0 L" : tel.toLocaleString('en-MY', {maximumFractionDigits:0})+" L");
+            
+            let setQ = (p, id, v) => setVal(p+id, isNaN(v) ? 0 : v);
+            setQ('qty_', 'item_0_0', 1); setQ('qty_', 'item_0_1', Math.max(0, r1 - 1)); setQ('qty_', 'item_0_2', b1); setQ('qty_', 'item_0_3', H1>=1?pm1:0); setQ('qty_', 'item_0_4', H1>=2?pm1:0); setQ('qty_', 'item_0_5', H1>=3?pm1:0); setQ('qty_', 'item_0_6', H1>=4?pm1*(H1-3):0); setQ('qty_', 'item_0_7', pp1); 
+            setQ('qty_', 'item_1_0', H1*4); setQ('qty_', 'item_1_1', pm1); setQ('qty_', 'item_1_2', pm1); setQ('qty_', 'item_1_3', L1_in); setQ('qty_', 'item_1_4', L1_in);  
+            setQ('qty_', 'item_3_0', H1_in); setQ('qty_', 'item_3_1', H1_in); setQ('qty_', 'item_3_2', (u!=='ft') ? H1_in : 1); setQ('qty_', 'item_3_3', 1); 
+
+            let sealP = (u==='ft') ? 4.88 : 4.0; let boltP = (u==='ft') ? 16 : 12;
+            setQ('qty_', 'item_3_4', Math.ceil(((r1+b1+s1+pp1)*sealP)/15)); setQ('qty_', 'item_3_5', Math.ceil((r1+b1+s1+pp1)*boltP*1.05)); 
+            if(!getVal('qty_item_4_0') || getVal('qty_item_4_0')=="0") setVal('qty_item_4_0', 1); if(!getVal('qty_item_4_1') || getVal('qty_item_4_1')=="0") setVal('qty_item_4_1', 1);
+
+            if(mode === "2") {
+                let r2=window.currentTotalP2; let pm2=Math.round(parseFloat(getVal('length2'))/factor + parseFloat(getVal('width2'))/factor)*2; let H2=Math.round(parseFloat(getVal('height2'))/factor); let pp2=(getVal('partChoice2')==='yes') ? Math.round(parseFloat(getVal('partLen2'))/factor)*Math.round(parseFloat(getVal('partHgt2'))/factor)*parseFloat(getVal('partQty2')) : 0;
+                setQ('qty2_', 'item_0_0', 1); setQ('qty2_', 'item_0_1', Math.max(0, (r2/H2)-1)); setQ('qty2_', 'item_0_2', r2/H2); setQ('qty2_', 'item_0_3', H2>=1?pm2:0); setQ('qty2_', 'item_0_4', H2>=2?pm2:0); setQ('qty2_', 'item_0_5', H2>=3?pm2:0); setQ('qty2_', 'item_0_6', H2>=4?pm2*(H2-3):0); setQ('qty2_', 'item_0_7', pp2); 
+                setQ('qty2_', 'item_1_0', H2*4); setQ('qty2_', 'item_1_1', pm2); setQ('qty2_', 'item_1_2', pm2); setQ('qty2_', 'item_1_3', parseFloat(getVal('length2'))); setQ('qty2_', 'item_1_4', parseFloat(getVal('length2'))); 
+                setQ('qty2_', 'item_3_0', parseFloat(getVal('height2'))); setQ('qty2_', 'item_3_1', parseFloat(getVal('height2'))); setQ('qty2_', 'item_3_2', (u!=='ft')?parseFloat(getVal('height2')):1); setQ('qty2_', 'item_3_3', 1); 
+                setQ('qty2_', 'item_3_4', Math.ceil((r2*sealP)/15)); setQ('qty2_', 'item_3_5', Math.ceil(r2*boltP*1.05)); 
+                if(!getVal('qty2_item_4_0')) setVal('qty2_item_4_0', 0); if(!getVal('qty2_item_4_1')) setVal('qty2_item_4_1', 0);
+            }
+
+            setTxt('plinthCalcText', `Recommendation: Require ${isNaN(W1+1)?0:W1+1} rows of concrete plinths, each ${isNaN(L1_in)?0:L1_in}${u==='ft'?'ft':'m'} long, spaced at ${u==='ft'?'4ft (1220mm)':'1m (1000mm)'} C/C.`);
+            calcTotals();
+        } catch (e) { console.error(e); }
+    }
+
+    function exportCSV() {
+        let csv = "\uFEFFWINKO INDUSTRIAL SDN BHD\nOFFICIAL TECHNICAL QUOTATION\n\n";
+        let qid = getVal('quoteIdInput') || "N/A"; let d = new Date().toLocaleDateString('en-MY'); let md = getVal('numTanks') || "1";
+        csv += `"Quote No:","${qid}"\n"Project / Client:","${getVal('projectName')||''}"\n"Date:","${d}"\n"Dimensions:","${document.getElementById('metaDims')?document.getElementById('metaDims').innerText:''}"\n"Total Panels:","${document.getElementById('sumPanels_screen')?document.getElementById('sumPanels_screen').innerText:''} pcs"\n"Material:","${getVal('coatChoice')+(md==='2'?' | Tank 2: '+getVal('coatChoice2'):'')}"\n\n`;
+        
+        let genBOM = (tankIdx, suffix) => {
+            csv += `TANK ${tankIdx} BILL OF MATERIALS\nCategory,Item Description,Qty,Unit Wt (kg),Unit Price (RM),Total (RM)\n`;
+            bomStructure.forEach((s, si) => s.items.forEach((it, ii) => {
+                let id = `item_${si}_${ii}`; let q = getNum(`${suffix}qty_${id}`);
+                if(q > 0) csv += `"${s.category}","${getVal(`${suffix}desc_${id}`)+(it.selectId?' ('+getVal((suffix===''?it.selectId:`sel2_${it.selectId}`))+')':'')}",${q},${getNum(`${suffix}wt_${id}`)},${getNum(`${suffix}price_${id}`)},${document.getElementById(suffix+'total_'+id).innerText.replace(/,/g, '')}\n`;
+            })); csv += `\n`;
+        };
+        
+        genBOM(1, ''); if(md === "2") genBOM(2, 'qty2_'); else if(md === "custom") csv += `CUSTOM ITEM (ITEM 2)\n"Description","Qty","Unit Base Cost (RM)","Total (RM)"\n"${getVal('customItemName')}",1,${getNum('customItemCost')},${getNum('customItemCost')}\n\n`;
+
+        csv += `,,,,"Est. Total Weight (kg)",${document.getElementById('sumWeight_screen').innerText.replace(' kg','')}\n,,,,"Base Cost (RM)",${document.getElementById('sumBaseCost_screen').innerText.replace(/,/g,'')}\n,,,,"Mark-Up (RM)",+${document.getElementById('sumMarkup_screen').innerText.replace(/,/g,'')}\n,,,,"Gross Subtotal (RM)",${document.getElementById('sumSubtotal_screen').innerText.replace(/,/g,'')}\n,,,,"Discount (RM)",-${document.getElementById('sumDiscount_screen').innerText.replace(/,/g,'')}\n,,,,"SST Tax (RM)",${document.getElementById('sumSST_screen').innerText.replace(/,/g,'')}\n,,,,"GRAND TOTAL (RM)",${document.getElementById('grandTotal_screen').innerText.replace(/,/g,'')}\n`;
+        
+        const a = document.createElement('a'); a.href = window.URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' })); a.download = `Jutarama_Quote_${qid}.csv`; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        applyCustomRows(); buildBOMTable(); loadPrices();
+        setTimeout(() => { toggleTank2(); processTankData(); }, 150);
+    });
+</script>
+</body>
+</html>
