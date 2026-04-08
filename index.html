@@ -5,24 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Winko / Jutarama - Enterprise Quoting ERP</title>
     <style>
-        /* --- MODERN RESET & TYPOGRAPHY --- */
         * { box-sizing: border-box; }
-        body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f8fafc; padding: 0; color: #334155; margin: 0; line-height: 1.5; }
+        body { font-family: system-ui, -apple-system, sans-serif; background-color: #f8fafc; padding: 0; color: #334155; margin: 0; line-height: 1.5; }
         
-        /* --- SECURITY OVERLAY --- */
-        #securityOverlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(5px);
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 9999; color: white; text-align: center;
-        }
+        #securityOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(5px); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; color: white; text-align: center; }
         .login-card { background: white; padding: 50px 40px; border-radius: 16px; color: #333; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); width: 90%; max-width: 420px; display: flex; flex-direction: column; align-items: center;}
         .login-card input { width: 100%; padding: 14px; margin: 25px 0 15px 0; border: 2px solid #e2e8f0; border-radius: 8px; text-align: center; font-size: 18px; outline: none; transition: border-color 0.3s; }
         .login-card input:focus { border-color: #ea580c; box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1); }
         .login-card button { width: 100%; padding: 14px; background: linear-gradient(135deg, #ea580c, #c2410c); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; transition: transform 0.2s, box-shadow 0.2s;}
-        .login-card button:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(234, 88, 12, 0.3); }
         
-        /* --- TOP NAVBAR --- */
         #topNav { display: none; background: #0f172a; padding: 10px 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;}
         .nav-links { display: flex; gap: 10px; flex-wrap: wrap; }
         .nav-btn { background: transparent; color: #cbd5e1; border: none; font-size: 14px; font-weight: 700; cursor: pointer; padding: 8px 14px; border-radius: 6px; transition: 0.2s; }
@@ -31,20 +22,15 @@
         .nav-logo { color: white; font-weight: 900; font-size: 1.2em; display: flex; align-items: center; gap: 10px;}
 
         #mainContent, #adminContent, #inventoryContent, #customerPreviewContainer { display: none; padding: 20px; }
-        #checklistPrintView { display: none; } 
-        .print-only { display: none; }
-        .internal-only-tag { display: none; }
+        #checklistPrintView, .print-only, .internal-only-tag { display: none; } 
 
-        /* --- DASHBOARD STYLES (SCREEN) --- */
         .container { max-width: 1550px; margin: auto; }
-        
         .app-header-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #cbd5e1; padding-bottom: 15px; margin-bottom: 20px; }
         .app-header-bar h2 { color: #0f172a; margin: 0; font-weight: 900; font-size: 1.8em; letter-spacing: -0.5px;}
         .live-clock { font-size: 0.9em; color: #64748b; font-weight: 600; background: #e2e8f0; padding: 6px 12px; border-radius: 20px;}
         
         .memory-panel { background: #fff7ed; border: 1px dashed #fed7aa; padding: 12px 20px; border-radius: 10px; display: flex; gap: 15px; align-items: center; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(234,88,12,0.05); flex-wrap: wrap;}
         .memory-panel select { flex: 1; min-width: 200px; padding: 10px; border-radius: 6px; border: 1px solid #fdba74; font-weight: 600; color: #ea580c; outline: none;}
-        .memory-panel select:focus { box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1); }
         .memory-btn { padding: 10px 18px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; color: white; transition: all 0.2s; white-space: nowrap;}
         .btn-save { background: #10b981; } .btn-save:hover { background: #059669; transform: translateY(-1px);}
         .btn-del { background: #f43f5e; } .btn-del:hover { background: #e11d48; transform: translateY(-1px);}
@@ -59,44 +45,32 @@
             .dim-grid, .config-grid { grid-template-columns: 1fr; }
         }
 
-        .module-card { background: #ffffff; border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; transition: box-shadow 0.3s;}
-        .module-card:hover { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
+        .module-card { background: #ffffff; border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;}
         .card-header { font-size: 1.15em; font-weight: 800; color: #0f172a; margin-top: 0; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; }
         .card-header span { color: #ea580c; margin-right: 6px; }
 
-        .reset-btn { background: #94a3b8; color: white; border: none; padding: 6px 12px; font-size: 12px; border-radius: 6px; cursor: pointer; transition: 0.2s; font-weight: 600;}
-        .reset-btn:hover { background: #64748b; }
-        .stock-check-btn { background: #3b82f6; color: white; border: none; padding: 6px 12px; font-size: 12px; border-radius: 6px; cursor: pointer; transition: 0.2s; font-weight: 600; margin-right: 10px;}
-        .stock-check-btn:hover { background: #2563eb; }
+        .reset-btn { background: #94a3b8; color: white; border: none; padding: 6px 12px; font-size: 12px; border-radius: 6px; cursor: pointer; font-weight: 600;}
+        .stock-check-btn { background: #3b82f6; color: white; border: none; padding: 6px 12px; font-size: 12px; border-radius: 6px; cursor: pointer; font-weight: 600; margin-right: 10px;}
         
         .config-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 15px; }
         .dim-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px; width: 100%; }
         .form-group { display: flex; flex-direction: column; margin-bottom: 5px;}
-        .form-group label { font-size: 0.8em; font-weight: 700; color: #64748b; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;}
-        .form-group input, .form-group select, .form-group textarea { padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; font-weight: 600; background: #f8fafc; font-family: inherit; transition: all 0.2s;}
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #ea580c; background: #fff; outline: none; box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1); }
+        .form-group label { font-size: 0.8em; font-weight: 700; color: #64748b; margin-bottom: 6px; text-transform: uppercase; }
+        .form-group input, .form-group select, .form-group textarea { padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; font-weight: 600; background: #f8fafc; font-family: inherit;}
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #ea580c; background: #fff; outline: none; }
         
         table { width: 100%; border-collapse: separate; border-spacing: 0; margin-bottom: 10px; font-size: 0.9em; table-layout: fixed; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; }
-        th { background: #f1f5f9; color: #475569; padding: 12px; text-align: left; border-bottom: 2px solid #e2e8f0; text-transform: uppercase; font-size: 0.8em; letter-spacing: 0.5px;}
+        th { background: #f1f5f9; color: #475569; padding: 12px; text-align: left; border-bottom: 2px solid #e2e8f0; text-transform: uppercase; font-size: 0.8em;}
         th.text-center { text-align: center; } th.text-right { text-align: right; }
         td { padding: 8px 10px; vertical-align: middle; border-bottom: 1px solid #f1f5f9;}
-        tr:last-child td { border-bottom: none; }
-        
         .col-item { background: #fff; font-weight: 600; width: 40%; color: #1e293b;}
         .col-input { width: 14%; }
         .col-total { text-align: right; font-weight: 700; width: 18%; background: #fafafa; color: #b91c1c;}
-        
-        .desc-input { flex: 1 1 100px; min-width: 80px; padding: 6px; border: 1px solid transparent; background: transparent; font-weight: 600; font-family: inherit; font-size: 1em; color: #0f172a; transition: 0.2s; border-radius: 4px; }
-        .desc-input:focus, .desc-input:hover { border-color: #ea580c; background: #fff; outline: none; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-
-        .col-input input { width: 100%; padding: 6px; text-align: center; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc; font-weight: 600; color: #0f172a; transition: 0.2s;}
-        .col-input input:focus { background: #fff; border-color: #ea580c; outline: none; box-shadow: 0 0 0 2px rgba(234,88,12,0.1);}
-        
+        .desc-input { width: 100%; padding: 6px; border: 1px solid transparent; background: transparent; font-weight: 600; font-family: inherit; font-size: 1em; color: #0f172a;}
+        .col-input input { width: 100%; padding: 6px; text-align: center; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc; font-weight: 600; color: #0f172a;}
         .section-header { background: #f8fafc; font-weight: 800; text-align: left; color: #1e293b; border-bottom: 2px solid #e2e8f0; border-top: 4px solid #fff;}
-        .bom-inline-select { flex: 0 0 auto; max-width: 110px; margin-left: 4px; padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85em; font-weight: 600; color: #ea580c; background: #fff; cursor: pointer; transition: 0.2s;}
-        .bom-inline-select:focus { outline: none; border-color: #ea580c; box-shadow: 0 0 0 2px rgba(234,88,12,0.1);}
+        .bom-inline-select { flex: 0 0 auto; max-width: 110px; margin-left: 4px; padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.85em; font-weight: 600; color: #ea580c; background: #fff; cursor: pointer;}
 
-        /* Floating Premium Summary Box */
         .summary-box { background: linear-gradient(145deg, #0f172a, #1e293b); color: white; padding: 25px; border-radius: 12px; box-shadow: 0 15px 25px -5px rgba(15,23,42,0.3);}
         .sum-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 1em; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; color: #cbd5e1;}
         .sum-row span:last-child { font-weight: 600; color: white;}
@@ -104,102 +78,69 @@
         .sum-row.total span:last-child { color: #fbbf24; }
 
         .btn-group { display: flex; gap: 12px; flex-wrap: wrap; }
-        .action-btn { flex: 1; min-width: 120px; padding: 14px; background: #ea580c; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 700; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;}
-        .action-btn:hover { background: #c2410c; transform: translateY(-2px); box-shadow: 0 8px 15px -3px rgba(234,88,12,0.3);}
-        .export-btn { background: #334155; } .export-btn:hover { background: #1e293b; box-shadow: 0 8px 15px -3px rgba(15,23,42,0.3);}
-        .print-btn { background: #059669; } .print-btn:hover { background: #047857; box-shadow: 0 8px 15px -3px rgba(5,150,105,0.3);}
+        .action-btn { flex: 1; min-width: 120px; padding: 14px; background: #ea580c; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px;}
+        .export-btn { background: #334155; } 
+        .print-btn { background: #059669; }
 
-        /* DYNAMIC VISUAL CONTAINERS (BULLETPROOF GRID CSS) */
         .visual-container { display: flex; flex-wrap: wrap; gap: 15px; justify-content: flex-start; margin-bottom: 15px; }
         .view-box { text-align: center; background: #f8fafc; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; width: 145px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);} 
         .view-title { font-size: 0.75em; font-weight: 800; margin-bottom: 8px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;}
-        
         .grid-draft { display: grid; gap: 1px; background: #94a3b8; border: 2px solid #475569; margin: 0 auto; border-radius: 2px; overflow: hidden;} 
         .panel { background: #e0f2fe; box-sizing: border-box; position: relative; border: 1px solid transparent;}
         .panel::before { content: ""; display: block; padding-top: 100%; }
 
         .tank-section-title { background: #e2e8f0; padding: 6px 12px; border-radius: 6px; font-weight: 800; color: #0f172a; margin-bottom: 10px; font-size: 0.9em; text-transform: uppercase; border-left: 4px solid #3b82f6;}
 
-        /* --- INVENTORY DASHBOARD STYLES --- */
+        /* INVENTORY STYLES */
         .inv-status { padding: 4px 8px; border-radius: 4px; font-size: 0.85em; font-weight: bold; text-align: center; }
-        .inv-ok { background: #dcfce7; color: #059669; }
-        .inv-low { background: #fef9c3; color: #d97706; }
-        .inv-out { background: #fee2e2; color: #e11d48; }
+        .inv-ok { background: #dcfce7; color: #059669; } .inv-low { background: #fef9c3; color: #d97706; } .inv-out { background: #fee2e2; color: #e11d48; }
         .stock-row-warning { background: #fef2f2 !important; border-left: 4px solid #ef4444; }
         .inv-input { width: 100%; max-width: 120px; padding: 10px; border: 2px solid #cbd5e1; border-radius: 6px; font-weight: 800; text-align: center; font-size: 16px; background: #fff; color: #0f172a; }
-        .inv-input:focus { border-color: #3b82f6; outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
 
-        /* --- ADMIN DASHBOARD STYLES --- */
+        /* ADMIN STYLES */
         .admin-header { background: #0f172a; color: white; padding: 25px 30px; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center;}
-        .admin-header h2 { color: white; border: none; margin: 0; padding: 0; font-weight: 800;}
-        .admin-btn { padding: 12px 24px; background: #e11d48; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s;}
+        .admin-btn { padding: 12px 24px; background: #e11d48; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;}
         .admin-btn.save { background: #10b981; }
-        .admin-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.2);}
         .admin-container { background: #1e293b; padding: 30px; border-radius: 0 0 12px 12px; color: white;}
-        .admin-table { width: 100%; border-collapse: collapse; background: white; color: #0f172a; border-radius: 8px; overflow: hidden; box-shadow: 0 10px 15px rgba(0,0,0,0.3);}
-        .admin-table th { background: #334155; color: white; border-color: #475569; padding: 15px; font-size: 0.9em; text-transform: uppercase; letter-spacing: 0.5px;}
+        .admin-table { width: 100%; border-collapse: collapse; background: white; color: #0f172a; border-radius: 8px;}
+        .admin-table th { background: #334155; color: white; padding: 15px; font-size: 0.9em; text-transform: uppercase;}
         .admin-table td { border-color: #e2e8f0; padding: 10px;}
         .admin-input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-weight: bold; text-align: center;}
-        .admin-input.text-left { text-align: left; }
 
-        /* --- CUSTOMER EDIT PREVIEW CSS --- */
+        /* PREVIEW EDITOR CSS */
         #customerPreviewContainer { background: #94a3b8; padding: 40px 20px; overflow-y: auto; flex-direction: column; align-items: center; }
-        .preview-toolbar { background: #0f172a; padding: 15px 30px; border-radius: 8px; margin-bottom: 20px; color: white; display: flex; gap: 20px; align-items: center; box-shadow: 0 10px 15px rgba(0,0,0,0.3); width: 100%; max-width: 210mm;}
+        .preview-toolbar { background: #0f172a; padding: 15px 30px; border-radius: 8px; margin-bottom: 20px; color: white; display: flex; gap: 20px; align-items: center; width: 100%; max-width: 210mm;}
         #customerPrintViewEditor { display: block; background: white; width: 100%; max-width: 210mm; min-height: 297mm; padding: 15mm; box-shadow: 0 20px 40px rgba(0,0,0,0.2); margin: 0 auto; color: #000; font-family: Arial, sans-serif; font-size: 9pt; }
         .editable-section { transition: background 0.2s; border-radius: 4px; padding: 4px; border: 1px solid transparent;}
         .editable-section:hover { background: #fef9c3; cursor: text; border: 1px dashed #eab308; }
 
-        /* ========================================================================== */
-        /* --- PROFESSIONAL PRINT STYLES (MULTI-MODE) --- */
-        /* ========================================================================== */
+        /* ================= PRINT STYLES ================= */
         @media print {
             @page { size: A4; margin: 10mm 15mm; }
             body { background: white; padding: 0; font-size: 9pt; color: #0f172a; font-family: Arial, Helvetica, sans-serif; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            
-            #topNav { display: none !important; }
-            .no-print { display: none !important; }
+            #topNav, .no-print { display: none !important; }
             .print-only { display: block !important; }
             .container { box-shadow: none; max-width: 100%; padding: 0; border: none; }
             
-            /* GLOBAL GRID PRINT OVERRIDES */
             .visual-container { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; width: 100% !important; margin: 10px 0 20px 0 !important; page-break-inside: avoid !important; clear: both !important;}
             .view-box { padding: 4px !important; border: 1.5px solid #cbd5e1 !important; background: #f8fafc !important; border-radius: 6px !important; width: 120px !important;}
             .grid-draft { gap: 0.5px !important; border: 1.5px solid #0f172a !important; background: #fff !important;}
             .view-title { font-size: 7pt !important; margin-bottom: 4px !important; color: #0f172a !important; text-align: center !important; font-weight: 800 !important; text-transform: uppercase !important;}
             
-            /* ------------------------------------------------ */
-            /* MODE 1: INTERNAL PRINT                           */
-            /* ------------------------------------------------ */
+            /* INTERNAL MODE */
             body.print-internal #mainContent { display: block !important; }
-            body.print-internal #customerPreviewContainer { display: none !important; }
-            body.print-internal #checklistPrintView { display: none !important; }
-
+            body.print-internal #customerPreviewContainer, body.print-internal #checklistPrintView { display: none !important; }
             body.print-internal .internal-hide { display: none !important; }
-            body.print-internal .internal-only-tag { display: block !important; }
-            
+            body.print-internal .internal-only-tag { display: block !important; text-align: center; color: #ef4444; font-weight: 900; font-size: 12pt; letter-spacing: 4px; border: 2px solid #ef4444; padding: 4px; margin-bottom: 15px; text-transform: uppercase;}
             body.print-internal .app-layout { display: block !important; }
             body.print-internal .col-left { width: 100% !important; display: block !important; }
             body.print-internal .col-right { display: none !important; } 
-            
             body.print-internal .module-card { border: none !important; padding: 0 !important; margin-bottom: 20px !important; box-shadow: none !important; }
-            
             body.print-internal .card-header { display: block !important; border-bottom: 2px solid #0f172a !important; margin-bottom: 8px !important; font-size: 11pt !important; color: #0f172a !important; text-transform: uppercase; padding: 0 0 5px 0 !important; background: transparent !important;}
             body.print-internal .card-header span, body.print-internal .card-header button { display: none !important; }
 
             /* MEGA WATERMARK */
-            body.print-internal::before {
-                content: "INTERNAL USE ONLY - STRICTLY CONFIDENTIAL";
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%) rotate(-45deg);
-                font-size: 60pt;
-                font-weight: 900;
-                color: rgba(239, 68, 68, 0.08);
-                z-index: -1;
-                white-space: nowrap;
-                pointer-events: none;
-            }
+            body.print-internal::before { content: "INTERNAL USE ONLY - STRICTLY CONFIDENTIAL"; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 60pt; font-weight: 900; color: rgba(239, 68, 68, 0.08); z-index: -1; white-space: nowrap; pointer-events: none; }
 
             body.print-internal .print-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #ea580c; padding-bottom: 10px; margin-bottom: 15px; }
             body.print-internal .header-left { display: flex; align-items: center; gap: 20px; }
@@ -216,7 +157,6 @@
             body.print-internal .meta-label { font-weight: 700; color: #64748b; width: 90px; text-transform: uppercase;}
             body.print-internal .meta-value { font-weight: 700; color: #0f172a; }
             
-            /* Zebra Striped Internal BOM Table */
             body.print-internal table { font-size: 8.5pt; margin-bottom: 10px; border-collapse: collapse; width: 100%; border: 1px solid #0f172a; border-radius: 0;}
             body.print-internal tr { border-bottom: 1px solid #cbd5e1; page-break-inside: avoid; }
             body.print-internal tr:nth-child(even):not(.section-header-row) { background-color: #f1f5f9 !important; }
@@ -238,34 +178,24 @@
             body.print-internal .col-uprice { width: 15% !important; }
             body.print-internal .col-itotal { width: 15% !important; }
             
-            /* --- REFINED INTERNAL FOOTER WITH BOXES --- */
             body.print-internal .footer-flex { display: flex !important; justify-content: space-between !important; align-items: flex-start !important; margin-top: 15px !important; page-break-inside: avoid !important; }
-            
-            /* Formal Approval Grid */
             body.print-internal .internal-approval-grid { display: flex; flex-direction: row; width: 60%; gap: 15px; margin-top: 0; }
             body.print-internal .internal-sig-box { flex: 1; border: 1.5px solid #0f172a; border-radius: 6px; padding: 8px; height: 80px; font-size: 8pt; color: #0f172a; display: flex; flex-direction: column; justify-content: space-between; background: #fff;}
             body.print-internal .internal-sig-box span { font-weight: 800; text-transform: uppercase; color: #475569;}
             body.print-internal .internal-sig-box strong { font-weight: 700; border-top: 1px dashed #cbd5e1; padding-top: 4px; text-align: center;}
 
-            /* Color-Coded Financial Ledger Box */
             body.print-internal .summary-box { background: #fff !important; color: #0f172a !important; border: 2px solid #0f172a !important; border-radius: 8px !important; padding: 0 !important; margin-top: 0 !important; width: 35% !important; float: none !important; box-shadow: 4px 4px 0px rgba(0,0,0,0.1) !important; overflow: hidden;}
             body.print-internal .summary-table { width: 100%; border-collapse: collapse; font-size: 9pt; margin-bottom: 0 !important; border: none !important;}
             body.print-internal .summary-table td { padding: 4px 10px; border: none; font-weight: 700; text-align: right !important;}
             body.print-internal .summary-table td:first-child { text-align: left !important; color: #475569; font-weight: 800; text-transform: uppercase; font-size: 7.5pt;}
-            
             body.print-internal .summary-table .border-top td { border-top: 1.5px solid #cbd5e1 !important; padding-top: 6px; }
             body.print-internal .summary-table .border-bottom td { border-bottom: 1.5px solid #cbd5e1 !important; padding-bottom: 6px; }
             body.print-internal .summary-table .grand-total-row td { font-size: 11pt; padding: 8px 10px; background: #e2e8f0 !important; font-weight: 900; color: #0f172a !important; }
-            
             body.print-internal .markup-print-val { color: #059669 !important; font-weight: 800; }
-
             body.print-internal .drawings-page { page-break-before: always !important; padding-top: 20px !important; }
             body.print-internal .tank-section-title { font-size: 11pt !important; margin-bottom: 10px !important; margin-top: 15px !important; color: #0f172a !important; font-weight: 800 !important; text-transform: uppercase !important; border-bottom: 2px solid #0f172a !important; padding-bottom: 5px !important; border-left: none !important; background: transparent !important;}
 
-
-            /* ------------------------------------------------ */
-            /* MODE 2: CUSTOMER PRINT                           */
-            /* ------------------------------------------------ */
+            /* CUSTOMER MODE */
             body.print-customer #mainContent, body.print-customer #inventoryContent, body.print-customer #adminContent { display: none !important; }
             body.print-customer #checklistPrintView { display: none !important; }
             body.print-customer #customerPreviewContainer { display: block !important; padding: 0 !important; background: none !important; }
@@ -276,78 +206,57 @@
             .cp-header { display: flex; margin-bottom: 15px;}
             .cp-header-left { width: 35%; display: flex; align-items: center; justify-content: center; background: transparent; padding: 5px;}
             .cp-header-right { width: 65%; padding-left: 20px;}
-            
             .cp-meta-layout { display: flex; justify-content: space-between; align-items: stretch; margin-bottom: 10px;}
             .cp-meta-left { width: 55%; font-size: 8.5pt;}
             .cp-meta-left table { width: 100%; border: none; margin: 0;}
             .cp-meta-left td { border: none; padding: 2px 5px 2px 0; vertical-align: top;}
             .cp-meta-left td:first-child { width: 70px; font-weight: normal; color: #000;}
-            
             .cp-meta-center { width: 15%; text-align: center; display: flex; align-items: center; justify-content: center;}
             .cp-quotation-box { border: 2px solid #000; padding: 4px 10px; font-weight: bold; font-size: 10pt; letter-spacing: 1px;}
-            
             .cp-meta-right { width: 30%; font-size: 8.5pt; text-align: right;}
             .cp-meta-right table { width: 100%; border: none; margin: 0;}
             .cp-meta-right td { border: none; padding: 2px 0 2px 5px; vertical-align: top; text-align: left;}
             .cp-meta-right td:first-child { width: 60px; font-weight: normal; color: #000; text-align: right;}
-
             .cp-table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 10px; font-size: 8.5pt; border: 2px solid #000; }
-            .cp-table th { background: #d1d5db !important; color: #000 !important; border: 1px solid #000; padding: 4px 6px !important; font-weight: bold; text-align: center; -webkit-print-color-adjust: exact;}
+            .cp-table th { background: #d1d5db !important; color: #000 !important; border: 1px solid #000; padding: 4px 6px !important; font-weight: bold; text-align: center;}
             .cp-table td { border: 1px solid #000; padding: 4px 6px !important; vertical-align: top; color: #000; line-height: 1.3 !important;}
             .cp-table .td-center { text-align: center;}
             .cp-table .td-right { text-align: right;}
-            
             .cp-short-exclusions { display: flex; align-items: stretch; margin-bottom: 15px !important; font-size: 8pt; line-height: 1.4; border: 1px solid #000;}
-            .cp-short-exclusions .label { background: #d1d5db !important; color: #000; padding: 6px 10px; font-weight: bold; border-right: 1px solid #000; -webkit-print-color-adjust: exact; width: 100px; text-align: center; display: flex; align-items: center; justify-content: center;}
+            .cp-short-exclusions .label { background: #d1d5db !important; color: #000; padding: 6px 10px; font-weight: bold; border-right: 1px solid #000; width: 100px; text-align: center; display: flex; align-items: center; justify-content: center;}
             .cp-short-exclusions .content { padding: 6px 10px; background: #fff; flex: 1;}
-
             .page-break-section { page-break-before: always; padding-top: 10px; }
-            
             .cp-full-terms { font-size: 8pt !important; line-height: 1.3 !important; white-space: pre-wrap; margin-bottom: 15px !important; color: #000;}
-
             .cp-tnc { font-size: 8pt !important; margin-bottom: 15px !important; page-break-inside: avoid;}
             .cp-tnc-title { font-weight: bold; text-decoration: underline; margin-bottom: 5px; font-size: 8.5pt;}
             .cp-tnc table { width: 100%; border: none; border-collapse: collapse;}
             .cp-tnc td { border: none; padding: 3px 5px; vertical-align: top;}
             .cp-tnc td:first-child { width: 140px; font-weight: bold; color: #000;}
-
             .cp-signoff { display: flex; justify-content: space-between; margin-top: 15px; page-break-inside: avoid;}
             .cp-signoff-left { width: 50%; }
             .cp-signoff-left p { margin: 2px 0; font-size: 8.5pt;}
 
-            /* ------------------------------------------------ */
-            /* MODE 3: SALES ORDER CHECKLIST                    */
-            /* ------------------------------------------------ */
+            /* CHECKLIST MODE */
             body.print-checklist #mainContent { display: none !important; }
             body.print-checklist #customerPreviewContainer { display: none !important; }
-            body.print-checklist #checklistPrintView { display: block !important; }
-
-            #checklistPrintView { font-family: Arial, sans-serif; color: #000; font-size: 9pt; line-height: 1.2; padding: 0 10px; }
+            body.print-checklist #checklistPrintView { display: block !important; font-family: Arial, sans-serif; color: #000; font-size: 9pt; line-height: 1.2; padding: 0 10px; }
             .chk-title { font-size: 11pt; font-weight: bold; text-decoration: underline; margin-bottom: 10px; }
-            
             .chk-market-tag { text-align: right; font-weight: bold; margin-bottom: 5px; }
             .chk-top-flex { display: flex; justify-content: space-between; margin-bottom: 5px; }
-            .chk-box { display: inline-block; width: 12px; height: 12px; border: 1px solid #000; text-align: center; vertical-align: middle; line-height: 12px; font-size: 9pt; margin-right: 4px; font-weight:bold; -webkit-print-color-adjust: exact !important;}
+            .chk-box { display: inline-block; width: 12px; height: 12px; border: 1px solid #000; text-align: center; vertical-align: middle; line-height: 12px; font-size: 9pt; margin-right: 4px; font-weight:bold;}
             .chk-line { display: inline-block; border-bottom: 1px solid #000; min-width: 100px; padding: 0 5px; }
-            
             .chk-table { width: 100%; border-collapse: collapse; margin-bottom: 5px;}
             .chk-table td { padding: 2px 2px; vertical-align: bottom; border:none;}
             .chk-table .label { width: 110px; font-weight:bold;}
-            
             .chk-section { border-top: 1.5px solid #000; border-bottom: 1.5px solid #000; padding: 5px 0; margin-bottom: 5px; page-break-inside: avoid;}
             .chk-section-title { font-weight: bold; text-transform: uppercase; font-size: 8.5pt; margin-bottom: 3px;}
-            
             .chk-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
             .chk-grid-3 { display: grid; grid-template-columns: auto auto auto; gap: 8px; align-items:center; margin-bottom:2px;}
             .chk-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom:2px;}
-            
             .chk-box-container { border: 1px solid #000; padding: 1px 4px; display:inline-block; min-width:25px; text-align:center; font-weight:bold;}
-
             .chk-footer { display: flex; justify-content: space-between; margin-top: 20px; page-break-inside: avoid; }
             .chk-sig-block { width: 30%; font-size: 8.5pt;}
             .chk-sig-line { border-top: 1px solid #000; margin-bottom: 5px; padding-top: 2px; font-weight:bold;}
-
-            /* Visual grids inside Checklist */
             body.print-checklist .visual-container { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; width: 100% !important; margin: 15px 0 25px 0 !important; page-break-inside: avoid !important; clear: both !important;}
             body.print-checklist .view-box { padding: 6px !important; border: 1.5px solid #cbd5e1 !important; background: #f8fafc !important; border-radius: 6px !important; width: 120px !important;}
             body.print-checklist .grid-draft { gap: 0.5px !important; border: 1.5px solid #0f172a !important; background: #fff !important;}
@@ -355,16 +264,6 @@
             body.print-checklist .view-title { font-size: 7pt !important; margin-bottom: 4px !important; color: #0f172a !important; text-align: center !important; font-weight: 800 !important; text-transform: uppercase !important;}
         }
     </style>
-    
-    <script>
-        const currentVersion = "V72";
-        if(localStorage.getItem("winkoAppVersion") !== currentVersion) {
-            localStorage.setItem("winkoAppVersion", currentVersion);
-            localStorage.removeItem("winkoProData");
-            for(let i=13; i<=71; i++) localStorage.removeItem("winkoProDataV" + i);
-            window.location.reload(true);
-        }
-    </script>
 </head>
 <body>
 
@@ -435,14 +334,11 @@
 
 <div id="mainContent">
     <div class="container">
-        
         <div class="app-header-bar no-print">
             <h2>Project Workspace</h2>
             <div class="live-clock">System Time: <span id="liveClock">Loading...</span></div>
         </div>
-
         <div class="print-only internal-only-tag">Strictly Confidential - Internal Costing</div>
-
         <div class="print-header print-only">
             <div class="header-left">
                 <img src="winko logo.png" alt="Winko Logo" style="width:100px; height:auto; object-fit:contain;">
@@ -459,7 +355,6 @@
                 <p><strong>Date:</strong> <span id="metaDate"></span></p>
             </div>
         </div>
-
         <div class="quote-meta print-only">
             <div class="meta-box">
                 <div class="meta-item"><span class="meta-label">Prepared For:</span> <span class="meta-value" id="metaProject">________________</span></div>
@@ -473,13 +368,8 @@
         </div>
 
         <div class="memory-panel no-print">
-            <strong style="color: #ea580c; display: flex; align-items: center; gap: 8px;">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-                Project Bank:
-            </strong>
-            <select id="memoryDropdown">
-                <option value="">-- Load a Saved Project --</option>
-            </select>
+            <strong style="color: #ea580c; display: flex; align-items: center; gap: 8px;">Project Bank:</strong>
+            <select id="memoryDropdown"><option value="">-- Load a Saved Project --</option></select>
             <button class="memory-btn btn-save" onclick="loadFromMemory()">Load</button>
             <button class="memory-btn btn-save" onclick="saveToMemory()" style="background: #ea580c;">Save Current</button>
             <button class="memory-btn btn-del" onclick="deleteFromMemory()">Delete</button>
@@ -487,7 +377,6 @@
 
         <div class="app-layout">
             <div class="col-left">
-                
                 <div class="module-card internal-hide no-print">
                     <div class="card-header"><span>📋</span> 1. Project & Client Info</div>
                     <div class="config-grid">
@@ -507,7 +396,6 @@
                         <div class="form-group"><label>Tank 1 Standard</label><select id="stdChoice" onchange="debouncedProcessTankData()"><option>SANS 10329:2020 Approved by SIRIM & SPAN</option><option>SS 22: 1979</option><option>Other</option></select></div>
                         <div class="form-group"><label>Unit System</label><select id="unitChoice" onchange="handleUnitChange()"><option value="ft">Imperial (4'x4')</option><option value="m_122">Imperial Panels (Input in Meters: 1.22m)</option><option value="m_100">True Metric Panels (Input in Meters: 1m)</option></select></div>
                         <div class="form-group" style="grid-column: span 2;"><label>Tank 1 Material / Finish</label><select id="coatChoice" onchange="debouncedProcessTankData()"><option>Hot Dipped Galvanised</option><option>Painted Steel</option><option>Stainless Steel (SS 304)</option><option>Stainless Steel (SS 316)</option></select></div>
-                        
                         <div class="form-group" style="grid-column: span 2;">
                             <label style="color:#2563eb;">Number of Tanks in Project</label>
                             <select id="numTanks" onchange="toggleTank2(); debouncedProcessTankData();" style="border: 2px solid #93c5fd;">
@@ -524,7 +412,6 @@
                         <div class="form-group"><label>Tank Width (<span class="unitLabel">Ft</span>)</label><input type="number" id="width" value="4" step="0.01" oninput="debouncedProcessTankData()"></div>
                         <div class="form-group"><label>Tank Height (<span class="unitLabel">Ft</span>)</label><input type="number" id="height" value="4" step="0.01" oninput="debouncedProcessTankData()"></div>
                     </div>
-                    
                     <div class="config-grid" style="margin-bottom:15px;">
                         <div class="form-group" style="grid-column: span 2;"><label>Tank 1 Partition</label><select id="partChoice" onchange="togglePartitionDetails(); debouncedProcessTankData();"><option value="no">No Partition</option><option value="yes">Yes (Internal Wall)</option></select></div>
                     </div>
@@ -533,7 +420,7 @@
                             <div class="form-group" style="flex:0.5; min-width:60px;"><label>Qty</label><input type="number" id="partQty" value="0" min="0" oninput="debouncedProcessTankData()"></div>
                             <div class="form-group" style="flex:1; min-width:80px;"><label>L/W (<span class="unitLabel">Ft</span>)</label><input type="number" id="partLen" value="0" step="0.01" oninput="debouncedProcessTankData()"></div>
                             <div class="form-group" style="flex:1; min-width:80px;"><label>Height (<span class="unitLabel">Ft</span>)</label><input type="number" id="partHgt" value="0" step="0.01" oninput="debouncedProcessTankData()"></div>
-                            <div class="form-group" style="flex:1; min-width:100px;"><label>Pos. (Panels)</label><input type="number" id="partPos" value="1" min="1" oninput="debouncedProcessTankData()" title="Number of panels from the edge to place the partition"></div>
+                            <div class="form-group" style="flex:1; min-width:100px;"><label>Pos. (Panels)</label><input type="number" id="partPos" value="1" min="1" oninput="debouncedProcessTankData()"></div>
                             <div class="form-group" style="flex:1.5; min-width:120px;"><label>Type</label><input type="text" id="partType" placeholder="e.g. Divider" oninput="debouncedProcessTankData()"></div>
                         </div>
                     </div>
@@ -549,7 +436,6 @@
                             <div class="form-group"><label>Tank Width (<span class="unitLabel">Ft</span>)</label><input type="number" id="width2" value="4" step="0.01" oninput="debouncedProcessTankData()"></div>
                             <div class="form-group"><label>Tank Height (<span class="unitLabel">Ft</span>)</label><input type="number" id="height2" value="4" step="0.01" oninput="debouncedProcessTankData()"></div>
                         </div>
-                        
                         <div class="config-grid" style="margin-bottom:15px;">
                             <div class="form-group" style="grid-column: span 2;"><label>Tank 2 Partition</label><select id="partChoice2" onchange="togglePartitionDetails(); debouncedProcessTankData();"><option value="no">No Partition</option><option value="yes">Yes (Internal Wall)</option></select></div>
                         </div>
@@ -558,7 +444,7 @@
                                 <div class="form-group" style="flex:0.6;"><label>Part. Qty</label><input type="number" id="partQty2" value="0" min="0" oninput="debouncedProcessTankData()"></div>
                                 <div class="form-group" style="flex:1;"><label>Part. L/W (<span class="unitLabel">Ft</span>)</label><input type="number" id="partLen2" value="0" step="0.01" oninput="debouncedProcessTankData()"></div>
                                 <div class="form-group" style="flex:1;"><label>Part. Height (<span class="unitLabel">Ft</span>)</label><input type="number" id="partHgt2" value="0" step="0.01" oninput="debouncedProcessTankData()"></div>
-                                <div class="form-group" style="flex:1; min-width:100px;"><label>Pos. (Panels)</label><input type="number" id="partPos2" value="1" min="1" oninput="debouncedProcessTankData()" title="Number of panels from the edge to place the partition"></div>
+                                <div class="form-group" style="flex:1; min-width:100px;"><label>Pos. (Panels)</label><input type="number" id="partPos2" value="1" min="1" oninput="debouncedProcessTankData()"></div>
                                 <div class="form-group" style="flex:2;"><label>Partition Type</label><input type="text" id="partType2" placeholder="e.g. Divider" oninput="debouncedProcessTankData()"></div>
                             </div>
                         </div>
@@ -586,19 +472,15 @@
                             <div class="form-group"><label>Wall L4 Thick.</label><input type="text" id="thickWallL4" value="1.5mm" oninput="debouncedProcessTankData()"></div>
                         </div>
                     </div>
-
-                    <button class="action-btn" onclick="processTankData()" style="width:100%; background: #0f172a; margin-top: 10px;">⚙️ Calculate Internal BOM</button>
                 </div>
                 
                 <div class="module-card internal-hide no-print">
                     <div class="card-header"><span>💰</span> 3. Commercial Terms & Formatting</div>
-                    
                     <div class="dim-grid" style="background: #ecfdf5; padding:15px; border-radius:8px; border:2px solid #10b981; margin-bottom:15px;">
                         <div class="form-group"><label style="color:#047857;">Profit Mark-Up (%)</label><input type="number" id="markupPct" value="0" oninput="debouncedProcessTankData()" style="border-color:#10b981; font-size: 16px; color: #047857; font-weight: 800;"></div>
                         <div class="form-group"><label>Discount (%)</label><input type="number" id="discountPct" value="0" oninput="debouncedProcessTankData()"></div>
                         <div class="form-group"><label>SST Tax (%)</label><input type="number" id="sstPct" value="5" oninput="debouncedProcessTankData()"></div>
                     </div>
-
                     <div class="config-grid" style="background: #f8fafc; padding:15px; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:15px;">
                         <div class="form-group" style="grid-column: span 2;"><label>Quotation Validity</label><input type="text" id="tcValidity" value="14 Days from the date of quotation, subject to stock availability and our confirmation." oninput="debouncedProcessTankData()"></div>
                         <div class="form-group" style="grid-column: span 2;"><label>Market</label><select id="marketChoice" onchange="debouncedProcessTankData()"><option value="local">Local (Malaysia)</option><option value="export">Export</option></select></div>
@@ -610,7 +492,6 @@
                         <div class="form-group"><label>Sign-off Name</label><input type="text" id="signName" value="LEE JL" oninput="debouncedProcessTankData()"></div>
                         <div class="form-group"><label>Sign-off Phone</label><input type="text" id="signPhone" value="019-2215558" oninput="debouncedProcessTankData()"></div>
                     </div>
-
                     <div class="form-group" style="margin-bottom: 15px;">
                         <label>Short Exclusions (Prints in Box on Page 2)</label>
                         <textarea id="shortExclusions" rows="5" oninput="debouncedProcessTankData()">- Float valve chamber or top sumps
@@ -619,7 +500,6 @@
 - Unloading and hoisting of materials.
 - HIRARC, permit application, medical test and site safety supervisor.</textarea>
                     </div>
-                    
                     <div class="form-group">
                         <label>Full Document T&C (Prints on Page 2)</label>
                         <textarea id="fullTermsNotes" rows="12" oninput="debouncedProcessTankData()">Scope of Supply
@@ -686,11 +566,9 @@ Note:
                         <tbody id="bomBody2"></tbody>
                     </table>
                 </div>
-
             </div>
 
             <div class="col-right">
-                
                 <div style="position: sticky; top: 80px;">
                     <div class="summary-box no-print">
                         <div class="sum-row"><span>Standard:</span> <span id="sumStd">-</span></div>
@@ -711,16 +589,13 @@ Note:
 
                     <div class="btn-group no-print" style="margin-bottom: 25px;">
                         <button class="action-btn export-btn" onclick="exportCSV()">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2-2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                            Export
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2-2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Export
                         </button>
                         <button class="action-btn print-btn" style="background: #334155;" onclick="printInternal()">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                            Internal
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg> Internal
                         </button>
                         <button class="action-btn print-btn" onclick="printCustomer()">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                            Customer
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg> Customer
                         </button>
                         <button class="action-btn print-btn" style="background: #0284c7;" onclick="printChecklist()">
                             📋 Sales Order
@@ -737,10 +612,8 @@ Note:
                             <div class="view-box"><div class="view-title">Left</div><div id="leftGrid" class="grid-draft"></div></div>
                             <div class="view-box"><div class="view-title">Right</div><div id="rightGrid" class="grid-draft"></div></div>
                         </div>
-                        
                         <div class="card-header" style="font-size: 1em; margin-top:25px; border-top:2px solid #f1f5f9; padding-top:15px;">Tank 1 Internal Bracing (Angle Stays)</div>
-                        <div class="visual-container" id="visualsArea1">
-                            </div>
+                        <div class="visual-container" id="visualsArea1"></div>
                     </div>
                     
                     <div class="module-card no-print" id="tank2VisualsCard" style="display:none;">
@@ -753,17 +626,14 @@ Note:
                             <div class="view-box"><div class="view-title">Left</div><div id="leftGrid2" class="grid-draft"></div></div>
                             <div class="view-box"><div class="view-title">Right</div><div id="rightGrid2" class="grid-draft"></div></div>
                         </div>
-                        
                         <div class="card-header" style="font-size: 1em; margin-top:25px; border-top:2px solid #f1f5f9; padding-top:15px;">Tank 2 Internal Bracing (Angle Stays)</div>
-                        <div class="visual-container" id="visualsArea2">
-                            </div>
+                        <div class="visual-container" id="visualsArea2"></div>
                     </div>
-
-                </div> </div>
+                </div> 
+            </div>
         </div>
 
         <div class="print-only" id="internalPrintFooter">
-            
             <div class="footer-flex">
                 <div class="internal-approval-grid">
                     <div class="internal-sig-box"><span>Costing Prepared By:</span> <strong><span id="intSigSales"></span></strong></div>
@@ -1177,8 +1047,8 @@ Note:
 </div>
 
 <script>
-    const SECRET_PASSWORD = "winko";
-    const ADMIN_PASSWORD = "admin";
+    const SECRET_PASSWORD = "winko2026";
+    const ADMIN_PASSWORD = "adminmaster99";
 
     let tankDataTimer;
     function debouncedProcessTankData() {
@@ -1259,7 +1129,6 @@ Note:
             });
         });
         
-        /* Auto-Inject Real Values From Client Spreadsheet if empty */
         const presets = {
             "Base Panel": 344, "Wall Panel (L1)": 344, "Wall Panel (L2)": 407, "Wall Panel (L3)": 407, "Wall Panel (L4)": 119,
             "Manhole Panel": 200, "Roof Panel": 186, "Partition Panel": 50,
@@ -1268,14 +1137,11 @@ Note:
             "Air Vent": 48, "Mastic Sealant (Rolls)": 89, "Bolt & Nut Sets": 72, "Water Level Indicator": 25, "Ext. Ladder": 15, "Int. Ladder": 15
         };
         
-        let needsUpdate = false;
         Object.keys(presets).forEach(k => {
             if(winkoInventory[k] && winkoInventory[k].stock === 0) {
                 winkoInventory[k].stock = presets[k];
-                needsUpdate = true;
             }
         });
-        
         localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory));
     }
 
@@ -1816,7 +1682,7 @@ Note:
         if(confirm("Reset the current board back to the Master Template?")) {
             customRowCounts = [0,0,0,0,0];
             localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts));
-            localStorage.removeItem('winkoProDataV72'); 
+            localStorage.removeItem('winkoProDataV74'); 
             
             let pc = document.getElementById('partChoice');
             if(pc) pc.value = 'no';
@@ -1976,7 +1842,6 @@ Note:
             let wliQtyEl = document.getElementById('qty_item_3_2'); let wliQty = (wliQtyEl && wliQtyEl.value) ? wliQtyEl.value : '0';
             let cpWLI = document.getElementById('cpWLI'); if(cpWLI) cpWLI.innerText = `${wliType} - ${wliQty} sets`;
 
-            // TANK 2 DATA SYNC (If Applicable)
             let cpTank2Row = document.getElementById('cpTank2Row'); 
             let cpTank2Specs = document.getElementById('cpTank2Specs');
             let cpTank2CustomDesc = document.getElementById('cpTank2CustomDesc');
@@ -2114,11 +1979,11 @@ Note:
                 if(it.selectId) { let s2 = document.getElementById(`sel2_${it.selectId}`); if(s2) data[`sel2_${it.selectId}`] = s2.value; }
             });
         });
-        localStorage.setItem('winkoProDataV72', JSON.stringify(data));
+        localStorage.setItem('winkoProDataV74', JSON.stringify(data));
     }
 
     function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV72');
+        let savedData = localStorage.getItem('winkoProDataV74');
         if (savedData) {
             savedData = JSON.parse(savedData);
             configIDs.forEach(id => {
@@ -2219,8 +2084,8 @@ Note:
                     </tr>`;
                 });
             });
-            if(document.getElementById('bomBody')) document.getElementById('bomBody').innerHTML = html;
-            if(document.getElementById('bomBody2')) document.getElementById('bomBody2').innerHTML = html2;
+            if(tbody) tbody.innerHTML = html;
+            if(tbody2) tbody2.innerHTML = html2;
         } catch(e) { console.error("Error building BOM:", e); }
     }
 
@@ -2350,367 +2215,6 @@ Note:
 
             syncPrintHeader(); 
         } catch(e) {}
-    }
-
-    function drawGrid(id, c, r, maxDim, pType = null, pPos = -1) {
-        const g = document.getElementById(id); 
-        const gp = document.getElementById(id + '_p'); 
-        const gc = document.getElementById(id + '_c'); 
-        
-        if (!g) return; 
-
-        c = isNaN(c) ? 0 : c;
-        r = isNaN(r) ? 0 : r;
-        maxDim = isNaN(maxDim) ? 0 : maxDim;
-
-        if ((c * r) > 2500) {
-            let msg = '<div style="grid-column: 1 / -1; padding: 20px; font-size:12px; color:#ef4444; font-weight:bold; background:#fef2f2; border:1px dashed #ef4444; width:100%;">Grid too large to render visually. Dimensions tracked safely in BOM.</div>';
-            g.style.display = 'block'; g.innerHTML = msg;
-            if(gp){ gp.style.display = 'block'; gp.innerHTML = msg; }
-            if(gc){ gc.style.display = 'block'; gc.innerHTML = msg; }
-            return;
-        }
-        
-        let widthPct = maxDim > 0 ? (c / maxDim) * 100 : 100;
-        
-        let html = '';
-        for(let i=0; i<(c*r); i++) {
-            let col = i % c;
-            let row = Math.floor(i / c);
-            let extraStyle = '';
-            
-            if (pType === 'v' && col === pPos) {
-                extraStyle += 'border-right: 3px solid #ef4444 !important; z-index: 10; ';
-            } else if (pType === 'h' && row === pPos) {
-                extraStyle += 'border-bottom: 3px solid #ef4444 !important; z-index: 10; ';
-            }
-
-            html += `<div class="panel" style="${extraStyle}"></div>`;
-        }
-        
-        let safeC = Math.max(1, c);
-        if(g) { g.style.display = 'grid'; g.style.gridTemplateColumns = `repeat(${safeC}, 1fr)`; g.style.width = `${widthPct}%`; g.innerHTML = html; }
-        if(gp) { gp.style.display = 'grid'; gp.style.gridTemplateColumns = `repeat(${safeC}, 1fr)`; gp.style.width = `${widthPct}%`; gp.innerHTML = html; }
-        if(gc) { gc.style.display = 'grid'; gc.style.gridTemplateColumns = `repeat(${safeC}, 1fr)`; gc.style.width = `${widthPct}%`; gc.innerHTML = html; }
-    }
-
-    function buildGridHTML(title, c, r, maxDim, pType = null, pPos = -1, showStays = false) {
-        c = isNaN(c) ? 0 : c;
-        r = isNaN(r) ? 0 : r;
-        maxDim = isNaN(maxDim) ? 0 : maxDim;
-        
-        if ((c * r) > 2500) {
-            return `<div class="view-box"><div class="view-title">${title}</div><div style="padding: 10px; font-size:12px; color: #ef4444; font-weight:bold;">Too large</div></div>`;
-        }
-
-        let widthPct = maxDim > 0 ? (c / maxDim) * 100 : 100;
-        let safeC = Math.max(1, c);
-        let gridHtml = `<div class="grid-draft" style="display:grid; grid-template-columns: repeat(${safeC}, 1fr); width: ${widthPct}%;">`;
-        
-        for(let i=0; i<(c*r); i++) {
-            let col = i % c;
-            let row = Math.floor(i / c);
-            let extraStyle = '';
-            
-            if (pType === 'v' && col === pPos) {
-                extraStyle += 'border-right: 3px solid #ef4444 !important; z-index: 10; ';
-            } else if (pType === 'h' && row === pPos) {
-                extraStyle += 'border-bottom: 3px solid #ef4444 !important; z-index: 10; ';
-            }
-            
-            let stayHtml = '';
-            if (showStays) {
-                if (col > 0) stayHtml += `<div style="position:absolute; left:-1px; top:0; width:2px; height:100%; background:#eab308; z-index:5;"></div>`;
-                if (row > 0) stayHtml += `<div style="position:absolute; top:-1px; left:0; width:100%; height:2px; background:#06b6d4; z-index:5;"></div>`;
-            }
-
-            gridHtml += `<div class="panel" style="${extraStyle}">${stayHtml}</div>`;
-        }
-        gridHtml += `</div>`;
-        
-        return `<div class="view-box"><div class="view-title">${title}</div>${gridHtml}</div>`;
-    }
-
-    function generateViews(containerId, L, W, H, pType, pPos) {
-        const container = document.getElementById(containerId);
-        const container_p = document.getElementById(containerId + '_p');
-        const container_c = document.getElementById(containerId + '_c');
-        if(!container) return;
-
-        L = isNaN(L) ? 0 : L;
-        W = isNaN(W) ? 0 : W;
-        H = isNaN(H) ? 0 : H;
-
-        let html = '';
-        const maxDim = Math.max(L, W, H);
-        
-        let totalLevels = Math.min(H, 4); 
-        for(let i=1; i<=totalLevels; i++) {
-            let label = i === H ? `Roof Level (Trusses)` : `Level ${i} (Stays)`;
-            html += buildGridHTML(label, L, W, maxDim, pType, pPos, true);
-        }
-
-        container.innerHTML = html;
-        if(container_p) container_p.innerHTML = html;
-        if(container_c) container_c.innerHTML = html;
-    }
-
-    function processTankData() {
-        try {
-            let ntEl = document.getElementById('numTanks');
-            let mode = (ntEl && ntEl.value) ? ntEl.value : "1";
-            
-            let ucEl = document.getElementById('unitChoice');
-            const unit = (ucEl && ucEl.value) ? ucEl.value : 'ft';
-            
-            let factor = 1;
-            if (unit === 'ft') factor = 4;
-            else if (unit === 'm_122') factor = 1.22;
-            else if (unit === 'm_100') factor = 1;
-            
-            const isImperial = (unit === 'ft' || unit === 'm_122');
-            const pSfx = isImperial ? (unit === 'ft' ? " (4'x4')" : " (1.22x1.22m)") : " (1x1m)";
-            
-            const unitStr = unit === 'ft' ? 'ft' : 'm';
-            const spacingStr = isImperial ? '4ft (1220mm)' : '1m (1000mm)';
-
-            let l1El = document.getElementById('length'); const L1_in = (l1El && l1El.value) ? (parseFloat(l1El.value) || 0) : 0;
-            let w1El = document.getElementById('width'); const W1_in = (w1El && w1El.value) ? (parseFloat(w1El.value) || 0) : 0;
-            let h1El = document.getElementById('height'); const H1_in = (h1El && h1El.value) ? (parseFloat(h1El.value) || 0) : 0;
-            
-            let volLiters1 = (unit === 'ft') ? (L1_in * W1_in * H1_in * 28.3168) : (L1_in * W1_in * H1_in * 1000);
-            let effLiters1 = volLiters1 * 0.9; 
-
-            const pc1El = document.getElementById('partChoice');
-            const partChoice1 = (pc1El && pc1El.value) ? pc1El.value : 'no';
-            let pQty1 = 0; let pLen_in1 = 0; let pHgt_in1 = 0; let pPos_in1 = 1;
-            
-            if(partChoice1 === 'yes') {
-                let pq1El = document.getElementById('partQty'); pQty1 = (pq1El && pq1El.value) ? (parseInt(pq1El.value) || 0) : 0;
-                let pl1El = document.getElementById('partLen'); pLen_in1 = (pl1El && pl1El.value) ? (parseFloat(pl1El.value) || 0) : 0;
-                let ph1El = document.getElementById('partHgt'); pHgt_in1 = (ph1El && ph1El.value) ? (parseFloat(ph1El.value) || 0) : 0;
-                let ppos1El = document.getElementById('partPos'); pPos_in1 = (ppos1El && ppos1El.value) ? (parseInt(ppos1El.value) || 1) : 1;
-            }
-
-            const L1 = Math.round(L1_in / factor);
-            const W1 = Math.round(W1_in / factor);
-            const H1 = Math.round(H1_in / factor);
-            const pL1 = Math.round(pLen_in1 / factor);
-            const pH1 = Math.round(pHgt_in1 / factor);
-            const pPosIdx1 = Math.max(0, pPos_in1 - 1);
-
-            let roof1 = L1 * W1; 
-            let base1 = L1 * W1; 
-            let perim1 = (L1 + W1) * 2;
-            let sides1 = perim1 * H1; 
-            let partPanels1 = (partChoice1 === 'yes' && pQty1 > 0) ? (pL1 * pH1 * pQty1) : 0;
-            let totalP1 = roof1 + base1 + sides1 + partPanels1;
-            window.currentTotalP1 = totalP1;
-
-            let pTypeTop1 = null, pPosTop1 = -1;
-            let pTypeFront1 = null, pPosFront1 = -1;
-            let pTypeSide1 = null, pPosSide1 = -1;
-
-            if (partChoice1 === 'yes' && pQty1 > 0) {
-                if (pL1 === W1) { 
-                    pTypeTop1 = 'v'; pPosTop1 = Math.min(L1 - 2, pPosIdx1);
-                    pTypeFront1 = 'v'; pPosFront1 = Math.min(L1 - 2, pPosIdx1);
-                } else if (pL1 === L1) { 
-                    pTypeTop1 = 'h'; pPosTop1 = Math.min(W1 - 2, pPosIdx1);
-                    pTypeSide1 = 'v'; pPosSide1 = Math.min(W1 - 2, pPosIdx1);
-                } else { 
-                    pTypeTop1 = 'v'; pPosTop1 = Math.min(L1 - 2, pPosIdx1);
-                    pTypeFront1 = 'v'; pPosFront1 = Math.min(L1 - 2, pPosIdx1);
-                }
-            }
-
-            const maxDim1 = Math.max(L1, W1, H1);
-            drawGrid('topGrid', L1, W1, maxDim1, pTypeTop1, pPosTop1); 
-            drawGrid('bottomGrid', L1, W1, maxDim1, pTypeTop1, pPosTop1);
-            drawGrid('frontGrid', L1, H1, maxDim1, pTypeFront1, pPosFront1); 
-            drawGrid('backGrid', L1, H1, maxDim1, pTypeFront1, pPosFront1);
-            drawGrid('leftGrid', W1, H1, maxDim1, pTypeSide1, pPosSide1); 
-            drawGrid('rightGrid', W1, H1, maxDim1, pTypeSide1, pPosSide1);
-
-            generateViews('visualsArea1', L1, W1, H1, pTypeTop1, pPosTop1);
-
-            let tRoof = document.getElementById('thickRoof') ? document.getElementById('thickRoof').value : "1.5mm";
-            let tBase = document.getElementById('thickBase') ? document.getElementById('thickBase').value : "4.5mm";
-            let tL1 = document.getElementById('thickWallL1') ? document.getElementById('thickWallL1').value : "4.5mm";
-            let tL2 = document.getElementById('thickWallL2') ? document.getElementById('thickWallL2').value : "3.0mm";
-            let tL3 = document.getElementById('thickWallL3') ? document.getElementById('thickWallL3').value : "3.0mm";
-            let tL4 = document.getElementById('thickWallL4') ? document.getElementById('thickWallL4').value : "1.5mm";
-
-            let updateDesc = function(prefix, id, val) { let el = document.getElementById(prefix + id); if(el) el.value = val; };
-            
-            updateDesc('desc_', 'item_0_0', "Manhole Panel" + pSfx);
-            updateDesc('desc_', 'item_0_1', tRoof + " Roof Panel" + pSfx);
-            updateDesc('desc_', 'item_0_2', tBase + " Base Panel" + pSfx);
-            updateDesc('desc_', 'item_0_3', tL1 + " Wall Panel (L1)" + pSfx);
-            updateDesc('desc_', 'item_0_4', tL2 + " Wall Panel (L2)" + pSfx);
-            updateDesc('desc_', 'item_0_5', tL3 + " Wall Panel (L3)" + pSfx);
-            updateDesc('desc_', 'item_0_6', tL4 + " Wall Panel (L4)" + pSfx);
-            updateDesc('desc_', 'item_0_7', "Partition Panel" + pSfx);
-
-            // TANK 2 DATA
-            let effLiters2 = 0;
-            let totalP2 = 0;
-
-            if (mode === "2") {
-                let l2El = document.getElementById('length2'); let L2_in = (l2El && l2El.value) ? (parseFloat(l2El.value) || 0) : 0;
-                let w2El = document.getElementById('width2'); let W2_in = (w2El && w2El.value) ? (parseFloat(w2El.value) || 0) : 0;
-                let h2El = document.getElementById('height2'); let H2_in = (h2El && h2El.value) ? (parseFloat(h2El.value) || 0) : 0;
-                
-                let volLiters2 = (unit === 'ft') ? (L2_in * W2_in * H2_in * 28.3168) : (L2_in * W2_in * H2_in * 1000);
-                effLiters2 = volLiters2 * 0.9; 
-
-                let pc2El = document.getElementById('partChoice2');
-                const partChoice2 = (pc2El && pc2El.value) ? pc2El.value : 'no';
-                let pQty2 = 0; let pLen_in2 = 0; let pHgt_in2 = 0; let pPos_in2 = 1;
-                if(partChoice2 === 'yes') {
-                    let pq2El = document.getElementById('partQty2'); pQty2 = (pq2El && pq2El.value) ? (parseInt(pq2El.value) || 0) : 0;
-                    let pl2El = document.getElementById('partLen2'); pLen_in2 = (pl2El && pl2El.value) ? (parseFloat(pl2El.value) || 0) : 0;
-                    let ph2El = document.getElementById('partHgt2'); pHgt_in2 = (ph2El && ph2El.value) ? (parseFloat(ph2El.value) || 0) : 0;
-                    let ppos2El = document.getElementById('partPos2'); pPos_in2 = (ppos2El && ppos2El.value) ? (parseInt(ppos2El.value) || 1) : 1;
-                }
-
-                const L2 = Math.round(L2_in / factor);
-                const W2 = Math.round(W2_in / factor);
-                const H2 = Math.round(H2_in / factor);
-                const pL2 = Math.round(pLen_in2 / factor);
-                const pH2 = Math.round(pHgt_in2 / factor);
-                const pPosIdx2 = Math.max(0, pPos_in2 - 1);
-
-                let roof2 = L2 * W2; let base2 = L2 * W2; let perim2 = (L2 + W2) * 2; let sides2 = perim2 * H2; 
-                let partPanels2 = (partChoice2 === 'yes' && pQty2 > 0) ? (pL2 * pH2 * pQty2) : 0;
-                totalP2 = roof2 + base2 + sides2 + partPanels2;
-
-                let pTypeTop2 = null, pPosTop2 = -1;
-                let pTypeFront2 = null, pPosFront2 = -1;
-                let pTypeSide2 = null, pPosSide2 = -1;
-
-                if (partChoice2 === 'yes' && pQty2 > 0) {
-                    if (pL2 === W2) { 
-                        pTypeTop2 = 'v'; pPosTop2 = Math.min(L2 - 2, pPosIdx2);
-                        pTypeFront2 = 'v'; pPosFront2 = Math.min(L2 - 2, pPosIdx2);
-                    } else if (pL2 === L2) { 
-                        pTypeTop2 = 'h'; pPosTop2 = Math.min(W2 - 2, pPosIdx2);
-                        pTypeSide2 = 'v'; pPosSide2 = Math.min(W2 - 2, pPosIdx2);
-                    } else { 
-                        pTypeTop2 = 'v'; pPosTop2 = Math.min(L2 - 2, pPosIdx2);
-                        pTypeFront2 = 'v'; pPosFront2 = Math.min(L2 - 2, pPosIdx2);
-                    }
-                }
-
-                const maxDim2 = Math.max(L2, W2, H2);
-                drawGrid('topGrid2', L2, W2, maxDim2, pTypeTop2, pPosTop2); 
-                drawGrid('bottomGrid2', L2, W2, maxDim2, pTypeTop2, pPosTop2);
-                drawGrid('frontGrid2', L2, H2, maxDim2, pTypeFront2, pPosFront2); 
-                drawGrid('backGrid2', L2, H2, maxDim2, pTypeFront2, pPosFront2);
-                drawGrid('leftGrid2', W2, H2, maxDim2, pTypeSide2, pPosSide2); 
-                drawGrid('rightGrid2', W2, H2, maxDim2, pTypeSide2, pPosSide2);
-
-                generateViews('visualsArea2', L2, W2, H2, pTypeTop2, pPosTop2);
-
-                updateDesc('desc2_', 'item_0_0', "Manhole Panel" + pSfx);
-                updateDesc('desc2_', 'item_0_1', tRoof + " Roof Panel" + pSfx);
-                updateDesc('desc2_', 'item_0_2', tBase + " Base Panel" + pSfx);
-                updateDesc('desc2_', 'item_0_3', tL1 + " Wall Panel (L1)" + pSfx);
-                updateDesc('desc2_', 'item_0_4', tL2 + " Wall Panel (L2)" + pSfx);
-                updateDesc('desc2_', 'item_0_5', tL3 + " Wall Panel (L3)" + pSfx);
-                updateDesc('desc2_', 'item_0_6', tL4 + " Wall Panel (L4)" + pSfx);
-                updateDesc('desc2_', 'item_0_7', "Partition Panel" + pSfx);
-
-            } else {
-                if(document.getElementById('qty2_item_0_0')) {
-                     const t2Inputs = document.querySelectorAll('[id^="qty2_"]');
-                     for(let i=0; i<t2Inputs.length; i++) {
-                         t2Inputs[i].value = 0;
-                     }
-                }
-            }
-            window.currentTotalP2 = (mode === "2") ? totalP2 : 0;
-
-            let totalEffLiters = effLiters1 + effLiters2;
-            let capScreen = document.getElementById('sumCapacity_screen');
-            if(capScreen) capScreen.innerText = isNaN(totalEffLiters) ? "0 L" : totalEffLiters.toLocaleString('en-MY', {maximumFractionDigits: 0}) + " L";
-            let capPrint = document.getElementById('sumCapacity_print');
-            if(capPrint && capScreen) capPrint.innerText = capScreen.innerText;
-
-            let combinedTotalP = totalP1 + totalP2;
-            let tpCount = document.getElementById('totalPanelsCount');
-            if(tpCount) tpCount.innerText = isNaN(combinedTotalP) ? "0" : combinedTotalP;
-
-            let setQ = function(prefix, id, val) { let el = document.getElementById(prefix + id); if(el) el.value = isNaN(val) ? 0 : val; };
-            
-            setQ('qty_', 'item_0_0', 1); 
-            setQ('qty_', 'item_0_1', Math.max(0, roof1 - 1)); 
-            setQ('qty_', 'item_0_2', base1); 
-            setQ('qty_', 'item_0_3', H1 >= 1 ? perim1 : 0); 
-            setQ('qty_', 'item_0_4', H1 >= 2 ? perim1 : 0); 
-            setQ('qty_', 'item_0_5', H1 >= 3 ? perim1 : 0); 
-            setQ('qty_', 'item_0_6', H1 >= 4 ? perim1 * (H1 - 3) : 0); 
-            setQ('qty_', 'item_0_7', partPanels1); 
-
-            setQ('qty_', 'item_1_0', H1 * 4); 
-            setQ('qty_', 'item_1_1', perim1); 
-            setQ('qty_', 'item_1_2', perim1); 
-            setQ('qty_', 'item_1_3', L1_in);  
-            setQ('qty_', 'item_1_4', L1_in);  
-
-            setQ('qty_', 'item_3_0', H1_in); 
-            setQ('qty_', 'item_3_1', H1_in); 
-            setQ('qty_', 'item_3_2', !isImperial ? H1_in : 1); 
-            setQ('qty_', 'item_3_3', 1); 
-
-            let sealantPerimeter = isImperial ? 4.88 : 4.0;
-            let boltsPerPanel = isImperial ? 16 : 12;
-            
-            setQ('qty_', 'item_3_4', Math.ceil((totalP1 * sealantPerimeter) / 15)); 
-            setQ('qty_', 'item_3_5', Math.ceil(totalP1 * boltsPerPanel * 1.05)); 
-
-            let qty40 = document.getElementById('qty_item_4_0'); 
-            if(qty40 && (!qty40.value || qty40.value == "0")) qty40.value = 1;
-            let qty41 = document.getElementById('qty_item_4_1');
-            if(qty41 && (!qty41.value || qty41.value == "0")) qty41.value = 1;
-
-            if(mode === "2") {
-                setQ('qty2_', 'item_0_0', 1); 
-                setQ('qty2_', 'item_0_1', Math.max(0, roof2 - 1)); 
-                setQ('qty2_', 'item_0_2', base2); 
-                setQ('qty2_', 'item_0_3', H2 >= 1 ? perim2 : 0); 
-                setQ('qty2_', 'item_0_4', H2 >= 2 ? perim2 : 0); 
-                setQ('qty2_', 'item_0_5', H2 >= 3 ? perim2 : 0); 
-                setQ('qty2_', 'item_0_6', H2 >= 4 ? perim2 * (H2 - 3) : 0); 
-                setQ('qty2_', 'item_0_7', partPanels2); 
-
-                setQ('qty2_', 'item_1_0', H2 * 4); 
-                setQ('qty2_', 'item_1_1', perim2); 
-                setQ('qty2_', 'item_1_2', perim2); 
-                setQ('qty2_', 'item_1_3', L2_in); 
-                setQ('qty2_', 'item_1_4', L2_in); 
-                
-                setQ('qty2_', 'item_3_0', H2_in); 
-                setQ('qty2_', 'item_3_1', H2_in); 
-                setQ('qty2_', 'item_3_2', !isImperial ? H2_in : 1); 
-                setQ('qty2_', 'item_3_3', 1); 
-
-                setQ('qty2_', 'item_3_4', Math.ceil((totalP2 * sealantPerimeter) / 15)); 
-                setQ('qty2_', 'item_3_5', Math.ceil(totalP2 * boltsPerPanel * 1.05)); 
-
-                let q2_40 = document.getElementById('qty2_item_4_0'); if(q2_40 && !q2_40.value) q2_40.value = 0;
-                let q2_41 = document.getElementById('qty2_item_4_1'); if(q2_41 && !q2_41.value) q2_41.value = 0;
-            }
-
-            let plinthText = document.getElementById('plinthCalcText');
-            const numPlinths = W1 + 1;
-            const plinthLen = isNaN(L1_in) ? 0 : L1_in;
-            if(plinthText) plinthText.innerText = `Recommendation: Require ${isNaN(numPlinths) ? 0 : numPlinths} rows of concrete plinths, each ${plinthLen}${unitStr} long, spaced at ${spacingStr} C/C.`;
-
-            calcTotals();
-        } catch (e) {
-            console.error("Tank Calculation Fallback executed.", e);
-        }
     }
 
     function exportCSV() {
@@ -2859,11 +2363,9 @@ Note:
         buildBOMTable();
         loadPrices();
         
-        // Force calculation & draw grids immediately on load
         setTimeout(() => {
             toggleTank2();
             processTankData();
-            console.log("Winko ERP System initialized successfully");
         }, 150);
     });
 
