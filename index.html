@@ -145,58 +145,56 @@
             .container { box-shadow: none; max-width: 100%; padding: 0; border: none; }
             
             /* --- FIXED PRINT GRID RULES --- */
-           .visual-container { 
+          /* PRINT GRID OVERRIDES (ENSURES LINES SHOW UP PERFECTLY IN PDF) */
+            .visual-container { 
                 display: flex !important; 
                 flex-wrap: wrap !important; 
-                gap: 15px !important; 
+                gap: 12px !important; 
                 justify-content: flex-start !important; 
-                margin-bottom: 20px !important; 
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
+                width: 100% !important; 
+                margin: 10px 0 20px 0 !important; 
+                page-break-inside: avoid !important; 
+                clear: both !important;
             }
             
             .view-box { 
-                width: 145px !important; /* Exact width from your screen CSS */
-                min-height: 155px !important; /* Gives the box a uniform height */
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
+                width: 145px !important; 
+                height: 145px !important; /* Fixed height stops the PDF from crushing or stretching the box */
+                display: flex !important; 
+                flex-direction: column !important; 
+                align-items: center !important; 
+                justify-content: flex-start !important; 
                 padding: 10px !important; 
                 border: 1.5px solid #cbd5e1 !important; 
                 background: #f8fafc !important; 
-                border-radius: 8px !important; 
+                border-radius: 6px !important; 
                 box-sizing: border-box !important;
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
             }
             
-           .grid-draft { 
-                display: grid !important;
-                /* Keep the gap to draw the lines, but force it to be strict */
+            .view-title { 
+                flex: 0 0 auto !important; /* Stops the title from stretching vertically */
+                width: 100% !important; 
+                font-size: 7pt !important; 
+                margin-bottom: 6px !important; 
+                color: #0f172a !important; 
+                text-align: center !important; 
+                font-weight: 800 !important; 
+                text-transform: uppercase !important;
+            }
+
+            .grid-draft { 
+                flex: 0 0 auto !important; /* Forbids the grid from stretching */
+                margin: auto !important; /* Magic trick: vertically and horizontally centers the grid inside the box */
+                max-width: 100% !important; 
                 gap: 1px !important; 
                 background: #94a3b8 !important; 
                 border: 2px solid #0f172a !important; 
-                
-                /* This centers the grid perfectly inside the view-box */
-                margin: auto !important; 
-                
-                /* STRICT sizing to stop the PDF from stretching or crushing it */
-                flex-grow: 0 !important;
-                flex-shrink: 0 !important;
-                max-width: 100% !important;
             }
             
             .panel { 
-                background-color: #e0f2fe !important; 
-                
-                /* The magic fix for squashed PDF squares: force the aspect ratio */
-                aspect-ratio: 1 / 1 !important; 
-                
-                /* Fallback for older PDF renderers that ignore aspect-ratio */
-                height: auto !important;
-                min-height: 5px !important; 
-                
-                /* Force colors to print exactly as seen on screen */
+                height: auto !important; /* CRITICAL: Prevents squashed rectangles in PDF */
+                background: #e0f2fe !important; 
+                aspect-ratio: 1 / 1 !important; /* Forces perfect squares */
                 -webkit-print-color-adjust: exact !important; 
                 print-color-adjust: exact !important;
             }
