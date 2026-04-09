@@ -129,20 +129,59 @@
         /* --- PROFESSIONAL PRINT STYLES (MULTI-MODE) --- */
         /* ========================================================================== */
         @media print {
-            @page { size: A4; margin: 10mm 15mm; }
-            body { background: white; padding: 0; font-size: 9pt; color: #0f172a; font-family: Arial, Helvetica, sans-serif; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            @page { size: A4; margin: 8mm 12mm; } /* Slightly tighter margin to give grids more room */
+            
+            /* Force the body to perfectly respect the A4 bounds without horizontal scrolling */
+            html, body { 
+                background: white; padding: 0; font-size: 9pt; color: #0f172a; 
+                font-family: Arial, Helvetica, sans-serif; 
+                -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+                width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; 
+            }
             
             #topNav { display: none !important; }
             .no-print { display: none !important; }
             .print-only { display: block !important; }
             .container { box-shadow: none; max-width: 100%; padding: 0; border: none; }
             
-            /* PRINT GRID OVERRIDES (ENSURES LINES SHOW UP PERFECTLY IN PDF) */
-            .visual-container { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; width: 100% !important; margin: 10px 0 20px 0 !important; page-break-inside: avoid !important; clear: both !important;}
-            .view-box { padding: 4px !important; border: 1.5px solid #cbd5e1 !important; background: #f8fafc !important; border-radius: 6px !important; width: 120px !important;}
+            /* --- FIXED PRINT GRID RULES --- */
+            .visual-container { 
+                display: flex !important; 
+                flex-wrap: wrap !important; 
+                gap: 2% !important; /* Use percentage instead of hardcoded pixels */
+                width: 100% !important; 
+                margin: 10px 0 20px 0 !important; 
+                page-break-inside: avoid !important;
+                break-inside: avoid !important; /* Modern syntax for avoiding bad breaks */
+                clear: both !important;
+            }
             
-            .grid-draft { gap: 1px !important; background: #94a3b8 !important; border: 2px solid #0f172a !important; }
-            .panel { background: #e0f2fe !important; aspect-ratio: 1 / 1 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;}
+            .view-box { 
+                padding: 4px !important; 
+                border: 1.5px solid #cbd5e1 !important; 
+                background: #f8fafc !important; 
+                border-radius: 6px !important; 
+                flex: 0 0 32% !important; /* Perfectly fits 3 drawing boxes per row */
+                max-width: 32% !important;
+                box-sizing: border-box !important;
+                page-break-inside: avoid !important;
+            }
+            
+            .grid-draft { 
+                gap: 1px !important; 
+                background: #94a3b8 !important; 
+                border: 2px solid #0f172a !important; 
+                width: 100% !important; /* Forces the grid to respect the view-box width */
+                max-width: 100% !important;
+            }
+            
+            .panel { 
+                background: #e0f2fe !important; 
+                aspect-ratio: 1 / 1 !important; 
+                -webkit-print-color-adjust: exact !important; 
+                print-color-adjust: exact !important;
+                min-height: 2px; /* Fallback in case PDF engine fails to calculate aspect ratio */
+            }
             
             .view-title { font-size: 7pt !important; margin-bottom: 4px !important; color: #0f172a !important; text-align: center !important; font-weight: 800 !important; text-transform: uppercase !important;}
             
