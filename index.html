@@ -170,18 +170,33 @@
                 break-inside: avoid !important;
             }
             
-            .grid-draft { 
+           .grid-draft { 
+                display: grid !important;
+                /* Keep the gap to draw the lines, but force it to be strict */
                 gap: 1px !important; 
                 background: #94a3b8 !important; 
                 border: 2px solid #0f172a !important; 
-                margin-top: auto !important; /* Pushes grid to vertical center */
-                margin-bottom: auto !important; /* Pushes grid to vertical center */
+                
+                /* This centers the grid perfectly inside the view-box */
+                margin: auto !important; 
+                
+                /* STRICT sizing to stop the PDF from stretching or crushing it */
+                flex-grow: 0 !important;
+                flex-shrink: 0 !important;
                 max-width: 100% !important;
             }
             
             .panel { 
-                background: #e0f2fe !important; 
+                background-color: #e0f2fe !important; 
+                
+                /* The magic fix for squashed PDF squares: force the aspect ratio */
                 aspect-ratio: 1 / 1 !important; 
+                
+                /* Fallback for older PDF renderers that ignore aspect-ratio */
+                height: auto !important;
+                min-height: 5px !important; 
+                
+                /* Force colors to print exactly as seen on screen */
                 -webkit-print-color-adjust: exact !important; 
                 print-color-adjust: exact !important;
             }
