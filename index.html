@@ -148,31 +148,32 @@
             .visual-container { 
                 display: flex !important; 
                 flex-wrap: wrap !important; 
-                gap: 2% !important; /* Use percentage instead of hardcoded pixels */
+                gap: 2% !important; /* Even spacing between boxes */
                 width: 100% !important; 
                 margin: 10px 0 20px 0 !important; 
-                page-break-inside: avoid !important;
-                break-inside: avoid !important; /* Modern syntax for avoiding bad breaks */
+                page-break-inside: avoid !important; 
                 clear: both !important;
             }
             
             .view-box { 
-                padding: 4px !important; 
+                padding: 10px !important; 
                 border: 1.5px solid #cbd5e1 !important; 
                 background: #f8fafc !important; 
-                border-radius: 6px !important; 
-                flex: 0 0 32% !important; /* Perfectly fits 3 drawing boxes per row */
+                border-radius: 8px !important; 
+                flex: 0 0 32% !important; /* Forces exactly 3 boxes per row */
                 max-width: 32% !important;
                 box-sizing: border-box !important;
                 page-break-inside: avoid !important;
+                text-align: center !important;
             }
             
             .grid-draft { 
                 gap: 1px !important; 
                 background: #94a3b8 !important; 
                 border: 2px solid #0f172a !important; 
-                width: 100% !important; /* Forces the grid to respect the view-box width */
+                /* NO "width: 100%" here! This allows your JS width percentages to work */
                 max-width: 100% !important;
+                margin: 0 auto !important; /* Centers the smaller grids (like Left/Right) perfectly */
             }
             
             .panel { 
@@ -180,7 +181,6 @@
                 aspect-ratio: 1 / 1 !important; 
                 -webkit-print-color-adjust: exact !important; 
                 print-color-adjust: exact !important;
-                min-height: 2px; /* Fallback in case PDF engine fails to calculate aspect ratio */
             }
             
             .view-title { font-size: 7pt !important; margin-bottom: 4px !important; color: #0f172a !important; text-align: center !important; font-weight: 800 !important; text-transform: uppercase !important;}
