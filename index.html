@@ -145,35 +145,38 @@
             .container { box-shadow: none; max-width: 100%; padding: 0; border: none; }
             
             /* --- FIXED PRINT GRID RULES --- */
-            .visual-container { 
+           .visual-container { 
                 display: flex !important; 
                 flex-wrap: wrap !important; 
-                gap: 2% !important; /* Even spacing between boxes */
-                width: 100% !important; 
-                margin: 10px 0 20px 0 !important; 
-                page-break-inside: avoid !important; 
-                clear: both !important;
+                gap: 15px !important; 
+                justify-content: flex-start !important; 
+                margin-bottom: 20px !important; 
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
             }
             
             .view-box { 
+                width: 145px !important; /* Exact width from your screen CSS */
+                min-height: 155px !important; /* Gives the box a uniform height */
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
                 padding: 10px !important; 
                 border: 1.5px solid #cbd5e1 !important; 
                 background: #f8fafc !important; 
                 border-radius: 8px !important; 
-                flex: 0 0 32% !important; /* Forces exactly 3 boxes per row */
-                max-width: 32% !important;
                 box-sizing: border-box !important;
                 page-break-inside: avoid !important;
-                text-align: center !important;
+                break-inside: avoid !important;
             }
             
             .grid-draft { 
                 gap: 1px !important; 
                 background: #94a3b8 !important; 
                 border: 2px solid #0f172a !important; 
-                /* NO "width: 100%" here! This allows your JS width percentages to work */
+                margin-top: auto !important; /* Pushes grid to vertical center */
+                margin-bottom: auto !important; /* Pushes grid to vertical center */
                 max-width: 100% !important;
-                margin: 0 auto !important; /* Centers the smaller grids (like Left/Right) perfectly */
             }
             
             .panel { 
@@ -183,8 +186,14 @@
                 print-color-adjust: exact !important;
             }
             
-            .view-title { font-size: 7pt !important; margin-bottom: 4px !important; color: #0f172a !important; text-align: center !important; font-weight: 800 !important; text-transform: uppercase !important;}
-            
+            .view-title { 
+                font-size: 7pt !important; 
+                margin-bottom: 4px !important; 
+                color: #0f172a !important; 
+                text-align: center !important; 
+                font-weight: 800 !important; 
+                text-transform: uppercase !important;
+            }
             /* ------------------------------------------------ */
             /* MODE 1: INTERNAL PRINT                           */
             /* ------------------------------------------------ */
