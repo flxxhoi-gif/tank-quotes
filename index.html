@@ -99,20 +99,24 @@
         
         #customerPreviewContainer { background: #94a3b8; padding: 20px; overflow-y: auto; flex-direction: column; align-items: center; }
         .preview-toolbar { background: #0f172a; padding: 10px 20px; border-radius: 6px; margin-bottom: 15px; color: white; display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 210mm;}
-        #customerPrintViewEditor { display: block; background: white; width: 100%; max-width: 210mm; min-height: 297mm; padding: 15mm; box-shadow: 0 10px 20px rgba(0,0,0,0.2); margin: 0 auto; color: #000; font-family: Arial, sans-serif; font-size: 9pt; }
+        #customerPrintViewEditor { display: block; background: white; width: 100%; max-width: 210mm; min-height: 297mm; padding: 15mm; box-shadow: 0 10px 20px rgba(0,0,0,0.2); margin: 0 auto; color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 9pt; }
         .editable-section { transition: background 0.2s; border-radius: 4px; padding: 4px; border: 1px solid transparent;}
         .editable-section:hover { background: #fef9c3; cursor: text; border: 1px dashed #eab308; }
 
         @media print {
             @page { size: A4; margin: 10mm 15mm; }
-            body { background: white; padding: 0; font-size: 9pt; color: #0f172a; font-family: Arial, sans-serif; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            body { background: white; padding: 0; font-size: 9pt; color: #0f172a; font-family: Arial, Helvetica, sans-serif; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             #topNav, .no-print, .internal-hide { display: none !important; }
             .print-only { display: block !important; }
             .container { max-width: 100%; padding: 0; }
             
+            /* PRINT PAGE BREAK CONTROLS */
+            tr, td, th { page-break-inside: avoid; }
+            .avoid-break { page-break-inside: avoid; }
+            .page-break { page-break-before: always; }
+            
             /* SO PRINT GRID OVERRIDES */
             .visual-container { display: flex !important; flex-wrap: wrap !important; gap: 10px !important; width: 100% !important; margin: 10px 0 20px 0 !important; page-break-inside: avoid !important;}
-            /* 6 items per row (16%) */
             .view-box { padding: 4px !important; border: 1px solid #cbd5e1 !important; background: transparent !important; border-radius: 4px !important; width: 15% !important; margin-bottom: 5px !important;}
             .grid-draft { gap: 0 !important; border: 1px solid #000 !important; background: transparent !important;}
             .panel { background: transparent !important; border: 1px solid #000 !important; box-sizing: border-box !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
@@ -137,11 +141,10 @@
             body.print-customer #customerPrintViewEditor { max-width: none !important; padding: 0 !important; margin: 0 !important; }
             body.print-customer .editable-section { outline: none !important; background: transparent !important; border: none !important; }
             .cp-table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 10px; font-size: 8.5pt; border: 2px solid #000; }
-            .cp-table th, .cp-table td { border: 1px solid #000; padding: 4px 6px !important; vertical-align: top;}
+            .cp-table th, .cp-table td { border: 1px solid #000; padding: 6px !important; vertical-align: top;}
             .cp-table th { background: #d1d5db !important; font-weight: bold; text-align: center;}
             .cp-short-exclusions { display: flex; align-items: stretch; margin-bottom: 15px !important; font-size: 8pt; border: 1px solid #000;}
             .cp-short-exclusions .label { background: #d1d5db !important; padding: 6px 10px; font-weight: bold; border-right: 1px solid #000; width: 100px; text-align: center; }
-            .page-break-section { page-break-before: always; padding-top: 10px; }
 
             body.print-checklist #mainContent, body.print-checklist #customerPreviewContainer { display: none !important; }
             body.print-checklist #checklistPrintView { display: block !important; font-size: 9pt; padding: 0 10px; }
@@ -149,10 +152,10 @@
         }
     </style>
     <script>
-        const cv = "V97";
+        const cv = "V98";
         if(localStorage.getItem("winkoAppVersion") !== cv) {
             localStorage.setItem("winkoAppVersion", cv);
-            for(let i=13; i<=96; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=97; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -314,7 +317,7 @@ Note:
             </div>
         </div>
 
-        <div class="print-only" id="internalPrintFooter">
+        <div class="print-only avoid-break" id="internalPrintFooter">
             <div class="footer-flex">
                 <div style="display:flex; gap:15px; width:60%;">
                     <div style="flex:1; border:1.5px solid #000; padding:8px; border-radius:6px; height:80px; display:flex; flex-direction:column; justify-content:space-between;">
@@ -343,7 +346,7 @@ Note:
                 </div>
             </div>
             
-            <div class="drawings-page" id="dynamicVisualsPrintContainer" style="page-break-before: always; padding-top:20px;"></div>
+            <div class="drawings-page page-break" id="dynamicVisualsPrintContainer"></div>
         </div>
     </div>
 </div>
@@ -393,12 +396,12 @@ Note:
             </tbody>
         </table>
 
-        <div style="page-break-before: always; padding-top: 10px;">
+        <div class="page-break">
             <div class="editable-section" contenteditable="true" style="display:flex; margin-bottom:15px; font-size:8pt; border:1px solid #000;">
                 <div contenteditable="false" style="padding:6px 10px; font-weight:bold; border-right:1px solid #000; width:100px; text-align:center; background:#d1d5db;">Exclusion</div><div style="padding:6px 10px; flex:1;" id="cpShortExclusionsText"></div>
             </div>
-            <div class="editable-section" id="cpFullTermsText" contenteditable="true" style="font-size:8pt; white-space:pre-wrap; margin-bottom:15px;"></div>
-            <div class="editable-section" contenteditable="true" style="font-size:8pt; margin-bottom:15px;">
+            <div class="editable-section avoid-break" id="cpFullTermsText" contenteditable="true" style="font-size:8pt; white-space:pre-wrap; margin-bottom:15px;"></div>
+            <div class="editable-section avoid-break" contenteditable="true" style="font-size:8pt; margin-bottom:15px;">
                 <div contenteditable="false" style="font-weight:bold; text-decoration:underline; margin-bottom:5px;">TERMS & CONDITIONS :-</div>
                 <table style="border:none; width:100%; border-collapse:collapse;">
                     <tr style="border:none;"><td style="width:130px; font-weight:bold; border:none; padding:3px 5px;" contenteditable="false">Quotation Validity:</td><td id="cpValidity" style="border:none; padding:3px 5px;"></td></tr>
@@ -407,7 +410,7 @@ Note:
                     <tr style="border:none;"><td style="font-weight:bold; border:none; padding:3px 5px;" contenteditable="false">Delivery Location:</td><td style="border:none; padding:3px 5px;"><span id="cpDeliveryTerm"></span></td></tr>
                 </table>
             </div>
-            <div class="editable-section" contenteditable="true" style="display:flex; justify-content:space-between; margin-top:15px;">
+            <div class="editable-section avoid-break" contenteditable="true" style="display:flex; justify-content:space-between; margin-top:15px;">
                 <div style="width:50%; font-size:8.5pt;">
                     <p>Best Regards.</p><p style="font-weight:bold; margin-bottom: 40px;">JUTARAMA INDUSTRIES (M) SDN BHD</p>
                     <p style="font-weight:bold; text-decoration:underline;" id="cpSignName"></p><p id="cpSignPhone"></p>
@@ -453,13 +456,13 @@ Note:
         <tbody id="so_table_body"></tbody>
     </table>
 
-    <div style="margin-top: 10px; font-size: 9pt;">
+    <div class="avoid-break" style="margin-top: 10px; font-size: 9pt;">
         <strong>Note :</strong><br>
         <span style="margin-left: 5px;">- Pls prepare tank dimension / Nozzle orientation to engineering dept for drawing arrangement</span>
-        <div id="so_special_remarks" contenteditable="true" style="margin-top:5px; min-height: 20px; outline:none; margin-left: 5px; color:#475569;">[Additional remarks here...]</div>
+        <div id="so_special_remarks" contenteditable="true" style="margin-top:5px; min-height: 20px; outline:none; margin-left: 5px; color:#475569; white-space:pre-wrap; border: 1px dashed transparent;">[Additional remarks here...]</div>
     </div>
 
-    <div style="display:flex; justify-content:space-between; margin-top:50px; font-size:9pt; text-align:center;">
+    <div class="avoid-break" style="display:flex; justify-content:space-between; margin-top:50px; font-size:9pt; text-align:center;">
         <div style="width:30%;">
             <div style="border-top:1px solid #000; padding-top:5px; font-weight:bold;">Prepared By,</div>
             <div style="text-align:left; margin-top:30px;">Name:<br>Date:</div>
@@ -475,7 +478,7 @@ Note:
         </div>
     </div>
     
-    <div style="page-break-before: always; padding-top: 10px;">
+    <div class="page-break" style="padding-top: 10px;">
         <div style="text-align:center; font-size: 14pt; font-weight: bold; text-decoration: underline; margin-bottom: 20px;">MATERIAL LIST & FACTORY ORDER</div>
         <div id="dynamicChecklistDrawingsContainer"></div>
         <div id="dynamicChecklistBomContainer"></div>
@@ -635,9 +638,9 @@ Note:
 
             // VISUALS
             screenVisHtml += `<div class="module-card no-print"><div class="card-header">Tank ${i+1} Visuals</div><div class="visual-container"><div class="view-box"><div class="view-title">Top</div><div id="grid_top_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Bottom</div><div id="grid_bot_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Front</div><div id="grid_fr_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Back</div><div id="grid_bk_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Left</div><div id="grid_lt_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Right</div><div id="grid_rt_s_${i}" class="grid-draft"></div></div></div></div>`;
-            printVisHtml += `<div class="tank-section-title" style="margin-top:25px;">Tank ${i+1} Exterior Panels</div><div class="visual-container"><div class="view-box"><div class="view-title">Top</div><div id="grid_top_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Bottom</div><div id="grid_bot_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Front</div><div id="grid_fr_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Back</div><div id="grid_bk_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Left</div><div id="grid_lt_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Right</div><div id="grid_rt_p_${i}" class="grid-draft"></div></div></div>`;
+            printVisHtml += `<div class="tank-section-title avoid-break" style="margin-top:25px;">Tank ${i+1} Exterior Panels</div><div class="visual-container avoid-break"><div class="view-box"><div class="view-title">Top</div><div id="grid_top_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Bottom</div><div id="grid_bot_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Front</div><div id="grid_fr_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Back</div><div id="grid_bk_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Left</div><div id="grid_lt_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Right</div><div id="grid_rt_p_${i}" class="grid-draft"></div></div></div>`;
             
-            chkVisHtml += `<div style="font-size:10pt; font-weight:bold; margin-top:15px; border-top:1px solid #000; padding-top:5px;">Tank ${i+1} Drawings</div><div style="display:flex; flex-wrap:wrap; gap:5px; width:100%; margin-bottom:20px;"><div class="view-box"><div style="font-size:7pt; font-weight:bold;">TOP</div><div id="grid_top_c_${i}" class="grid-draft"></div></div><div class="view-box"><div style="font-size:7pt; font-weight:bold;">BOT</div><div id="grid_bot_c_${i}" class="grid-draft"></div></div><div class="view-box"><div style="font-size:7pt; font-weight:bold;">FR</div><div id="grid_fr_c_${i}" class="grid-draft"></div></div><div class="view-box"><div style="font-size:7pt; font-weight:bold;">BK</div><div id="grid_bk_c_${i}" class="grid-draft"></div></div><div class="view-box"><div style="font-size:7pt; font-weight:bold;">LT</div><div id="grid_lt_c_${i}" class="grid-draft"></div></div><div class="view-box"><div style="font-size:7pt; font-weight:bold;">RT</div><div id="grid_rt_c_${i}" class="grid-draft"></div></div></div>`;
+            chkVisHtml += `<div class="avoid-break"><div style="font-size:10pt; font-weight:bold; margin-top:15px; border-top:1px solid #000; padding-top:5px;">Tank ${i+1} Drawings</div><div style="display:flex; flex-wrap:wrap; gap:5px; width:100%; margin-bottom:20px;"><div class="view-box"><div style="font-size:7pt; font-weight:bold;">TOP</div><div id="grid_top_c_${i}" class="grid-draft"></div></div><div class="view-box"><div style="font-size:7pt; font-weight:bold;">BOT</div><div id="grid_bot_c_${i}" class="grid-draft"></div></div><div class="view-box"><div style="font-size:7pt; font-weight:bold;">FR</div><div id="grid_fr_c_${i}" class="grid-draft"></div></div><div class="view-box"><div style="font-size:7pt; font-weight:bold;">BK</div><div id="grid_bk_c_${i}" class="grid-draft"></div></div><div class="view-box"><div style="font-size:7pt; font-weight:bold;">LT</div><div id="grid_lt_c_${i}" class="grid-draft"></div></div><div class="view-box"><div style="font-size:7pt; font-weight:bold;">RT</div><div id="grid_rt_c_${i}" class="grid-draft"></div></div></div></div>`;
         });
 
         let customHtml = "";
@@ -702,7 +705,7 @@ Note:
                 let partStr = (t.partChoice === 'yes' && t.partQty > 0) ? `<tr><td style="width:140px; padding:0;">Partition</td><td style="padding:0;">: ${t.partQty}x ${t.partType} (${t.partL}${u} x ${t.partH}${u})</td></tr>` : '';
 
                 soTableHtml += `
-                <tr>
+                <tr class="avoid-break">
                     <td style="border:1px solid #000; text-align:center; vertical-align:top; padding:8px 5px;">${soIdx++}</td>
                     <td style="border:1px solid #000; padding:8px 5px; vertical-align:top;">
                         <strong>Supply Pressed Steel Tank Size: ${t.override || t.L+u+'(L) x '+t.W+u+'(W) x '+t.H+u+'(H)'}</strong><br>
@@ -776,7 +779,7 @@ Note:
 
             appCustomItems.forEach(c => { 
                 totalBase += (c.cost * (c.qty||0)); 
-                soTableHtml += `<tr>
+                soTableHtml += `<tr class="avoid-break">
                     <td style="border:1px solid #000; text-align:center; vertical-align:top; padding:8px 5px;">${soIdx++}</td>
                     <td style="border:1px solid #000; padding:8px 5px; vertical-align:top;"><strong>${c.desc}</strong></td>
                     <td style="border:1px solid #000; text-align:center; vertical-align:top; padding:8px 5px;">unit</td>
@@ -813,7 +816,7 @@ Note:
                 let intLadStr = t.bom[3] && t.bom[3].items[1] ? `${t.bom[3].items[1].selVal} Internal - ${t.bom[3].items[1].qty} sets` : '';
                 let wliStr = t.bom[3] && t.bom[3].items[2] ? `${t.bom[3].items[2].selVal} - ${t.bom[3].items[2].qty} sets` : '';
 
-                cpRows += `<tr>
+                cpRows += `<tr class="avoid-break">
                     <td style="text-align:center; border:1px solid #000; padding:6px; vertical-align:top;">${cpIdx++}</td>
                     <td style="border:1px solid #000; padding:6px; vertical-align:top;">
                         <strong>Supply and Install ${t.coat} Tank Size:<br>${dStr} (Total: ${t.totalPanels} Pcs)</strong><br>Comply to ${t.std}<br>
@@ -834,7 +837,7 @@ Note:
 
             appCustomItems.forEach((c, i) => {
                 let trPct = (c.cost * (c.qty||0)) / globalRef; let trFinal = net * trPct; c.finalPrice = trFinal;
-                cpRows += `<tr>
+                cpRows += `<tr class="avoid-break">
                     <td style="text-align:center; border:1px solid #000; padding:6px; vertical-align:top;">${cpIdx++}</td>
                     <td style="border:1px solid #000; padding:6px; vertical-align:top;"><strong>${c.desc}</strong></td>
                     <td style="text-align:center; border:1px solid #000; padding:6px; vertical-align:top;">${c.qty||0}</td>
@@ -848,7 +851,7 @@ Note:
             // Generate the Material List on the attached page
             let chkBomHtml = ``;
             appTanks.forEach((t, i) => {
-                chkBomHtml += `<div style="font-weight:bold; background:#e2e8f0; padding:4px 8px; margin-top:10px; border:1px solid #000; border-bottom:none;">TANK ${i+1} : ${t.override || t.L+u+' x '+t.W+u+' x '+t.H+u}</div>
+                chkBomHtml += `<div class="avoid-break"><div style="font-weight:bold; background:#e2e8f0; padding:4px 8px; margin-top:10px; border:1px solid #000; border-bottom:none;">TANK ${i+1} : ${t.override || t.L+u+' x '+t.W+u+' x '+t.H+u}</div>
                 <table style="width:100%; border-collapse:collapse; font-size:8.5pt; border:1px solid #000; margin-bottom:15px;">
                     <thead>
                         <tr style="background:#d1d5db;">
@@ -870,7 +873,7 @@ Note:
                             hasItems = true;
                             let desc = it.name;
                             if (it.selectId && it.selVal) desc += ` (${it.selVal})`;
-                            rows += `<tr>
+                            rows += `<tr class="avoid-break">
                                 <td style="border:1px solid #000; padding:4px; text-align:center;">${idx++}</td>
                                 <td style="border:1px solid #000; padding:4px;"><strong>[${sec.category}]</strong> ${desc}</td>
                                 <td style="border:1px solid #000; padding:4px; text-align:center; font-weight:bold;">${isSvc ? 'LUMP SUM' : q}</td>
@@ -879,11 +882,11 @@ Note:
                     });
                     if (hasItems) chkBomHtml += rows;
                 });
-                chkBomHtml += `</tbody></table>`;
+                chkBomHtml += `</tbody></table></div>`;
             });
 
             if (appCustomItems.length > 0) {
-                chkBomHtml += `<div style="font-weight:bold; background:#e2e8f0; padding:4px 8px; margin-top:10px; border:1px solid #000; border-bottom:none;">CUSTOM ITEMS</div>
+                chkBomHtml += `<div class="avoid-break"><div style="font-weight:bold; background:#e2e8f0; padding:4px 8px; margin-top:10px; border:1px solid #000; border-bottom:none;">CUSTOM ITEMS</div>
                 <table style="width:100%; border-collapse:collapse; font-size:8.5pt; border:1px solid #000; margin-bottom:15px;">
                     <thead>
                         <tr style="background:#d1d5db;">
@@ -895,13 +898,13 @@ Note:
                     <tbody>`;
                 let idx = 1;
                 appCustomItems.forEach((c) => {
-                    chkBomHtml += `<tr>
+                    chkBomHtml += `<tr class="avoid-break">
                         <td style="border:1px solid #000; padding:4px; text-align:center;">${idx++}</td>
                         <td style="border:1px solid #000; padding:4px;">${c.desc}</td>
                         <td style="border:1px solid #000; padding:4px; text-align:center; font-weight:bold;">${c.qty || 0}</td>
                     </tr>`;
                 });
-                chkBomHtml += `</tbody></table>`;
+                chkBomHtml += `</tbody></table></div>`;
             }
             setHtml('dynamicChecklistBomContainer', chkBomHtml);
 
@@ -959,8 +962,8 @@ Note:
     function buildAdminTable() { let h = ''; systemBaseStructure.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { h += `<tr><td style="font-weight:800; background:#f1f5f9; text-align:left;">${sec.category}</td><td><input type="text" class="admin-input text-left" id="adm_name_${sIdx}_${iIdx}" value="${it.name}"></td><td><input type="number" step="0.1" class="admin-input" id="adm_wt_${sIdx}_${iIdx}" value="${it.wt || 0}"></td><td><input type="number" step="0.01" class="admin-input" id="adm_price_${sIdx}_${iIdx}" value="${it.def.toFixed(2)}"></td></tr>`; }); }); setHtml('adminBody', h); }
     function saveAdminDefaults() { let nd = JSON.parse(JSON.stringify(systemBaseStructure)); nd.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { it.name = getVal(`adm_name_${sIdx}_${iIdx}`); it.wt = getNum(`adm_wt_${sIdx}_${iIdx}`); it.def = getNum(`adm_price_${sIdx}_${iIdx}`); }); }); localStorage.setItem('winkoMasterDefaults', JSON.stringify(nd)); alert("Success! Master Defaults updated."); location.reload(); }
 
-    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV97', JSON.stringify(d)); }
-    function loadPrices() { let s = localStorage.getItem('winkoProDataV97'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; } renderAllDynamicUI(); processTankData(); }
+    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV98', JSON.stringify(d)); }
+    function loadPrices() { let s = localStorage.getItem('winkoProDataV98'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; } renderAllDynamicUI(); processTankData(); }
 
     function refreshMemoryDropdown() { let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; let s = document.getElementById('memoryDropdown'); if(s) { s.innerHTML = '<option value="">-- Load a Saved Project --</option>'; Object.keys(m).forEach(k => { s.innerHTML += `<option value="${k}">${k}</option>`; }); } }
     function saveToMemory() { let p = getVal('projectName').trim(); if(!p) { alert("Type a Project Name first."); return; } let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; m[p] = d; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); alert("Saved."); refreshMemoryDropdown(); setVal('memoryDropdown', p); }
