@@ -151,10 +151,10 @@
         }
     </style>
     <script>
-        const cv = "V87";
+        const cv = "V88";
         if(localStorage.getItem("winkoAppVersion") !== cv) {
             localStorage.setItem("winkoAppVersion", cv);
-            for(let i=13; i<=86; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=87; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -382,11 +382,16 @@ Note:
         </div>
 
         <table class="editable-section cp-table" contenteditable="true" style="width:100%; border-collapse:collapse; margin:10px 0; font-size:8.5pt; border:2px solid #000;">
-            <thead><tr><th style="width:6%; border:1px solid #000; text-align:center;">Item</th><th style="width:50%; border:1px solid #000; text-align:center;">Description</th><th style="width:14%; border:1px solid #000; text-align:center;">Unit Price</th><th style="width:10%; border:1px solid #000; text-align:center;">Qty</th><th style="width:20%; border:1px solid #000; text-align:center;">Total Price</th></tr></thead>
+            <thead><tr>
+                <th style="width:6%; border:1px solid #000; text-align:center;">Item</th>
+                <th style="width:64%; border:1px solid #000; text-align:center;">Description</th>
+                <th style="width:10%; border:1px solid #000; text-align:center;">Qty</th>
+                <th style="width:20%; border:1px solid #000; text-align:center;">Total Price</th>
+            </tr></thead>
             <tbody id="cpDynamicTanksBody"></tbody>
             <tbody>
-                <tr><td colspan="2" style="border:none;"></td><td colspan="2" style="border:1px solid #000; text-align:right;">SST <span id="cpSstPct"></span>%</td><td style="border:1px solid #000; text-align:right;" id="cpSstAmt"></td></tr>
-                <tr><td colspan="2" style="border:none;"></td><td colspan="2" style="border:none;"></td><td style="border:1px solid #000; text-align:right; font-weight:bold; border-bottom:4px double #000;" id="cpGrandTotal"></td></tr>
+                <tr><td colspan="2" style="border:none;"></td><td style="border:1px solid #000; text-align:right;">SST <span id="cpSstPct"></span>%</td><td style="border:1px solid #000; text-align:right;" id="cpSstAmt"></td></tr>
+                <tr><td colspan="2" style="border:none;"></td><td style="border:none; text-align:right; font-weight:bold;">TOTAL</td><td style="border:1px solid #000; text-align:right; font-weight:bold; border-bottom:4px double #000;" id="cpGrandTotal"></td></tr>
             </tbody>
         </table>
 
@@ -603,7 +608,7 @@ Note:
         appCustomItems.forEach((c, i) => {
             customHtml += `<div class="tank-block" style="background:#f5f3ff; padding:15px; border-radius:6px; border:1px solid #ddd6fe; margin-top:10px;">
                 <div style="display:flex; justify-content:space-between; font-weight:bold; color:#4c1d95; margin-bottom:10px;">Custom Item ${i+1} <button class="del-btn" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; font-size:11px; font-weight:bold; cursor:pointer;" onclick="removeCustomItem(${i})">X REMOVE</button></div>
-                <div style="display:flex; gap:10px;"><div class="form-group" style="flex:2;"><label>Description</label><input type="text" value="${c.desc}" oninput="updateCustomField(${i}, 'desc', this.value)"></div><div class="form-group" style="flex:1;"><label>Qty</label><input type="number" value="${c.qty}" oninput="updateCustomField(${i}, 'qty', this.value, true)"></div><div class="form-group" style="flex:1;"><label>Lump Sum Price (Unit)</label><input type="number" value="${c.cost}" oninput="updateCustomField(${i}, 'cost', this.value, true)"></div></div>
+                <div style="display:flex; gap:10px;"><div class="form-group" style="flex:2;"><label>Description</label><input type="text" value="${c.desc}" oninput="updateCustomField(${i}, 'desc', this.value)"></div><div class="form-group" style="flex:1;"><label>Qty</label><input type="number" value="${c.qty}" oninput="updateCustomField(${i}, 'qty', this.value, true)"></div><div class="form-group" style="flex:1;"><label>Base Price (Unit)</label><input type="number" value="${c.cost}" oninput="updateCustomField(${i}, 'cost', this.value, true)"></div></div>
             </div>`;
         });
 
@@ -668,7 +673,7 @@ Note:
                 if(t.bom[0]) {
                     if(t.bom[0].items[0]) bD(0,0, "Manhole Panel"+pSfx); if(t.bom[0].items[1]) bD(0,1, t.tRoof+" Roof Panel"+pSfx); if(t.bom[0].items[2]) bD(0,2, t.tBase+" Base Panel"+pSfx); if(t.bom[0].items[3]) bD(0,3, t.tW1+" Wall Panel (L1)"+pSfx); if(t.bom[0].items[4]) bD(0,4, t.tW2+" Wall Panel (L2)"+pSfx); if(t.bom[0].items[5]) bD(0,5, t.tW3+" Wall Panel (L3)"+pSfx); if(t.bom[0].items[6]) bD(0,6, t.tW4+" Wall Panel (L4)"+pSfx); if(t.bom[0].items[7]) bD(0,7, "Partition Panel"+pSfx);
                     
-                    if(t.bom[0].items[0]) bQ(0,0, 1); if(t.bom[0].items[1]) bQ(0,1, Math.max(0, r - 1)); if(t.bom[0].items[2]) bQ(0,2, b); if(t.bom[0].items[3]) bQ(0,3, H>=1?pm:0); if(t.bom[0].items[4]) bQ(0,4, H>=2?pm:0); if(t.bom[0].items[5]) bQ(0,5, H>=3?pm:0); if(t.bom[0].items[6]) bQ(0,6, H>=4?pm*(H-3):0); if(t.bom[0].items[7]) bQ(0,7, pp);
+                    if(t.bom[0].items[0]) bQ(0,0, r>0?1:0); if(t.bom[0].items[1]) bQ(0,1, Math.max(0, r - 1)); if(t.bom[0].items[2]) bQ(0,2, b); if(t.bom[0].items[3]) bQ(0,3, H>=1?pm:0); if(t.bom[0].items[4]) bQ(0,4, H>=2?pm:0); if(t.bom[0].items[5]) bQ(0,5, H>=3?pm:0); if(t.bom[0].items[6]) bQ(0,6, H>=4?pm*(H-3):0); if(t.bom[0].items[7]) bQ(0,7, pp);
                 }
                 if(t.bom[1]) { if(t.bom[1].items[0]) bQ(1,0, H*4); if(t.bom[1].items[1]) bQ(1,1, pm); if(t.bom[1].items[2]) bQ(1,2, pm); if(t.bom[1].items[3]) bQ(1,3, t.L); if(t.bom[1].items[4]) bQ(1,4, t.L); }
                 if(t.bom[3]) {
@@ -696,7 +701,7 @@ Note:
                 totalW += t.weight; totalBase += t.baseCost;
             });
 
-            appCustomItems.forEach(c => { totalBase += (c.cost * c.qty); });
+            appCustomItems.forEach(c => { totalBase += (c.cost * (c.qty||0)); });
 
             let mkp = getNum('markupPct'); let mkAmt = totalBase * (mkp / 100); let sub = totalBase + mkAmt; 
             let dsc = getNum('discountPct'); let dscAmt = sub * (dsc / 100); let net = sub - dscAmt;
@@ -719,40 +724,38 @@ Note:
             appTanks.forEach((t, i) => {
                 let trPct = t.baseCost / globalRef; let trFinal = net * trPct; t.finalPrice = trFinal;
                 let dStr = t.override || `${t.L}${u} (L) x ${t.W}${u} (W) x ${t.H}${u} (H)`;
-                let pStr = (t.partChoice === 'yes' && t.partQty > 0) ? `<tr style="border:none;"><td style="border:none;">d)</td><td style="border:none;" colspan="3">Partition: ${t.partQty}x ${t.partType} (${t.partL}${u} x ${t.partH}${u})</td></tr>` : '';
+                let pStr = (t.partChoice === 'yes' && t.partQty > 0) ? `<tr style="border:none;"><td style="border:none; vertical-align:top;">d)</td><td style="border:none; vertical-align:top;" colspan="3">Partition: ${t.partQty}x ${t.partType} (${t.partL}${u} x ${t.partH}${u})</td></tr>` : '';
                 
                 let extLadStr = t.bom[3] && t.bom[3].items[0] ? `${t.bom[3].items[0].selVal} External - ${t.bom[3].items[0].qty} sets` : '';
                 let intLadStr = t.bom[3] && t.bom[3].items[1] ? `${t.bom[3].items[1].selVal} Internal - ${t.bom[3].items[1].qty} sets` : '';
                 let wliStr = t.bom[3] && t.bom[3].items[2] ? `${t.bom[3].items[2].selVal} - ${t.bom[3].items[2].qty} sets` : '';
 
                 cpRows += `<tr>
-                    <td style="text-align:center; border:1px solid #000; padding:4px;">${cpIdx++}</td>
-                    <td style="border:1px solid #000; padding:4px;">
+                    <td style="text-align:center; border:1px solid #000; padding:6px; vertical-align:top;">${cpIdx++}</td>
+                    <td style="border:1px solid #000; padding:6px; vertical-align:top;">
                         <strong>Supply and Install ${t.coat} Tank Size:<br>${dStr} (Total: ${t.totalPanels} Pcs)</strong><br>Comply to ${t.std}<br>
                         <table style="border:none; width:100%; font-size:8.5pt;">
-                            <tr style="border:none;"><td style="width:20px; border:none;">a)</td><td style="width:75px; border:none;">Thickness:</td><td style="width:50px; border:none;">Roof</td><td style="border:none;">: ${t.tRoof}</td></tr>
-                            <tr style="border:none;"><td style="border:none;"></td><td style="border:none;"></td><td style="border:none;">Base</td><td style="border:none;">: ${t.tBase}</td></tr>
-                            <tr style="border:none;"><td style="border:none;"></td><td style="border:none;"></td><td style="border:none;">Wall</td><td style="border:none;">: L1: ${t.tW1} | L2: ${t.tW2} | L3: ${t.tW3} | L4: ${t.tW4}</td></tr>
+                            <tr style="border:none;"><td style="width:20px; border:none; vertical-align:top;">a)</td><td style="width:75px; border:none; vertical-align:top;">Thickness:</td><td style="width:50px; border:none; vertical-align:top;">Roof</td><td style="border:none; vertical-align:top;">: ${t.tRoof}</td></tr>
+                            <tr style="border:none;"><td style="border:none; vertical-align:top;"></td><td style="border:none; vertical-align:top;"></td><td style="border:none; vertical-align:top;">Base</td><td style="border:none; vertical-align:top;">: ${t.tBase}</td></tr>
+                            <tr style="border:none;"><td style="border:none; vertical-align:top;"></td><td style="border:none; vertical-align:top;"></td><td style="border:none; vertical-align:top;">Wall</td><td style="border:none; vertical-align:top;">: L1: ${t.tW1} | L2: ${t.tW2} | L3: ${t.tW3} | L4: ${t.tW4}</td></tr>
                             <tr style="border:none;"><td style="border:none; vertical-align:top;">b)</td><td style="border:none; vertical-align:top;" colspan="3">Ladders: ${intLadStr}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${extLadStr}</td></tr>
-                            <tr style="border:none;"><td style="border:none;">c)</td><td style="border:none;" colspan="3">WLI: ${wliStr}</td></tr>
+                            <tr style="border:none;"><td style="border:none; vertical-align:top;">c)</td><td style="border:none; vertical-align:top;" colspan="3">WLI: ${wliStr}</td></tr>
                             ${pStr}
-                            <tr style="border:none;"><td style="border:none;">${pStr?'e)':'d)'}</td><td style="border:none;" colspan="3">Tank to be sit on existing I-Beam or RC plinths</td></tr>
+                            <tr style="border:none;"><td style="border:none; vertical-align:top;">${pStr?'e)':'d)'}</td><td style="border:none; vertical-align:top;" colspan="3">Tank to be sit on existing I-Beam or RC plinths</td></tr>
                         </table>
                     </td>
-                    <td style="text-align:right; border:1px solid #000; padding:4px;">${trFinal.toLocaleString('en-MY',{minimumFractionDigits:2})}</td>
-                    <td style="text-align:center; border:1px solid #000; padding:4px;">1</td>
-                    <td style="text-align:right; border:1px solid #000; padding:4px;">${trFinal.toLocaleString('en-MY',{minimumFractionDigits:2})}</td>
+                    <td style="text-align:center; border:1px solid #000; padding:6px; vertical-align:top;">1</td>
+                    <td style="text-align:right; border:1px solid #000; padding:6px; vertical-align:top;">${trFinal.toLocaleString('en-MY',{minimumFractionDigits:2})}</td>
                 </tr>`;
             });
 
             appCustomItems.forEach((c, i) => {
-                let trPct = (c.cost * c.qty) / globalRef; let trFinal = net * trPct; c.finalPrice = trFinal;
+                let trPct = (c.cost * (c.qty||0)) / globalRef; let trFinal = net * trPct; c.finalPrice = trFinal;
                 cpRows += `<tr>
-                    <td style="text-align:center; border:1px solid #000; padding:4px;">${cpIdx++}</td>
-                    <td style="border:1px solid #000; padding:4px;"><strong>${c.desc}</strong></td>
-                    <td style="text-align:right; border:1px solid #000; padding:4px;">${c.qty>0 ? (trFinal/c.qty).toLocaleString('en-MY',{minimumFractionDigits:2}) : '0.00'}</td>
-                    <td style="text-align:center; border:1px solid #000; padding:4px;">${c.qty}</td>
-                    <td style="text-align:right; border:1px solid #000; padding:4px;">${trFinal.toLocaleString('en-MY',{minimumFractionDigits:2})}</td>
+                    <td style="text-align:center; border:1px solid #000; padding:6px; vertical-align:top;">${cpIdx++}</td>
+                    <td style="border:1px solid #000; padding:6px; vertical-align:top;"><strong>${c.desc}</strong></td>
+                    <td style="text-align:center; border:1px solid #000; padding:6px; vertical-align:top;">${c.qty||0}</td>
+                    <td style="text-align:right; border:1px solid #000; padding:6px; vertical-align:top;">${trFinal.toLocaleString('en-MY',{minimumFractionDigits:2})}</td>
                 </tr>`;
             });
 
@@ -797,8 +800,8 @@ Note:
     function buildAdminTable() { let h = ''; systemBaseStructure.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { h += `<tr><td style="font-weight:800; background:#f1f5f9; text-align:left;">${sec.category}</td><td><input type="text" class="admin-input text-left" id="adm_name_${sIdx}_${iIdx}" value="${it.name}"></td><td><input type="number" step="0.1" class="admin-input" id="adm_wt_${sIdx}_${iIdx}" value="${it.wt || 0}"></td><td><input type="number" step="0.01" class="admin-input" id="adm_price_${sIdx}_${iIdx}" value="${it.def.toFixed(2)}"></td></tr>`; }); }); setHtml('adminBody', h); }
     function saveAdminDefaults() { let nd = JSON.parse(JSON.stringify(systemBaseStructure)); nd.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { it.name = getVal(`adm_name_${sIdx}_${iIdx}`); it.wt = getNum(`adm_wt_${sIdx}_${iIdx}`); it.def = getNum(`adm_price_${sIdx}_${iIdx}`); }); }); localStorage.setItem('winkoMasterDefaults', JSON.stringify(nd)); alert("Success! Master Defaults updated."); location.reload(); }
 
-    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV87', JSON.stringify(d)); }
-    function loadPrices() { let s = localStorage.getItem('winkoProDataV87'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; } renderAllDynamicUI(); processTankData(); }
+    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV88', JSON.stringify(d)); }
+    function loadPrices() { let s = localStorage.getItem('winkoProDataV88'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; } renderAllDynamicUI(); processTankData(); }
 
     function refreshMemoryDropdown() { let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; let s = document.getElementById('memoryDropdown'); if(s) { s.innerHTML = '<option value="">-- Load a Saved Project --</option>'; Object.keys(m).forEach(k => { s.innerHTML += `<option value="${k}">${k}</option>`; }); } }
     function saveToMemory() { let p = getVal('projectName').trim(); if(!p) { alert("Type a Project Name first."); return; } let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; m[p] = d; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); alert("Saved."); refreshMemoryDropdown(); setVal('memoryDropdown', p); }
