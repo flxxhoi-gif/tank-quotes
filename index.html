@@ -110,11 +110,11 @@
             .print-only { display: block !important; }
             .container { max-width: 100%; padding: 0; }
             
-            /* PRINT GRID OVERRIDES */
+            /* CRISP PRINT GRID OVERRIDES */
             .visual-container { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; width: 100% !important; margin: 10px 0 20px 0 !important; page-break-inside: avoid !important;}
-            .view-box { padding: 4px !important; border: 1.5px solid #cbd5e1 !important; background: #f8fafc !important; border-radius: 6px !important; width: 120px !important;}
-            .grid-draft { gap: 1px !important; border: 1.5px solid #0f172a !important; background: #94a3b8 !important;}
-            .panel { background: #e0f2fe !important; border: none !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .view-box { padding: 4px !important; border: 1.5px solid #cbd5e1 !important; background: transparent !important; border-radius: 6px !important; width: 120px !important;}
+            .grid-draft { gap: 0 !important; border: 2px solid #000 !important; background: transparent !important;}
+            .panel { background: transparent !important; border: 1px solid #000 !important; box-sizing: border-box !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             
             body.print-internal #mainContent { display: block !important; }
             body.print-internal #customerPreviewContainer, body.print-internal #checklistPrintView, body.print-internal .col-right { display: none !important; }
@@ -151,10 +151,10 @@
         }
     </style>
     <script>
-        const cv = "V86";
+        const cv = "V87";
         if(localStorage.getItem("winkoAppVersion") !== cv) {
             localStorage.setItem("winkoAppVersion", cv);
-            for(let i=13; i<=85; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=86; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -512,7 +512,7 @@ Note:
         ['btnTabQuote', 'btnTabInv', 'btnTabAdmin', 'btnTabPreview'].forEach(id => document.getElementById(id).classList.remove('active'));
 
         if(tabId === 'quote') { setDisp('mainContent', true); document.getElementById('btnTabQuote').classList.add('active'); }
-        else if(tabId === 'preview') { syncPrintHeader(); document.getElementById('customerPreviewContainer').style.display='flex'; document.getElementById('btnTabPreview').classList.add('active'); }
+        else if(tabId === 'preview') { syncPrintHeader(window.currentUnit||'ft'); document.getElementById('customerPreviewContainer').style.display='flex'; document.getElementById('btnTabPreview').classList.add('active'); }
         else if(tabId === 'inventory') { setDisp('inventoryContent', true); document.getElementById('btnTabInv').classList.add('active'); renderInventoryTable(); }
         else if(tabId === 'admin') { setDisp('adminContent', true); document.getElementById('btnTabAdmin').classList.add('active'); buildAdminTable(); }
     }
@@ -571,7 +571,7 @@ Note:
                 sec.items.forEach((it, iIdx) => {
                     let selHtml = it.selectId ? `<select id="t_${i}_sel_${sIdx}_${iIdx}" class="bom-inline-select" onchange="updateBomField(${i}, ${sIdx}, ${iIdx}, 'selVal', this.value)">${it.options.map(o=>`<option value="${o}" ${it.selVal===o?'selected':''}>${o}</option>`).join('')}</select>` : '';
                     let qtyHtml = isSvc ? 
-                        `<input type="hidden" id="t_${i}_q_${sIdx}_${iIdx}" value="1"><span style="font-size:10px; font-weight:800; color:#94a3b8; background:#f1f5f9; padding:2px 4px; border-radius:4px; border:1px solid #cbd5e1;">LUMP SUM</span>` : 
+                        `<input type="hidden" id="t_${i}_q_${sIdx}_${iIdx}" value="1">` : 
                         `<input type="number" id="t_${i}_q_${sIdx}_${iIdx}" value="${it.qty||0}" oninput="updateBomField(${i}, ${sIdx}, ${iIdx}, 'qty', this.value, true)">`;
 
                     bRows += `<tr>
@@ -586,8 +586,8 @@ Note:
             bomHtml += `<div class="module-card"><div class="card-header"><div><span>⚙️</span> BOM - TANK ${i+1}</div></div><table><thead><tr><th>Description</th><th class="text-center">Qty</th><th class="text-center">Wt(kg)</th><th class="text-right">Price</th><th class="text-right">Total</th></tr></thead><tbody>${bRows}</tbody></table></div>`;
 
             // VISUALS
-            screenVisHtml += `<div class="module-card no-print"><div class="card-header">Tank ${i+1} Visuals</div><div class="visual-container"><div class="view-box"><div class="view-title">Top</div><div id="grid_top_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Bottom</div><div id="grid_bot_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Front</div><div id="grid_fr_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Back</div><div id="grid_bk_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Left</div><div id="grid_lt_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Right</div><div id="grid_rt_s_${i}" class="grid-draft"></div></div></div><div class="card-header" style="margin-top:15px;">Internal Bracing</div><div class="visual-container" id="grid_int_s_${i}"></div></div>`;
-            printVisHtml += `<div class="tank-section-title" style="margin-top:25px;">Tank ${i+1} Exterior Panels</div><div class="visual-container"><div class="view-box"><div class="view-title">Top</div><div id="grid_top_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Bottom</div><div id="grid_bot_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Front</div><div id="grid_fr_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Back</div><div id="grid_bk_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Left</div><div id="grid_lt_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Right</div><div id="grid_rt_p_${i}" class="grid-draft"></div></div></div><div class="tank-section-title">Tank ${i+1} Internal Bracing</div><div class="visual-container" id="grid_int_p_${i}"></div>`;
+            screenVisHtml += `<div class="module-card no-print"><div class="card-header">Tank ${i+1} Visuals</div><div class="visual-container"><div class="view-box"><div class="view-title">Top</div><div id="grid_top_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Bottom</div><div id="grid_bot_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Front</div><div id="grid_fr_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Back</div><div id="grid_bk_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Left</div><div id="grid_lt_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Right</div><div id="grid_rt_s_${i}" class="grid-draft"></div></div></div></div>`;
+            printVisHtml += `<div class="tank-section-title" style="margin-top:25px;">Tank ${i+1} Exterior Panels</div><div class="visual-container"><div class="view-box"><div class="view-title">Top</div><div id="grid_top_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Bottom</div><div id="grid_bot_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Front</div><div id="grid_fr_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Back</div><div id="grid_bk_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Left</div><div id="grid_lt_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Right</div><div id="grid_rt_p_${i}" class="grid-draft"></div></div></div>`;
             
             chkTankHtml += `<div style="border-top:1.5px solid #000; padding:5px 0; margin-bottom:5px;">
                 <div style="font-weight:bold; background:#e2e8f0; padding:2px 5px; margin-bottom:4px;">TANK ${i+1} : <span id="chk_sz_${i}"></span> | Pcs: <span id="chk_pcs_${i}"></span></div>
@@ -596,7 +596,7 @@ Note:
                     <div><strong>T.Roof:</strong> ${t.tRoof.replace('mm','')}</div><div><strong>T.Base:</strong> ${t.tBase.replace('mm','')}</div><div><strong>T.W1:</strong> ${t.tW1.replace('mm','')}</div><div><strong>T.W2:</strong> ${t.tW2.replace('mm','')}</div><div><strong>T.W3:</strong> ${t.tW3.replace('mm','')}</div><div><strong>T.W4:</strong> ${t.tW4.replace('mm','')}</div>
                 </div>
             </div>`;
-            chkVisHtml += `<div style="font-size:10pt; font-weight:bold; margin-top:15px; border-top:1px solid #000; padding-top:5px;">Tank ${i+1} Drawings</div><div style="display:flex; flex-wrap:wrap; gap:8px; width:100%;"><div style="padding:4px; border:1px solid #000; width:110px; text-align:center;"><div style="font-size:7pt; font-weight:bold;">TOP</div><div id="grid_top_c_${i}" class="grid-draft"></div></div><div style="padding:4px; border:1px solid #000; width:110px; text-align:center;"><div style="font-size:7pt; font-weight:bold;">BOT</div><div id="grid_bot_c_${i}" class="grid-draft"></div></div><div style="padding:4px; border:1px solid #000; width:110px; text-align:center;"><div style="font-size:7pt; font-weight:bold;">FR</div><div id="grid_fr_c_${i}" class="grid-draft"></div></div><div style="padding:4px; border:1px solid #000; width:110px; text-align:center;"><div style="font-size:7pt; font-weight:bold;">BK</div><div id="grid_bk_c_${i}" class="grid-draft"></div></div><div style="padding:4px; border:1px solid #000; width:110px; text-align:center;"><div style="font-size:7pt; font-weight:bold;">LT</div><div id="grid_lt_c_${i}" class="grid-draft"></div></div><div style="padding:4px; border:1px solid #000; width:110px; text-align:center;"><div style="font-size:7pt; font-weight:bold;">RT</div><div id="grid_rt_c_${i}" class="grid-draft"></div></div></div><div style="font-size:9pt; font-weight:bold; margin-top:5px;">Tank ${i+1} Internal Bracing</div><div style="display:flex; flex-wrap:wrap; gap:8px;" id="grid_int_c_${i}"></div>`;
+            chkVisHtml += `<div style="font-size:10pt; font-weight:bold; margin-top:15px; border-top:1px solid #000; padding-top:5px;">Tank ${i+1} Drawings</div><div style="display:flex; flex-wrap:wrap; gap:8px; width:100%;"><div style="padding:4px; border:1px solid #000; width:110px; text-align:center;"><div style="font-size:7pt; font-weight:bold;">TOP</div><div id="grid_top_c_${i}" class="grid-draft"></div></div><div style="padding:4px; border:1px solid #000; width:110px; text-align:center;"><div style="font-size:7pt; font-weight:bold;">BOT</div><div id="grid_bot_c_${i}" class="grid-draft"></div></div><div style="padding:4px; border:1px solid #000; width:110px; text-align:center;"><div style="font-size:7pt; font-weight:bold;">FR</div><div id="grid_fr_c_${i}" class="grid-draft"></div></div><div style="padding:4px; border:1px solid #000; width:110px; text-align:center;"><div style="font-size:7pt; font-weight:bold;">BK</div><div id="grid_bk_c_${i}" class="grid-draft"></div></div><div style="padding:4px; border:1px solid #000; width:110px; text-align:center;"><div style="font-size:7pt; font-weight:bold;">LT</div><div id="grid_lt_c_${i}" class="grid-draft"></div></div><div style="padding:4px; border:1px solid #000; width:110px; text-align:center;"><div style="font-size:7pt; font-weight:bold;">RT</div><div id="grid_rt_c_${i}" class="grid-draft"></div></div></div>`;
         });
 
         let customHtml = "";
@@ -629,22 +629,10 @@ Note:
         el.style.display='grid'; el.style.gridTemplateColumns=`repeat(${Math.max(1,c)}, 1fr)`; el.style.width=`${wp}%`; el.innerHTML=html;
     }
 
-    function buildGridHTML(title, c, r, maxDim, pType, pPos, showStays) {
-        c = isNaN(c) ? 0 : c; r = isNaN(r) ? 0 : r; maxDim = isNaN(maxDim) ? 0 : maxDim;
-        if ((c * r) > 2500) return `<div class="view-box"><div class="view-title">${title}</div><div style="padding: 10px; font-size:12px; color:#ef4444;">Too large</div></div>`;
-        let wp = maxDim > 0 ? (c / maxDim) * 100 : 100;
-        let gh = `<div class="grid-draft" style="display:grid; grid-template-columns: repeat(${Math.max(1,c)}, 1fr); width: ${wp}%;">`;
-        for(let i=0; i<(c*r); i++) {
-            let col = i%c; let row = Math.floor(i/c); let ex = '';
-            if (pType === 'v' && col === pPos) ex += 'border-right: 3px solid #ef4444 !important; z-index: 10; '; else if (pType === 'h' && row === pPos) ex += 'border-bottom: 3px solid #ef4444 !important; z-index: 10; ';
-            let st = ''; if(showStays) { if(col>0) st+=`<div style="position:absolute; left:-1px; top:0; width:2px; height:100%; background:#eab308; z-index:5;"></div>`; if(row>0) st+=`<div style="position:absolute; top:-1px; left:0; width:100%; height:2px; background:#06b6d4; z-index:5;"></div>`; }
-            gh += `<div class="panel" style="${ex}">${st}</div>`;
-        } return `<div class="view-box"><div class="view-title">${title}</div>${gh}</div>`;
-    }
-
     function processTankData() {
         try {
             let u = getVal('unitChoice') || 'ft'; let factor = u === 'ft' ? 4 : (u === 'm_122' ? 1.22 : 1);
+            window.currentUnit = u;
             let pSfx = u === 'ft' ? " (4'x4')" : (u === 'm_122' ? " (1.22x1.22m)" : " (1x1m)");
             let totalC = 0, totalP = 0, totalW = 0, totalBase = 0;
 
@@ -673,9 +661,6 @@ Note:
                 drawGrid(`grid_bk_s_${i}`, L, H, mx, pTF, pPF); drawGrid(`grid_bk_p_${i}`, L, H, mx, pTF, pPF); drawGrid(`grid_bk_c_${i}`, L, H, mx, pTF, pPF);
                 drawGrid(`grid_lt_s_${i}`, W, H, mx, pTS, pPS); drawGrid(`grid_lt_p_${i}`, W, H, mx, pTS, pPS); drawGrid(`grid_lt_c_${i}`, W, H, mx, pTS, pPS);
                 drawGrid(`grid_rt_s_${i}`, W, H, mx, pTS, pPS); drawGrid(`grid_rt_p_${i}`, W, H, mx, pTS, pPS); drawGrid(`grid_rt_c_${i}`, W, H, mx, pTS, pPS);
-                
-                let h_int = ''; for(let lvl=1; lvl<=Math.min(H, 4); lvl++) h_int += buildGridHTML(lvl===H ? `Roof (Trusses)` : `Level ${lvl} (Stays)`, L, W, mx, pTT, pPT, true);
-                setHtml(`grid_int_s_${i}`, h_int); setHtml(`grid_int_p_${i}`, h_int); setHtml(`grid_int_c_${i}`, h_int);
 
                 let bQ = (sI, iI, v) => t.bom[sI].items[iI].qty = isNaN(v)?0:v;
                 let bD = (sI, iI, v) => t.bom[sI].items[iI].name = v;
@@ -683,7 +668,7 @@ Note:
                 if(t.bom[0]) {
                     if(t.bom[0].items[0]) bD(0,0, "Manhole Panel"+pSfx); if(t.bom[0].items[1]) bD(0,1, t.tRoof+" Roof Panel"+pSfx); if(t.bom[0].items[2]) bD(0,2, t.tBase+" Base Panel"+pSfx); if(t.bom[0].items[3]) bD(0,3, t.tW1+" Wall Panel (L1)"+pSfx); if(t.bom[0].items[4]) bD(0,4, t.tW2+" Wall Panel (L2)"+pSfx); if(t.bom[0].items[5]) bD(0,5, t.tW3+" Wall Panel (L3)"+pSfx); if(t.bom[0].items[6]) bD(0,6, t.tW4+" Wall Panel (L4)"+pSfx); if(t.bom[0].items[7]) bD(0,7, "Partition Panel"+pSfx);
                     
-                    if(t.bom[0].items[0]) bQ(0,0, 1); if(t.bom[0].items[1]) bQ(0,1, Math.max(0, (r/Math.max(1,H))-1)); if(t.bom[0].items[2]) bQ(0,2, r/Math.max(1,H)); if(t.bom[0].items[3]) bQ(0,3, H>=1?pm:0); if(t.bom[0].items[4]) bQ(0,4, H>=2?pm:0); if(t.bom[0].items[5]) bQ(0,5, H>=3?pm:0); if(t.bom[0].items[6]) bQ(0,6, H>=4?pm*(H-3):0); if(t.bom[0].items[7]) bQ(0,7, pp);
+                    if(t.bom[0].items[0]) bQ(0,0, 1); if(t.bom[0].items[1]) bQ(0,1, Math.max(0, r - 1)); if(t.bom[0].items[2]) bQ(0,2, b); if(t.bom[0].items[3]) bQ(0,3, H>=1?pm:0); if(t.bom[0].items[4]) bQ(0,4, H>=2?pm:0); if(t.bom[0].items[5]) bQ(0,5, H>=3?pm:0); if(t.bom[0].items[6]) bQ(0,6, H>=4?pm*(H-3):0); if(t.bom[0].items[7]) bQ(0,7, pp);
                 }
                 if(t.bom[1]) { if(t.bom[1].items[0]) bQ(1,0, H*4); if(t.bom[1].items[1]) bQ(1,1, pm); if(t.bom[1].items[2]) bQ(1,2, pm); if(t.bom[1].items[3]) bQ(1,3, t.L); if(t.bom[1].items[4]) bQ(1,4, t.L); }
                 if(t.bom[3]) {
@@ -812,18 +797,18 @@ Note:
     function buildAdminTable() { let h = ''; systemBaseStructure.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { h += `<tr><td style="font-weight:800; background:#f1f5f9; text-align:left;">${sec.category}</td><td><input type="text" class="admin-input text-left" id="adm_name_${sIdx}_${iIdx}" value="${it.name}"></td><td><input type="number" step="0.1" class="admin-input" id="adm_wt_${sIdx}_${iIdx}" value="${it.wt || 0}"></td><td><input type="number" step="0.01" class="admin-input" id="adm_price_${sIdx}_${iIdx}" value="${it.def.toFixed(2)}"></td></tr>`; }); }); setHtml('adminBody', h); }
     function saveAdminDefaults() { let nd = JSON.parse(JSON.stringify(systemBaseStructure)); nd.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { it.name = getVal(`adm_name_${sIdx}_${iIdx}`); it.wt = getNum(`adm_wt_${sIdx}_${iIdx}`); it.def = getNum(`adm_price_${sIdx}_${iIdx}`); }); }); localStorage.setItem('winkoMasterDefaults', JSON.stringify(nd)); alert("Success! Master Defaults updated."); location.reload(); }
 
-    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV86', JSON.stringify(d)); }
-    function loadPrices() { let s = localStorage.getItem('winkoProDataV86'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; } renderAllDynamicUI(); processTankData(); }
+    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV87', JSON.stringify(d)); }
+    function loadPrices() { let s = localStorage.getItem('winkoProDataV87'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; } renderAllDynamicUI(); processTankData(); }
 
     function refreshMemoryDropdown() { let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; let s = document.getElementById('memoryDropdown'); if(s) { s.innerHTML = '<option value="">-- Load a Saved Project --</option>'; Object.keys(m).forEach(k => { s.innerHTML += `<option value="${k}">${k}</option>`; }); } }
     function saveToMemory() { let p = getVal('projectName').trim(); if(!p) { alert("Type a Project Name first."); return; } let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; m[p] = d; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); alert("Saved."); refreshMemoryDropdown(); setVal('memoryDropdown', p); }
     function loadFromMemory() { let p = getVal('memoryDropdown'); if(!p) return; let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; let d = m[p]; if (d) { appTanks = d.tanks || []; appCustomItems = d.custom || []; configIDs.forEach(id => { if (d[id] !== undefined) setVal(id, d[id]); }); renderAllDynamicUI(); processTankData(); } }
     function deleteFromMemory() { let p = getVal('memoryDropdown'); if(p && confirm("Delete '"+p+"'?")) { let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; delete m[p]; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); refreshMemoryDropdown(); } }
 
-    function printInternal() { document.body.className = 'print-internal'; syncPrintHeader(); setTimeout(() => window.print(), 300); }
-    function printCustomer() { document.body.className = 'print-customer'; syncPrintHeader(); setTimeout(() => window.print(), 300); }
+    function printInternal() { document.body.className = 'print-internal'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => window.print(), 300); }
+    function printCustomer() { document.body.className = 'print-customer'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => window.print(), 300); }
     function printCustomerFromPreview() { document.body.className = 'print-customer'; setTimeout(() => window.print(), 300); }
-    function printChecklist() { document.body.className = 'print-checklist'; syncPrintHeader(); setTimeout(() => { window.print(); setTimeout(deductInventoryFromSO, 1000); }, 300); }
+    function printChecklist() { document.body.className = 'print-checklist'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => { window.print(); setTimeout(deductInventoryFromSO, 1000); }, 300); }
 
     window.addEventListener('afterprint', () => { document.body.className = ''; });
     setInterval(() => { let d = new Date(); let s = d.toLocaleDateString('en-MY').replace(/\//g, '-'); setTxt('liveClock', s + " " + d.toLocaleTimeString('en-MY')); setTxt('metaDate', s); setTxt('cpDate', s); }, 1000);
