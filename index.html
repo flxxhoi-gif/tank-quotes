@@ -110,11 +110,11 @@
             .print-only { display: block !important; }
             .container { max-width: 100%; padding: 0; }
             
-            /* CRISP PRINT GRID OVERRIDES */
-            .visual-container { display: flex !important; flex-wrap: wrap !important; gap: 15px !important; width: 100% !important; margin: 10px 0 20px 0 !important; page-break-inside: avoid !important;}
-            /* Made view boxes much larger for print (31% width = 3 items per row) */
-            .view-box { padding: 8px !important; border: 2px solid #cbd5e1 !important; background: transparent !important; border-radius: 6px !important; width: 31% !important; margin-bottom: 10px !important;}
-            .grid-draft { gap: 0 !important; border: 2px solid #000 !important; background: transparent !important;}
+            /* V85 CRISP PRINT GRID OVERRIDES */
+            .visual-container { display: flex !important; flex-wrap: wrap !important; gap: 10px !important; width: 100% !important; margin: 10px 0 20px 0 !important; page-break-inside: avoid !important;}
+            /* Reverted to 6 items per row (16%) */
+            .view-box { padding: 4px !important; border: 1px solid #cbd5e1 !important; background: transparent !important; border-radius: 4px !important; width: 15% !important; margin-bottom: 5px !important;}
+            .grid-draft { gap: 0 !important; border: 1px solid #000 !important; background: transparent !important;}
             .panel { background: transparent !important; border: 1px solid #000 !important; box-sizing: border-box !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             
             body.print-internal #mainContent { display: block !important; }
@@ -152,10 +152,10 @@
         }
     </style>
     <script>
-        const cv = "V93";
+        const cv = "V94";
         if(localStorage.getItem("winkoAppVersion") !== cv) {
             localStorage.setItem("winkoAppVersion", cv);
-            for(let i=13; i<=92; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=93; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -438,7 +438,7 @@ Note:
         <div style="width:30%;"><div style="border-top:1px solid #000; font-weight:bold; padding-top:2px;">Prepared:</div></div><div style="width:30%;"><div style="border-top:1px solid #000; font-weight:bold; padding-top:2px;">Approved:</div></div><div style="width:30%;"><div style="border-top:1px solid #000; font-weight:bold; padding-top:2px;">Received (Production):</div></div>
     </div>
     
-    <div style="page-break-before: always; padding-top: 10px;" id="dynamicChecklistDrawingsContainer"></div>
+    <div id="dynamicChecklistDrawingsContainer"></div>
     
     <div id="dynamicChecklistBomContainer"></div>
 </div>
@@ -598,6 +598,7 @@ Note:
             screenVisHtml += `<div class="module-card no-print"><div class="card-header">Tank ${i+1} Visuals</div><div class="visual-container"><div class="view-box"><div class="view-title">Top</div><div id="grid_top_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Bottom</div><div id="grid_bot_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Front</div><div id="grid_fr_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Back</div><div id="grid_bk_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Left</div><div id="grid_lt_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Right</div><div id="grid_rt_s_${i}" class="grid-draft"></div></div></div></div>`;
             printVisHtml += `<div class="tank-section-title" style="margin-top:25px;">Tank ${i+1} Exterior Panels</div><div class="visual-container"><div class="view-box"><div class="view-title">Top</div><div id="grid_top_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Bottom</div><div id="grid_bot_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Front</div><div id="grid_fr_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Back</div><div id="grid_bk_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Left</div><div id="grid_lt_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Right</div><div id="grid_rt_p_${i}" class="grid-draft"></div></div></div>`;
             
+            // Reverted back exactly to V85 formatting
             chkTankHtml += `<div style="border-top:1.5px solid #000; padding:5px 0; margin-bottom:5px;">
                 <div style="font-weight:bold; background:#e2e8f0; padding:2px 5px; margin-bottom:4px;">TANK ${i+1} : <span id="chk_sz_${i}"></span> | Pcs: <span id="chk_pcs_${i}"></span></div>
                 <div style="display:flex; gap:15px; font-size:8pt; flex-wrap:wrap;">
@@ -606,8 +607,8 @@ Note:
                 </div>
             </div>`;
             
-            // Re-engineered Checklist Prints to span 31% width (3 per row evenly) so they are much bigger
-            chkVisHtml += `<div style="font-size:10pt; font-weight:bold; margin-top:15px; border-top:1px solid #000; padding-top:5px;">Tank ${i+1} Drawings</div><div style="display:flex; flex-wrap:wrap; gap:10px; width:100%;"><div style="padding:6px; border:2px solid #000; width:31%; text-align:center;"><div style="font-size:8pt; font-weight:bold;">TOP</div><div id="grid_top_c_${i}" class="grid-draft"></div></div><div style="padding:6px; border:2px solid #000; width:31%; text-align:center;"><div style="font-size:8pt; font-weight:bold;">BOT</div><div id="grid_bot_c_${i}" class="grid-draft"></div></div><div style="padding:6px; border:2px solid #000; width:31%; text-align:center;"><div style="font-size:8pt; font-weight:bold;">FR</div><div id="grid_fr_c_${i}" class="grid-draft"></div></div><div style="padding:6px; border:2px solid #000; width:31%; text-align:center;"><div style="font-size:8pt; font-weight:bold;">BK</div><div id="grid_bk_c_${i}" class="grid-draft"></div></div><div style="padding:6px; border:2px solid #000; width:31%; text-align:center;"><div style="font-size:8pt; font-weight:bold;">LT</div><div id="grid_lt_c_${i}" class="grid-draft"></div></div><div style="padding:6px; border:2px solid #000; width:31%; text-align:center;"><div style="font-size:8pt; font-weight:bold;">RT</div><div id="grid_rt_c_${i}" class="grid-draft"></div></div></div>`;
+            // Reverted back to 6 in a row inline blocks (16% width) to keep the original page layout
+            chkVisHtml += `<div style="font-size:10pt; font-weight:bold; margin-top:15px; border-top:1px solid #000; padding-top:5px;">Tank ${i+1} Drawings</div><div style="display:flex; flex-wrap:wrap; gap:5px; width:100%;"><div class="view-box"><div style="font-size:7pt; font-weight:bold;">TOP</div><div id="grid_top_c_${i}" class="grid-draft"></div></div><div class="view-box"><div style="font-size:7pt; font-weight:bold;">BOT</div><div id="grid_bot_c_${i}" class="grid-draft"></div></div><div class="view-box"><div style="font-size:7pt; font-weight:bold;">FR</div><div id="grid_fr_c_${i}" class="grid-draft"></div></div><div class="view-box"><div style="font-size:7pt; font-weight:bold;">BK</div><div id="grid_bk_c_${i}" class="grid-draft"></div></div><div class="view-box"><div style="font-size:7pt; font-weight:bold;">LT</div><div id="grid_lt_c_${i}" class="grid-draft"></div></div><div class="view-box"><div style="font-size:7pt; font-weight:bold;">RT</div><div id="grid_rt_c_${i}" class="grid-draft"></div></div></div>`;
         });
 
         let customHtml = "";
@@ -656,7 +657,10 @@ Note:
                 
                 let r=L*W, b=L*W, pm=(L+W)*2, s=pm*H, pp=(t.partChoice==='yes'&&t.partQty>0)?(pL*pH*t.partQty):0;
                 t.totalPanels = r + b + s + pp; totalP += t.totalPanels;
-                setTxt(`chk_pcs_${i}`, t.totalPanels); setTxt(`chk_sz_${i}`, `${t.L}x${t.W}x${t.H}`);
+                
+                if(document.getElementById(`chk_pcs_${i}`)) {
+                    setTxt(`chk_pcs_${i}`, t.totalPanels); setTxt(`chk_sz_${i}`, `${t.L}x${t.W}x${t.H}`);
+                }
 
                 let pTT = null, pPT = -1, pTF = null, pPF = -1, pTS = null, pPS = -1;
                 if (t.partChoice==='yes' && t.partQty>0) {
@@ -771,7 +775,7 @@ Note:
             setHtml('cpDynamicTanksBody', cpRows);
             setTxt('cpSstPct', sst || 0); setTxt('cpSstAmt', sstAmt.toLocaleString('en-MY', {minimumFractionDigits: 2}));
             
-            // Generate Detailed BOM for Checklist Print View (Factory Order)
+            // Detailed BOM for Checklist Print View (Factory Order) - remains on 2nd Page as asked in V91
             let chkBomHtml = `<div style="page-break-before: always; padding-top: 15px;">
                 <div style="font-size: 11pt; font-weight: bold; text-decoration: underline; margin-bottom: 10px;">Sales Order - Bill of Materials (BOM)</div>`;
             
@@ -780,14 +784,13 @@ Note:
                 <table style="width:100%; border-collapse:collapse; font-size:8.5pt; border:1px solid #000; margin-bottom:15px;">
                     <thead>
                         <tr style="background:#d1d5db;">
-                            <th style="border:1px solid #000; padding:4px; text-align:center; width:8%;">Item</th>
-                            <th style="border:1px solid #000; padding:4px; text-align:center; width:72%;">Description</th>
-                            <th style="border:1px solid #000; padding:4px; text-align:center; width:20%;">Qty</th>
+                            <th style="border:1px solid #000; padding:4px; text-align:left; width:25%;">Category</th>
+                            <th style="border:1px solid #000; padding:4px; text-align:left; width:60%;">Description</th>
+                            <th style="border:1px solid #000; padding:4px; text-align:center; width:15%;">Qty</th>
                         </tr>
                     </thead>
                     <tbody>`;
                 
-                let idx = 1;
                 t.bom.forEach((sec) => {
                     let hasItems = false;
                     let rows = '';
@@ -799,8 +802,8 @@ Note:
                             let desc = it.name;
                             if (it.selectId && it.selVal) desc += ` (${it.selVal})`;
                             rows += `<tr>
-                                <td style="border:1px solid #000; padding:4px; text-align:center;">${idx++}</td>
-                                <td style="border:1px solid #000; padding:4px;"><strong>[${sec.category}]</strong> ${desc}</td>
+                                <td style="border:1px solid #000; padding:4px;">${sec.category}</td>
+                                <td style="border:1px solid #000; padding:4px;">${desc}</td>
                                 <td style="border:1px solid #000; padding:4px; text-align:center; font-weight:bold;">${isSvc ? 'LUMP SUM' : q}</td>
                             </tr>`;
                         }
@@ -815,16 +818,13 @@ Note:
                 <table style="width:100%; border-collapse:collapse; font-size:8.5pt; border:1px solid #000; margin-bottom:15px;">
                     <thead>
                         <tr style="background:#d1d5db;">
-                            <th style="border:1px solid #000; padding:4px; text-align:center; width:8%;">Item</th>
-                            <th style="border:1px solid #000; padding:4px; text-align:center; width:72%;">Description</th>
-                            <th style="border:1px solid #000; padding:4px; text-align:center; width:20%;">Qty</th>
+                            <th style="border:1px solid #000; padding:4px; text-align:left; width:85%;">Description</th>
+                            <th style="border:1px solid #000; padding:4px; text-align:center; width:15%;">Qty</th>
                         </tr>
                     </thead>
                     <tbody>`;
-                let idx = 1;
                 appCustomItems.forEach((c) => {
                     chkBomHtml += `<tr>
-                        <td style="border:1px solid #000; padding:4px; text-align:center;">${idx++}</td>
                         <td style="border:1px solid #000; padding:4px;">${c.desc}</td>
                         <td style="border:1px solid #000; padding:4px; text-align:center; font-weight:bold;">${c.qty || 0}</td>
                     </tr>`;
@@ -872,8 +872,8 @@ Note:
     function buildAdminTable() { let h = ''; systemBaseStructure.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { h += `<tr><td style="font-weight:800; background:#f1f5f9; text-align:left;">${sec.category}</td><td><input type="text" class="admin-input text-left" id="adm_name_${sIdx}_${iIdx}" value="${it.name}"></td><td><input type="number" step="0.1" class="admin-input" id="adm_wt_${sIdx}_${iIdx}" value="${it.wt || 0}"></td><td><input type="number" step="0.01" class="admin-input" id="adm_price_${sIdx}_${iIdx}" value="${it.def.toFixed(2)}"></td></tr>`; }); }); setHtml('adminBody', h); }
     function saveAdminDefaults() { let nd = JSON.parse(JSON.stringify(systemBaseStructure)); nd.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { it.name = getVal(`adm_name_${sIdx}_${iIdx}`); it.wt = getNum(`adm_wt_${sIdx}_${iIdx}`); it.def = getNum(`adm_price_${sIdx}_${iIdx}`); }); }); localStorage.setItem('winkoMasterDefaults', JSON.stringify(nd)); alert("Success! Master Defaults updated."); location.reload(); }
 
-    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV93', JSON.stringify(d)); }
-    function loadPrices() { let s = localStorage.getItem('winkoProDataV93'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; } renderAllDynamicUI(); processTankData(); }
+    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV94', JSON.stringify(d)); }
+    function loadPrices() { let s = localStorage.getItem('winkoProDataV94'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; } renderAllDynamicUI(); processTankData(); }
 
     function refreshMemoryDropdown() { let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; let s = document.getElementById('memoryDropdown'); if(s) { s.innerHTML = '<option value="">-- Load a Saved Project --</option>'; Object.keys(m).forEach(k => { s.innerHTML += `<option value="${k}">${k}</option>`; }); } }
     function saveToMemory() { let p = getVal('projectName').trim(); if(!p) { alert("Type a Project Name first."); return; } let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; m[p] = d; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); alert("Saved."); refreshMemoryDropdown(); setVal('memoryDropdown', p); }
