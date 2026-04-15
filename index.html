@@ -69,6 +69,8 @@
         .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
         .action-btn { flex: 1; min-width: 110px; padding: 12px; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 700; background: #ea580c; display: flex; align-items: center; justify-content: center; gap: 6px;}
         .export-btn { background: #334155; } .print-btn { background: #059669; }
+        .add-btn { background: #38bdf8; margin-top:10px; width:100%; color: #0f172a; border: 2px dashed #0284c7; } .add-btn:hover { background: #0ea5e9; color:white; }
+        .del-btn { background: #ef4444; color:white; padding:4px 8px; border:none; border-radius:4px; font-size:11px; cursor:pointer; font-weight:bold; }
         
         /* PERFECT GRID SYSTEM */
         .visual-container { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-start; margin-bottom: 10px; }
@@ -79,7 +81,7 @@
         .panel { background: #e0f2fe; position: relative; border: none; box-sizing: border-box; }
         .panel::before { content: ""; display: block; padding-top: 100%; }
         
-        .tank-section-title { background: #e2e8f0; padding: 5px 10px; border-radius: 4px; font-weight: 800; color: #0f172a; margin-bottom: 8px; font-size: 0.85em; text-transform: uppercase; border-left: 4px solid #3b82f6; }
+        .tank-section-title { background: #e2e8f0; padding: 5px 10px; border-radius: 4px; font-weight: 800; color: #0f172a; margin-bottom: 8px; font-size: 0.85em; text-transform: uppercase; border-left: 4px solid #3b82f6; display:flex; justify-content:space-between; align-items:center; }
         
         /* INVENTORY STYLES */
         .inv-status { padding: 3px 6px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
@@ -149,10 +151,10 @@
         }
     </style>
     <script>
-        const cv = "V85";
+        const cv = "V86";
         if(localStorage.getItem("winkoAppVersion") !== cv) {
             localStorage.setItem("winkoAppVersion", cv);
-            for(let i=13; i<=84; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=85; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -230,108 +232,16 @@
                 </div>
 
                 <div class="module-card no-print">
-                    <div class="card-header"><span>📐</span> 2. Tank Engineering</div>
-                    <div class="config-grid">
-                        <div class="form-group"><label>Standard</label><select id="stdChoice" onchange="safeProcess()"><option>SANS 10329:2020 Approved by SIRIM & SPAN</option><option>SS 22: 1979</option></select></div>
-                        <div class="form-group"><label>Unit System</label><select id="unitChoice" onchange="handleUnitChange()"><option value="ft">Imperial (4'x4')</option><option value="m_122">Imperial (1.22m)</option><option value="m_100">Metric (1m)</option></select></div>
-                        <div class="form-group" style="grid-column: span 2;"><label>Material</label><select id="coatChoice" onchange="safeProcess()"><option>Hot Dipped Galvanised</option><option>Painted Steel</option><option>Stainless Steel (SS 304)</option><option>Stainless Steel (SS 316)</option></select></div>
-                        <div class="form-group" style="grid-column: span 2;"><label>Total Items</label><select id="numTanks" onchange="toggleTanks(); safeProcess();">
-                            <option value="1">1 Tank Only</option>
-                            <option value="2">2 Tanks</option>
-                            <option value="3">3 Tanks</option>
-                            <option value="custom1">1 Tank + 1 Custom Item</option>
-                            <option value="custom2">1 Tank + 2 Custom Items</option>
-                            <option value="custom3">1 Tank + 3 Custom Items</option>
-                        </select></div>
+                    <div class="card-header"><span>📐</span> 2. Engineering Configuration</div>
+                    <div class="config-grid" style="margin-bottom:20px; padding-bottom:15px; border-bottom:2px solid #e2e8f0;">
+                        <div class="form-group" style="grid-column: span 2;"><label>Global Unit System</label><select id="unitChoice" onchange="handleUnitChange()"><option value="ft">Imperial (4'x4')</option><option value="m_122">Imperial (1.22m)</option><option value="m_100">Metric (1m)</option></select></div>
                     </div>
 
-                    <div class="tank-section-title">Tank 1 Specs</div>
-                    <div class="dim-grid">
-                        <div class="form-group"><label>Length</label><input type="number" id="length" value="12" step="0.01" oninput="safeProcess()"></div>
-                        <div class="form-group"><label>Width</label><input type="number" id="width" value="4" step="0.01" oninput="safeProcess()"></div>
-                        <div class="form-group"><label>Height</label><input type="number" id="height" value="4" step="0.01" oninput="safeProcess()"></div>
-                        <div class="form-group" style="grid-column: span 3;"><label style="color:#0284c7;">Custom Size Override Text</label><input type="text" id="sizeOverride1" placeholder="e.g. Custom 2m x 3m L-Shape" style="border: 1px dashed #38bdf8;" oninput="safeProcess()"></div>
-                    </div>
-                    
-                    <div class="tank-section-title" style="margin-top: 10px;">Tank 1 Panel Thicknesses</div>
-                    <div class="dim-grid" style="background: #f8fafc; padding:10px; border:1px solid #e2e8f0; margin-bottom:15px; border-radius:6px;">
-                        <div class="form-group"><label>Roof</label><input type="text" id="thickRoof" value="1.5mm" oninput="safeProcess()"></div>
-                        <div class="form-group"><label>Base</label><input type="text" id="thickBase" value="4.5mm" oninput="safeProcess()"></div>
-                        <div class="form-group"><label>Wall L1</label><input type="text" id="thickWallL1" value="4.5mm" oninput="safeProcess()"></div>
-                        <div class="form-group"><label>Wall L2</label><input type="text" id="thickWallL2" value="3.0mm" oninput="safeProcess()"></div>
-                        <div class="form-group"><label>Wall L3</label><input type="text" id="thickWallL3" value="3.0mm" oninput="safeProcess()"></div>
-                        <div class="form-group"><label>Wall L4</label><input type="text" id="thickWallL4" value="1.5mm" oninput="safeProcess()"></div>
-                    </div>
+                    <div id="dynamicTanksContainer"></div>
+                    <button class="action-btn add-btn" onclick="addNewTank()">+ ADD ANOTHER TANK</button>
 
-                    <div class="config-grid"><div class="form-group" style="grid-column: span 2;"><label>Tank 1 Partition</label><select id="partChoice" onchange="togglePartitionDetails(); safeProcess();"><option value="no">No</option><option value="yes">Yes</option></select></div></div>
-                    <div id="partitionDetailsRow" style="display: none; background: #fff7ed; padding: 15px; border-radius: 8px; margin-bottom: 15px;"><div style="display:flex; gap:10px;"><div class="form-group"><label>Qty</label><input type="number" id="partQty" value="0" min="0" oninput="safeProcess()"></div><div class="form-group"><label>L/W</label><input type="number" id="partLen" value="0" step="0.01" oninput="safeProcess()"></div><div class="form-group"><label>Hgt</label><input type="number" id="partHgt" value="0" step="0.01" oninput="safeProcess()"></div><div class="form-group"><label>Pos</label><input type="number" id="partPos" value="1" min="1" oninput="safeProcess()"></div><div class="form-group" style="flex:1.5;"><label>Type</label><input type="text" id="partType" placeholder="Divider" oninput="safeProcess()"></div></div></div>
-
-                    <div id="tank2Section" style="display: none; margin-top: 25px; border-top: 2px solid #cbd5e1; padding-top:15px;">
-                        <div class="tank-section-title" style="background:#fef3c7;">Tank 2 Specs</div>
-                        <div class="config-grid">
-                            <div class="form-group"><label>Standard</label><select id="stdChoice2" onchange="safeProcess()"><option>SANS 10329:2020</option><option>SS 22: 1979</option></select></div>
-                            <div class="form-group"><label>Material</label><select id="coatChoice2" onchange="safeProcess()"><option>Hot Dipped Galvanised</option><option>Painted Steel</option><option>SS 304</option><option>SS 316</option></select></div>
-                        </div>
-                        <div class="dim-grid">
-                            <div class="form-group"><label>Length</label><input type="number" id="length2" value="8" step="0.01" oninput="safeProcess()"></div>
-                            <div class="form-group"><label>Width</label><input type="number" id="width2" value="4" step="0.01" oninput="safeProcess()"></div>
-                            <div class="form-group"><label>Height</label><input type="number" id="height2" value="4" step="0.01" oninput="safeProcess()"></div>
-                            <div class="form-group" style="grid-column: span 3;"><label style="color:#ca8a04;">Custom Size Override Text</label><input type="text" id="sizeOverride2" placeholder="e.g. 2000 Gallons Special" style="border: 1px dashed #facc15;" oninput="safeProcess()"></div>
-                        </div>
-
-                        <div class="tank-section-title" style="margin-top: 10px;">Tank 2 Panel Thicknesses</div>
-                        <div class="dim-grid" style="background: #fef3c7; padding:10px; border:1px solid #fde68a; margin-bottom:15px; border-radius:6px;">
-                            <div class="form-group"><label>Roof</label><input type="text" id="thickRoof2" value="1.5mm" oninput="safeProcess()"></div>
-                            <div class="form-group"><label>Base</label><input type="text" id="thickBase2" value="4.5mm" oninput="safeProcess()"></div>
-                            <div class="form-group"><label>Wall L1</label><input type="text" id="thickWallL1_2" value="4.5mm" oninput="safeProcess()"></div>
-                            <div class="form-group"><label>Wall L2</label><input type="text" id="thickWallL2_2" value="3.0mm" oninput="safeProcess()"></div>
-                            <div class="form-group"><label>Wall L3</label><input type="text" id="thickWallL3_2" value="3.0mm" oninput="safeProcess()"></div>
-                            <div class="form-group"><label>Wall L4</label><input type="text" id="thickWallL4_2" value="1.5mm" oninput="safeProcess()"></div>
-                        </div>
-
-                        <div class="config-grid"><div class="form-group" style="grid-column:span 2;"><label>Tank 2 Partition</label><select id="partChoice2" onchange="togglePartitionDetails(); safeProcess();"><option value="no">No</option><option value="yes">Yes</option></select></div></div>
-                        <div id="partitionDetailsRow2" style="display:none; background:#fff7ed; padding:15px;"><div style="display:flex; gap:10px;"><div class="form-group"><label>Qty</label><input type="number" id="partQty2" value="0" min="0" oninput="safeProcess()"></div><div class="form-group"><label>L/W</label><input type="number" id="partLen2" value="0" step="0.01" oninput="safeProcess()"></div><div class="form-group"><label>Hgt</label><input type="number" id="partHgt2" value="0" step="0.01" oninput="safeProcess()"></div><div class="form-group"><label>Pos</label><input type="number" id="partPos2" value="1" min="1" oninput="safeProcess()"></div><div class="form-group" style="flex:2;"><label>Type</label><input type="text" id="partType2" placeholder="Divider" oninput="safeProcess()"></div></div></div>
-                    </div>
-
-                    <div id="tank3Section" style="display: none; margin-top: 25px; border-top: 2px solid #cbd5e1; padding-top:15px;">
-                        <div class="tank-section-title" style="background:#dcfce7;">Tank 3 Specs</div>
-                        <div class="config-grid">
-                            <div class="form-group"><label>Standard</label><select id="stdChoice3" onchange="safeProcess()"><option>SANS 10329:2020</option><option>SS 22: 1979</option></select></div>
-                            <div class="form-group"><label>Material</label><select id="coatChoice3" onchange="safeProcess()"><option>Hot Dipped Galvanised</option><option>Painted Steel</option><option>SS 304</option><option>SS 316</option></select></div>
-                        </div>
-                        <div class="dim-grid">
-                            <div class="form-group"><label>Length</label><input type="number" id="length3" value="4" step="0.01" oninput="safeProcess()"></div>
-                            <div class="form-group"><label>Width</label><input type="number" id="width3" value="4" step="0.01" oninput="safeProcess()"></div>
-                            <div class="form-group"><label>Height</label><input type="number" id="height3" value="4" step="0.01" oninput="safeProcess()"></div>
-                            <div class="form-group" style="grid-column: span 3;"><label style="color:#16a34a;">Custom Size Override Text</label><input type="text" id="sizeOverride3" placeholder="e.g. Tank 3 Special" style="border: 1px dashed #22c55e;" oninput="safeProcess()"></div>
-                        </div>
-
-                        <div class="tank-section-title" style="margin-top: 10px;">Tank 3 Panel Thicknesses</div>
-                        <div class="dim-grid" style="background: #dcfce7; padding:10px; border:1px solid #bbf7d0; margin-bottom:15px; border-radius:6px;">
-                            <div class="form-group"><label>Roof</label><input type="text" id="thickRoof3" value="1.5mm" oninput="safeProcess()"></div>
-                            <div class="form-group"><label>Base</label><input type="text" id="thickBase3" value="4.5mm" oninput="safeProcess()"></div>
-                            <div class="form-group"><label>Wall L1</label><input type="text" id="thickWallL1_3" value="4.5mm" oninput="safeProcess()"></div>
-                            <div class="form-group"><label>Wall L2</label><input type="text" id="thickWallL2_3" value="3.0mm" oninput="safeProcess()"></div>
-                            <div class="form-group"><label>Wall L3</label><input type="text" id="thickWallL3_3" value="3.0mm" oninput="safeProcess()"></div>
-                            <div class="form-group"><label>Wall L4</label><input type="text" id="thickWallL4_3" value="1.5mm" oninput="safeProcess()"></div>
-                        </div>
-
-                        <div class="config-grid"><div class="form-group" style="grid-column:span 2;"><label>Tank 3 Partition</label><select id="partChoice3" onchange="togglePartitionDetails(); safeProcess();"><option value="no">No</option><option value="yes">Yes</option></select></div></div>
-                        <div id="partitionDetailsRow3" style="display:none; background:#fff7ed; padding:15px;"><div style="display:flex; gap:10px;"><div class="form-group"><label>Qty</label><input type="number" id="partQty3" value="0" min="0" oninput="safeProcess()"></div><div class="form-group"><label>L/W</label><input type="number" id="partLen3" value="0" step="0.01" oninput="safeProcess()"></div><div class="form-group"><label>Hgt</label><input type="number" id="partHgt3" value="0" step="0.01" oninput="safeProcess()"></div><div class="form-group"><label>Pos</label><input type="number" id="partPos3" value="1" min="1" oninput="safeProcess()"></div><div class="form-group" style="flex:2;"><label>Type</label><input type="text" id="partType3" placeholder="Divider" oninput="safeProcess()"></div></div></div>
-                    </div>
-
-                    <div id="customItemSection1" style="display: none; margin-top: 25px; border-top: 2px solid #cbd5e1; padding-top:15px;">
-                        <div class="tank-section-title" style="background:#e0e7ff;">Custom Item 1</div>
-                        <div class="config-grid"><div class="form-group" style="flex:2;"><label>Description</label><input type="text" id="customItemName1" value="Custom Structure / Pump Room" oninput="safeProcess()"></div><div class="form-group" style="flex:1;"><label>Lump Sum Price</label><input type="number" id="customItemCost1" value="0" oninput="safeProcess()"></div></div>
-                    </div>
-                    <div id="customItemSection2" style="display: none; margin-top: 15px;">
-                        <div class="tank-section-title" style="background:#e0e7ff;">Custom Item 2</div>
-                        <div class="config-grid"><div class="form-group" style="flex:2;"><label>Description</label><input type="text" id="customItemName2" value="Tower Structure" oninput="safeProcess()"></div><div class="form-group" style="flex:1;"><label>Lump Sum Price</label><input type="number" id="customItemCost2" value="0" oninput="safeProcess()"></div></div>
-                    </div>
-                    <div id="customItemSection3" style="display: none; margin-top: 15px;">
-                        <div class="tank-section-title" style="background:#e0e7ff;">Custom Item 3</div>
-                        <div class="config-grid"><div class="form-group" style="flex:2;"><label>Description</label><input type="text" id="customItemName3" value="Hoisting Fees" oninput="safeProcess()"></div><div class="form-group" style="flex:1;"><label>Lump Sum Price</label><input type="number" id="customItemCost3" value="0" oninput="safeProcess()"></div></div>
-                    </div>
+                    <div id="dynamicCustomContainer" style="margin-top: 30px;"></div>
+                    <button class="action-btn add-btn" onclick="addNewCustomItem()" style="background:#e0e7ff; border-color:#6366f1; color:#3730a3;">+ ADD CUSTOM ITEM</button>
                 </div>
                 
                 <div class="module-card no-print">
@@ -376,18 +286,7 @@ Note:
 10. Upon PO received, the delivery and installation of tank shall be done within 6 months. Any date extension will be subjected to price revision and storage charges.</textarea></div>
                 </div>
 
-                <div class="module-card" id="bomCard">
-                    <div class="card-header"><div><span>⚙️</span> INTERNAL BOM - TANK 1</div><div><button class="stock-check-btn no-print" onclick="checkStockAvailability()">✓ Check Stock</button><button class="reset-btn no-print" onclick="resetDefaultPrices()">↺ Reset</button></div></div>
-                    <table id="bomTable"><thead><tr><th>Description</th><th class="text-center">Qty</th><th class="text-center">Wt(kg)</th><th class="text-right">Price</th><th class="text-right">Total</th></tr></thead><tbody id="bomBody"></tbody></table>
-                </div>
-                <div class="module-card" id="bomCard2" style="display:none;">
-                    <div class="card-header"><div><span>⚙️</span> BOM - TANK 2</div></div>
-                    <table id="bomTable2"><thead><tr><th>Description</th><th class="text-center">Qty</th><th class="text-center">Wt(kg)</th><th class="text-right">Price</th><th class="text-right">Total</th></tr></thead><tbody id="bomBody2"></tbody></table>
-                </div>
-                <div class="module-card" id="bomCard3" style="display:none;">
-                    <div class="card-header"><div><span>⚙️</span> BOM - TANK 3</div></div>
-                    <table id="bomTable3"><thead><tr><th>Description</th><th class="text-center">Qty</th><th class="text-center">Wt(kg)</th><th class="text-right">Price</th><th class="text-right">Total</th></tr></thead><tbody id="bomBody3"></tbody></table>
-                </div>
+                <div id="dynamicBomContainer"></div>
             </div>
 
             <div class="col-right">
@@ -411,24 +310,8 @@ Note:
                         <button class="action-btn print-btn" onclick="printCustomer()">Customer PDF</button>
                         <button class="action-btn print-btn" style="background: #0284c7;" onclick="printChecklist()">📋 SO Checklist</button>
                     </div>
-
-                    <div class="module-card no-print" style="margin-bottom:20px;">
-                        <div class="card-header">Tank 1 Visuals</div>
-                        <div class="visual-container"><div class="view-box"><div class="view-title">Top</div><div id="topGrid" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Front</div><div id="frontGrid" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Back</div><div id="backGrid" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Left</div><div id="leftGrid" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Right</div><div id="rightGrid" class="grid-draft"></div></div></div>
-                        <div class="card-header" style="margin-top:15px;">Internal Bracing</div><div class="visual-container" id="visualsArea1"></div>
-                    </div>
                     
-                    <div class="module-card no-print" id="tank2VisualsCard" style="display:none;">
-                        <div class="card-header">Tank 2 Visuals</div>
-                        <div class="visual-container"><div class="view-box"><div class="view-title">Top</div><div id="topGrid2" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid2" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Front</div><div id="frontGrid2" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Back</div><div id="backGrid2" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Left</div><div id="leftGrid2" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Right</div><div id="rightGrid2" class="grid-draft"></div></div></div>
-                        <div class="card-header" style="margin-top:15px;">Internal Bracing</div><div class="visual-container" id="visualsArea2"></div>
-                    </div>
-
-                    <div class="module-card no-print" id="tank3VisualsCard" style="display:none;">
-                        <div class="card-header">Tank 3 Visuals</div>
-                        <div class="visual-container"><div class="view-box"><div class="view-title">Top</div><div id="topGrid3" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid3" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Front</div><div id="frontGrid3" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Back</div><div id="backGrid3" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Left</div><div id="leftGrid3" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Right</div><div id="rightGrid3" class="grid-draft"></div></div></div>
-                        <div class="card-header" style="margin-top:15px;">Internal Bracing</div><div class="visual-container" id="visualsArea3"></div>
-                    </div>
+                    <div id="dynamicVisualsScreenContainer"></div>
                 </div> 
             </div>
         </div>
@@ -462,23 +345,7 @@ Note:
                 </div>
             </div>
             
-            <div class="drawings-page" style="page-break-before: always; padding-top:20px;">
-                <div class="tank-section-title">Tank 1 Exterior Panels</div>
-                <div class="visual-container"><div class="view-box"><div class="view-title">Top</div><div id="topGrid_p" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid_p" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Front</div><div id="frontGrid_p" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Back</div><div id="backGrid_p" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Left</div><div id="leftGrid_p" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Right</div><div id="rightGrid_p" class="grid-draft"></div></div></div>
-                <div class="tank-section-title">Tank 1 Internal Bracing</div><div class="visual-container" id="visualsArea1_p"></div>
-                
-                <div id="tank2VisualsPrint_p" style="display:none;">
-                    <div class="tank-section-title" style="margin-top:25px;">Tank 2 Exterior Panels</div>
-                    <div class="visual-container"><div class="view-box"><div class="view-title">Top</div><div id="topGrid2_p" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid2_p" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Front</div><div id="frontGrid2_p" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Back</div><div id="backGrid2_p" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Left</div><div id="leftGrid2_p" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Right</div><div id="rightGrid2_p" class="grid-draft"></div></div></div>
-                    <div class="tank-section-title">Tank 2 Internal Bracing</div><div class="visual-container" id="visualsArea2_p"></div>
-                </div>
-
-                <div id="tank3VisualsPrint_p" style="display:none;">
-                    <div class="tank-section-title" style="margin-top:25px;">Tank 3 Exterior Panels</div>
-                    <div class="visual-container"><div class="view-box"><div class="view-title">Top</div><div id="topGrid3_p" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Bottom</div><div id="bottomGrid3_p" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Front</div><div id="frontGrid3_p" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Back</div><div id="backGrid3_p" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Left</div><div id="leftGrid3_p" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Right</div><div id="rightGrid3_p" class="grid-draft"></div></div></div>
-                    <div class="tank-section-title">Tank 3 Internal Bracing</div><div class="visual-container" id="visualsArea3_p"></div>
-                </div>
-            </div>
+            <div class="drawings-page" id="dynamicVisualsPrintContainer" style="page-break-before: always; padding-top:20px;"></div>
         </div>
     </div>
 </div>
@@ -514,73 +381,10 @@ Note:
             <p style="font-size: 9pt; font-weight: bold; text-decoration: underline;">RE: SUPPLY, DELIVER AND INSTALL PRESSED STEEL TANK</p>
         </div>
 
-        <table class="editable-section" contenteditable="true" style="width:100%; border-collapse:collapse; margin:10px 0; font-size:8.5pt; border:2px solid #000;">
+        <table class="editable-section cp-table" contenteditable="true" style="width:100%; border-collapse:collapse; margin:10px 0; font-size:8.5pt; border:2px solid #000;">
             <thead><tr><th style="width:6%; border:1px solid #000; text-align:center;">Item</th><th style="width:50%; border:1px solid #000; text-align:center;">Description</th><th style="width:14%; border:1px solid #000; text-align:center;">Unit Price</th><th style="width:10%; border:1px solid #000; text-align:center;">Qty</th><th style="width:20%; border:1px solid #000; text-align:center;">Total Price</th></tr></thead>
+            <tbody id="cpDynamicTanksBody"></tbody>
             <tbody>
-                <tr id="cpTank1Row">
-                    <td style="text-align:center; border:1px solid #000; padding:4px;">1</td>
-                    <td style="border:1px solid #000; padding:4px;">
-                        <strong>Supply and Install <span id="cpMaterial"></span> Tank Size:<br><span id="cpDims"></span></strong><br>Comply to <span id="cpStd"></span><br>
-                        <table style="border:none; width:100%; font-size:8.5pt;">
-                            <tr style="border:none;"><td style="width:20px; border:none;">a)</td><td style="width:75px; border:none;">Thickness:</td><td style="width:50px; border:none;">Roof</td><td style="border:none;">: <span id="cpThickRoof"></span></td></tr>
-                            <tr style="border:none;"><td style="border:none;"></td><td style="border:none;"></td><td style="border:none;">Base</td><td style="border:none;">: <span id="cpThickBase"></span></td></tr>
-                            <tr style="border:none;"><td style="border:none;"></td><td style="border:none;"></td><td style="border:none;">Wall</td><td style="border:none;">: <span id="cpThickWall"></span></td></tr>
-                            <tr style="border:none;"><td style="border:none; vertical-align:top;">b)</td><td style="border:none; vertical-align:top;" colspan="3">Ladders: <span id="cpLaddersInt"></span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="cpLaddersExt"></span></td></tr>
-                            <tr style="border:none;"><td style="border:none;">c)</td><td style="border:none;" colspan="3">WLI: <span id="cpWLI"></span></td></tr>
-                            <tr id="cpPartRow" style="border:none;"><td style="border:none;">d)</td><td style="border:none;" colspan="3">Partition: <span id="cpPartSection"></span></td></tr>
-                            <tr style="border:none;"><td style="border:none;">e)</td><td style="border:none;" colspan="3">Tank to be sit on existing I-Beam or RC plinths</td></tr>
-                            <tr style="border:none;"><td style="border:none;">f)</td><td style="border:none;" colspan="3">Exclude flanges, nozzles, pumps and etc.</td></tr>
-                        </table>
-                    </td>
-                    <td style="text-align:right; border:1px solid #000; padding:4px;" id="cpUnitPrice"></td><td style="text-align:center; border:1px solid #000; padding:4px;" id="cpNumTanks">1</td><td style="text-align:right; border:1px solid #000; padding:4px;" id="cpTotalPrice"></td>
-                </tr>
-
-                <tr id="cpTank2Row" style="display:none;">
-                    <td style="text-align:center; border:1px solid #000; padding:4px;">2</td>
-                    <td style="border:1px solid #000; padding:4px;">
-                        <strong>Supply and Install <span id="cpMaterial2"></span> Tank Size:<br><span id="cpDims2"></span></strong><br>Comply to <span id="cpStd2"></span><br>
-                        <table style="border:none; width:100%; font-size:8.5pt;">
-                            <tr style="border:none;"><td style="width:20px; border:none;">a)</td><td style="width:75px; border:none;">Thickness:</td><td style="width:50px; border:none;">Roof</td><td style="border:none;">: <span id="cpThickRoof2"></span></td></tr>
-                            <tr style="border:none;"><td style="border:none;"></td><td style="border:none;"></td><td style="border:none;">Base</td><td style="border:none;">: <span id="cpThickBase2"></span></td></tr>
-                            <tr style="border:none;"><td style="border:none;"></td><td style="border:none;"></td><td style="border:none;">Wall</td><td style="border:none;">: <span id="cpThickWall2"></span></td></tr>
-                            <tr style="border:none;"><td style="border:none; vertical-align:top;">b)</td><td style="border:none; vertical-align:top;" colspan="3">Ladders: <span id="cpLaddersInt2"></span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="cpLaddersExt2"></span></td></tr>
-                            <tr style="border:none;"><td style="border:none;">c)</td><td style="border:none;" colspan="3">WLI: <span id="cpWLI2"></span></td></tr>
-                            <tr id="cpPartRow2" style="border:none;"><td style="border:none;">d)</td><td style="border:none;" colspan="3">Partition: <span id="cpPartSection2"></span></td></tr>
-                            <tr style="border:none;"><td style="border:none;">e)</td><td style="border:none;" colspan="3">Tank to be sit on existing I-Beam or RC plinths</td></tr>
-                            <tr style="border:none;"><td style="border:none;">f)</td><td style="border:none;" colspan="3">Exclude flanges, nozzles, pumps and etc.</td></tr>
-                        </table>
-                    </td>
-                    <td style="text-align:right; border:1px solid #000; padding:4px;" id="cpUnitPrice2"></td><td style="text-align:center; border:1px solid #000; padding:4px;">1</td><td style="text-align:right; border:1px solid #000; padding:4px;" id="cpTotalPrice2"></td>
-                </tr>
-
-                <tr id="cpTank3Row" style="display:none;">
-                    <td style="text-align:center; border:1px solid #000; padding:4px;">3</td>
-                    <td style="border:1px solid #000; padding:4px;">
-                        <strong>Supply and Install <span id="cpMaterial3"></span> Tank Size:<br><span id="cpDims3"></span></strong><br>Comply to <span id="cpStd3"></span><br>
-                        <table style="border:none; width:100%; font-size:8.5pt;">
-                            <tr style="border:none;"><td style="width:20px; border:none;">a)</td><td style="width:75px; border:none;">Thickness:</td><td style="width:50px; border:none;">Roof</td><td style="border:none;">: <span id="cpThickRoof3"></span></td></tr>
-                            <tr style="border:none;"><td style="border:none;"></td><td style="border:none;"></td><td style="border:none;">Base</td><td style="border:none;">: <span id="cpThickBase3"></span></td></tr>
-                            <tr style="border:none;"><td style="border:none;"></td><td style="border:none;"></td><td style="border:none;">Wall</td><td style="border:none;">: <span id="cpThickWall3"></span></td></tr>
-                            <tr style="border:none;"><td style="border:none; vertical-align:top;">b)</td><td style="border:none; vertical-align:top;" colspan="3">Ladders: <span id="cpLaddersInt3"></span><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="cpLaddersExt3"></span></td></tr>
-                            <tr style="border:none;"><td style="border:none;">c)</td><td style="border:none;" colspan="3">WLI: <span id="cpWLI3"></span></td></tr>
-                            <tr id="cpPartRow3" style="border:none;"><td style="border:none;">d)</td><td style="border:none;" colspan="3">Partition: <span id="cpPartSection3"></span></td></tr>
-                            <tr style="border:none;"><td style="border:none;">e)</td><td style="border:none;" colspan="3">Tank to be sit on existing I-Beam or RC plinths</td></tr>
-                            <tr style="border:none;"><td style="border:none;">f)</td><td style="border:none;" colspan="3">Exclude flanges, nozzles, pumps and etc.</td></tr>
-                        </table>
-                    </td>
-                    <td style="text-align:right; border:1px solid #000; padding:4px;" id="cpUnitPrice3"></td><td style="text-align:center; border:1px solid #000; padding:4px;">1</td><td style="text-align:right; border:1px solid #000; padding:4px;" id="cpTotalPrice3"></td>
-                </tr>
-
-                <tr id="cpCustomRow1" style="display:none;">
-                    <td style="text-align:center; border:1px solid #000; padding:4px;" id="cpIdxC1">2</td><td style="border:1px solid #000; padding:4px;"><strong id="cpCustomDesc1"></strong></td><td style="text-align:right; border:1px solid #000; padding:4px;" id="cpCustomPrice1"></td><td style="text-align:center; border:1px solid #000; padding:4px;">1</td><td style="text-align:right; border:1px solid #000; padding:4px;" id="cpCustomPrice1_tot"></td>
-                </tr>
-                <tr id="cpCustomRow2" style="display:none;">
-                    <td style="text-align:center; border:1px solid #000; padding:4px;" id="cpIdxC2">3</td><td style="border:1px solid #000; padding:4px;"><strong id="cpCustomDesc2"></strong></td><td style="text-align:right; border:1px solid #000; padding:4px;" id="cpCustomPrice2"></td><td style="text-align:center; border:1px solid #000; padding:4px;">1</td><td style="text-align:right; border:1px solid #000; padding:4px;" id="cpCustomPrice2_tot"></td>
-                </tr>
-                <tr id="cpCustomRow3" style="display:none;">
-                    <td style="text-align:center; border:1px solid #000; padding:4px;" id="cpIdxC3">4</td><td style="border:1px solid #000; padding:4px;"><strong id="cpCustomDesc3"></strong></td><td style="text-align:right; border:1px solid #000; padding:4px;" id="cpCustomPrice3"></td><td style="text-align:center; border:1px solid #000; padding:4px;">1</td><td style="text-align:right; border:1px solid #000; padding:4px;" id="cpCustomPrice3_tot"></td>
-                </tr>
-
                 <tr><td colspan="2" style="border:none;"></td><td colspan="2" style="border:1px solid #000; text-align:right;">SST <span id="cpSstPct"></span>%</td><td style="border:1px solid #000; text-align:right;" id="cpSstAmt"></td></tr>
                 <tr><td colspan="2" style="border:none;"></td><td colspan="2" style="border:none;"></td><td style="border:1px solid #000; text-align:right; font-weight:bold; border-bottom:4px double #000;" id="cpGrandTotal"></td></tr>
             </tbody>
@@ -617,37 +421,9 @@ Note:
         <div style="width: 48%;"><table style="width:100%; border:none;"><tr style="border:none;"><td style="width:110px; font-weight:bold; border:none; padding:2px;">Customer:</td><td style="border-bottom:1px solid #000; padding:0 5px;" id="chk_customer"></td></tr><tr style="border:none;"><td style="font-weight:bold; border:none; padding:2px;">PO No:</td><td style="border-bottom:1px solid #000; padding:0 5px;" id="chk_custpo"></td></tr><tr style="border:none;"><td style="font-weight:bold; border:none; padding:2px;">Project Name:</td><td style="border-bottom:1px solid #000; padding:0 5px;" id="chk_project"></td></tr></table></div>
         <div style="width: 48%;"><table style="width:100%; border:none;"><tr style="border:none;"><td style="width:110px; font-weight:bold; border:none; padding:2px;">Project No.:</td><td style="border-bottom:1px solid #000; padding:0 5px;" id="chk_projno"></td></tr><tr style="border:none;"><td style="font-weight:bold; border:none; padding:2px;">Issued Date:</td><td style="border-bottom:1px solid #000; padding:0 5px;" id="chk_issued"></td></tr><tr style="border:none;"><td style="font-weight:bold; border:none; padding:2px;">Delivery Date:</td><td style="border-bottom:1px solid #000; padding:0 5px;" id="chk_deldate"></td></tr></table></div>
     </div>
-    <div style="border-top:1.5px solid #000; border-bottom:1.5px solid #000; padding:5px 0; margin-bottom:5px;">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;"><div><span style="font-weight:bold; font-size:8.5pt; margin-right:20px;">STANDARD</span> <span class="chk-box" id="box_sans"></span> SANS &nbsp; <span class="chk-box" id="box_ss22"></span> SS22</div></div>
-        <table style="width:100%; border:none; margin-top:2px;"><tr style="border:none;"><td style="width:70px; font-weight:bold; border:none;">Size:</td><td style="border-bottom:1px solid #000; width:40%;" id="chk_tanksize"></td><td style="width:60px; font-weight:bold; border:none;">Qty:</td><td style="border-bottom:1px solid #000; text-align:center;" id="chk_tankqty"></td><td style="width:75px; font-weight:bold; border:none;">Total Pcs:</td><td style="border-bottom:1px solid #000; text-align:center;" id="chk_totalpanel"></td></tr></table>
-        <div style="display:flex; gap:15px; margin-top:2px;"><div style="width:70px; font-weight:bold;">Partition:</div><div><span class="chk-box" id="box_part_no"></span> No</div><div><span class="chk-box" id="box_part_yes"></span> YES</div></div>
-        <div style="display:flex; gap:15px; margin-top:4px;"><div style="width:70px; font-weight:bold;">Coating:</div><div><span class="chk-box" id="box_coat_hdg"></span> HDG</div><div><span class="chk-box" id="box_coat_paint"></span> Painted</div><div><span class="chk-box" id="box_coat_ms"></span> MS</div><div style="flex-grow:1; font-weight:bold;">Remark: <span style="display:inline-block; border-bottom:1px solid #000; min-width:100px; width:80%;"></span></div></div>
-    </div>
-    <div style="border-top:1.5px solid #000; border-bottom:1.5px solid #000; padding:5px 0; margin-bottom:5px;">
-        <div style="font-weight:bold; text-transform:uppercase; font-size:8.5pt; margin-bottom:3px;">Thickness</div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-            <table style="border:none; width:95%;"><tr style="border:none;"><td style="width:40px; border:none;">Roof</td><td style="border:1px solid #000; text-align:center; font-weight:bold; padding: 0 4px;" id="chk_t_roof"></td><td style="border:none; padding-left:4px;">mm</td></tr><tr style="border:none;"><td style="border:none;">Base</td><td style="border:1px solid #000; text-align:center; font-weight:bold; padding: 0 4px;" id="chk_t_base"></td><td style="border:none; padding-left:4px;">mm</td></tr></table>
-            <table style="border:none; width:95%;"><tr style="border:none;"><td style="width:45px; border:none;">W1</td><td style="border:1px solid #000; text-align:center; font-weight:bold; padding: 0 4px;" id="chk_t_w1"></td><td style="border:none; padding-left:4px;">mm</td></tr><tr style="border:none;"><td style="border:none;">W2</td><td style="border:1px solid #000; text-align:center; font-weight:bold; padding: 0 4px;" id="chk_t_w2"></td><td style="border:none; padding-left:4px;">mm</td></tr><tr style="border:none;"><td style="border:none;">W3</td><td style="border:1px solid #000; text-align:center; font-weight:bold; padding: 0 4px;" id="chk_t_w3"></td><td style="border:none; padding-left:4px;">mm</td></tr><tr style="border:none;"><td style="border:none;">W4</td><td style="border:1px solid #000; text-align:center; font-weight:bold; padding: 0 4px;" id="chk_t_w4"></td><td style="border:none; padding-left:4px;">mm</td></tr></table>
-        </div>
-    </div>
-    <div style="border-top:1.5px solid #000; border-bottom:1.5px solid #000; padding:5px 0; margin-bottom:5px;">
-        <div style="font-weight:bold; text-transform:uppercase; font-size:8.5pt; margin-bottom:3px;">Accessories</div>
-        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:4px;">
-            <div>Manhole</div><div><span style="border:1px solid #000; padding:1px 4px; display:inline-block; min-width:25px; text-align:center; font-weight:bold;" id="chk_qty_manhole"></span> Qty</div><div style="grid-column: span 2;"><span class="chk-box">&#10003;</span> Normal</div>
-            <div>Int Ladder</div><div><span style="border:1px solid #000; padding:1px 4px; display:inline-block; min-width:25px; text-align:center; font-weight:bold;" id="chk_qty_int_lad"></span> Qty</div><div><span class="chk-box" id="box_int_hdg"></span> HDG</div><div><span class="chk-box" id="box_int_304"></span> SS304 &nbsp; <span class="chk-box" id="box_int_316"></span> SS316</div>
-            <div>Ext Ladder</div><div><span style="border:1px solid #000; padding:1px 4px; display:inline-block; min-width:25px; text-align:center; font-weight:bold;" id="chk_qty_ext_lad"></span> Qty</div><div><span class="chk-box" id="box_ext_hdg"></span> HDG</div><div><span class="chk-box" id="box_ext_304"></span> SS304 &nbsp; <span class="chk-box" id="box_ext_316"></span> SS316</div>
-            <div>WLI</div><div><span style="border:1px solid #000; padding:1px 4px; display:inline-block; min-width:25px; text-align:center; font-weight:bold;" id="chk_qty_wli"></span> Qty</div><div><span class="chk-box" id="box_wli_ball"></span> Ball</div><div><span class="chk-box" id="box_wli_tube"></span> Tube</div>
-            <div>Air vent</div><div><span style="border:1px solid #000; padding:1px 4px; display:inline-block; min-width:25px; text-align:center; font-weight:bold;" id="chk_qty_vent"></span> Qty</div><div><span class="chk-box" id="box_vent_hdg"></span> Steel</div><div><span class="chk-box" id="box_vent_abs"></span> ABS</div>
-        </div>
-    </div>
-    <div style="border-top:1.5px solid #000; border-bottom:1.5px solid #000; padding:5px 0; margin-bottom:5px;">
-        <div style="font-weight:bold; text-transform:uppercase; font-size:8.5pt; margin-bottom:3px;">TANK FOUNDATION</div>
-        <div style="display:grid; grid-template-columns:auto auto auto; gap:8px;">
-            <div>Steel C-Channel / I Beam</div><div><span class="chk-box"></span> Yes</div><div><span class="chk-box"></span> No</div>
-            <div>Size</div><div><span style="display:inline-block; border-bottom:1px solid #000; width:100%;"></span></div><div><span class="chk-box"></span> 1m RC &nbsp; <span class="chk-box"></span> 2m RC</div>
-            <div>Coating</div><div><span class="chk-box"></span> HDG</div><div><span class="chk-box"></span> Painted</div>
-        </div>
-    </div>
+    
+    <div id="dynamicChecklistTanksContainer"></div>
+
     <div style="border-top:1.5px solid #000; border-bottom:1.5px solid #000; padding:5px 0; margin-bottom:5px;">
         <div style="font-weight:bold; text-transform:uppercase; font-size:8.5pt; margin-bottom:3px;">OTHER REQUIREMENTS</div>
         <div style="border-bottom:1px solid #000; width:100%; margin-top:12px;"></div><div style="border-bottom:1px solid #000; width:100%; margin-top:12px;"></div>
@@ -655,44 +431,7 @@ Note:
     <div style="display:flex; justify-content:space-between; margin-top:20px;">
         <div style="width:30%;"><div style="border-top:1px solid #000; font-weight:bold; padding-top:2px;">Prepared:</div></div><div style="width:30%;"><div style="border-top:1px solid #000; font-weight:bold; padding-top:2px;">Approved:</div></div><div style="width:30%;"><div style="border-top:1px solid #000; font-weight:bold; padding-top:2px;">Received (Production):</div></div>
     </div>
-    <div style="page-break-before: always; padding-top: 10px;">
-        <div style="font-size:11pt; font-weight:bold; text-decoration:underline; margin:20px 0 10px 0;">Tank 1 - Production Drawings</div>
-        <div style="display:flex; flex-wrap:wrap; gap:8px; width:100%;">
-            <div style="padding:4px; border:1.5px solid #000; border-radius:6px; width:120px; text-align:center;"><div style="font-size:7pt; font-weight:800; text-transform:uppercase;">Top</div><div id="topGrid_c" class="grid-draft"></div></div>
-            <div style="padding:4px; border:1.5px solid #000; border-radius:6px; width:120px; text-align:center;"><div style="font-size:7pt; font-weight:800; text-transform:uppercase;">Bottom</div><div id="bottomGrid_c" class="grid-draft"></div></div>
-            <div style="padding:4px; border:1.5px solid #000; border-radius:6px; width:120px; text-align:center;"><div style="font-size:7pt; font-weight:800; text-transform:uppercase;">Front</div><div id="frontGrid_c" class="grid-draft"></div></div>
-            <div style="padding:4px; border:1.5px solid #000; border-radius:6px; width:120px; text-align:center;"><div style="font-size:7pt; font-weight:800; text-transform:uppercase;">Back</div><div id="backGrid_c" class="grid-draft"></div></div>
-            <div style="padding:4px; border:1.5px solid #000; border-radius:6px; width:120px; text-align:center;"><div style="font-size:7pt; font-weight:800; text-transform:uppercase;">Left</div><div id="leftGrid_c" class="grid-draft"></div></div>
-            <div style="padding:4px; border:1.5px solid #000; border-radius:6px; width:120px; text-align:center;"><div style="font-size:7pt; font-weight:800; text-transform:uppercase;">Right</div><div id="rightGrid_c" class="grid-draft"></div></div>
-        </div>
-        <div style="font-size:10pt; font-weight:bold; margin-top:25px;">Tank 1 - Internal Bracing</div><div style="display:flex; flex-wrap:wrap; gap:8px; width:100%;" id="visualsArea1_c"></div>
-        
-        <div id="tank2VisualsPrint_c" style="display:none;">
-            <div style="font-size:11pt; font-weight:bold; text-decoration:underline; margin:30px 0 10px 0;">Tank 2 - Production Drawings</div>
-            <div style="display:flex; flex-wrap:wrap; gap:8px; width:100%;">
-                <div style="padding:4px; border:1.5px solid #000; border-radius:6px; width:120px; text-align:center;"><div style="font-size:7pt; font-weight:800; text-transform:uppercase;">Top</div><div id="topGrid2_c" class="grid-draft"></div></div>
-                <div style="padding:4px; border:1.5px solid #000; border-radius:6px; width:120px; text-align:center;"><div style="font-size:7pt; font-weight:800; text-transform:uppercase;">Bottom</div><div id="bottomGrid2_c" class="grid-draft"></div></div>
-                <div style="padding:4px; border:1.5px solid #000; border-radius:6px; width:120px; text-align:center;"><div style="font-size:7pt; font-weight:800; text-transform:uppercase;">Front</div><div id="frontGrid2_c" class="grid-draft"></div></div>
-                <div style="padding:4px; border:1.5px solid #000; border-radius:6px; width:120px; text-align:center;"><div style="font-size:7pt; font-weight:800; text-transform:uppercase;">Back</div><div id="backGrid2_c" class="grid-draft"></div></div>
-                <div style="padding:4px; border:1.5px solid #000; border-radius:6px; width:120px; text-align:center;"><div style="font-size:7pt; font-weight:800; text-transform:uppercase;">Left</div><div id="leftGrid2_c" class="grid-draft"></div></div>
-                <div style="padding:4px; border:1.5px solid #000; border-radius:6px; width:120px; text-align:center;"><div style="font-size:7pt; font-weight:800; text-transform:uppercase;">Right</div><div id="rightGrid2_c" class="grid-draft"></div></div>
-            </div>
-            <div style="font-size:10pt; font-weight:bold; margin-top:25px;">Tank 2 - Internal Bracing</div><div style="display:flex; flex-wrap:wrap; gap:8px; width:100%;" id="visualsArea2_c"></div>
-        </div>
-
-        <div id="tank3VisualsPrint_c" style="display:none;">
-            <div style="font-size:11pt; font-weight:bold; text-decoration:underline; margin:30px 0 10px 0;">Tank 3 - Production Drawings</div>
-            <div style="display:flex; flex-wrap:wrap; gap:8px; width:100%;">
-                <div style="padding:4px; border:1.5px solid #000; border-radius:6px; width:120px; text-align:center;"><div style="font-size:7pt; font-weight:800; text-transform:uppercase;">Top</div><div id="topGrid3_c" class="grid-draft"></div></div>
-                <div style="padding:4px; border:1.5px solid #000; border-radius:6px; width:120px; text-align:center;"><div style="font-size:7pt; font-weight:800; text-transform:uppercase;">Bottom</div><div id="bottomGrid3_c" class="grid-draft"></div></div>
-                <div style="padding:4px; border:1.5px solid #000; border-radius:6px; width:120px; text-align:center;"><div style="font-size:7pt; font-weight:800; text-transform:uppercase;">Front</div><div id="frontGrid3_c" class="grid-draft"></div></div>
-                <div style="padding:4px; border:1.5px solid #000; border-radius:6px; width:120px; text-align:center;"><div style="font-size:7pt; font-weight:800; text-transform:uppercase;">Back</div><div id="backGrid3_c" class="grid-draft"></div></div>
-                <div style="padding:4px; border:1.5px solid #000; border-radius:6px; width:120px; text-align:center;"><div style="font-size:7pt; font-weight:800; text-transform:uppercase;">Left</div><div id="leftGrid3_c" class="grid-draft"></div></div>
-                <div style="padding:4px; border:1.5px solid #000; border-radius:6px; width:120px; text-align:center;"><div style="font-size:7pt; font-weight:800; text-transform:uppercase;">Right</div><div id="rightGrid3_c" class="grid-draft"></div></div>
-            </div>
-            <div style="font-size:10pt; font-weight:bold; margin-top:25px;">Tank 3 - Internal Bracing</div><div style="display:flex; flex-wrap:wrap; gap:8px; width:100%;" id="visualsArea3_c"></div>
-        </div>
-    </div>
+    <div style="page-break-before: always; padding-top: 10px;" id="dynamicChecklistDrawingsContainer"></div>
 </div>
 
 <script>
@@ -702,11 +441,58 @@ Note:
     const setVal = (id, v) => { let e = document.getElementById(id); if(e) e.value = v; };
     const setHtml = (id, v) => { let e = document.getElementById(id); if(e) e.innerHTML = v; };
     const setDisp = (id, show) => { let e = document.getElementById(id); if(e) e.style.display = show ? 'block' : 'none'; };
-    const setTDisp = (id, show) => { let e = document.getElementById(id); if(e) e.style.display = show ? 'table-row' : 'none'; };
     const setBox = (id, show) => { let e = document.getElementById(id); if(e) e.innerHTML = show ? '&#10003;' : '&nbsp;'; };
 
     const SECRET_PASSWORD = "winko2026";
     const ADMIN_PASSWORD = "adminmaster99";
+
+    // Standard Template Data
+    const systemBaseStructure = [
+        { category: "Panels", items: [{name: "Manhole Panel", def: 450, wt: 55}, {name: "Roof Panel", def: 220, wt: 26}, {name: "Base Panel", def: 350, wt: 68}, {name: "Wall Panel (L1)", def: 350, wt: 68}, {name: "Wall Panel (L2)", def: 280, wt: 48}, {name: "Wall Panel (L3)", def: 280, wt: 48}, {name: "Wall Panel (L4)", def: 220, wt: 26}, {name: "Partition Panel", def: 280, wt: 48}] },
+        { category: "Cleat & Trusses", items: [{name: "Type A Cleat", def: 25, wt: 1.2}, {name: "Type B Cleat", def: 28, wt: 1.8}, {name: "Type C Cleat", def: 30, wt: 2.5}, {name: "Ø1\" Pipe", def: 12, wt: 1.6}, {name: "2\" x 2\" angle", def: 15, wt: 2.2}] },
+        { category: "Angle Stay", items: [{name: "44 1/4\" (L1 Stay)", def: 45, wt: 4.5}, {name: "67\" (L2 Stay)", def: 65, wt: 7.2}, {name: "11' 3\" (L3 Stay)", def: 95, wt: 14.5}, {name: "15' 8.5\" (L4 Stay)", def: 125, wt: 19.8}] },
+        { category: "Accessories", items: [{name: "Ext. Ladder", def: 55, wt: 3.5, selectId: "extLadMat", options: ["HDG", "SS 304", "SS 316"]}, {name: "Int. Ladder", def: 75, wt: 3.5, selectId: "intLadMat", options: ["HDG", "SS 304", "SS 316"]}, {name: "Water Level Indicator", def: 220, wt: 2.5, selectId: "wliType", options: ["Ball Float", "Tube Type"]}, {name: "Air Vent", def: 85, wt: 1.5, selectId: "ventType", options: ["HDG Steel", "ABS Plastic"]}, {name: "Mastic Sealant (Rolls)", def: 38, wt: 0.8}, {name: "Bolt & Nut Sets", def: 1.60, wt: 0.15}] },
+        { category: "Services", items: [{name: "Installation & Labor", def: 3500, wt: 0}, {name: "Transport", def: 850, wt: 0}] }
+    ];
+
+    try { let md = JSON.parse(localStorage.getItem('winkoMasterDefaults')); if(md) md.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { if(systemBaseStructure[sIdx] && systemBaseStructure[sIdx].items[iIdx]) { systemBaseStructure[sIdx].items[iIdx].name = it.name; systemBaseStructure[sIdx].items[iIdx].def = it.def; systemBaseStructure[sIdx].items[iIdx].wt = it.wt; } }); }); } catch(e) {}
+    
+    // Ensure selects have defaults
+    systemBaseStructure.forEach(sec => sec.items.forEach(it => { if(it.selectId && !it.selVal) it.selVal = it.options[0]; }));
+
+    // Global State App Architecture
+    let appTanks = [];
+    let appCustomItems = [];
+    const configIDs = ['quoteIdInput', 'custPoNo', 'custDelDate', 'marketChoice', 'unitChoice', 'markupPct','discountPct','sstPct', 'shortExclusions', 'fullTermsNotes', 'custCompany', 'custAttn', 'custAddr', 'tcValidity', 'tcLead', 'tcDelivery', 'tcPayment', 'signName', 'signPhone'];
+
+    function defaultTank() {
+        return {
+            id: Date.now() + Math.random(),
+            std: "SANS 10329:2020 Approved by SIRIM & SPAN", coat: "Hot Dipped Galvanised",
+            L: 12, W: 4, H: 4, override: "",
+            tRoof: "1.5mm", tBase: "4.5mm", tW1: "4.5mm", tW2: "3.0mm", tW3: "3.0mm", tW4: "1.5mm",
+            partChoice: "no", partQty: 0, partL: 0, partH: 0, partPos: 1, partType: "Divider",
+            bom: JSON.parse(JSON.stringify(systemBaseStructure)),
+            baseCost: 0, finalPrice: 0, totalPanels: 0, weight: 0
+        };
+    }
+    
+    function defaultCustomItem() {
+        return { id: Date.now() + Math.random(), desc: "Custom Structure / Pump Room", cost: 0, qty: 1, finalPrice: 0 };
+    }
+
+    // Event Triggers & State Updater
+    function updateTankField(tIdx, field, val, isNum = false) { appTanks[tIdx][field] = isNum ? (parseFloat(val) || 0) : val; safeProcess(); }
+    function updateBomField(tIdx, sIdx, iIdx, field, val, isNum = false) { appTanks[tIdx].bom[sIdx].items[iIdx][field] = isNum ? (parseFloat(val) || 0) : val; safeProcess(); }
+    function updateCustomField(cIdx, field, val, isNum = false) { appCustomItems[cIdx][field] = isNum ? (parseFloat(val) || 0) : val; safeProcess(); }
+    function handleUnitChange() { safeProcess(); }
+
+    function addNewTank() { appTanks.push(defaultTank()); renderAllDynamicUI(); processTankData(); }
+    function removeTank(idx) { if(confirm("Remove this tank?")) { appTanks.splice(idx, 1); renderAllDynamicUI(); processTankData(); } }
+    function addNewCustomItem() { appCustomItems.push(defaultCustomItem()); renderAllDynamicUI(); processTankData(); }
+    function removeCustomItem(idx) { appCustomItems.splice(idx, 1); renderAllDynamicUI(); processTankData(); }
+    function addBomRow(tIdx, sIdx) { appTanks[tIdx].bom[sIdx].items.push({name: "Custom Item", qty: 0, wt: 0, def: 0}); renderAllDynamicUI(); processTankData(); }
+    function removeBomRow(tIdx, sIdx) { let minLen = systemBaseStructure[sIdx].items.length; if(appTanks[tIdx].bom[sIdx].items.length > minLen) { appTanks[tIdx].bom[sIdx].items.pop(); renderAllDynamicUI(); processTankData(); } else { alert("Cannot remove base system items. Set Qty to 0 instead."); } }
 
     function safeProcess() { processTankData(); savePrices(); }
 
@@ -715,8 +501,7 @@ Note:
         if(p === SECRET_PASSWORD) {
             setDisp('securityOverlay', false); setDisp('topNav', true); setDisp('mainContent', true);
             if(!getVal('quoteIdInput')) setVal('quoteIdInput', "QP-" + new Date().getFullYear().toString().substr(-2) + "-00" + Math.floor(Math.random() * 9 + 1));
-            let u = getVal('unitChoice'); if (u) window.currentUnit = u;
-            refreshMemoryDropdown(); initInventory(); processTankData(); 
+            refreshMemoryDropdown(); initInventory(); loadPrices();
         } else if (p === ADMIN_PASSWORD) {
             setDisp('securityOverlay', false); setDisp('topNav', true); setDisp('adminContent', true); buildAdminTable();
         } else { alert("Incorrect Password!"); }
@@ -732,596 +517,328 @@ Note:
         else if(tabId === 'admin') { setDisp('adminContent', true); document.getElementById('btnTabAdmin').classList.add('active'); buildAdminTable(); }
     }
 
-    let winkoInventory = {};
-    try { winkoInventory = JSON.parse(localStorage.getItem('winkoInventoryDB')) || {}; } catch(e) { winkoInventory = {}; }
+    // Build the dynamic UI elements
+    function renderAllDynamicUI() {
+        let tanksHtml = "", bomHtml = "", screenVisHtml = "", printVisHtml = "", chkVisHtml = "", chkTankHtml = "";
 
-    function initInventory() {
-        bomStructure.forEach(sec => sec.items.forEach(it => {
-            let bn = it.name.replace(/ \(1x1m\)| \(1\.22x1\.22m\)| \(4'x4'\)/g, '');
-            if(!winkoInventory[bn]) winkoInventory[bn] = { stock: 0, alert: 10 };
-        }));
-        const presets = { "Base Panel":344, "Wall Panel (L1)":344, "Wall Panel (L2)":407, "Wall Panel (L3)":407, "Wall Panel (L4)":119, "Manhole Panel":200, "Roof Panel":186, "Partition Panel":50, "Type A Cleat":297, "Type B Cleat":130, "Type C Cleat":500, "44 1/4\" (L1 Stay)":76, "67\" (L2 Stay)":262, "11' 3\" (L3 Stay)":96, "15' 8.5\" (L4 Stay)":40, "Air Vent":48, "Mastic Sealant (Rolls)":89, "Bolt & Nut Sets":72, "Water Level Indicator":25, "Ext. Ladder":15, "Int. Ladder":15 };
-        let updated = false; Object.keys(presets).forEach(k => { if(winkoInventory[k] && winkoInventory[k].stock === 0) { winkoInventory[k].stock = presets[k]; updated = true; } });
-        if(updated) localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory));
-    }
+        appTanks.forEach((t, i) => {
+            // TANK INFO
+            tanksHtml += `<div class="tank-block" style="border-top:2px dashed #cbd5e1; margin-top:20px; padding-top:15px;">
+                <div class="tank-section-title" style="background:#e0f2fe; display:flex; justify-content:space-between;">
+                    <span>Tank ${i+1} Specs</span> <button class="del-btn no-print" onclick="removeTank(${i})">X REMOVE</button>
+                </div>
+                <div class="config-grid">
+                    <div class="form-group"><label>Standard</label><select id="t_${i}_std" onchange="updateTankField(${i}, 'std', this.value)"><option ${t.std.includes('SANS')?'selected':''}>SANS 10329:2020 Approved by SIRIM & SPAN</option><option ${t.std.includes('SS 22')?'selected':''}>SS 22: 1979</option></select></div>
+                    <div class="form-group"><label>Material</label><select id="t_${i}_coat" onchange="updateTankField(${i}, 'coat', this.value)"><option ${t.coat==='Hot Dipped Galvanised'?'selected':''}>Hot Dipped Galvanised</option><option ${t.coat==='Painted Steel'?'selected':''}>Painted Steel</option><option ${t.coat==='Stainless Steel (SS 304)'?'selected':''}>Stainless Steel (SS 304)</option><option ${t.coat==='Stainless Steel (SS 316)'?'selected':''}>Stainless Steel (SS 316)</option></select></div>
+                </div>
+                <div class="dim-grid">
+                    <div class="form-group"><label>Length</label><input type="number" id="t_${i}_L" value="${t.L}" step="0.01" oninput="updateTankField(${i}, 'L', this.value, true)"></div>
+                    <div class="form-group"><label>Width</label><input type="number" id="t_${i}_W" value="${t.W}" step="0.01" oninput="updateTankField(${i}, 'W', this.value, true)"></div>
+                    <div class="form-group"><label>Height</label><input type="number" id="t_${i}_H" value="${t.H}" step="0.01" oninput="updateTankField(${i}, 'H', this.value, true)"></div>
+                    <div class="form-group" style="grid-column: span 3;"><label style="color:#0ea5e9;">Custom Size Override Text</label><input type="text" id="t_${i}_override" value="${t.override}" placeholder="e.g. 2m x 3m Custom Shape" style="border:1px dashed #0ea5e9;" oninput="updateTankField(${i}, 'override', this.value)"></div>
+                </div>
+                
+                <div class="tank-section-title" style="margin-top:10px; background:#f1f5f9;">Tank ${i+1} Panel Thicknesses</div>
+                <div class="dim-grid" style="padding:10px; border:1px solid #e2e8f0; margin-bottom:15px; border-radius:6px;">
+                    <div class="form-group"><label>Roof</label><input type="text" id="t_${i}_tRoof" value="${t.tRoof}" oninput="updateTankField(${i}, 'tRoof', this.value)"></div>
+                    <div class="form-group"><label>Base</label><input type="text" id="t_${i}_tBase" value="${t.tBase}" oninput="updateTankField(${i}, 'tBase', this.value)"></div>
+                    <div class="form-group"><label>Wall L1</label><input type="text" id="t_${i}_tW1" value="${t.tW1}" oninput="updateTankField(${i}, 'tW1', this.value)"></div>
+                    <div class="form-group"><label>Wall L2</label><input type="text" id="t_${i}_tW2" value="${t.tW2}" oninput="updateTankField(${i}, 'tW2', this.value)"></div>
+                    <div class="form-group"><label>Wall L3</label><input type="text" id="t_${i}_tW3" value="${t.tW3}" oninput="updateTankField(${i}, 'tW3', this.value)"></div>
+                    <div class="form-group"><label>Wall L4</label><input type="text" id="t_${i}_tW4" value="${t.tW4}" oninput="updateTankField(${i}, 'tW4', this.value)"></div>
+                </div>
 
-    function renderInventoryTable() {
-        let html = '';
-        Object.keys(winkoInventory).sort().forEach(k => {
-            let d = winkoInventory[k]; let st = ''; let rc = '';
-            if(d.stock <= 0) { st = '<span class="inv-status inv-out">OUT OF STOCK</span>'; rc = 'stock-row-warning'; } else if (d.stock <= d.alert) { st = '<span class="inv-status inv-low">LOW STOCK</span>'; rc = 'stock-row-warning'; } else { st = '<span class="inv-status inv-ok">OK</span>'; }
-            let sId = k.replace(/[^a-zA-Z0-9]/g, '');
-            html += `<tr class="${rc}"><td style="font-weight:700;">${k} <div style="margin-top:4px;">${st}</div></td><td class="text-center"><input type="number" class="inv-input" id="inv_stock_${sId}" value="${d.stock}"></td><td class="text-center"><input type="number" class="inv-input" id="inv_alert_${sId}" value="${d.alert}"></td></tr>`;
-        }); setHtml('invBody', html);
-    }
+                <div class="config-grid">
+                    <div class="form-group" style="grid-column:span 2;"><label>Partition Choice</label><select id="t_${i}_partChoice" onchange="updateTankField(${i}, 'partChoice', this.value); document.getElementById('partDet_${i}').style.display=this.value==='yes'?'flex':'none';">
+                        <option value="no" ${t.partChoice==='no'?'selected':''}>No</option>
+                        <option value="yes" ${t.partChoice==='yes'?'selected':''}>Yes</option>
+                    </select></div>
+                </div>
+                <div id="partDet_${i}" style="display:${t.partChoice==='yes'?'flex':'none'}; background:#fff7ed; padding:15px; border-radius:8px; margin-bottom:15px; gap:10px; flex-wrap:wrap;">
+                    <div class="form-group"><label>Qty</label><input type="number" id="t_${i}_partQty" value="${t.partQty}" oninput="updateTankField(${i}, 'partQty', this.value, true)"></div>
+                    <div class="form-group"><label>L/W (Size)</label><input type="number" id="t_${i}_partL" value="${t.partL}" step="0.01" oninput="updateTankField(${i}, 'partL', this.value, true)"></div>
+                    <div class="form-group"><label>Height</label><input type="number" id="t_${i}_partH" value="${t.partH}" step="0.01" oninput="updateTankField(${i}, 'partH', this.value, true)"></div>
+                    <div class="form-group"><label>Position</label><input type="number" id="t_${i}_partPos" value="${t.partPos}" oninput="updateTankField(${i}, 'partPos', this.value, true)"></div>
+                    <div class="form-group" style="flex:1.5;"><label>Type</label><input type="text" id="t_${i}_partType" value="${t.partType}" oninput="updateTankField(${i}, 'partType', this.value)"></div>
+                </div>
+            </div>`;
 
-    function saveInventory() { Object.keys(winkoInventory).forEach(k => { let sId = k.replace(/[^a-zA-Z0-9]/g, ''); winkoInventory[k].stock = getNum(`inv_stock_${sId}`); winkoInventory[k].alert = getNum(`inv_alert_${sId}`); }); localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory)); alert("Stock Levels updated."); renderInventoryTable(); }
-
-    function checkStockAvailability() {
-        let missing = []; let md = getVal('numTanks');
-        bomStructure.forEach((s, sIdx) => s.items.forEach((it, iIdx) => {
-            let tReq = getNum(`qty_item_${sIdx}_${iIdx}`);
-            if(md==='2' || md==='3') tReq += getNum(`qty2_item_${sIdx}_${iIdx}`);
-            if(md==='3') tReq += getNum(`qty3_item_${sIdx}_${iIdx}`);
-            if(tReq > 0) { let bn = it.name.replace(/ \(1x1m\)| \(1\.22x1\.22m\)| \(4'x4'\)/g, ''); if(winkoInventory[bn] && winkoInventory[bn].stock < tReq) missing.push(`${bn} (Need: ${tReq}, Have: ${winkoInventory[bn].stock})`); }
-        }));
-        if(missing.length > 0) alert("⚠️ WARNING: INSUFFICIENT STOCK FOR THIS QUOTE!\n\n" + missing.join("\n")); else alert("✅ ALL ITEMS IN STOCK!");
-    }
-
-    function deductInventoryFromSO() {
-        if(!confirm("Deduct these BOM items from Live Inventory?")) return; let c = 0; let md = getVal('numTanks');
-        bomStructure.forEach((s, sIdx) => s.items.forEach((it, iIdx) => {
-            let tReq = getNum(`qty_item_${sIdx}_${iIdx}`);
-            if(md==='2' || md==='3') tReq += getNum(`qty2_item_${sIdx}_${iIdx}`);
-            if(md==='3') tReq += getNum(`qty3_item_${sIdx}_${iIdx}`);
-            if(tReq > 0) { let bn = it.name.replace(/ \(1x1m\)| \(1\.22x1\.22m\)| \(4'x4'\)/g, ''); if(winkoInventory[bn]) { winkoInventory[bn].stock -= tReq; c++; } }
-        })); localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory)); alert(`Deducted ${c} items from stock.`);
-    }
-
-    function printInternal() { document.body.className = 'print-internal'; syncPrintHeader(); setHtml('visualsArea1_p', document.getElementById('visualsArea1').innerHTML); setHtml('visualsArea2_p', document.getElementById('visualsArea2').innerHTML); setHtml('visualsArea3_p', document.getElementById('visualsArea3').innerHTML); setTimeout(() => window.print(), 300); }
-    function printCustomer() { document.body.className = 'print-customer'; syncPrintHeader(); setTimeout(() => window.print(), 300); }
-    function printCustomerFromPreview() { document.body.className = 'print-customer'; setTimeout(() => window.print(), 300); }
-    function printChecklist() { document.body.className = 'print-checklist'; syncPrintHeader(); setHtml('visualsArea1_c', document.getElementById('visualsArea1').innerHTML); setHtml('visualsArea2_c', document.getElementById('visualsArea2').innerHTML); setHtml('visualsArea3_c', document.getElementById('visualsArea3').innerHTML); setTimeout(() => { window.print(); setTimeout(deductInventoryFromSO, 1000); }, 300); }
-
-    window.addEventListener('afterprint', () => { document.body.className = (document.getElementById('customerPreviewContainer').style.display === 'flex') ? '' : ''; });
-    setInterval(() => { let d = new Date(); let s = d.toLocaleDateString('en-MY').replace(/\//g, '-'); setTxt('liveClock', s + " " + d.toLocaleTimeString('en-MY')); setTxt('metaDate', s); setTxt('cpDate', s); }, 1000);
-
-    function updateLabels() { let l = getVal('unitChoice') === 'ft' ? 'Ft' : 'Meter'; document.querySelectorAll('.unitLabel').forEach(el => el.innerText = l); }
-    
-    function toggleTanks() {
-        let m = getVal('numTanks');
-        let t2 = m === '2' || m === '3';
-        let t3 = m === '3';
-        let c1 = m === 'custom1' || m === 'custom2' || m === 'custom3';
-        let c2 = m === 'custom2' || m === 'custom3';
-        let c3 = m === 'custom3';
-        
-        setDisp('tank2Section', t2); setDisp('tank2VisualsCard', t2); setDisp('tank2VisualsPrint_p', t2); setDisp('tank2VisualsPrint_c', t2); setDisp('bomCard2', t2);
-        setDisp('tank3Section', t3); setDisp('tank3VisualsCard', t3); setDisp('tank3VisualsPrint_p', t3); setDisp('tank3VisualsPrint_c', t3); setDisp('bomCard3', t3);
-        
-        setDisp('customItemSection1', c1); setDisp('customItemSection2', c2); setDisp('customItemSection3', c3);
-        
-        let p1 = getVal('partChoice'); setDisp('partitionDetailsRow', p1 === 'yes'); if(p1!=='yes') setVal('partQty', 0); 
-        let p2 = getVal('partChoice2'); setDisp('partitionDetailsRow2', p2 === 'yes'); if(p2!=='yes') setVal('partQty2', 0);
-        let p3 = getVal('partChoice3'); setDisp('partitionDetailsRow3', p3 === 'yes'); if(p3!=='yes') setVal('partQty3', 0);
-    }
-
-    function handleUnitChange() {
-        let uc = getVal('unitChoice') || 'ft'; let ou = window.currentUnit || 'ft';
-        if(ou !== uc) {
-            ['length', 'width', 'height', 'partLen', 'partHgt', 'length2', 'width2', 'height2', 'partLen2', 'partHgt2', 'length3', 'width3', 'height3', 'partLen3', 'partHgt3'].forEach(id => {
-                let e = document.getElementById(id);
-                if(e && e.value > 0) {
-                    let v = parseFloat(e.value); let p = ou === 'ft' ? v/4 : (ou === 'm_122' ? v/1.22 : v/1);
-                    if(uc === 'ft') e.value = (p*4); else if(uc === 'm_122') e.value = +(p*1.22).toFixed(2); else e.value = Math.round(p);
-                }
-            }); window.currentUnit = uc;
-        } updateLabels(); savePrices(); processTankData();
-    }
-
-    const systemBaseStructure = [
-        { category: "Panels", items: [{name: "Manhole Panel", def: 450, wt: 55}, {name: "Roof Panel", def: 220, wt: 26}, {name: "Base Panel", def: 350, wt: 68}, {name: "Wall Panel (L1)", def: 350, wt: 68}, {name: "Wall Panel (L2)", def: 280, wt: 48}, {name: "Wall Panel (L3)", def: 280, wt: 48}, {name: "Wall Panel (L4)", def: 220, wt: 26}, {name: "Partition Panel", def: 280, wt: 48}] },
-        { category: "Cleat & Trusses", items: [{name: "Type A Cleat", def: 25, wt: 1.2}, {name: "Type B Cleat", def: 28, wt: 1.8}, {name: "Type C Cleat", def: 30, wt: 2.5}, {name: "Ø1\" Pipe", def: 12, wt: 1.6}, {name: "2\" x 2\" angle", def: 15, wt: 2.2}] },
-        { category: "Angle Stay", items: [{name: "44 1/4\" (L1 Stay)", def: 45, wt: 4.5}, {name: "67\" (L2 Stay)", def: 65, wt: 7.2}, {name: "11' 3\" (L3 Stay)", def: 95, wt: 14.5}, {name: "15' 8.5\" (L4 Stay)", def: 125, wt: 19.8}] },
-        { category: "Accessories", items: [{name: "Ext. Ladder", def: 55, wt: 3.5, selectId: "extLadMat", options: ["HDG", "SS 304", "SS 316"]}, {name: "Int. Ladder", def: 75, wt: 3.5, selectId: "intLadMat", options: ["HDG", "SS 304", "SS 316"]}, {name: "Water Level Indicator", def: 220, wt: 2.5, selectId: "wliType", options: ["Ball Float", "Tube Type"]}, {name: "Air Vent", def: 85, wt: 1.5, selectId: "ventType", options: ["HDG Steel", "ABS Plastic"]}, {name: "Mastic Sealant (Rolls)", def: 38, wt: 0.8}, {name: "Bolt & Nut Sets", def: 1.60, wt: 0.15}] },
-        { category: "Services", items: [{name: "Installation & Labor", def: 3500, wt: 0}, {name: "Transport", def: 850, wt: 0}] }
-    ];
-
-    try { let md = JSON.parse(localStorage.getItem('winkoMasterDefaults')); if(md) md.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { if(systemBaseStructure[sIdx] && systemBaseStructure[sIdx].items[iIdx]) { systemBaseStructure[sIdx].items[iIdx].name = it.name; systemBaseStructure[sIdx].items[iIdx].def = it.def; systemBaseStructure[sIdx].items[iIdx].wt = it.wt; } }); }); } catch(e) {}
-
-    let bomStructure = JSON.parse(JSON.stringify(systemBaseStructure)); let customRowCounts = [0,0,0,0,0]; try { let sc = JSON.parse(localStorage.getItem('winkoCustomCounts')); if(Array.isArray(sc)) customRowCounts = sc; } catch(e) {}
-
-    const configIDs = [
-        'quoteIdInput', 'custPoNo', 'custDelDate', 'marketChoice', 'numTanks', 
-        'customItemName1', 'customItemCost1', 'customItemName2', 'customItemCost2', 'customItemName3', 'customItemCost3', 
-        'stdChoice','stdChoice2', 'stdChoice3','unitChoice','coatChoice','coatChoice2','coatChoice3', 
-        'length','width','height', 'partChoice', 'partQty','partLen','partHgt','partPos','partType', 
-        'length2','width2','height2', 'partChoice2', 'partQty2','partLen2','partHgt2','partPos2','partType2', 
-        'length3','width3','height3', 'partChoice3', 'partQty3','partLen3','partHgt3','partPos3','partType3', 
-        'thickRoof', 'thickWallL1', 'thickWallL2', 'thickWallL3', 'thickWallL4', 'thickBase', 
-        'thickRoof2', 'thickWallL1_2', 'thickWallL2_2', 'thickWallL3_2', 'thickWallL4_2', 'thickBase2', 
-        'thickRoof3', 'thickWallL1_3', 'thickWallL2_3', 'thickWallL3_3', 'thickWallL4_3', 'thickBase3', 
-        'sizeOverride1', 'sizeOverride2', 'sizeOverride3', 'markupPct','discountPct','sstPct', 
-        'shortExclusions', 'fullTermsNotes', 'custCompany', 'custAttn', 'custAddr', 'tcValidity', 'tcLead', 'tcDelivery', 'tcPayment', 'signName', 'signPhone'
-    ];
-
-    function buildAdminTable() { let h = ''; systemBaseStructure.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { h += `<tr><td style="font-weight:800; background:#f1f5f9; text-align:left;">${sec.category}</td><td><input type="text" class="admin-input text-left" id="adm_name_${sIdx}_${iIdx}" value="${it.name}"></td><td><input type="number" step="0.1" class="admin-input" id="adm_wt_${sIdx}_${iIdx}" value="${it.wt || 0}"></td><td><input type="number" step="0.01" class="admin-input" id="adm_price_${sIdx}_${iIdx}" value="${it.def.toFixed(2)}"></td></tr>`; }); }); setHtml('adminBody', h); }
-    function saveAdminDefaults() { let nd = JSON.parse(JSON.stringify(systemBaseStructure)); nd.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { it.name = getVal(`adm_name_${sIdx}_${iIdx}`); it.wt = getNum(`adm_wt_${sIdx}_${iIdx}`); it.def = getNum(`adm_price_${sIdx}_${iIdx}`); }); }); localStorage.setItem('winkoMasterDefaults', JSON.stringify(nd)); alert("Success! Master Defaults updated."); location.reload(); }
-    function applyCustomRows() { bomStructure = JSON.parse(JSON.stringify(systemBaseStructure)); for(let i=0; i < Math.min(customRowCounts.length, bomStructure.length); i++) { for(let j=0; j < customRowCounts[i]; j++) { bomStructure[i].items.push({name: "Custom Added Item", def: 0, wt: 0}); } } }
-    function addCategoryRow(sIdx) { savePrices(); customRowCounts[sIdx]++; localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts)); applyCustomRows(); buildBOMTable(); loadPrices(); }
-    function removeCategoryRow(sIdx) { if(customRowCounts[sIdx] > 0) { savePrices(); customRowCounts[sIdx]--; localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts)); applyCustomRows(); buildBOMTable(); loadPrices(); } }
-
-    function refreshMemoryDropdown() { let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; let s = document.getElementById('memoryDropdown'); if(s) { s.innerHTML = '<option value="">-- Load a Saved Project --</option>'; Object.keys(m).forEach(k => { s.innerHTML += `<option value="${k}">${k}</option>`; }); } }
-    function saveToMemory() {
-        let p = getVal('projectName').trim(); if(!p) { alert("Please type a Project Name first to save it."); return; }
-        let d = { customRowCounts: JSON.parse(JSON.stringify(customRowCounts)) }; configIDs.forEach(id => { d[id] = getVal(id); });
-        bomStructure.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { let uId = `item_${sIdx}_${iIdx}`; d[`desc_${uId}`]=getVal(`desc_${uId}`); d[`wt_${uId}`]=getVal(`wt_${uId}`); d[`price_${uId}`]=getVal(`price_${uId}`); d[`qty_${uId}`]=getVal(`qty_${uId}`); if(it.selectId) d[it.selectId]=getVal(it.selectId); d[`desc2_${uId}`]=getVal(`desc2_${uId}`); d[`wt2_${uId}`]=getVal(`wt2_${uId}`); d[`price2_${uId}`]=getVal(`price2_${uId}`); d[`qty2_${uId}`]=getVal(`qty2_${uId}`); if(it.selectId) d[`sel2_${it.selectId}`]=getVal(`sel2_${it.selectId}`); d[`desc3_${uId}`]=getVal(`desc3_${uId}`); d[`wt3_${uId}`]=getVal(`wt3_${uId}`); d[`price3_${uId}`]=getVal(`price3_${uId}`); d[`qty3_${uId}`]=getVal(`qty3_${uId}`); if(it.selectId) d[`sel3_${it.selectId}`]=getVal(`sel3_${it.selectId}`); }); });
-        let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; m[p] = d; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); alert("Project '" + p + "' has been saved."); refreshMemoryDropdown(); setVal('memoryDropdown', p); syncPrintHeader();
-    }
-
-    function loadFromMemory() {
-        let p = getVal('memoryDropdown'); if(!p) return; let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; let d = m[p];
-        if (d) {
-            customRowCounts = d.customRowCounts || [0,0,0,0,0]; localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts)); applyCustomRows(); buildBOMTable();
-            setVal('projectName', p); configIDs.forEach(id => { if (d[id] !== undefined) setVal(id, d[id]); }); if(getVal('unitChoice')) window.currentUnit = getVal('unitChoice'); updateLabels(); toggleTanks();
-            bomStructure.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { let uId = `item_${sIdx}_${iIdx}`; setVal(`desc_${uId}`, d[`desc_${uId}`]); setVal(`wt_${uId}`, d[`wt_${uId}`]); setVal(`price_${uId}`, d[`price_${uId}`]); setVal(`qty_${uId}`, d[`qty_${uId}`]); if(it.selectId) setVal(it.selectId, d[it.selectId]); setVal(`desc2_${uId}`, d[`desc2_${uId}`]); setVal(`wt2_${uId}`, d[`wt2_${uId}`]); setVal(`price2_${uId}`, d[`price2_${uId}`]); setVal(`qty2_${uId}`, d[`qty2_${uId}`]); if(it.selectId) setVal(`sel2_${it.selectId}`, d[`sel2_${it.selectId}`]); setVal(`desc3_${uId}`, d[`desc3_${uId}`]); setVal(`wt3_${uId}`, d[`wt3_${uId}`]); setVal(`price3_${uId}`, d[`price3_${uId}`]); setVal(`qty3_${uId}`, d[`qty3_${uId}`]); if(it.selectId) setVal(`sel3_${it.selectId}`, d[`sel3_${it.selectId}`]); }); }); processTankData(); 
-        }
-    }
-
-    function deleteFromMemory() { let p = getVal('memoryDropdown'); if(!p) { alert("Select a project to delete."); return; } if(confirm("Permanently delete '" + p + "'?")) { let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; delete m[p]; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); refreshMemoryDropdown(); setVal('projectName', ""); } }
-    function resetDefaultPrices() { if(confirm("Reset the current board back to the Master Template?")) { customRowCounts = [0,0,0,0,0]; localStorage.setItem('winkoCustomCounts', JSON.stringify(customRowCounts)); localStorage.removeItem('winkoProDataV85'); location.reload(); } }
-
-    function syncPrintHeader() {
-        try {
-            setTxt('metaQuoteId', getVal('quoteIdInput') || "N/A"); setTxt('metaProject', getVal('projectName') || "_____________________"); setTxt('metaStd', getVal('stdChoice')); 
-            let u = getVal('unitChoice') === 'ft' ? 'ft' : 'm'; 
-            let md = getVal('numTanks'); 
-            
-            let dStr1 = getVal('sizeOverride1') || `${getNum('length')}${u} (L) x ${getNum('width')}${u} (W) x ${getNum('height')}${u} (H)`;
-            let dStr = `Tank 1: ${dStr1}`;
-            let dStr2 = ""; let dStr3 = "";
-            let p1Str = getVal('partChoice') === 'yes' && getNum('partQty') > 0 ? `${getNum('partQty')}x ${getVal('partType')} (${getNum('partLen')}${u} x ${getNum('partHgt')}${u})` : '';
-            let p2Str = ''; let p3Str = '';
-
-            if(md === "2" || md === "3") {
-                dStr2 = getVal('sizeOverride2') || `${getNum('length2')}${u} (L) x ${getNum('width2')}${u} (W) x ${getNum('height2')}${u} (H)`;
-                dStr += ` | Tank 2: ${dStr2}`;
-                p2Str = getVal('partChoice2') === 'yes' && getNum('partQty2') > 0 ? `${getNum('partQty2')}x ${getVal('partType2')} (${getNum('partLen2')}${u} x ${getNum('partHgt2')}${u})` : '';
-            }
-            if(md === "3") {
-                dStr3 = getVal('sizeOverride3') || `${getNum('length3')}${u} (L) x ${getNum('width3')}${u} (W) x ${getNum('height3')}${u} (H)`;
-                dStr += ` | Tank 3: ${dStr3}`;
-                p3Str = getVal('partChoice3') === 'yes' && getNum('partQty3') > 0 ? `${getNum('partQty3')}x ${getVal('partType3')} (${getNum('partLen3')}${u} x ${getNum('partHgt3')}${u})` : '';
-            }
-            if (md.startsWith("custom")) { dStr += ` | + Custom Items`; }
-            
-            setTxt('metaDims', dStr); 
-            let coatStr = getVal('coatChoice'); 
-            if(md === '2' || md === '3') coatStr += ` | ${getVal('coatChoice2')}`;
-            if(md === '3') coatStr += ` | ${getVal('coatChoice3')}`;
-            setTxt('metaCoat', coatStr);
-            
-            let pDisp = p1Str || 'None';
-            if (md === '2' || md === '3') pDisp = `T1: ${p1Str||'None'} | T2: ${p2Str||'None'}`;
-            if (md === '3') pDisp += ` | T3: ${p3Str||'None'}`;
-            setTxt('metaPart', pDisp); 
-            
-            setTxt('cpCustName', getVal('custCompany') || getVal('projectName') || "Client Name"); document.getElementById('cpCustAddress').innerHTML = (getVal('custAddr') || '').replace(/\n/g, '<br>'); setTxt('cpAttention', getVal('custAttn')); setTxt('cpProject', getVal('projectName')); setTxt('cpRef', getVal('quoteIdInput')); 
-            
-            setTxt('cpMaterial', getVal('coatChoice')); 
-            setTxt('cpDims', `${dStr1} (Total: ${window.currentTotalP1 || 0} Panels)`); 
-            setTxt('cpStd', getVal('stdChoice')); 
-            setTxt('cpThickRoof', getVal('thickRoof')); setTxt('cpThickBase', getVal('thickBase')); 
-            setTxt('cpThickWall', `L1: ${getVal('thickWallL1')} | L2: ${getVal('thickWallL2')} | L3: ${getVal('thickWallL3')} | L4: ${getVal('thickWallL4')}`);
-            setTDisp('cpPartRow', p1Str !== ''); setTxt('cpPartSection', p1Str);
-            setTxt('cpLaddersInt', `${getVal('intLadMat')} Internal Ladder - ${getVal('qty_item_3_1')} sets`); setTxt('cpLaddersExt', `${getVal('extLadMat')} External Ladder with safety cage - ${getVal('qty_item_3_0')} sets`); setTxt('cpWLI', `${getVal('wliType')} - ${getVal('qty_item_3_2')} sets`);
-            
-            setTDisp('cpTank2Row', md === '2' || md === '3');
-            if(md === "2" || md === "3") {
-                setTxt('cpMaterial2', getVal('coatChoice2')); 
-                setTxt('cpDims2', `${dStr2} (Total: ${window.currentTotalP2 || 0} Panels)`); 
-                setTxt('cpStd2', getVal('stdChoice2')); 
-                setTxt('cpThickRoof2', getVal('thickRoof2')); setTxt('cpThickBase2', getVal('thickBase2')); 
-                setTxt('cpThickWall2', `L1: ${getVal('thickWallL1_2')} | L2: ${getVal('thickWallL2_2')} | L3: ${getVal('thickWallL3_2')} | L4: ${getVal('thickWallL4_2')}`);
-                setTDisp('cpPartRow2', p2Str !== ''); setTxt('cpPartSection2', p2Str);
-                setTxt('cpLaddersInt2', `${getVal('sel2_intLadMat')} Internal Ladder - ${getVal('qty2_item_3_1')} sets`); setTxt('cpLaddersExt2', `${getVal('sel2_extLadMat')} External Ladder with safety cage - ${getVal('qty2_item_3_0')} sets`); setTxt('cpWLI2', `${getVal('sel2_wliType')} - ${getVal('qty2_item_3_2')} sets`);
-            }
-
-            setTDisp('cpTank3Row', md === '3');
-            if(md === "3") {
-                setTxt('cpMaterial3', getVal('coatChoice3')); 
-                setTxt('cpDims3', `${dStr3} (Total: ${window.currentTotalP3 || 0} Panels)`); 
-                setTxt('cpStd3', getVal('stdChoice3')); 
-                setTxt('cpThickRoof3', getVal('thickRoof3')); setTxt('cpThickBase3', getVal('thickBase3')); 
-                setTxt('cpThickWall3', `L1: ${getVal('thickWallL1_3')} | L2: ${getVal('thickWallL2_3')} | L3: ${getVal('thickWallL3_3')} | L4: ${getVal('thickWallL4_3')}`);
-                setTDisp('cpPartRow3', p3Str !== ''); setTxt('cpPartSection3', p3Str);
-                setTxt('cpLaddersInt3', `${getVal('sel3_intLadMat')} Internal Ladder - ${getVal('qty3_item_3_1')} sets`); setTxt('cpLaddersExt3', `${getVal('sel3_extLadMat')} External Ladder with safety cage - ${getVal('qty3_item_3_0')} sets`); setTxt('cpWLI3', `${getVal('sel3_wliType')} - ${getVal('qty3_item_3_2')} sets`);
-            }
-
-            setTDisp('cpCustomRow1', md.startsWith('custom'));
-            if(md.startsWith('custom')) {
-                setTxt('cpCustomDesc1', getVal('customItemName1') || "Custom Item 1");
-                setTxt('cpCustomPrice1_tot', document.getElementById('cpCustomPrice1').innerText);
-            }
-            setTDisp('cpCustomRow2', md === 'custom2' || md === 'custom3');
-            if(md === 'custom2' || md === 'custom3') {
-                setTxt('cpIdxC2', md === 'custom2' || md === 'custom3' ? '3' : '');
-                setTxt('cpCustomDesc2', getVal('customItemName2') || "Custom Item 2");
-                setTxt('cpCustomPrice2_tot', document.getElementById('cpCustomPrice2').innerText);
-            }
-            setTDisp('cpCustomRow3', md === 'custom3');
-            if(md === 'custom3') {
-                setTxt('cpIdxC3', '4');
-                setTxt('cpCustomDesc3', getVal('customItemName3') || "Custom Item 3");
-                setTxt('cpCustomPrice3_tot', document.getElementById('cpCustomPrice3').innerText);
-            }
-
-            document.getElementById('cpShortExclusionsText').innerHTML = (getVal('shortExclusions') || '').replace(/\n/g, '<br>'); document.getElementById('cpFullTermsText').innerHTML = getVal('fullTermsNotes') || '';
-            let lineSpan = (v) => `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${v}</span>`;
-            document.getElementById('cpValidity').innerHTML = lineSpan(getVal('tcValidity')); document.getElementById('cpPayment').innerHTML = (getVal('tcPayment')||'').split('\n').filter(l=>l.trim()!=='').map(l=>lineSpan(l)).join(''); document.getElementById('cpDeliveryTerm').innerHTML = lineSpan(getVal('tcDelivery')); document.getElementById('cpLeadTime').innerHTML = lineSpan(getVal('tcLead')); setTxt('cpSignName', getVal('signName')); setTxt('intSigSales', getVal('signName')); setTxt('cpSignPhone', getVal('signPhone'));
-            
-            // Checklist Sync
-            setTxt('chk_customer', getVal('custCompany')); setTxt('chk_project', getVal('projectName')); setTxt('chk_projno', getVal('quoteIdInput')); setTxt('chk_custpo', getVal('custPoNo')); setTxt('chk_deldate', getVal('custDelDate')); setTxt('chk_issued', new Date().toLocaleDateString('en-MY'));
-            
-            let csZ = (md === '3') ? `T1: ${dStr1} / T2: ${dStr2} / T3: ${dStr3}` : ((md === '2') ? `T1: ${dStr1} / T2: ${dStr2}` : dStr1);
-            setTxt('chk_tanksize', csZ); setTxt('chk_tankqty', (md==='3')?'3':(md==='2'?'2':'1')); setTxt('chk_totalpanel', document.getElementById('sumPanels_screen').innerText);
-            
-            setBox('box_local', getVal('marketChoice') === 'local'); setBox('box_export', getVal('marketChoice') === 'export'); setBox('box_sans', getVal('stdChoice').includes('SANS')); setBox('box_ss22', getVal('stdChoice').includes('SS 22')); setBox('box_part_no', getVal('partChoice') === 'no'); setBox('box_part_yes', getVal('partChoice') === 'yes'); setBox('box_coat_hdg', getVal('coatChoice').includes('Galvanised')); setBox('box_coat_paint', getVal('coatChoice').includes('Painted')); setBox('box_coat_ms', getVal('coatChoice').includes('MS'));
-            
-            let chkT1 = (id) => getVal(id).replace('mm','');
-            let thkS = (id1, id2, id3) => { if(md==='3') return `${chkT1(id1)} / ${chkT1(id2)} / ${chkT1(id3)}`; if(md==='2') return `${chkT1(id1)} / ${chkT1(id2)}`; return chkT1(id1); };
-            
-            setTxt('chk_t_roof', thkS('thickRoof', 'thickRoof2', 'thickRoof3'));
-            setTxt('chk_t_base', thkS('thickBase', 'thickBase2', 'thickBase3'));
-            setTxt('chk_t_w1', thkS('thickWallL1', 'thickWallL1_2', 'thickWallL1_3'));
-            setTxt('chk_t_w2', thkS('thickWallL2', 'thickWallL2_2', 'thickWallL2_3'));
-            setTxt('chk_t_w3', thkS('thickWallL3', 'thickWallL3_2', 'thickWallL3_3'));
-            setTxt('chk_t_w4', thkS('thickWallL4', 'thickWallL4_2', 'thickWallL4_3'));
-
-            setTxt('chk_qty_manhole', getVal('qty_item_0_0')); setTxt('chk_qty_ext_lad', getVal('qty_item_3_0')); setTxt('chk_qty_int_lad', getVal('qty_item_3_1')); setTxt('chk_qty_wli', getVal('qty_item_3_2')); setTxt('chk_qty_vent', getVal('qty_item_3_3'));
-            
-            let im = getVal('intLadMat'); setBox('box_int_hdg', im === 'HDG'); setBox('box_int_304', im === 'SS 304'); setBox('box_int_316', im === 'SS 316');
-            let em = getVal('extLadMat'); setBox('box_ext_hdg', em === 'HDG'); setBox('box_ext_304', em === 'SS 304'); setBox('box_ext_316', em === 'SS 316');
-            let wm = getVal('wliType'); setBox('box_wli_ball', wm.includes('Ball')); setBox('box_wli_tube', wm.includes('Tube'));
-            let vm = getVal('ventType'); setBox('box_vent_hdg', vm.includes('Steel')); setBox('box_vent_abs', vm.includes('ABS'));
-        } catch(e) {}
-    }
-
-    function savePrices() {
-        let data = {}; configIDs.forEach(id => data[id] = getVal(id));
-        bomStructure.forEach((sec, sIdx) => {
-            sec.items.forEach((it, iIdx) => {
-                let u = `item_${sIdx}_${iIdx}`; data[`desc_${u}`] = getVal(`desc_${u}`); data[`wt_${u}`] = getVal(`wt_${u}`); data[`price_${u}`] = getVal(`price_${u}`); data[`qty_${u}`] = getVal(`qty_${u}`); if(it.selectId) data[it.selectId] = getVal(it.selectId);
-                data[`desc2_${u}`] = getVal(`desc2_${u}`); data[`wt2_${u}`] = getVal(`wt2_${u}`); data[`price2_${u}`] = getVal(`price2_${u}`); data[`qty2_${u}`] = getVal(`qty2_${u}`); if(it.selectId) data[`sel2_${it.selectId}`] = getVal(`sel2_${it.selectId}`);
-                data[`desc3_${u}`] = getVal(`desc3_${u}`); data[`wt3_${u}`] = getVal(`wt3_${u}`); data[`price3_${u}`] = getVal(`price3_${u}`); data[`qty3_${u}`] = getVal(`qty3_${u}`); if(it.selectId) data[`sel3_${it.selectId}`] = getVal(`sel3_${it.selectId}`);
-            });
-        });
-        localStorage.setItem('winkoProDataV85', JSON.stringify(data));
-    }
-
-    function loadPrices() {
-        let savedData = localStorage.getItem('winkoProDataV85');
-        if (savedData) {
-            let sd = JSON.parse(savedData); configIDs.forEach(id => { if(sd[id] !== undefined) setVal(id, sd[id]); });
-            if (getVal('unitChoice')) window.currentUnit = getVal('unitChoice'); updateLabels(); toggleTanks();
-            bomStructure.forEach((sec, sIdx) => {
+            // BOM HTML
+            let bRows = "";
+            t.bom.forEach((sec, sIdx) => {
+                let isSvc = (sec.category === "Services");
+                bRows += `<tr class="section-header-row"><td colspan="5" class="section-header" style="padding:0;"><div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; font-weight:800; background:#f1f5f9;"><span>${sec.category}</span><div class="no-print"><button type="button" onclick="addBomRow(${i}, ${sIdx})" style="padding:4px 8px; font-size:11px; background:#fff; border:1px solid #ea580c; color:#ea580c; border-radius:4px; cursor:pointer; font-weight:700;">+ Row</button> <button type="button" onclick="removeBomRow(${i}, ${sIdx})" style="padding:4px 8px; font-size:11px; background:#fff; border:1px solid #e11d48; color:#e11d48; border-radius:4px; cursor:pointer; font-weight:700;">- Row</button></div></div></td></tr>`;
                 sec.items.forEach((it, iIdx) => {
-                    let u = `item_${sIdx}_${iIdx}`; setVal(`desc_${u}`, sd[`desc_${u}`]); setVal(`wt_${u}`, sd[`wt_${u}`]); setVal(`price_${u}`, sd[`price_${u}`]); setVal(`qty_${u}`, sd[`qty_${u}`]); if(it.selectId) setVal(it.selectId, sd[it.selectId]);
-                    setVal(`desc2_${u}`, sd[`desc2_${u}`]); setVal(`wt2_${u}`, sd[`wt2_${u}`]); setVal(`price2_${u}`, sd[`price2_${u}`]); setVal(`qty2_${u}`, sd[`qty2_${u}`]); if(it.selectId) setVal(`sel2_${it.selectId}`, sd[`sel2_${it.selectId}`]);
-                    setVal(`desc3_${u}`, sd[`desc3_${u}`]); setVal(`wt3_${u}`, sd[`wt3_${u}`]); setVal(`price3_${u}`, sd[`price3_${u}`]); setVal(`qty3_${u}`, sd[`qty3_${u}`]); if(it.selectId) setVal(`sel3_${it.selectId}`, sd[`sel3_${it.selectId}`]);
+                    let selHtml = it.selectId ? `<select id="t_${i}_sel_${sIdx}_${iIdx}" class="bom-inline-select" onchange="updateBomField(${i}, ${sIdx}, ${iIdx}, 'selVal', this.value)">${it.options.map(o=>`<option value="${o}" ${it.selVal===o?'selected':''}>${o}</option>`).join('')}</select>` : '';
+                    let qtyHtml = isSvc ? 
+                        `<input type="hidden" id="t_${i}_q_${sIdx}_${iIdx}" value="1"><span style="font-size:10px; font-weight:800; color:#94a3b8; background:#f1f5f9; padding:2px 4px; border-radius:4px; border:1px solid #cbd5e1;">LUMP SUM</span>` : 
+                        `<input type="number" id="t_${i}_q_${sIdx}_${iIdx}" value="${it.qty||0}" oninput="updateBomField(${i}, ${sIdx}, ${iIdx}, 'qty', this.value, true)">`;
+
+                    bRows += `<tr>
+                        <td class="col-item"><div style="display:flex; align-items:center; gap:4px;"><input type="text" class="desc-input" id="t_${i}_n_${sIdx}_${iIdx}" value="${it.name}" oninput="updateBomField(${i}, ${sIdx}, ${iIdx}, 'name', this.value)">${selHtml}</div></td>
+                        <td class="col-input col-qty">${qtyHtml}</td>
+                        <td class="col-input"><input type="number" step="0.1" id="t_${i}_w_${sIdx}_${iIdx}" value="${it.wt||0}" oninput="updateBomField(${i}, ${sIdx}, ${iIdx}, 'wt', this.value, true)"></td>
+                        <td class="col-input"><input type="number" step="0.01" id="t_${i}_p_${sIdx}_${iIdx}" value="${(it.def||0).toFixed(2)}" oninput="updateBomField(${i}, ${sIdx}, ${iIdx}, 'def', this.value, true)"></td>
+                        <td class="col-total" id="tot_${i}_${sIdx}_${iIdx}">0.00</td>
+                    </tr>`;
                 });
             });
-        }
-    }
+            bomHtml += `<div class="module-card"><div class="card-header"><div><span>⚙️</span> BOM - TANK ${i+1}</div></div><table><thead><tr><th>Description</th><th class="text-center">Qty</th><th class="text-center">Wt(kg)</th><th class="text-right">Price</th><th class="text-right">Total</th></tr></thead><tbody>${bRows}</tbody></table></div>`;
 
-    function buildBOMTable() {
-        let h1 = '', h2 = '', h3 = '';
-        bomStructure.forEach((sec, sIdx) => {
-            let isSvc = (sec.category === "Services");
-            h1 += `<tr class="section-header-row"><td colspan="5" class="section-header" style="padding:0;"><div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px;"><span>${sec.category}</span><div class="no-print"><button type="button" onclick="addCategoryRow(${sIdx})" style="padding:4px 8px; font-size:11px; background:#fff; border:1px solid #ea580c; color:#ea580c; border-radius:4px; cursor:pointer; font-weight:700;">+ Row</button> <button type="button" onclick="removeCategoryRow(${sIdx})" style="padding:4px 8px; font-size:11px; background:#fff; border:1px solid #e11d48; color:#e11d48; border-radius:4px; cursor:pointer; font-weight:700;">- Row</button></div></div></td></tr>`;
-            h2 += `<tr class="section-header-row"><td colspan="5" class="section-header" style="padding:8px 12px;"><span>${sec.category}</span></td></tr>`;
-            h3 += `<tr class="section-header-row"><td colspan="5" class="section-header" style="padding:8px 12px;"><span>${sec.category}</span></td></tr>`;
+            // VISUALS
+            screenVisHtml += `<div class="module-card no-print"><div class="card-header">Tank ${i+1} Visuals</div><div class="visual-container"><div class="view-box"><div class="view-title">Top</div><div id="grid_top_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Bottom</div><div id="grid_bot_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Front</div><div id="grid_fr_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Back</div><div id="grid_bk_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Left</div><div id="grid_lt_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Right</div><div id="grid_rt_s_${i}" class="grid-draft"></div></div></div><div class="card-header" style="margin-top:15px;">Internal Bracing</div><div class="visual-container" id="grid_int_s_${i}"></div></div>`;
+            printVisHtml += `<div class="tank-section-title" style="margin-top:25px;">Tank ${i+1} Exterior Panels</div><div class="visual-container"><div class="view-box"><div class="view-title">Top</div><div id="grid_top_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Bottom</div><div id="grid_bot_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Front</div><div id="grid_fr_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Back</div><div id="grid_bk_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Left</div><div id="grid_lt_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Right</div><div id="grid_rt_p_${i}" class="grid-draft"></div></div></div><div class="tank-section-title">Tank ${i+1} Internal Bracing</div><div class="visual-container" id="grid_int_p_${i}"></div>`;
             
-            sec.items.forEach((it, iIdx) => {
-                const id = `item_${sIdx}_${iIdx}`; let sw = (it.wt!==undefined && !isNaN(it.wt)) ? it.wt : 0;
-                let sel1 = it.selectId ? ` <select id="${it.selectId}" class="bom-inline-select" onchange="savePrices()">` + it.options.map(o => `<option value="${o}">${o}</option>`).join('') + `</select>` : '';
-                let sel2 = it.selectId ? ` <select id="sel2_${it.selectId}" class="bom-inline-select" onchange="savePrices()">` + it.options.map(o => `<option value="${o}">${o}</option>`).join('') + `</select>` : '';
-                let sel3 = it.selectId ? ` <select id="sel3_${it.selectId}" class="bom-inline-select" onchange="savePrices()">` + it.options.map(o => `<option value="${o}">${o}</option>`).join('') + `</select>` : '';
-
-                let mkQ = (sf) => isSvc ? `<input type="hidden" value="1" id="${sf}qty_${id}"><span style="font-size:10px; font-weight:800; color:#94a3b8; background:#f1f5f9; padding:2px 4px; border-radius:4px; border:1px solid #cbd5e1;">LUMP SUM</span>` : `<input type="number" value="0" id="${sf}qty_${id}" oninput="safeProcess()">`;
-
-                h1 += `<tr><td class="col-item"><div style="display:flex; align-items:center; gap:4px;"><input type="text" id="desc_${id}" class="desc-input" value="${it.name}" onchange="savePrices()">${sel1}</div></td><td class="col-input col-qty">${mkQ('')}</td><td class="col-input col-wt"><input type="number" step="0.1" value="${sw}" id="wt_${id}" oninput="calcTotals(); savePrices();"></td><td class="col-input col-uprice"><input type="number" step="0.01" value="${it.def.toFixed(2)}" id="price_${id}" oninput="calcTotals(); savePrices();"></td><td class="col-total" id="total_${id}">0.00</td></tr>`;
-                h2 += `<tr><td class="col-item"><div style="display:flex; align-items:center; gap:4px;"><input type="text" id="desc2_${id}" class="desc-input" value="${it.name}" onchange="savePrices()">${sel2}</div></td><td class="col-input col-qty">${mkQ('qty2_')}</td><td class="col-input col-wt"><input type="number" step="0.1" value="${sw}" id="wt2_${id}" oninput="calcTotals(); savePrices();"></td><td class="col-input col-uprice"><input type="number" step="0.01" value="${it.def.toFixed(2)}" id="price2_${id}" oninput="calcTotals(); savePrices();"></td><td class="col-total" id="total2_${id}">0.00</td></tr>`;
-                h3 += `<tr><td class="col-item"><div style="display:flex; align-items:center; gap:4px;"><input type="text" id="desc3_${id}" class="desc-input" value="${it.name}" onchange="savePrices()">${sel3}</div></td><td class="col-input col-qty">${mkQ('qty3_')}</td><td class="col-input col-wt"><input type="number" step="0.1" value="${sw}" id="wt3_${id}" oninput="calcTotals(); savePrices();"></td><td class="col-input col-uprice"><input type="number" step="0.01" value="${it.def.toFixed(2)}" id="price3_${id}" oninput="calcTotals(); savePrices();"></td><td class="col-total" id="total3_${id}">0.00</td></tr>`;
-            });
+            chkTankHtml += `<div style="border-top:1.5px solid #000; padding:5px 0; margin-bottom:5px;">
+                <div style="font-weight:bold; background:#e2e8f0; padding:2px 5px; margin-bottom:4px;">TANK ${i+1} : <span id="chk_sz_${i}"></span> | Pcs: <span id="chk_pcs_${i}"></span></div>
+                <div style="display:flex; gap:15px; font-size:8pt; flex-wrap:wrap;">
+                    <div><strong>Std:</strong> ${t.std.includes('SANS')?'SANS':'SS22'}</div><div><strong>Part:</strong> ${t.partChoice==='yes'?'YES':'NO'}</div><div><strong>Coat:</strong> ${t.coat}</div>
+                    <div><strong>T.Roof:</strong> ${t.tRoof.replace('mm','')}</div><div><strong>T.Base:</strong> ${t.tBase.replace('mm','')}</div><div><strong>T.W1:</strong> ${t.tW1.replace('mm','')}</div><div><strong>T.W2:</strong> ${t.tW2.replace('mm','')}</div><div><strong>T.W3:</strong> ${t.tW3.replace('mm','')}</div><div><strong>T.W4:</strong> ${t.tW4.replace('mm','')}</div>
+                </div>
+            </div>`;
+            chkVisHtml += `<div style="font-size:10pt; font-weight:bold; margin-top:15px; border-top:1px solid #000; padding-top:5px;">Tank ${i+1} Drawings</div><div style="display:flex; flex-wrap:wrap; gap:8px; width:100%;"><div style="padding:4px; border:1px solid #000; width:110px; text-align:center;"><div style="font-size:7pt; font-weight:bold;">TOP</div><div id="grid_top_c_${i}" class="grid-draft"></div></div><div style="padding:4px; border:1px solid #000; width:110px; text-align:center;"><div style="font-size:7pt; font-weight:bold;">BOT</div><div id="grid_bot_c_${i}" class="grid-draft"></div></div><div style="padding:4px; border:1px solid #000; width:110px; text-align:center;"><div style="font-size:7pt; font-weight:bold;">FR</div><div id="grid_fr_c_${i}" class="grid-draft"></div></div><div style="padding:4px; border:1px solid #000; width:110px; text-align:center;"><div style="font-size:7pt; font-weight:bold;">BK</div><div id="grid_bk_c_${i}" class="grid-draft"></div></div><div style="padding:4px; border:1px solid #000; width:110px; text-align:center;"><div style="font-size:7pt; font-weight:bold;">LT</div><div id="grid_lt_c_${i}" class="grid-draft"></div></div><div style="padding:4px; border:1px solid #000; width:110px; text-align:center;"><div style="font-size:7pt; font-weight:bold;">RT</div><div id="grid_rt_c_${i}" class="grid-draft"></div></div></div><div style="font-size:9pt; font-weight:bold; margin-top:5px;">Tank ${i+1} Internal Bracing</div><div style="display:flex; flex-wrap:wrap; gap:8px;" id="grid_int_c_${i}"></div>`;
         });
-        setHtml('bomBody', h1); setHtml('bomBody2', h2); setHtml('bomBody3', h3);
-    }
 
-    function calcTotals() {
-        let baseCost = 0; let totalWeight = 0; let mode = getVal('numTanks') || "1";
+        let customHtml = "";
+        appCustomItems.forEach((c, i) => {
+            customHtml += `<div class="tank-block" style="background:#f5f3ff; padding:15px; border-radius:6px; border:1px solid #ddd6fe; margin-top:10px;">
+                <div style="display:flex; justify-content:space-between; font-weight:bold; color:#4c1d95; margin-bottom:10px;">Custom Item ${i+1} <button class="del-btn" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; font-size:11px; font-weight:bold; cursor:pointer;" onclick="removeCustomItem(${i})">X REMOVE</button></div>
+                <div style="display:flex; gap:10px;"><div class="form-group" style="flex:2;"><label>Description</label><input type="text" value="${c.desc}" oninput="updateCustomField(${i}, 'desc', this.value)"></div><div class="form-group" style="flex:1;"><label>Qty</label><input type="number" value="${c.qty}" oninput="updateCustomField(${i}, 'qty', this.value, true)"></div><div class="form-group" style="flex:1;"><label>Lump Sum Price (Unit)</label><input type="number" value="${c.cost}" oninput="updateCustomField(${i}, 'cost', this.value, true)"></div></div>
+            </div>`;
+        });
 
-        try {
-            bomStructure.forEach((sec, sIdx) => { 
-                let isSvc = (sIdx === 4);
-                sec.items.forEach((it, iIdx) => {
-                    const id = `item_${sIdx}_${iIdx}`;
-                    const q1 = isSvc ? 1 : getNum(`qty_${id}`); const p1 = getNum(`price_${id}`); const w1 = getNum(`wt_${id}`);
-                    const t1 = q1 * p1; setTxt(`total_${id}`, t1.toLocaleString('en-MY', {minimumFractionDigits:2}));
-                    baseCost += t1; totalWeight += isSvc ? 0 : (q1 * w1);
-
-                    if (mode === "2" || mode === "3") {
-                        const q2 = isSvc ? 1 : getNum(`qty2_${id}`); const p2 = getNum(`price2_${id}`); const w2 = getNum(`wt2_${id}`);
-                        const t2 = q2 * p2; setTxt(`total2_${id}`, t2.toLocaleString('en-MY', {minimumFractionDigits:2}));
-                        baseCost += t2; totalWeight += isSvc ? 0 : (q2 * w2);
-                    }
-
-                    if (mode === "3") {
-                        const q3 = isSvc ? 1 : getNum(`qty3_${id}`); const p3 = getNum(`price3_${id}`); const w3 = getNum(`wt3_${id}`);
-                        const t3 = q3 * p3; setTxt(`total3_${id}`, t3.toLocaleString('en-MY', {minimumFractionDigits:2}));
-                        baseCost += t3; totalWeight += isSvc ? 0 : (q3 * w3);
-                    }
-                });
-            });
-
-            let customCost1 = (mode.startsWith('custom')) ? getNum('customItemCost1') : 0;
-            let customCost2 = (mode === 'custom2' || mode === 'custom3') ? getNum('customItemCost2') : 0;
-            let customCost3 = (mode === 'custom3') ? getNum('customItemCost3') : 0;
-            let totalCustomCost = customCost1 + customCost2 + customCost3;
-
-            baseCost = (isNaN(baseCost) ? 0 : baseCost) + totalCustomCost;
-
-            let mkp = getNum('markupPct'); let mkAmt = baseCost * (mkp / 100); let sub = baseCost + mkAmt; 
-            let dsc = getNum('discountPct'); let dscAmt = sub * (dsc / 100); let net = sub - dscAmt;
-            let sst = getNum('sstPct'); let sstAmt = net * (sst / 100); let grand = net + sstAmt;
-            
-            let exactT1 = window.currentTotalP1 || 0; let exactT2 = window.currentTotalP2 || 0; let exactT3 = window.currentTotalP3 || 0;
-            let totPanels = exactT1 + exactT2 + exactT3;
-            
-            const setMulti = (ids, v) => ids.forEach(id => setTxt(id, v));
-            setMulti(['sumPanels_screen', 'sumPanels_print'], isNaN(totPanels)?0:totPanels);
-            setMulti(['sumBaseCost_screen', 'sumBaseCost_print'], baseCost.toLocaleString('en-MY', {minimumFractionDigits: 2}));
-            setMulti(['sumMarkup_screen', 'sumMarkup_print'], mkAmt.toLocaleString('en-MY', {minimumFractionDigits: 2}));
-            setMulti(['sumSubtotal_screen', 'sumSubtotal_print'], sub.toLocaleString('en-MY', {minimumFractionDigits: 2}));
-            setMulti(['sumDiscount_screen', 'sumDiscount_print'], dscAmt.toLocaleString('en-MY', {minimumFractionDigits: 2}));
-            setMulti(['sumSST_screen', 'sumSST_print'], sstAmt.toLocaleString('en-MY', {minimumFractionDigits: 2}));
-            setMulti(['grandTotal_screen', 'grandTotal_print', 'cpGrandTotal'], grand.toLocaleString('en-MY', {minimumFractionDigits: 2}));
-            setMulti(['sumWeight_screen', 'sumWeight_print'], totalWeight.toLocaleString('en-MY', {maximumFractionDigits: 1}) + " kg");
-
-            let p1 = net; let p2 = 0; let p3 = 0;
-            let pC1 = 0; let pC2 = 0; let pC3 = 0;
-
-            if ((mode === "2" || mode === "3") && totPanels > 0) { 
-                p1 = net * (exactT1 / totPanels); 
-                p2 = net * (exactT2 / totPanels); 
-                if (mode === "3") p3 = net * (exactT3 / totPanels);
-            } 
-            else if (totalCustomCost > 0) { 
-                let appC = (c) => { let m = c*(mkp/100); let s = c+m; return s-(s*(dsc/100)); };
-                pC1 = appC(customCost1); pC2 = appC(customCost2); pC3 = appC(customCost3);
-                p1 = net - (pC1 + pC2 + pC3); 
-            }
-            
-            setTxt('cpUnitPrice', p1.toLocaleString('en-MY', {minimumFractionDigits: 2})); setTxt('cpTotalPrice', p1.toLocaleString('en-MY', {minimumFractionDigits: 2}));
-            setTxt('cpUnitPrice2', p2.toLocaleString('en-MY', {minimumFractionDigits: 2})); setTxt('cpTotalPrice2', p2.toLocaleString('en-MY', {minimumFractionDigits: 2}));
-            setTxt('cpUnitPrice3', p3.toLocaleString('en-MY', {minimumFractionDigits: 2})); setTxt('cpTotalPrice3', p3.toLocaleString('en-MY', {minimumFractionDigits: 2}));
-
-            setTxt('cpCustomPrice1', pC1.toLocaleString('en-MY', {minimumFractionDigits: 2}));
-            setTxt('cpCustomPrice2', pC2.toLocaleString('en-MY', {minimumFractionDigits: 2}));
-            setTxt('cpCustomPrice3', pC3.toLocaleString('en-MY', {minimumFractionDigits: 2}));
-
-            setTxt('cpSstPct', sst || 0); setTxt('cpSstAmt', sstAmt.toLocaleString('en-MY', {minimumFractionDigits: 2})); 
-
-            syncPrintHeader(); 
-        } catch(e) { console.error(e); }
+        setHtml('dynamicTanksContainer', tanksHtml);
+        setHtml('dynamicBomContainer', bomHtml);
+        setHtml('dynamicVisualsScreenContainer', screenVisHtml);
+        setHtml('dynamicVisualsPrintContainer', printVisHtml);
+        setHtml('dynamicChecklistTanksContainer', chkTankHtml);
+        setHtml('dynamicChecklistDrawingsContainer', chkVisHtml);
+        setHtml('dynamicCustomContainer', customHtml);
     }
 
     function drawGrid(id, c, r, maxDim, pType = null, pPos = -1) {
-        const g = document.getElementById(id); const gp = document.getElementById(id + '_p'); const gc = document.getElementById(id + '_c'); 
-        if (!g) return; 
-
+        let el = document.getElementById(id); if (!el) return;
         c = isNaN(c) ? 0 : c; r = isNaN(r) ? 0 : r; maxDim = isNaN(maxDim) ? 0 : maxDim;
-
-        if ((c * r) > 2500) {
-            let msg = '<div style="padding: 10px; font-size:12px; color:#ef4444; font-weight:bold; border:1px dashed #ef4444; width:100%;">Too large to draw.</div>';
-            g.style.display='block'; g.innerHTML=msg; if(gp){gp.style.display='block'; gp.innerHTML=msg;} if(gc){gc.style.display='block'; gc.innerHTML=msg;} return;
-        }
+        if ((c * r) > 2500) { el.style.display = 'block'; el.innerHTML = '<div style="padding: 10px; font-size:12px; color:#ef4444; font-weight:bold; border:1px dashed #ef4444; width:100%;">Too large to draw.</div>'; return; }
         
         let wp = maxDim > 0 ? (c / maxDim) * 100 : 100; let html = '';
         for(let i=0; i<(c*r); i++) {
             let ex = ''; if (pType === 'v' && (i%c) === pPos) ex += 'border-right: 3px solid #ef4444 !important; z-index: 10; '; else if (pType === 'h' && Math.floor(i/c) === pPos) ex += 'border-bottom: 3px solid #ef4444 !important; z-index: 10; ';
             html += `<div class="panel" style="${ex}"></div>`;
         }
-        
-        let sc = Math.max(1, c);
-        if(g) { g.style.display='grid'; g.style.gridTemplateColumns=`repeat(${sc}, 1fr)`; g.style.width=`${wp}%`; g.innerHTML=html; }
-        if(gp) { gp.style.display='grid'; gp.style.gridTemplateColumns=`repeat(${sc}, 1fr)`; gp.style.width=`${wp}%`; gp.innerHTML=html; }
-        if(gc) { gc.style.display='grid'; gc.style.gridTemplateColumns=`repeat(${sc}, 1fr)`; gc.style.width=`${wp}%`; gc.innerHTML=html; }
+        el.style.display='grid'; el.style.gridTemplateColumns=`repeat(${Math.max(1,c)}, 1fr)`; el.style.width=`${wp}%`; el.innerHTML=html;
     }
 
-    function buildGridHTML(title, c, r, maxDim, pType = null, pPos = -1, showStays = false) {
+    function buildGridHTML(title, c, r, maxDim, pType, pPos, showStays) {
         c = isNaN(c) ? 0 : c; r = isNaN(r) ? 0 : r; maxDim = isNaN(maxDim) ? 0 : maxDim;
         if ((c * r) > 2500) return `<div class="view-box"><div class="view-title">${title}</div><div style="padding: 10px; font-size:12px; color:#ef4444;">Too large</div></div>`;
-
-        let wp = maxDim > 0 ? (c / maxDim) * 100 : 100; let sc = Math.max(1, c);
-        let gh = `<div class="grid-draft" style="display:grid; grid-template-columns: repeat(${sc}, 1fr); width: ${wp}%;">`;
-        
+        let wp = maxDim > 0 ? (c / maxDim) * 100 : 100;
+        let gh = `<div class="grid-draft" style="display:grid; grid-template-columns: repeat(${Math.max(1,c)}, 1fr); width: ${wp}%;">`;
         for(let i=0; i<(c*r); i++) {
             let col = i%c; let row = Math.floor(i/c); let ex = '';
-            if (pType === 'v' && col === pPos) ex += 'border-right: 3px solid #ef4444 !important; z-index: 10; ';
-            else if (pType === 'h' && row === pPos) ex += 'border-bottom: 3px solid #ef4444 !important; z-index: 10; ';
+            if (pType === 'v' && col === pPos) ex += 'border-right: 3px solid #ef4444 !important; z-index: 10; '; else if (pType === 'h' && row === pPos) ex += 'border-bottom: 3px solid #ef4444 !important; z-index: 10; ';
             let st = ''; if(showStays) { if(col>0) st+=`<div style="position:absolute; left:-1px; top:0; width:2px; height:100%; background:#eab308; z-index:5;"></div>`; if(row>0) st+=`<div style="position:absolute; top:-1px; left:0; width:100%; height:2px; background:#06b6d4; z-index:5;"></div>`; }
             gh += `<div class="panel" style="${ex}">${st}</div>`;
-        }
-        return `<div class="view-box"><div class="view-title">${title}</div>${gh}</div>`;
-    }
-
-    function generateViews(cId, L, W, H, pType, pPos) {
-        const c = document.getElementById(cId); const cp = document.getElementById(cId + '_p'); const cc = document.getElementById(cId + '_c'); if(!c) return;
-        L = isNaN(L)?0:L; W = isNaN(W)?0:W; H = isNaN(H)?0:H; let h = ''; const mx = Math.max(L, W, H);
-        for(let i=1; i<=Math.min(H, 4); i++) h += buildGridHTML(i===H ? `Roof Level (Trusses)` : `Level ${i} (Stays)`, L, W, mx, pType, pPos, true);
-        c.innerHTML = h; if(cp) cp.innerHTML = h; if(cc) cc.innerHTML = h;
+        } return `<div class="view-box"><div class="view-title">${title}</div>${gh}</div>`;
     }
 
     function processTankData() {
         try {
-            let mode = getVal('numTanks') || "1"; let u = getVal('unitChoice') || 'ft';
-            let factor = u === 'ft' ? 4 : (u === 'm_122' ? 1.22 : 1);
+            let u = getVal('unitChoice') || 'ft'; let factor = u === 'ft' ? 4 : (u === 'm_122' ? 1.22 : 1);
             let pSfx = u === 'ft' ? " (4'x4')" : (u === 'm_122' ? " (1.22x1.22m)" : " (1x1m)");
+            let totalC = 0, totalP = 0, totalW = 0, totalBase = 0;
 
-            let L1_in = parseFloat(getVal('length')) || 0; let W1_in = parseFloat(getVal('width')) || 0; let H1_in = parseFloat(getVal('height')) || 0;
-            let effLiters1 = ((u === 'ft') ? (L1_in * W1_in * H1_in * 28.3168) : (L1_in * W1_in * H1_in * 1000)) * 0.9; 
+            appTanks.forEach((t, i) => {
+                t.effLiters = ((u === 'ft') ? (t.L * t.W * t.H * 28.3168) : (t.L * t.W * t.H * 1000)) * 0.9; 
+                totalC += t.effLiters;
 
-            let pQty1 = 0, pL1_in = 0, pH1_in = 0, pPos_in1 = 1, partChoice1 = getVal('partChoice');
-            if(partChoice1 === 'yes') { pQty1=parseInt(getVal('partQty'))||0; pL1_in=parseFloat(getVal('partLen'))||0; pH1_in=parseFloat(getVal('partHgt'))||0; pPos_in1=parseInt(getVal('partPos'))||1; }
+                const L = Math.round(t.L / factor); const W = Math.round(t.W / factor); const H = Math.round(t.H / factor);
+                const pL = Math.round(t.partL / factor); const pH = Math.round(t.partH / factor); const pPosIdx = Math.max(0, t.partPos - 1);
+                
+                let r=L*W, b=L*W, pm=(L+W)*2, s=pm*H, pp=(t.partChoice==='yes'&&t.partQty>0)?(pL*pH*t.partQty):0;
+                t.totalPanels = r + b + s + pp; totalP += t.totalPanels;
+                setTxt(`chk_pcs_${i}`, t.totalPanels); setTxt(`chk_sz_${i}`, `${t.L}x${t.W}x${t.H}`);
 
-            const L1 = Math.round(L1_in / factor); const W1 = Math.round(W1_in / factor); const H1 = Math.round(H1_in / factor);
-            const pL1 = Math.round(pL1_in / factor); const pH1 = Math.round(pH1_in / factor); const pPosIdx1 = Math.max(0, pPos_in1 - 1);
-
-            let r1 = L1*W1; let b1 = L1*W1; let pm1 = (L1+W1)*2; let s1 = pm1*H1; let pp1 = (partChoice1==='yes' && pQty1>0) ? (pL1*pH1*pQty1) : 0;
-            window.currentTotalP1 = r1 + b1 + s1 + pp1;
-
-            let pTT1 = null, pPT1 = -1, pTF1 = null, pPF1 = -1, pTS1 = null, pPS1 = -1;
-            if (partChoice1 === 'yes' && pQty1 > 0) {
-                if (pL1 === W1) { pTT1='v'; pPT1=Math.min(L1-2, pPosIdx1); pTF1='v'; pPF1=Math.min(L1-2, pPosIdx1); } 
-                else if (pL1 === L1) { pTT1='h'; pPT1=Math.min(W1-2, pPosIdx1); pTS1='v'; pPS1=Math.min(W1-2, pPosIdx1); } 
-                else { pTT1='v'; pPT1=Math.min(L1-2, pPosIdx1); pTF1='v'; pPF1=Math.min(L1-2, pPosIdx1); }
-            }
-
-            const mx1 = Math.max(L1, W1, H1);
-            drawGrid('topGrid', L1, W1, mx1, pTT1, pPT1); drawGrid('bottomGrid', L1, W1, mx1, pTT1, pPT1);
-            drawGrid('frontGrid', L1, H1, mx1, pTF1, pPF1); drawGrid('backGrid', L1, H1, mx1, pTF1, pPF1);
-            drawGrid('leftGrid', W1, H1, mx1, pTS1, pPS1); drawGrid('rightGrid', W1, H1, mx1, pTS1, pPS1);
-            generateViews('visualsArea1', L1, W1, H1, pTT1, pPT1);
-
-            let setDesc = (p, id, v) => setVal(p+id, v);
-            setDesc('desc_', 'item_0_0', "Manhole Panel" + pSfx); setDesc('desc_', 'item_0_1', getVal('thickRoof') + " Roof Panel" + pSfx); setDesc('desc_', 'item_0_2', getVal('thickBase') + " Base Panel" + pSfx); setDesc('desc_', 'item_0_3', getVal('thickWallL1') + " Wall Panel (L1)" + pSfx); setDesc('desc_', 'item_0_4', getVal('thickWallL2') + " Wall Panel (L2)" + pSfx); setDesc('desc_', 'item_0_5', getVal('thickWallL3') + " Wall Panel (L3)" + pSfx); setDesc('desc_', 'item_0_6', getVal('thickWallL4') + " Wall Panel (L4)" + pSfx); setDesc('desc_', 'item_0_7', "Partition Panel" + pSfx);
-
-            let effLiters2 = 0, totalP2 = 0, effLiters3 = 0, totalP3 = 0;
-            
-            if (mode === "2" || mode === "3") {
-                let L2_in = parseFloat(getVal('length2')) || 0; let W2_in = parseFloat(getVal('width2')) || 0; let H2_in = parseFloat(getVal('height2')) || 0;
-                effLiters2 = ((u === 'ft') ? (L2_in * W2_in * H2_in * 28.3168) : (L2_in * W2_in * H2_in * 1000)) * 0.9; 
-
-                let pQty2 = 0, pL2_in = 0, pH2_in = 0, pPos_in2 = 1, partChoice2 = getVal('partChoice2');
-                if(partChoice2 === 'yes') { pQty2=parseInt(getVal('partQty2'))||0; pL2_in=parseFloat(getVal('partLen2'))||0; pH2_in=parseFloat(getVal('partHgt2'))||0; pPos_in2=parseInt(getVal('partPos2'))||1; }
-
-                const L2 = Math.round(L2_in / factor); const W2 = Math.round(W2_in / factor); const H2 = Math.round(H2_in / factor);
-                const pL2 = Math.round(pL2_in / factor); const pH2 = Math.round(pH2_in / factor); const pPosIdx2 = Math.max(0, pPos_in2 - 1);
-
-                let r2 = L2*W2; let b2 = L2*W2; let pm2 = (L2+W2)*2; let s2 = pm2*H2; let pp2 = (partChoice2==='yes' && pQty2>0) ? (pL2*pH2*pQty2) : 0;
-                totalP2 = r2 + b2 + s2 + pp2; window.currentTotalP2 = totalP2;
-
-                let pTT2 = null, pPT2 = -1, pTF2 = null, pPF2 = -1, pTS2 = null, pPS2 = -1;
-                if (partChoice2 === 'yes' && pQty2 > 0) {
-                    if (pL2 === W2) { pTT2='v'; pPT2=Math.min(L2-2, pPosIdx2); pTF2='v'; pPF2=Math.min(L2-2, pPosIdx2); } 
-                    else if (pL2 === L2) { pTT2='h'; pPT2=Math.min(W2-2, pPosIdx2); pTS2='v'; pPS2=Math.min(W2-2, pPosIdx2); } 
-                    else { pTT2='v'; pPT2=Math.min(L2-2, pPosIdx2); pTF2='v'; pPF2=Math.min(L2-2, pPosIdx2); }
+                let pTT = null, pPT = -1, pTF = null, pPF = -1, pTS = null, pPS = -1;
+                if (t.partChoice==='yes' && t.partQty>0) {
+                    if (pL === W) { pTT='v'; pPT=Math.min(L-2, pPosIdx); pTF='v'; pPF=Math.min(L-2, pPosIdx); } 
+                    else if (pL === L) { pTT='h'; pPT=Math.min(W-2, pPosIdx); pTS='v'; pPS=Math.min(W-2, pPosIdx); } 
+                    else { pTT='v'; pPT=Math.min(L-2, pPosIdx); pTF='v'; pPF=Math.min(L-2, pPosIdx); }
                 }
 
-                const mx2 = Math.max(L2, W2, H2);
-                drawGrid('topGrid2', L2, W2, mx2, pTT2, pPT2); drawGrid('bottomGrid2', L2, W2, mx2, pTT2, pPT2);
-                drawGrid('frontGrid2', L2, H2, mx2, pTF2, pPF2); drawGrid('backGrid2', L2, H2, mx2, pTF2, pPF2);
-                drawGrid('leftGrid2', W2, H2, mx2, pTS2, pPS2); drawGrid('rightGrid2', W2, H2, mx2, pTS2, pPS2);
-                generateViews('visualsArea2', L2, W2, H2, pTT2, pPT2);
+                const mx = Math.max(L, W, H);
+                drawGrid(`grid_top_s_${i}`, L, W, mx, pTT, pPT); drawGrid(`grid_top_p_${i}`, L, W, mx, pTT, pPT); drawGrid(`grid_top_c_${i}`, L, W, mx, pTT, pPT);
+                drawGrid(`grid_bot_s_${i}`, L, W, mx, pTT, pPT); drawGrid(`grid_bot_p_${i}`, L, W, mx, pTT, pPT); drawGrid(`grid_bot_c_${i}`, L, W, mx, pTT, pPT);
+                drawGrid(`grid_fr_s_${i}`, L, H, mx, pTF, pPF); drawGrid(`grid_fr_p_${i}`, L, H, mx, pTF, pPF); drawGrid(`grid_fr_c_${i}`, L, H, mx, pTF, pPF);
+                drawGrid(`grid_bk_s_${i}`, L, H, mx, pTF, pPF); drawGrid(`grid_bk_p_${i}`, L, H, mx, pTF, pPF); drawGrid(`grid_bk_c_${i}`, L, H, mx, pTF, pPF);
+                drawGrid(`grid_lt_s_${i}`, W, H, mx, pTS, pPS); drawGrid(`grid_lt_p_${i}`, W, H, mx, pTS, pPS); drawGrid(`grid_lt_c_${i}`, W, H, mx, pTS, pPS);
+                drawGrid(`grid_rt_s_${i}`, W, H, mx, pTS, pPS); drawGrid(`grid_rt_p_${i}`, W, H, mx, pTS, pPS); drawGrid(`grid_rt_c_${i}`, W, H, mx, pTS, pPS);
+                
+                let h_int = ''; for(let lvl=1; lvl<=Math.min(H, 4); lvl++) h_int += buildGridHTML(lvl===H ? `Roof (Trusses)` : `Level ${lvl} (Stays)`, L, W, mx, pTT, pPT, true);
+                setHtml(`grid_int_s_${i}`, h_int); setHtml(`grid_int_p_${i}`, h_int); setHtml(`grid_int_c_${i}`, h_int);
 
-                setDesc('desc2_', 'item_0_0', "Manhole Panel" + pSfx); setDesc('desc2_', 'item_0_1', getVal('thickRoof2') + " Roof Panel" + pSfx); setDesc('desc2_', 'item_0_2', getVal('thickBase2') + " Base Panel" + pSfx); setDesc('desc2_', 'item_0_3', getVal('thickWallL1_2') + " Wall Panel (L1)" + pSfx); setDesc('desc2_', 'item_0_4', getVal('thickWallL2_2') + " Wall Panel (L2)" + pSfx); setDesc('desc2_', 'item_0_5', getVal('thickWallL3_2') + " Wall Panel (L3)" + pSfx); setDesc('desc2_', 'item_0_6', getVal('thickWallL4_2') + " Wall Panel (L4)" + pSfx); setDesc('desc2_', 'item_0_7', "Partition Panel" + pSfx);
-            } else { window.currentTotalP2 = 0; document.querySelectorAll('[id^="qty2_"]').forEach(e=> {if(e.type!=='hidden') e.value=0;}); }
-
-            if (mode === "3") {
-                let L3_in = parseFloat(getVal('length3')) || 0; let W3_in = parseFloat(getVal('width3')) || 0; let H3_in = parseFloat(getVal('height3')) || 0;
-                effLiters3 = ((u === 'ft') ? (L3_in * W3_in * H3_in * 28.3168) : (L3_in * W3_in * H3_in * 1000)) * 0.9; 
-
-                let pQty3 = 0, pL3_in = 0, pH3_in = 0, pPos_in3 = 1, partChoice3 = getVal('partChoice3');
-                if(partChoice3 === 'yes') { pQty3=parseInt(getVal('partQty3'))||0; pL3_in=parseFloat(getVal('partLen3'))||0; pH3_in=parseFloat(getVal('partHgt3'))||0; pPos_in3=parseInt(getVal('partPos3'))||1; }
-
-                const L3 = Math.round(L3_in / factor); const W3 = Math.round(W3_in / factor); const H3 = Math.round(H3_in / factor);
-                const pL3 = Math.round(pL3_in / factor); const pH3 = Math.round(pH3_in / factor); const pPosIdx3 = Math.max(0, pPos_in3 - 1);
-
-                let r3 = L3*W3; let b3 = L3*W3; let pm3 = (L3+W3)*2; let s3 = pm3*H3; let pp3 = (partChoice3==='yes' && pQty3>0) ? (pL3*pH3*pQty3) : 0;
-                totalP3 = r3 + b3 + s3 + pp3; window.currentTotalP3 = totalP3;
-
-                let pTT3 = null, pPT3 = -1, pTF3 = null, pPF3 = -1, pTS3 = null, pPS3 = -1;
-                if (partChoice3 === 'yes' && pQty3 > 0) {
-                    if (pL3 === W3) { pTT3='v'; pPT3=Math.min(L3-2, pPosIdx3); pTF3='v'; pPF3=Math.min(L3-2, pPosIdx3); } 
-                    else if (pL3 === L3) { pTT3='h'; pPT3=Math.min(W3-2, pPosIdx3); pTS3='v'; pPS3=Math.min(W3-2, pPosIdx3); } 
-                    else { pTT3='v'; pPT3=Math.min(L3-2, pPosIdx3); pTF3='v'; pPF3=Math.min(L3-2, pPosIdx3); }
+                let bQ = (sI, iI, v) => t.bom[sI].items[iI].qty = isNaN(v)?0:v;
+                let bD = (sI, iI, v) => t.bom[sI].items[iI].name = v;
+                
+                if(t.bom[0]) {
+                    if(t.bom[0].items[0]) bD(0,0, "Manhole Panel"+pSfx); if(t.bom[0].items[1]) bD(0,1, t.tRoof+" Roof Panel"+pSfx); if(t.bom[0].items[2]) bD(0,2, t.tBase+" Base Panel"+pSfx); if(t.bom[0].items[3]) bD(0,3, t.tW1+" Wall Panel (L1)"+pSfx); if(t.bom[0].items[4]) bD(0,4, t.tW2+" Wall Panel (L2)"+pSfx); if(t.bom[0].items[5]) bD(0,5, t.tW3+" Wall Panel (L3)"+pSfx); if(t.bom[0].items[6]) bD(0,6, t.tW4+" Wall Panel (L4)"+pSfx); if(t.bom[0].items[7]) bD(0,7, "Partition Panel"+pSfx);
+                    
+                    if(t.bom[0].items[0]) bQ(0,0, 1); if(t.bom[0].items[1]) bQ(0,1, Math.max(0, (r/Math.max(1,H))-1)); if(t.bom[0].items[2]) bQ(0,2, r/Math.max(1,H)); if(t.bom[0].items[3]) bQ(0,3, H>=1?pm:0); if(t.bom[0].items[4]) bQ(0,4, H>=2?pm:0); if(t.bom[0].items[5]) bQ(0,5, H>=3?pm:0); if(t.bom[0].items[6]) bQ(0,6, H>=4?pm*(H-3):0); if(t.bom[0].items[7]) bQ(0,7, pp);
                 }
+                if(t.bom[1]) { if(t.bom[1].items[0]) bQ(1,0, H*4); if(t.bom[1].items[1]) bQ(1,1, pm); if(t.bom[1].items[2]) bQ(1,2, pm); if(t.bom[1].items[3]) bQ(1,3, t.L); if(t.bom[1].items[4]) bQ(1,4, t.L); }
+                if(t.bom[3]) {
+                    if(t.bom[3].items[0]) bQ(3,0, t.H); if(t.bom[3].items[1]) bQ(3,1, t.H); if(t.bom[3].items[2]) bQ(3,2, (u!=='ft')?t.H:1); if(t.bom[3].items[3]) bQ(3,3, 1);
+                    let sP=(u==='ft')?4.88:4.0; let bP=(u==='ft')?16:12; 
+                    if(t.bom[3].items[4]) bQ(3,4, Math.ceil(((r+b+s+pp)*sP)/15)); if(t.bom[3].items[5]) bQ(3,5, Math.ceil((r+b+s+pp)*bP*1.05));
+                }
+                
+                t.baseCost = 0; t.weight = 0;
+                t.bom.forEach((sec, sIdx) => sec.items.forEach((it, iIdx) => { 
+                    let isSvc = (sec.category === "Services");
+                    let qEl = document.getElementById(`t_${i}_q_${sIdx}_${iIdx}`);
+                    let nEl = document.getElementById(`t_${i}_n_${sIdx}_${iIdx}`);
+                    if(qEl && document.activeElement !== qEl && !isSvc) qEl.value = it.qty; 
+                    if(nEl && document.activeElement !== nEl) nEl.value = it.name;
 
-                const mx3 = Math.max(L3, W3, H3);
-                drawGrid('topGrid3', L3, W3, mx3, pTT3, pPT3); drawGrid('bottomGrid3', L3, W3, mx3, pTT3, pPT3);
-                drawGrid('frontGrid3', L3, H3, mx3, pTF3, pPF3); drawGrid('backGrid3', L3, H3, mx3, pTF3, pPF3);
-                drawGrid('leftGrid3', W3, H3, mx3, pTS3, pPS3); drawGrid('rightGrid3', W3, H3, mx3, pTS3, pPS3);
-                generateViews('visualsArea3', L3, W3, H3, pTT3, pPT3);
+                    let calcQty = isSvc ? 1 : it.qty;
+                    let lTot = calcQty * (it.def||0); 
+                    t.baseCost += lTot; 
+                    t.weight += isSvc ? 0 : (calcQty * (it.wt||0)); 
+                    
+                    let te = document.getElementById(`tot_${i}_${sIdx}_${iIdx}`); 
+                    if(te) { te.innerText = lTot.toLocaleString('en-MY',{minimumFractionDigits:2}); te.style.color = calcQty>0?'#b91c1c':'#94a3b8'; } 
+                }));
+                totalW += t.weight; totalBase += t.baseCost;
+            });
 
-                setDesc('desc3_', 'item_0_0', "Manhole Panel" + pSfx); setDesc('desc3_', 'item_0_1', getVal('thickRoof3') + " Roof Panel" + pSfx); setDesc('desc3_', 'item_0_2', getVal('thickBase3') + " Base Panel" + pSfx); setDesc('desc3_', 'item_0_3', getVal('thickWallL1_3') + " Wall Panel (L1)" + pSfx); setDesc('desc3_', 'item_0_4', getVal('thickWallL2_3') + " Wall Panel (L2)" + pSfx); setDesc('desc3_', 'item_0_5', getVal('thickWallL3_3') + " Wall Panel (L3)" + pSfx); setDesc('desc3_', 'item_0_6', getVal('thickWallL4_3') + " Wall Panel (L4)" + pSfx); setDesc('desc3_', 'item_0_7', "Partition Panel" + pSfx);
-            } else { window.currentTotalP3 = 0; document.querySelectorAll('[id^="qty3_"]').forEach(e=>{if(e.type!=='hidden') e.value=0;}); }
+            appCustomItems.forEach(c => { totalBase += (c.cost * c.qty); });
 
-            let tel = effLiters1 + effLiters2 + effLiters3; setTxt('sumCapacity_screen', isNaN(tel) ? "0 L" : tel.toLocaleString('en-MY', {maximumFractionDigits:0})+" L");
+            let mkp = getNum('markupPct'); let mkAmt = totalBase * (mkp / 100); let sub = totalBase + mkAmt; 
+            let dsc = getNum('discountPct'); let dscAmt = sub * (dsc / 100); let net = sub - dscAmt;
+            let sst = getNum('sstPct'); let sstAmt = net * (sst / 100); let grand = net + sstAmt;
+
+            const setM = (ids, v) => ids.forEach(id => setTxt(id, v));
+            setM(['sumPanels_screen', 'sumPanels_print'], totalP); setM(['sumCapacity_screen', 'sumCapacity_print'], isNaN(totalC)?"0 L":totalC.toLocaleString('en-MY',{maximumFractionDigits:0})+" L");
+            setM(['sumBaseCost_screen', 'sumBaseCost_print'], totalBase.toLocaleString('en-MY', {minimumFractionDigits: 2}));
+            setM(['sumMarkup_screen', 'sumMarkup_print'], mkAmt.toLocaleString('en-MY', {minimumFractionDigits: 2}));
+            setM(['sumSubtotal_screen', 'sumSubtotal_print'], sub.toLocaleString('en-MY', {minimumFractionDigits: 2}));
+            setM(['sumDiscount_screen', 'sumDiscount_print'], dscAmt.toLocaleString('en-MY', {minimumFractionDigits: 2}));
+            setM(['sumSST_screen', 'sumSST_print'], sstAmt.toLocaleString('en-MY', {minimumFractionDigits: 2}));
+            setM(['grandTotal_screen', 'grandTotal_print', 'cpGrandTotal'], grand.toLocaleString('en-MY', {minimumFractionDigits: 2}));
+            setM(['sumWeight_screen', 'sumWeight_print'], totalW.toLocaleString('en-MY', {maximumFractionDigits: 1}) + " kg");
+
+            // Customer PDF Generator
+            let globalRef = totalBase === 0 ? 1 : totalBase;
+            let cpRows = ""; let cpIdx = 1;
+
+            appTanks.forEach((t, i) => {
+                let trPct = t.baseCost / globalRef; let trFinal = net * trPct; t.finalPrice = trFinal;
+                let dStr = t.override || `${t.L}${u} (L) x ${t.W}${u} (W) x ${t.H}${u} (H)`;
+                let pStr = (t.partChoice === 'yes' && t.partQty > 0) ? `<tr style="border:none;"><td style="border:none;">d)</td><td style="border:none;" colspan="3">Partition: ${t.partQty}x ${t.partType} (${t.partL}${u} x ${t.partH}${u})</td></tr>` : '';
+                
+                let extLadStr = t.bom[3] && t.bom[3].items[0] ? `${t.bom[3].items[0].selVal} External - ${t.bom[3].items[0].qty} sets` : '';
+                let intLadStr = t.bom[3] && t.bom[3].items[1] ? `${t.bom[3].items[1].selVal} Internal - ${t.bom[3].items[1].qty} sets` : '';
+                let wliStr = t.bom[3] && t.bom[3].items[2] ? `${t.bom[3].items[2].selVal} - ${t.bom[3].items[2].qty} sets` : '';
+
+                cpRows += `<tr>
+                    <td style="text-align:center; border:1px solid #000; padding:4px;">${cpIdx++}</td>
+                    <td style="border:1px solid #000; padding:4px;">
+                        <strong>Supply and Install ${t.coat} Tank Size:<br>${dStr} (Total: ${t.totalPanels} Pcs)</strong><br>Comply to ${t.std}<br>
+                        <table style="border:none; width:100%; font-size:8.5pt;">
+                            <tr style="border:none;"><td style="width:20px; border:none;">a)</td><td style="width:75px; border:none;">Thickness:</td><td style="width:50px; border:none;">Roof</td><td style="border:none;">: ${t.tRoof}</td></tr>
+                            <tr style="border:none;"><td style="border:none;"></td><td style="border:none;"></td><td style="border:none;">Base</td><td style="border:none;">: ${t.tBase}</td></tr>
+                            <tr style="border:none;"><td style="border:none;"></td><td style="border:none;"></td><td style="border:none;">Wall</td><td style="border:none;">: L1: ${t.tW1} | L2: ${t.tW2} | L3: ${t.tW3} | L4: ${t.tW4}</td></tr>
+                            <tr style="border:none;"><td style="border:none; vertical-align:top;">b)</td><td style="border:none; vertical-align:top;" colspan="3">Ladders: ${intLadStr}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${extLadStr}</td></tr>
+                            <tr style="border:none;"><td style="border:none;">c)</td><td style="border:none;" colspan="3">WLI: ${wliStr}</td></tr>
+                            ${pStr}
+                            <tr style="border:none;"><td style="border:none;">${pStr?'e)':'d)'}</td><td style="border:none;" colspan="3">Tank to be sit on existing I-Beam or RC plinths</td></tr>
+                        </table>
+                    </td>
+                    <td style="text-align:right; border:1px solid #000; padding:4px;">${trFinal.toLocaleString('en-MY',{minimumFractionDigits:2})}</td>
+                    <td style="text-align:center; border:1px solid #000; padding:4px;">1</td>
+                    <td style="text-align:right; border:1px solid #000; padding:4px;">${trFinal.toLocaleString('en-MY',{minimumFractionDigits:2})}</td>
+                </tr>`;
+            });
+
+            appCustomItems.forEach((c, i) => {
+                let trPct = (c.cost * c.qty) / globalRef; let trFinal = net * trPct; c.finalPrice = trFinal;
+                cpRows += `<tr>
+                    <td style="text-align:center; border:1px solid #000; padding:4px;">${cpIdx++}</td>
+                    <td style="border:1px solid #000; padding:4px;"><strong>${c.desc}</strong></td>
+                    <td style="text-align:right; border:1px solid #000; padding:4px;">${c.qty>0 ? (trFinal/c.qty).toLocaleString('en-MY',{minimumFractionDigits:2}) : '0.00'}</td>
+                    <td style="text-align:center; border:1px solid #000; padding:4px;">${c.qty}</td>
+                    <td style="text-align:right; border:1px solid #000; padding:4px;">${trFinal.toLocaleString('en-MY',{minimumFractionDigits:2})}</td>
+                </tr>`;
+            });
+
+            setHtml('cpDynamicTanksBody', cpRows);
+            setTxt('cpSstPct', sst || 0); setTxt('cpSstAmt', sstAmt.toLocaleString('en-MY', {minimumFractionDigits: 2}));
             
-            let setQ = (p, id, v) => setVal(p+id, isNaN(v) ? 0 : v);
-            setQ('qty_', 'item_0_0', 1); setQ('qty_', 'item_0_1', Math.max(0, r1 - 1)); setQ('qty_', 'item_0_2', b1); setQ('qty_', 'item_0_3', H1>=1?pm1:0); setQ('qty_', 'item_0_4', H1>=2?pm1:0); setQ('qty_', 'item_0_5', H1>=3?pm1:0); setQ('qty_', 'item_0_6', H1>=4?pm1*(H1-3):0); setQ('qty_', 'item_0_7', pp1); 
-            setQ('qty_', 'item_1_0', H1*4); setQ('qty_', 'item_1_1', pm1); setQ('qty_', 'item_1_2', pm1); setQ('qty_', 'item_1_3', L1_in); setQ('qty_', 'item_1_4', L1_in);  
-            setQ('qty_', 'item_3_0', H1_in); setQ('qty_', 'item_3_1', H1_in); setQ('qty_', 'item_3_2', (u!=='ft') ? H1_in : 1); setQ('qty_', 'item_3_3', 1); 
-
-            let sealP = (u==='ft') ? 4.88 : 4.0; let boltP = (u==='ft') ? 16 : 12;
-            setQ('qty_', 'item_3_4', Math.ceil(((r1+b1+s1+pp1)*sealP)/15)); setQ('qty_', 'item_3_5', Math.ceil((r1+b1+s1+pp1)*boltP*1.05)); 
-
-            if(mode === "2" || mode === "3") {
-                let r2=window.currentTotalP2; let pm2=Math.round(parseFloat(getVal('length2'))/factor + parseFloat(getVal('width2'))/factor)*2; let H2=Math.round(parseFloat(getVal('height2'))/factor); let pp2=(getVal('partChoice2')==='yes') ? Math.round(parseFloat(getVal('partLen2'))/factor)*Math.round(parseFloat(getVal('partHgt2'))/factor)*parseFloat(getVal('partQty2')) : 0;
-                setQ('qty2_', 'item_0_0', 1); setQ('qty2_', 'item_0_1', Math.max(0, (r2/H2)-1)); setQ('qty2_', 'item_0_2', r2/H2); setQ('qty2_', 'item_0_3', H2>=1?pm2:0); setQ('qty2_', 'item_0_4', H2>=2?pm2:0); setQ('qty2_', 'item_0_5', H2>=3?pm2:0); setQ('qty2_', 'item_0_6', H2>=4?pm2*(H2-3):0); setQ('qty2_', 'item_0_7', pp2); 
-                setQ('qty2_', 'item_1_0', H2*4); setQ('qty2_', 'item_1_1', pm2); setQ('qty2_', 'item_1_2', pm2); setQ('qty2_', 'item_1_3', parseFloat(getVal('length2'))); setQ('qty2_', 'item_1_4', parseFloat(getVal('length2'))); 
-                setQ('qty2_', 'item_3_0', parseFloat(getVal('height2'))); setQ('qty2_', 'item_3_1', parseFloat(getVal('height2'))); setQ('qty2_', 'item_3_2', (u!=='ft')?parseFloat(getVal('height2')):1); setQ('qty2_', 'item_3_3', 1); 
-                setQ('qty2_', 'item_3_4', Math.ceil((r2*sealP)/15)); setQ('qty2_', 'item_3_5', Math.ceil(r2*boltP*1.05)); 
-            }
-
-            if(mode === "3") {
-                let r3=window.currentTotalP3; let pm3=Math.round(parseFloat(getVal('length3'))/factor + parseFloat(getVal('width3'))/factor)*2; let H3=Math.round(parseFloat(getVal('height3'))/factor); let pp3=(getVal('partChoice3')==='yes') ? Math.round(parseFloat(getVal('partLen3'))/factor)*Math.round(parseFloat(getVal('partHgt3'))/factor)*parseFloat(getVal('partQty3')) : 0;
-                setQ('qty3_', 'item_0_0', 1); setQ('qty3_', 'item_0_1', Math.max(0, (r3/H3)-1)); setQ('qty3_', 'item_0_2', r3/H3); setQ('qty3_', 'item_0_3', H3>=1?pm3:0); setQ('qty3_', 'item_0_4', H3>=2?pm3:0); setQ('qty3_', 'item_0_5', H3>=3?pm3:0); setQ('qty3_', 'item_0_6', H3>=4?pm3*(H3-3):0); setQ('qty3_', 'item_0_7', pp3); 
-                setQ('qty3_', 'item_1_0', H3*4); setQ('qty3_', 'item_1_1', pm3); setQ('qty3_', 'item_1_2', pm3); setQ('qty3_', 'item_1_3', parseFloat(getVal('length3'))); setQ('qty3_', 'item_1_4', parseFloat(getVal('length3'))); 
-                setQ('qty3_', 'item_3_0', parseFloat(getVal('height3'))); setQ('qty3_', 'item_3_1', parseFloat(getVal('height3'))); setQ('qty3_', 'item_3_2', (u!=='ft')?parseFloat(getVal('height3')):1); setQ('qty3_', 'item_3_3', 1); 
-                setQ('qty3_', 'item_3_4', Math.ceil((r3*sealP)/15)); setQ('qty3_', 'item_3_5', Math.ceil(r3*boltP*1.05)); 
-            }
-
-            calcTotals();
-        } catch (e) { console.error(e); }
+            syncPrintHeader(u);
+        } catch(e) { console.error(e); }
     }
+
+    function syncPrintHeader(u) {
+        setTxt('metaQuoteId', getVal('quoteIdInput') || "N/A"); setTxt('metaProject', getVal('projectName') || "_____________________"); 
+        let dDims = appTanks.map((t,i) => `T${i+1}: ${t.override || t.L+u+'x'+t.W+u+'x'+t.H+u}`).join(' | '); setTxt('metaDims', dDims); 
+        setTxt('metaCoat', [...new Set(appTanks.map(t=>t.coat))].join(', '));
+        setTxt('metaStd', appTanks.length>0 ? appTanks[0].std : '-'); 
+        setTxt('metaPart', appTanks.filter(t=>t.partChoice==='yes').map((t,i)=>`T${i+1}: ${t.partQty}x${t.partType}`).join(' | ') || 'None');
+        
+        setTxt('cpCustName', getVal('custCompany') || getVal('projectName') || "Client Name"); document.getElementById('cpCustAddress').innerHTML = (getVal('custAddr') || '').replace(/\n/g, '<br>'); setTxt('cpAttention', getVal('custAttn')); setTxt('cpProject', getVal('projectName')); setTxt('cpRef', getVal('quoteIdInput'));
+        document.getElementById('cpShortExclusionsText').innerHTML = (getVal('shortExclusions') || '').replace(/\n/g, '<br>'); document.getElementById('cpFullTermsText').innerHTML = getVal('fullTermsNotes') || '';
+        let ls = (v) => `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${v}</span>`;
+        document.getElementById('cpValidity').innerHTML = ls(getVal('tcValidity')); document.getElementById('cpPayment').innerHTML = (getVal('tcPayment')||'').split('\n').filter(l=>l.trim()!=='').map(l=>ls(l)).join(''); document.getElementById('cpDeliveryTerm').innerHTML = ls(getVal('tcDelivery')); document.getElementById('cpLeadTime').innerHTML = ls(getVal('tcLead')); setTxt('cpSignName', getVal('signName')); setTxt('intSigSales', getVal('signName')); setTxt('cpSignPhone', getVal('signPhone')); 
+        
+        setTxt('chk_customer', getVal('custCompany')); setTxt('chk_project', getVal('projectName')); setTxt('chk_projno', getVal('quoteIdInput')); setTxt('chk_custpo', getVal('custPoNo')); setTxt('chk_deldate', getVal('custDelDate')); setTxt('chk_issued', new Date().toLocaleDateString('en-MY'));
+        setBox('box_local', getVal('marketChoice') === 'local'); setBox('box_export', getVal('marketChoice') === 'export'); 
+    }
+
+    function initInventory() {
+        systemBaseStructure.forEach(sec => sec.items.forEach(it => { let bn = it.name.replace(/ \(1x1m\)| \(1\.22x1\.22m\)| \(4'x4'\)/g, ''); if(!winkoInventory[bn]) winkoInventory[bn] = { stock: 0, alert: 10 }; }));
+        const presets = { "Base Panel":344, "Wall Panel (L1)":344, "Wall Panel (L2)":407, "Wall Panel (L3)":407, "Wall Panel (L4)":119, "Manhole Panel":200, "Roof Panel":186, "Partition Panel":50, "Type A Cleat":297, "Type B Cleat":130, "Type C Cleat":500, "44 1/4\" (L1 Stay)":76, "67\" (L2 Stay)":262, "11' 3\" (L3 Stay)":96, "15' 8.5\" (L4 Stay)":40, "Air Vent":48, "Mastic Sealant (Rolls)":89, "Bolt & Nut Sets":72, "Water Level Indicator":25, "Ext. Ladder":15, "Int. Ladder":15 }; let updated = false; Object.keys(presets).forEach(k => { if(winkoInventory[k] && winkoInventory[k].stock === 0) { winkoInventory[k].stock = presets[k]; updated = true; } }); if(updated) localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory));
+    }
+    
+    let winkoInventory = {}; try { winkoInventory = JSON.parse(localStorage.getItem('winkoInventoryDB')) || {}; } catch(e) { winkoInventory = {}; }
+    function renderInventoryTable() { let html = ''; Object.keys(winkoInventory).sort().forEach(k => { let d = winkoInventory[k]; let st = ''; let rc = ''; if(d.stock <= 0) { st = '<span class="inv-status inv-out">OUT OF STOCK</span>'; rc = 'stock-row-warning'; } else if (d.stock <= d.alert) { st = '<span class="inv-status inv-low">LOW STOCK</span>'; rc = 'stock-row-warning'; } else { st = '<span class="inv-status inv-ok">OK</span>'; } let sId = k.replace(/[^a-zA-Z0-9]/g, ''); html += `<tr class="${rc}"><td style="font-weight:700;">${k} <div style="margin-top:4px;">${st}</div></td><td class="text-center"><input type="number" class="inv-input" id="inv_stock_${sId}" value="${d.stock}"></td><td class="text-center"><input type="number" class="inv-input" id="inv_alert_${sId}" value="${d.alert}"></td></tr>`; }); setHtml('invBody', html); }
+    function saveInventory() { Object.keys(winkoInventory).forEach(k => { let sId = k.replace(/[^a-zA-Z0-9]/g, ''); winkoInventory[k].stock = getNum(`inv_stock_${sId}`); winkoInventory[k].alert = getNum(`inv_alert_${sId}`); }); localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory)); alert("Stock Levels updated."); renderInventoryTable(); }
+
+    function deductInventoryFromSO() {
+        if(!confirm("Deduct these items from Live Inventory?")) return; let c = 0;
+        appTanks.forEach(t => { t.bom.forEach(s => s.items.forEach(it => { if(s.category === "Services") return; if(it.qty > 0) { let bn = it.name.replace(/ \(1x1m\)| \(1\.22x1\.22m\)| \(4'x4'\)/g, ''); if(winkoInventory[bn]) { winkoInventory[bn].stock -= it.qty; c++; } } })); });
+        localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory)); alert(`Deducted items from stock.`);
+    }
+
+    function buildAdminTable() { let h = ''; systemBaseStructure.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { h += `<tr><td style="font-weight:800; background:#f1f5f9; text-align:left;">${sec.category}</td><td><input type="text" class="admin-input text-left" id="adm_name_${sIdx}_${iIdx}" value="${it.name}"></td><td><input type="number" step="0.1" class="admin-input" id="adm_wt_${sIdx}_${iIdx}" value="${it.wt || 0}"></td><td><input type="number" step="0.01" class="admin-input" id="adm_price_${sIdx}_${iIdx}" value="${it.def.toFixed(2)}"></td></tr>`; }); }); setHtml('adminBody', h); }
+    function saveAdminDefaults() { let nd = JSON.parse(JSON.stringify(systemBaseStructure)); nd.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { it.name = getVal(`adm_name_${sIdx}_${iIdx}`); it.wt = getNum(`adm_wt_${sIdx}_${iIdx}`); it.def = getNum(`adm_price_${sIdx}_${iIdx}`); }); }); localStorage.setItem('winkoMasterDefaults', JSON.stringify(nd)); alert("Success! Master Defaults updated."); location.reload(); }
+
+    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV86', JSON.stringify(d)); }
+    function loadPrices() { let s = localStorage.getItem('winkoProDataV86'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; } renderAllDynamicUI(); processTankData(); }
+
+    function refreshMemoryDropdown() { let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; let s = document.getElementById('memoryDropdown'); if(s) { s.innerHTML = '<option value="">-- Load a Saved Project --</option>'; Object.keys(m).forEach(k => { s.innerHTML += `<option value="${k}">${k}</option>`; }); } }
+    function saveToMemory() { let p = getVal('projectName').trim(); if(!p) { alert("Type a Project Name first."); return; } let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; m[p] = d; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); alert("Saved."); refreshMemoryDropdown(); setVal('memoryDropdown', p); }
+    function loadFromMemory() { let p = getVal('memoryDropdown'); if(!p) return; let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; let d = m[p]; if (d) { appTanks = d.tanks || []; appCustomItems = d.custom || []; configIDs.forEach(id => { if (d[id] !== undefined) setVal(id, d[id]); }); renderAllDynamicUI(); processTankData(); } }
+    function deleteFromMemory() { let p = getVal('memoryDropdown'); if(p && confirm("Delete '"+p+"'?")) { let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; delete m[p]; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); refreshMemoryDropdown(); } }
+
+    function printInternal() { document.body.className = 'print-internal'; syncPrintHeader(); setTimeout(() => window.print(), 300); }
+    function printCustomer() { document.body.className = 'print-customer'; syncPrintHeader(); setTimeout(() => window.print(), 300); }
+    function printCustomerFromPreview() { document.body.className = 'print-customer'; setTimeout(() => window.print(), 300); }
+    function printChecklist() { document.body.className = 'print-checklist'; syncPrintHeader(); setTimeout(() => { window.print(); setTimeout(deductInventoryFromSO, 1000); }, 300); }
+
+    window.addEventListener('afterprint', () => { document.body.className = ''; });
+    setInterval(() => { let d = new Date(); let s = d.toLocaleDateString('en-MY').replace(/\//g, '-'); setTxt('liveClock', s + " " + d.toLocaleTimeString('en-MY')); setTxt('metaDate', s); setTxt('cpDate', s); }, 1000);
 
     function exportCSV() {
         let csv = "\uFEFFWINKO INDUSTRIAL SDN BHD\nOFFICIAL TECHNICAL QUOTATION\n\n";
-        let qid = getVal('quoteIdInput') || "N/A"; let d = new Date().toLocaleDateString('en-MY'); let md = getVal('numTanks') || "1";
-        csv += `"Quote No:","${qid}"\n"Project / Client:","${getVal('projectName')||''}"\n"Date:","${d}"\n"Dimensions:","${document.getElementById('metaDims')?document.getElementById('metaDims').innerText:''}"\n"Total Panels:","${document.getElementById('sumPanels_screen')?document.getElementById('sumPanels_screen').innerText:''} pcs"\n\n`;
-        
-        let genBOM = (tankIdx, suffix) => {
-            csv += `TANK ${tankIdx} BILL OF MATERIALS\nCategory,Item Description,Qty,Unit Wt (kg),Unit Price (RM),Total (RM)\n`;
-            bomStructure.forEach((s, si) => s.items.forEach((it, ii) => {
-                let id = `item_${si}_${ii}`; let q = getNum(`${suffix}qty_${id}`); if(si===4) q=1;
-                if(q > 0 || si===4) csv += `"${s.category}","${getVal(`${suffix}desc_${id}`)+(it.selectId?' ('+getVal((suffix===''?it.selectId:(suffix==='qty2_'?`sel2_${it.selectId}`:`sel3_${it.selectId}`))) +')':'')}",${si===4?'Lump Sum':q},${getNum(`${suffix}wt_${id}`)},${getNum(`${suffix}price_${id}`)},${document.getElementById(suffix.replace('qty','total')+'_'+id).innerText.replace(/,/g, '')}\n`;
-            })); csv += `\n`;
-        };
-        
-        genBOM(1, ''); 
-        if(md === "2" || md === "3") genBOM(2, 'qty2_'); 
-        if(md === "3") genBOM(3, 'qty3_'); 
-
-        if(md.startsWith('custom')) {
-            csv += `CUSTOM ITEMS\n"Description","Lump Sum Price (RM)","Total (RM)"\n`;
-            csv += `"${getVal('customItemName1')}",${getNum('customItemCost1')},${getNum('customItemCost1')}\n`;
-            if (md === 'custom2' || md === 'custom3') csv += `"${getVal('customItemName2')}",${getNum('customItemCost2')},${getNum('customItemCost2')}\n`;
-            if (md === 'custom3') csv += `"${getVal('customItemName3')}",${getNum('customItemCost3')},${getNum('customItemCost3')}\n`;
-            csv += `\n`;
-        }
-
-        csv += `,,,,"Est. Total Weight (kg)",${document.getElementById('sumWeight_screen').innerText.replace(' kg','')}\n,,,,"Base Cost (RM)",${document.getElementById('sumBaseCost_screen').innerText.replace(/,/g,'')}\n,,,,"Mark-Up (RM)",+${document.getElementById('sumMarkup_screen').innerText.replace(/,/g,'')}\n,,,,"Gross Subtotal (RM)",${document.getElementById('sumSubtotal_screen').innerText.replace(/,/g,'')}\n,,,,"Discount (RM)",-${document.getElementById('sumDiscount_screen').innerText.replace(/,/g,'')}\n,,,,"SST Tax (RM)",${document.getElementById('sumSST_screen').innerText.replace(/,/g,'')}\n,,,,"GRAND TOTAL (RM)",${document.getElementById('grandTotal_screen').innerText.replace(/,/g,'')}\n`;
-        
-        const a = document.createElement('a'); a.href = window.URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' })); a.download = `Jutarama_Quote_${qid}.csv`; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        csv += `"Quote No:","${getVal('quoteIdInput')}"\n"Project:","${getVal('projectName')}"\n"Date:","${new Date().toLocaleDateString('en-MY')}"\n\n`;
+        appTanks.forEach((t, i) => {
+            csv += `TANK ${i+1} BILL OF MATERIALS\nCategory,Item Description,Qty,Unit Wt (kg),Unit Price (RM),Total (RM)\n`;
+            t.bom.forEach((s) => s.items.forEach((it) => { let isSvc=(s.category==="Services"); let q = isSvc?1:it.qty; if(q>0) csv += `"${s.category}","${it.name}",${isSvc?'Lump Sum':q},${it.wt},${it.def},${(q*(it.def||0))}\n`; })); csv += `\n`;
+        });
+        if(appCustomItems.length > 0) { csv += `CUSTOM ITEMS\n"Description","Qty","Unit Base Cost (RM)","Total (RM)"\n`; appCustomItems.forEach(c => csv+=`"${c.desc}",${c.qty},${c.cost},${c.qty*c.cost}\n`); csv += `\n`; }
+        csv += `,,,,"Gross Subtotal (RM)",${document.getElementById('sumSubtotal_screen').innerText.replace(/,/g,'')}\n,,,,"GRAND TOTAL (RM)",${document.getElementById('grandTotal_screen').innerText.replace(/,/g,'')}\n`;
+        const a = document.createElement('a'); a.href = window.URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' })); a.download = `Jutarama_Quote_${getVal('quoteIdInput')}.csv`; document.body.appendChild(a); a.click(); document.body.removeChild(a);
     }
-
-    document.addEventListener("DOMContentLoaded", function() {
-        applyCustomRows(); buildBOMTable(); loadPrices();
-        setTimeout(() => { toggleTanks(); processTankData(); }, 150);
-    });
-
 </script>
 </body>
 </html>
