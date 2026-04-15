@@ -152,10 +152,10 @@
         }
     </style>
     <script>
-        const cv = "V92";
+        const cv = "V93";
         if(localStorage.getItem("winkoAppVersion") !== cv) {
             localStorage.setItem("winkoAppVersion", cv);
-            for(let i=13; i<=91; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=92; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -309,7 +309,7 @@ Note:
                         <button class="action-btn export-btn" onclick="exportCSV()">Export CSV</button>
                         <button class="action-btn print-btn" style="background: #334155;" onclick="printInternal()">Internal PDF</button>
                         <button class="action-btn print-btn" onclick="printCustomer()">Customer PDF</button>
-                        <button class="action-btn print-btn" style="background: #0284c7;" onclick="printChecklist()">📋 SO Factory Checklist</button>
+                        <button class="action-btn print-btn" style="background: #0284c7;" onclick="printChecklist()">📋 SO Checklist</button>
                     </div>
                     
                     <div id="dynamicVisualsScreenContainer"></div>
@@ -422,44 +422,22 @@ Note:
 
 <div id="checklistPrintView">
     <div style="text-align:right; font-weight:bold; margin-bottom:5px;"><span class="chk-box" id="box_local"></span> LOCAL &nbsp;&nbsp;&nbsp; <span class="chk-box" id="box_export"></span> EXPORT</div>
-    <div style="font-size: 11pt; font-weight: bold; text-decoration: underline; margin-bottom: 10px;">Pressed Steel Tank Sales Order / Production Checklist</div>
+    <div style="font-size: 11pt; font-weight: bold; text-decoration: underline; margin-bottom: 10px;">Pressed Steel Tank Sales Order Checklist</div>
     <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
         <div style="width: 48%;"><table style="width:100%; border:none;"><tr style="border:none;"><td style="width:110px; font-weight:bold; border:none; padding:2px;">Customer:</td><td style="border-bottom:1px solid #000; padding:0 5px;" id="chk_customer"></td></tr><tr style="border:none;"><td style="font-weight:bold; border:none; padding:2px;">PO No:</td><td style="border-bottom:1px solid #000; padding:0 5px;" id="chk_custpo"></td></tr><tr style="border:none;"><td style="font-weight:bold; border:none; padding:2px;">Project Name:</td><td style="border-bottom:1px solid #000; padding:0 5px;" id="chk_project"></td></tr></table></div>
-        <div style="width: 48%;"><table style="width:100%; border:none;"><tr style="border:none;"><td style="width:110px; font-weight:bold; border:none; padding:2px;">Project No.:</td><td style="border-bottom:1px solid #000; padding:0 5px;" id="chk_projno"></td></tr><tr style="border:none;"><td style="font-weight:bold; border:none; padding:2px;">Issued Date:</td><td style="border-bottom:1px solid #000; padding:0 5px;" id="chk_issued"></td></tr><tr style="border:none;"><td style="font-weight:bold; border:none; padding:2px;">Delivery Target:</td><td style="border-bottom:1px solid #000; padding:0 5px;" id="chk_deldate"></td></tr></table></div>
+        <div style="width: 48%;"><table style="width:100%; border:none;"><tr style="border:none;"><td style="width:110px; font-weight:bold; border:none; padding:2px;">Project No.:</td><td style="border-bottom:1px solid #000; padding:0 5px;" id="chk_projno"></td></tr><tr style="border:none;"><td style="font-weight:bold; border:none; padding:2px;">Issued Date:</td><td style="border-bottom:1px solid #000; padding:0 5px;" id="chk_issued"></td></tr><tr style="border:none;"><td style="font-weight:bold; border:none; padding:2px;">Delivery Date:</td><td style="border-bottom:1px solid #000; padding:0 5px;" id="chk_deldate"></td></tr></table></div>
     </div>
     
     <div id="dynamicChecklistTanksContainer"></div>
 
-    <div style="border-top:2px solid #000; border-bottom:2px solid #000; padding:8px 0; margin-bottom:5px;">
-        <div style="font-weight:bold; text-transform:uppercase; font-size:9pt; margin-bottom:5px;">SPECIAL INSTRUCTIONS / REMARKS</div>
-        <div contenteditable="true" style="width:100%; min-height:40px; outline:none; font-size:9pt;">
-            [Type any special factory instructions, nozzle details, or site conditions here...]
-        </div>
+    <div style="border-top:1.5px solid #000; border-bottom:1.5px solid #000; padding:5px 0; margin-bottom:5px;">
+        <div style="font-weight:bold; text-transform:uppercase; font-size:8.5pt; margin-bottom:3px;">OTHER REQUIREMENTS</div>
+        <div style="border-bottom:1px solid #000; width:100%; margin-top:12px;"></div><div style="border-bottom:1px solid #000; width:100%; margin-top:12px;"></div>
+    </div>
+    <div style="display:flex; justify-content:space-between; margin-top:20px;">
+        <div style="width:30%;"><div style="border-top:1px solid #000; font-weight:bold; padding-top:2px;">Prepared:</div></div><div style="width:30%;"><div style="border-top:1px solid #000; font-weight:bold; padding-top:2px;">Approved:</div></div><div style="width:30%;"><div style="border-top:1px solid #000; font-weight:bold; padding-top:2px;">Received (Production):</div></div>
     </div>
     
-    <div style="margin-top:15px; page-break-inside: avoid;">
-        <table style="width:100%; border-collapse:collapse; text-align:center; border:2px solid #000; font-size:8.5pt;">
-            <tr style="background:#d1d5db; border-bottom:2px solid #000;">
-                <th style="border-right:1px solid #000; padding:6px; width:25%;">PREPARED BY (SALES)</th>
-                <th style="border-right:1px solid #000; padding:6px; width:25%;">CHECKED BY (ENG)</th>
-                <th style="border-right:1px solid #000; padding:6px; width:25%;">APPROVED BY (MGT)</th>
-                <th style="padding:6px; width:25%;">RECEIVED BY (PROD)</th>
-            </tr>
-            <tr>
-                <td style="border-right:1px solid #000; height:60px; vertical-align:bottom; padding:5px;">Name: <span style="display:inline-block; border-bottom:1px dashed #000; width:70%;"></span></td>
-                <td style="border-right:1px solid #000; height:60px; vertical-align:bottom; padding:5px;">Name: <span style="display:inline-block; border-bottom:1px dashed #000; width:70%;"></span></td>
-                <td style="border-right:1px solid #000; height:60px; vertical-align:bottom; padding:5px;">Name: <span style="display:inline-block; border-bottom:1px dashed #000; width:70%;"></span></td>
-                <td style="height:60px; vertical-align:bottom; padding:5px;">Name: <span style="display:inline-block; border-bottom:1px dashed #000; width:70%;"></span></td>
-            </tr>
-            <tr style="border-top:1px solid #000;">
-                <td style="border-right:1px solid #000; padding:5px; text-align:left;">Sign:<br><br>Date:</td>
-                <td style="border-right:1px solid #000; padding:5px; text-align:left;">Sign:<br><br>Date:</td>
-                <td style="border-right:1px solid #000; padding:5px; text-align:left;">Sign:<br><br>Date:</td>
-                <td style="padding:5px; text-align:left;">Sign:<br><br>Date:</td>
-            </tr>
-        </table>
-    </div>
-
     <div style="page-break-before: always; padding-top: 10px;" id="dynamicChecklistDrawingsContainer"></div>
     
     <div id="dynamicChecklistBomContainer"></div>
@@ -620,38 +598,12 @@ Note:
             screenVisHtml += `<div class="module-card no-print"><div class="card-header">Tank ${i+1} Visuals</div><div class="visual-container"><div class="view-box"><div class="view-title">Top</div><div id="grid_top_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Bottom</div><div id="grid_bot_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Front</div><div id="grid_fr_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Back</div><div id="grid_bk_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Left</div><div id="grid_lt_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Right</div><div id="grid_rt_s_${i}" class="grid-draft"></div></div></div></div>`;
             printVisHtml += `<div class="tank-section-title" style="margin-top:25px;">Tank ${i+1} Exterior Panels</div><div class="visual-container"><div class="view-box"><div class="view-title">Top</div><div id="grid_top_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Bottom</div><div id="grid_bot_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Front</div><div id="grid_fr_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Back</div><div id="grid_bk_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Left</div><div id="grid_lt_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Right</div><div id="grid_rt_p_${i}" class="grid-draft"></div></div></div>`;
             
-            chkTankHtml += `<div style="border-top:1px solid #000; padding:5px 0; margin-bottom:5px;">
-                <div style="font-weight:bold; background:#e2e8f0; padding:4px 8px; margin-bottom:4px; font-size:10pt;">TANK ${i+1} SUMMARY</div>
-                <table style="width:100%; border-collapse:collapse; font-size:8pt; border:1px solid #000;">
-                    <tr>
-                        <th style="border:1px solid #000; padding:4px; background:#f1f5f9; text-align:left;">Dimension</th>
-                        <td style="border:1px solid #000; padding:4px; font-weight:bold;" colspan="3" id="chk_sz_${i}"></td>
-                        <th style="border:1px solid #000; padding:4px; background:#f1f5f9; text-align:left;">Total Panels</th>
-                        <td style="border:1px solid #000; padding:4px; font-weight:bold;" id="chk_pcs_${i}"></td>
-                    </tr>
-                    <tr>
-                        <th style="border:1px solid #000; padding:4px; background:#f1f5f9; text-align:left;">Material</th>
-                        <td style="border:1px solid #000; padding:4px;" colspan="3">${t.coat}</td>
-                        <th style="border:1px solid #000; padding:4px; background:#f1f5f9; text-align:left;">Partition</th>
-                        <td style="border:1px solid #000; padding:4px;">${t.partChoice==='yes'?'YES':'NO'}</td>
-                    </tr>
-                    <tr style="background:#f1f5f9;">
-                        <th style="border:1px solid #000; padding:4px; text-align:center;">Roof</th>
-                        <th style="border:1px solid #000; padding:4px; text-align:center;">Base</th>
-                        <th style="border:1px solid #000; padding:4px; text-align:center;">Wall L1</th>
-                        <th style="border:1px solid #000; padding:4px; text-align:center;">Wall L2</th>
-                        <th style="border:1px solid #000; padding:4px; text-align:center;">Wall L3</th>
-                        <th style="border:1px solid #000; padding:4px; text-align:center;">Wall L4</th>
-                    </tr>
-                    <tr>
-                        <td style="border:1px solid #000; padding:4px; text-align:center; font-weight:bold;" id="chk_tRoof_${i}"></td>
-                        <td style="border:1px solid #000; padding:4px; text-align:center; font-weight:bold;" id="chk_tBase_${i}"></td>
-                        <td style="border:1px solid #000; padding:4px; text-align:center; font-weight:bold;" id="chk_tW1_${i}"></td>
-                        <td style="border:1px solid #000; padding:4px; text-align:center; font-weight:bold;" id="chk_tW2_${i}"></td>
-                        <td style="border:1px solid #000; padding:4px; text-align:center; font-weight:bold;" id="chk_tW3_${i}"></td>
-                        <td style="border:1px solid #000; padding:4px; text-align:center; font-weight:bold;" id="chk_tW4_${i}"></td>
-                    </tr>
-                </table>
+            chkTankHtml += `<div style="border-top:1.5px solid #000; padding:5px 0; margin-bottom:5px;">
+                <div style="font-weight:bold; background:#e2e8f0; padding:2px 5px; margin-bottom:4px;">TANK ${i+1} : <span id="chk_sz_${i}"></span> | Pcs: <span id="chk_pcs_${i}"></span></div>
+                <div style="display:flex; gap:15px; font-size:8pt; flex-wrap:wrap;">
+                    <div><strong>Std:</strong> ${t.std.includes('SANS')?'SANS':'SS22'}</div><div><strong>Part:</strong> ${t.partChoice==='yes'?'YES':'NO'}</div><div><strong>Coat:</strong> ${t.coat}</div>
+                    <div><strong>T.Roof:</strong> ${t.tRoof.replace('mm','')}</div><div><strong>T.Base:</strong> ${t.tBase.replace('mm','')}</div><div><strong>T.W1:</strong> ${t.tW1.replace('mm','')}</div><div><strong>T.W2:</strong> ${t.tW2.replace('mm','')}</div><div><strong>T.W3:</strong> ${t.tW3.replace('mm','')}</div><div><strong>T.W4:</strong> ${t.tW4.replace('mm','')}</div>
+                </div>
             </div>`;
             
             // Re-engineered Checklist Prints to span 31% width (3 per row evenly) so they are much bigger
@@ -704,17 +656,7 @@ Note:
                 
                 let r=L*W, b=L*W, pm=(L+W)*2, s=pm*H, pp=(t.partChoice==='yes'&&t.partQty>0)?(pL*pH*t.partQty):0;
                 t.totalPanels = r + b + s + pp; totalP += t.totalPanels;
-                
-                // Set the exact quantity counts on the checklist summary table
-                if(document.getElementById(`chk_pcs_${i}`)) {
-                    setTxt(`chk_pcs_${i}`, t.totalPanels); setTxt(`chk_sz_${i}`, `${t.L}x${t.W}x${t.H}`);
-                    setHtml(`chk_tRoof_${i}`, `${t.tRoof.replace('mm','')} <br><span style="font-size:7pt;">(${Math.max(0,r-1)} pcs)</span>`);
-                    setHtml(`chk_tBase_${i}`, `${t.tBase.replace('mm','')} <br><span style="font-size:7pt;">(${b} pcs)</span>`);
-                    setHtml(`chk_tW1_${i}`, `${t.tW1.replace('mm','')} <br><span style="font-size:7pt;">(${H>=1?pm:0} pcs)</span>`);
-                    setHtml(`chk_tW2_${i}`, `${t.tW2.replace('mm','')} <br><span style="font-size:7pt;">(${H>=2?pm:0} pcs)</span>`);
-                    setHtml(`chk_tW3_${i}`, `${t.tW3.replace('mm','')} <br><span style="font-size:7pt;">(${H>=3?pm:0} pcs)</span>`);
-                    setHtml(`chk_tW4_${i}`, `${t.tW4.replace('mm','')} <br><span style="font-size:7pt;">(${H>=4?pm*(H-3):0} pcs)</span>`);
-                }
+                setTxt(`chk_pcs_${i}`, t.totalPanels); setTxt(`chk_sz_${i}`, `${t.L}x${t.W}x${t.H}`);
 
                 let pTT = null, pPT = -1, pTF = null, pPF = -1, pTS = null, pPS = -1;
                 if (t.partChoice==='yes' && t.partQty>0) {
@@ -838,13 +780,14 @@ Note:
                 <table style="width:100%; border-collapse:collapse; font-size:8.5pt; border:1px solid #000; margin-bottom:15px;">
                     <thead>
                         <tr style="background:#d1d5db;">
-                            <th style="border:1px solid #000; padding:4px; text-align:left; width:25%;">Category</th>
-                            <th style="border:1px solid #000; padding:4px; text-align:left; width:60%;">Description</th>
-                            <th style="border:1px solid #000; padding:4px; text-align:center; width:15%;">Qty</th>
+                            <th style="border:1px solid #000; padding:4px; text-align:center; width:8%;">Item</th>
+                            <th style="border:1px solid #000; padding:4px; text-align:center; width:72%;">Description</th>
+                            <th style="border:1px solid #000; padding:4px; text-align:center; width:20%;">Qty</th>
                         </tr>
                     </thead>
                     <tbody>`;
                 
+                let idx = 1;
                 t.bom.forEach((sec) => {
                     let hasItems = false;
                     let rows = '';
@@ -856,8 +799,8 @@ Note:
                             let desc = it.name;
                             if (it.selectId && it.selVal) desc += ` (${it.selVal})`;
                             rows += `<tr>
-                                <td style="border:1px solid #000; padding:4px;">${sec.category}</td>
-                                <td style="border:1px solid #000; padding:4px;">${desc}</td>
+                                <td style="border:1px solid #000; padding:4px; text-align:center;">${idx++}</td>
+                                <td style="border:1px solid #000; padding:4px;"><strong>[${sec.category}]</strong> ${desc}</td>
                                 <td style="border:1px solid #000; padding:4px; text-align:center; font-weight:bold;">${isSvc ? 'LUMP SUM' : q}</td>
                             </tr>`;
                         }
@@ -872,13 +815,16 @@ Note:
                 <table style="width:100%; border-collapse:collapse; font-size:8.5pt; border:1px solid #000; margin-bottom:15px;">
                     <thead>
                         <tr style="background:#d1d5db;">
-                            <th style="border:1px solid #000; padding:4px; text-align:left; width:85%;">Description</th>
-                            <th style="border:1px solid #000; padding:4px; text-align:center; width:15%;">Qty</th>
+                            <th style="border:1px solid #000; padding:4px; text-align:center; width:8%;">Item</th>
+                            <th style="border:1px solid #000; padding:4px; text-align:center; width:72%;">Description</th>
+                            <th style="border:1px solid #000; padding:4px; text-align:center; width:20%;">Qty</th>
                         </tr>
                     </thead>
                     <tbody>`;
+                let idx = 1;
                 appCustomItems.forEach((c) => {
                     chkBomHtml += `<tr>
+                        <td style="border:1px solid #000; padding:4px; text-align:center;">${idx++}</td>
                         <td style="border:1px solid #000; padding:4px;">${c.desc}</td>
                         <td style="border:1px solid #000; padding:4px; text-align:center; font-weight:bold;">${c.qty || 0}</td>
                     </tr>`;
@@ -926,8 +872,8 @@ Note:
     function buildAdminTable() { let h = ''; systemBaseStructure.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { h += `<tr><td style="font-weight:800; background:#f1f5f9; text-align:left;">${sec.category}</td><td><input type="text" class="admin-input text-left" id="adm_name_${sIdx}_${iIdx}" value="${it.name}"></td><td><input type="number" step="0.1" class="admin-input" id="adm_wt_${sIdx}_${iIdx}" value="${it.wt || 0}"></td><td><input type="number" step="0.01" class="admin-input" id="adm_price_${sIdx}_${iIdx}" value="${it.def.toFixed(2)}"></td></tr>`; }); }); setHtml('adminBody', h); }
     function saveAdminDefaults() { let nd = JSON.parse(JSON.stringify(systemBaseStructure)); nd.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { it.name = getVal(`adm_name_${sIdx}_${iIdx}`); it.wt = getNum(`adm_wt_${sIdx}_${iIdx}`); it.def = getNum(`adm_price_${sIdx}_${iIdx}`); }); }); localStorage.setItem('winkoMasterDefaults', JSON.stringify(nd)); alert("Success! Master Defaults updated."); location.reload(); }
 
-    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV92', JSON.stringify(d)); }
-    function loadPrices() { let s = localStorage.getItem('winkoProDataV92'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; } renderAllDynamicUI(); processTankData(); }
+    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV93', JSON.stringify(d)); }
+    function loadPrices() { let s = localStorage.getItem('winkoProDataV93'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; } renderAllDynamicUI(); processTankData(); }
 
     function refreshMemoryDropdown() { let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; let s = document.getElementById('memoryDropdown'); if(s) { s.innerHTML = '<option value="">-- Load a Saved Project --</option>'; Object.keys(m).forEach(k => { s.innerHTML += `<option value="${k}">${k}</option>`; }); } }
     function saveToMemory() { let p = getVal('projectName').trim(); if(!p) { alert("Type a Project Name first."); return; } let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; m[p] = d; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); alert("Saved."); refreshMemoryDropdown(); setVal('memoryDropdown', p); }
