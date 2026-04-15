@@ -72,7 +72,7 @@
         .add-btn { background: #38bdf8; margin-top:10px; width:100%; color: #0f172a; border: 2px dashed #0284c7; } .add-btn:hover { background: #0ea5e9; color:white; }
         .del-btn { background: #ef4444; color:white; padding:4px 8px; border:none; border-radius:4px; font-size:11px; cursor:pointer; font-weight:bold; }
         
-        /* PERFECT GRID SYSTEM */
+        /* VISUAL DRAFT SYSTEM */
         .visual-container { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-start; margin-bottom: 10px; }
         .view-box { text-align: center; background: #f8fafc; padding: 8px; border: 1px solid #e2e8f0; border-radius: 6px; width: 135px; } 
         .view-title { font-size: 0.7em; font-weight: 800; margin-bottom: 6px; color: #64748b; text-transform: uppercase; }
@@ -115,43 +115,42 @@
             .avoid-break { page-break-inside: avoid; }
             .page-break { page-break-before: always; }
             
-            /* GLOBAL SO PRINT GRID OVERRIDES */
-            .visual-container { display: flex !important; flex-wrap: wrap !important; gap: 10px !important; width: 100% !important; margin: 10px 0 20px 0 !important; page-break-inside: avoid !important;}
-            .grid-draft { gap: 0 !important; border: 1px solid #000 !important; background: transparent !important;}
-            .panel { background: transparent !important; border: 1px solid #000 !important; box-sizing: border-box !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            /* SHARED PRINT STYLES */
+            .grid-draft { gap: 0 !important; border: 1.5px solid #000 !important; background: transparent !important;}
+            .panel { background: transparent !important; border: 1px solid #000 !important; box-sizing: border-box !important; }
             
-            /* --- LARGER DRAWINGS FOR INTERNAL PDF (3 PER ROW) --- */
-            body.print-internal .view-box { padding: 10px !important; border: 2px solid #cbd5e1 !important; border-radius: 6px !important; width: 31% !important; margin-bottom: 15px !important;}
-            body.print-internal .view-title { font-size: 11pt !important; margin-bottom: 8px !important; font-weight: 800 !important; color:#0f172a !important;}
+            /* --- INTERNAL PDF: MAX SIZE 3X2 GRID --- */
+            body.print-internal .visual-container { display: flex !important; flex-wrap: wrap !important; gap: 15px !important; width: 100% !important; margin: 0 auto !important; justify-content: space-between !important;}
+            body.print-internal .view-box { padding: 8px !important; border: 1.5px solid #000 !important; border-radius: 4px !important; width: 31% !important; margin-bottom: 10px !important; height: fit-content !important;}
+            body.print-internal .view-title { font-size: 10pt !important; margin-bottom: 5px !important; font-weight: 800 !important; text-decoration: underline;}
             
-            /* --- COMPACT DRAWINGS FOR CHECKLIST (6 PER ROW) --- */
-            body.print-checklist .view-box { padding: 4px !important; border: 1px solid #cbd5e1 !important; border-radius: 4px !important; width: 15% !important; margin-bottom: 5px !important;}
-            
+            /* --- CHECKLIST PDF: COMPACT 6 PER ROW --- */
+            body.print-checklist .visual-container { display: flex !important; flex-wrap: wrap !important; gap: 5px !important; width: 100% !important; }
+            body.print-checklist .view-box { padding: 3px !important; border: 1px solid #cbd5e1 !important; border-radius: 4px !important; width: 15% !important; }
+            body.print-checklist .view-title { font-size: 7pt !important; }
+
             /* INTERNAL LAYOUTOVERRIDES */
             body.print-internal #mainContent { display: block !important; }
             body.print-internal #customerPreviewContainer, body.print-internal #checklistPrintView, body.print-internal .col-right { display: none !important; }
             body.print-internal .app-layout, body.print-internal .col-left { display: block !important; width: 100% !important; }
-            body.print-internal .module-card { border: none !important; padding: 0 !important; margin-bottom: 20px !important; box-shadow: none !important; }
-            body.print-internal .card-header { display: block !important; border-bottom: 2px solid #0f172a !important; margin-bottom: 8px !important; font-size: 11pt !important; padding: 0 0 5px 0 !important;}
-            body.print-internal::before { content: "INTERNAL USE ONLY - STRICTLY CONFIDENTIAL"; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 60pt; font-weight: 900; color: rgba(239, 68, 68, 0.08); z-index: -1; white-space: nowrap; }
+            body.print-internal .module-card { border: none !important; padding: 0 !important; margin-bottom: 15px !important; box-shadow: none !important; }
+            body.print-internal .card-header { display: block !important; border-bottom: 2.5px solid #0f172a !important; margin-bottom: 8px !important; font-size: 12pt !important; padding: 0 0 5px 0 !important;}
+            body.print-internal::before { content: "INTERNAL COSTING - DO NOT SHARE"; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 60pt; font-weight: 900; color: rgba(239, 68, 68, 0.08); z-index: -1; white-space: nowrap; pointer-events: none; }
             body.print-internal .print-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #ea580c; padding-bottom: 10px; margin-bottom: 15px; }
-            body.print-internal table { font-size: 8.5pt; margin-bottom: 10px; border-collapse: collapse; width: 100%; border: 1px solid #0f172a; }
+            body.print-internal table { font-size: 8.5pt; margin-bottom: 10px; border-collapse: collapse; width: 100%; border: 1.5px solid #0f172a; }
             body.print-internal th { background-color: #0f172a !important; color: #ffffff !important; padding: 6px 8px;}
             body.print-internal td { border-right: 1px solid #cbd5e1; padding: 4px 8px; border-bottom: 1px solid #cbd5e1;}
             body.print-internal td.text-right { text-align: right; font-weight: 700;}
             body.print-internal input, body.print-internal .desc-input, body.print-internal .bom-inline-select { border: none !important; background: transparent !important; padding: 0 !important; width: auto;}
-            body.print-internal .summary-box { background: #fff !important; border: 2px solid #0f172a !important; border-radius: 8px !important; padding: 0 !important; width: 35% !important; float: right !important;}
+            body.print-internal .summary-box { background: #fff !important; border: 2.5px solid #0f172a !important; border-radius: 8px !important; padding: 0 !important; width: 40% !important; float: right !important;}
             body.print-internal .drawings-page { page-break-before: always !important; padding-top: 20px !important; clear: both !important;}
 
             body.print-customer #mainContent, body.print-customer #inventoryContent, body.print-customer #adminContent { display: none !important; }
             body.print-customer #customerPreviewContainer { display: block !important; padding: 0 !important; background: none !important; }
             body.print-customer #customerPrintViewEditor { max-width: none !important; padding: 0 !important; margin: 0 !important; }
-            body.print-customer .editable-section { outline: none !important; background: transparent !important; border: none !important; }
             .cp-table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 10px; font-size: 8.5pt; border: 2px solid #000; }
             .cp-table th, .cp-table td { border: 1px solid #000; padding: 6px !important; vertical-align: top;}
             .cp-table th { background: #d1d5db !important; font-weight: bold; text-align: center;}
-            .cp-short-exclusions { display: flex; align-items: stretch; margin-bottom: 15px !important; font-size: 8pt; border: 1px solid #000;}
-            .cp-short-exclusions .label { background: #d1d5db !important; padding: 6px 10px; font-weight: bold; border-right: 1px solid #000; width: 100px; text-align: center; }
 
             body.print-checklist #mainContent, body.print-checklist #customerPreviewContainer { display: none !important; }
             body.print-checklist #checklistPrintView { display: block !important; font-size: 9pt; padding: 0 10px; }
@@ -159,10 +158,10 @@
         }
     </style>
     <script>
-        const cv = "V100";
+        const cv = "V101";
         if(localStorage.getItem("winkoAppVersion") !== cv) {
             localStorage.setItem("winkoAppVersion", cv);
-            for(let i=13; i<=99; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=100; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -326,29 +325,26 @@ Note:
 
         <div class="print-only avoid-break" id="internalPrintFooter">
             <div class="footer-flex">
-                <div style="display:flex; gap:15px; width:60%;">
+                <div style="display:flex; gap:15px; width:55%;">
                     <div style="flex:1; border:1.5px solid #000; padding:8px; border-radius:6px; height:80px; display:flex; flex-direction:column; justify-content:space-between;">
-                        <span style="font-weight:800; font-size:8pt; color:#475569;">COSTING PREPARED BY:</span><strong style="text-align:center; border-top:1px dashed #cbd5e1; padding-top:4px;" id="intSigSales"></strong>
+                        <span style="font-weight:800; font-size:8pt; color:#475569;">COSTING BY:</span><strong style="text-align:center; border-top:1px dashed #cbd5e1; padding-top:4px;" id="intSigSales"></strong>
                     </div>
                     <div style="flex:1; border:1.5px solid #000; padding:8px; border-radius:6px; height:80px; display:flex; flex-direction:column; justify-content:space-between;">
-                        <span style="font-weight:800; font-size:8pt; color:#475569;">ENGINEERING CHECK:</span><strong style="text-align:center; border-top:1px dashed #cbd5e1; padding-top:4px;"></strong>
-                    </div>
-                    <div style="flex:1; border:1.5px solid #000; padding:8px; border-radius:6px; height:80px; display:flex; flex-direction:column; justify-content:space-between;">
-                        <span style="font-weight:800; font-size:8pt; color:#475569;">MANAGEMENT APPROVAL:</span><strong style="text-align:center; border-top:1px dashed #cbd5e1; padding-top:4px;"></strong>
+                        <span style="font-weight:800; font-size:8pt; color:#475569;">ENGINEERING:</span><strong style="text-align:center; border-top:1px dashed #cbd5e1; padding-top:4px;"></strong>
                     </div>
                 </div>
 
-                <div style="width:35%; border:2px solid #000; border-radius:8px; padding:0; overflow:hidden; margin-left:auto;">
+                <div style="width:40%; border:2.5px solid #000; border-radius:8px; padding:0; overflow:hidden; margin-left:auto;">
                     <table style="width:100%; border-collapse:collapse; margin:0; font-size:9pt;">
-                        <tr><td style="padding:4px 10px; font-weight:800; font-size:7.5pt; color:#475569;">EST. CAPACITY:</td><td id="sumCapacity_print" style="text-align:right; font-weight:700; color:#0284c7;">0 L</td></tr>
-                        <tr><td style="padding:4px 10px; font-weight:800; font-size:7.5pt; color:#475569;">TOTAL PANELS:</td><td id="sumPanels_print" style="text-align:right; font-weight:700; color:#9333ea;">0</td></tr>
-                        <tr><td style="padding:4px 10px; font-weight:800; font-size:7.5pt; color:#475569;">EST. TOTAL WT:</td><td id="sumWeight_print" style="text-align:right; font-weight:700; color:#ea580c;">0 kg</td></tr>
-                        <tr><td style="padding:6px 10px; font-weight:800; font-size:7.5pt; color:#475569; border-top:1.5px solid #cbd5e1;">RAW BASE COST:</td><td style="text-align:right; font-weight:700; border-top:1.5px solid #cbd5e1;">RM <span id="sumBaseCost_print">0.00</span></td></tr>
-                        <tr><td style="padding:4px 10px; font-weight:800; font-size:7.5pt; color:#475569;">PROFIT MARGIN:</td><td style="text-align:right; font-weight:800; color:#059669;">+ RM <span id="sumMarkup_print">0.00</span></td></tr>
-                        <tr><td style="padding:4px 10px; font-weight:800; font-size:7.5pt; color:#475569;">GROSS SUBTOTAL:</td><td style="text-align:right; font-weight:800;">RM <span id="sumSubtotal_print">0.00</span></td></tr>
+                        <tr><td style="padding:4px 10px; font-weight:800; font-size:7.5pt; color:#475569;">CAPACITY:</td><td id="sumCapacity_print" style="text-align:right; font-weight:700; color:#0284c7;">0 L</td></tr>
+                        <tr><td style="padding:4px 10px; font-weight:800; font-size:7.5pt; color:#475569;">PANELS:</td><td id="sumPanels_print" style="text-align:right; font-weight:700;">0</td></tr>
+                        <tr><td style="padding:4px 10px; font-weight:800; font-size:7.5pt; color:#475569;">WEIGHT:</td><td id="sumWeight_print" style="text-align:right; font-weight:700; color:#ea580c;">0 kg</td></tr>
+                        <tr><td style="padding:6px 10px; font-weight:800; font-size:7.5pt; color:#475569; border-top:1.5px solid #cbd5e1;">BASE COST:</td><td style="text-align:right; font-weight:700; border-top:1.5px solid #cbd5e1;">RM <span id="sumBaseCost_print">0.00</span></td></tr>
+                        <tr><td style="padding:4px 10px; font-weight:800; font-size:7.5pt; color:#475569;">MARKUP:</td><td style="text-align:right; font-weight:800; color:#059669;">+ RM <span id="sumMarkup_print">0.00</span></td></tr>
+                        <tr><td style="padding:4px 10px; font-weight:800; font-size:7.5pt; color:#475569;">GROSS:</td><td style="text-align:right; font-weight:800;">RM <span id="sumSubtotal_print">0.00</span></td></tr>
                         <tr><td style="padding:4px 10px; font-weight:800; font-size:7.5pt; color:#475569;">DISCOUNT:</td><td style="text-align:right; font-weight:700; color:#d97706;">- RM <span id="sumDiscount_print">0.00</span></td></tr>
                         <tr><td style="padding:6px 10px; font-weight:800; font-size:7.5pt; color:#475569; border-bottom:1.5px solid #cbd5e1;">SST TAX:</td><td style="text-align:right; font-weight:700; border-bottom:1.5px solid #cbd5e1;">+ RM <span id="sumSST_print">0.00</span></td></tr>
-                        <tr style="background:#e2e8f0;"><td style="padding:8px 10px; font-weight:900; font-size:11pt; color:#0f172a;">FINAL QUOTE:</td><td style="text-align:right; font-weight:900; font-size:11pt; color:#0f172a;">RM <span id="grandTotal_print">0.00</span></td></tr>
+                        <tr style="background:#0f172a; color:white;"><td style="padding:8px 10px; font-weight:900; font-size:11pt;">FINAL:</td><td style="text-align:right; font-weight:900; font-size:11pt;">RM <span id="grandTotal_print">0.00</span></td></tr>
                     </table>
                 </div>
             </div>
@@ -504,7 +500,6 @@ Note:
     const SECRET_PASSWORD = "winko2026";
     const ADMIN_PASSWORD = "adminmaster99";
 
-    // Standard Template Data
     const systemBaseStructure = [
         { category: "Panels", items: [{name: "Manhole Panel", def: 450, wt: 55}, {name: "Roof Panel", def: 220, wt: 26}, {name: "Base Panel", def: 350, wt: 68}, {name: "Wall Panel (L1)", def: 350, wt: 68}, {name: "Wall Panel (L2)", def: 280, wt: 48}, {name: "Wall Panel (L3)", def: 280, wt: 48}, {name: "Wall Panel (L4)", def: 220, wt: 26}, {name: "Partition Panel", def: 280, wt: 48}] },
         { category: "Cleat & Trusses", items: [{name: "Type A Cleat", def: 25, wt: 1.2}, {name: "Type B Cleat", def: 28, wt: 1.8}, {name: "Type C Cleat", def: 30, wt: 2.5}, {name: "Ø1\" Pipe", def: 12, wt: 1.6}, {name: "2\" x 2\" angle", def: 15, wt: 2.2}] },
@@ -514,11 +509,8 @@ Note:
     ];
 
     try { let md = JSON.parse(localStorage.getItem('winkoMasterDefaults')); if(md) md.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { if(systemBaseStructure[sIdx] && systemBaseStructure[sIdx].items[iIdx]) { systemBaseStructure[sIdx].items[iIdx].name = it.name; systemBaseStructure[sIdx].items[iIdx].def = it.def; systemBaseStructure[sIdx].items[iIdx].wt = it.wt; } }); }); } catch(e) {}
-    
-    // Ensure selects have defaults
     systemBaseStructure.forEach(sec => sec.items.forEach(it => { if(it.selectId && !it.selVal) it.selVal = it.options[0]; }));
 
-    // Global State App Architecture
     let appTanks = [];
     let appCustomItems = [];
     const configIDs = ['quoteIdInput', 'custPoNo', 'custDelDate', 'marketChoice', 'unitChoice', 'markupPct','discountPct','sstPct', 'shortExclusions', 'fullTermsNotes', 'custCompany', 'custAttn', 'custAddr', 'tcValidity', 'tcLead', 'tcDelivery', 'tcPayment', 'signName', 'signPhone'];
@@ -539,7 +531,6 @@ Note:
         return { id: Date.now() + Math.random(), desc: "Custom Structure / Pump Room", cost: 0, qty: 1, finalPrice: 0 };
     }
 
-    // Event Triggers & State Updater
     function updateTankField(tIdx, field, val, isNum = false) { appTanks[tIdx][field] = isNum ? (parseFloat(val) || 0) : val; safeProcess(); }
     function updateBomField(tIdx, sIdx, iIdx, field, val, isNum = false) { appTanks[tIdx].bom[sIdx].items[iIdx][field] = isNum ? (parseFloat(val) || 0) : val; safeProcess(); }
     function updateCustomField(cIdx, field, val, isNum = false) { appCustomItems[cIdx][field] = isNum ? (parseFloat(val) || 0) : val; safeProcess(); }
@@ -550,7 +541,7 @@ Note:
     function addNewCustomItem() { appCustomItems.push(defaultCustomItem()); renderAllDynamicUI(); processTankData(); }
     function removeCustomItem(idx) { appCustomItems.splice(idx, 1); renderAllDynamicUI(); processTankData(); }
     function addBomRow(tIdx, sIdx) { appTanks[tIdx].bom[sIdx].items.push({name: "Custom Item", qty: 0, wt: 0, def: 0}); renderAllDynamicUI(); processTankData(); }
-    function removeBomRow(tIdx, sIdx) { let minLen = systemBaseStructure[sIdx].items.length; if(appTanks[tIdx].bom[sIdx].items.length > minLen) { appTanks[tIdx].bom[sIdx].items.pop(); renderAllDynamicUI(); processTankData(); } else { alert("Cannot remove base system items. Set Qty to 0 instead."); } }
+    function removeBomRow(tIdx, sIdx) { let minLen = systemBaseStructure[sIdx].items.length; if(appTanks[tIdx].bom[sIdx].items.length > minLen) { appTanks[tIdx].bom[sIdx].items.pop(); renderAllDynamicUI(); processTankData(); } }
 
     function safeProcess() { processTankData(); savePrices(); }
 
@@ -568,94 +559,75 @@ Note:
     function switchTab(tabId) {
         setDisp('mainContent', false); setDisp('inventoryContent', false); setDisp('adminContent', false); setDisp('customerPreviewContainer', false);
         ['btnTabQuote', 'btnTabInv', 'btnTabAdmin', 'btnTabPreview'].forEach(id => document.getElementById(id).classList.remove('active'));
-
         if(tabId === 'quote') { setDisp('mainContent', true); document.getElementById('btnTabQuote').classList.add('active'); }
         else if(tabId === 'preview') { syncPrintHeader(window.currentUnit||'ft'); document.getElementById('customerPreviewContainer').style.display='flex'; document.getElementById('btnTabPreview').classList.add('active'); }
         else if(tabId === 'inventory') { setDisp('inventoryContent', true); document.getElementById('btnTabInv').classList.add('active'); renderInventoryTable(); }
         else if(tabId === 'admin') { setDisp('adminContent', true); document.getElementById('btnTabAdmin').classList.add('active'); buildAdminTable(); }
     }
 
-    // Build the dynamic UI elements
     function renderAllDynamicUI() {
         let tanksHtml = "", bomHtml = "", screenVisHtml = "", printVisHtml = "", chkVisHtml = "";
-
         appTanks.forEach((t, i) => {
-            // TANK INFO
             tanksHtml += `<div class="tank-block" style="border-top:2px dashed #cbd5e1; margin-top:20px; padding-top:15px;">
                 <div class="tank-section-title" style="background:#e0f2fe; display:flex; justify-content:space-between;">
                     <span>Tank ${i+1} Specs</span> <button class="del-btn no-print" onclick="removeTank(${i})">X REMOVE</button>
                 </div>
                 <div class="config-grid">
-                    <div class="form-group"><label>Standard</label><select id="t_${i}_std" onchange="updateTankField(${i}, 'std', this.value)"><option ${t.std.includes('SANS')?'selected':''}>SANS 10329:2020 Approved by SIRIM & SPAN</option><option ${t.std.includes('SS 22')?'selected':''}>SS 22: 1979</option></select></div>
-                    <div class="form-group"><label>Material</label><select id="t_${i}_coat" onchange="updateTankField(${i}, 'coat', this.value)"><option ${t.coat==='Hot Dipped Galvanised'?'selected':''}>Hot Dipped Galvanised</option><option ${t.coat==='Painted Steel'?'selected':''}>Painted Steel</option><option ${t.coat==='Stainless Steel (SS 304)'?'selected':''}>Stainless Steel (SS 304)</option><option ${t.coat==='Stainless Steel (SS 316)'?'selected':''}>Stainless Steel (SS 316)</option></select></div>
+                    <div class="form-group"><label>Standard</label><select onchange="updateTankField(${i}, 'std', this.value)"><option ${t.std.includes('SANS')?'selected':''}>SANS 10329:2020 Approved by SIRIM & SPAN</option><option ${t.std.includes('SS 22')?'selected':''}>SS 22: 1979</option></select></div>
+                    <div class="form-group"><label>Material</label><select onchange="updateTankField(${i}, 'coat', this.value)"><option ${t.coat==='Hot Dipped Galvanised'?'selected':''}>Hot Dipped Galvanised</option><option ${t.coat==='Painted Steel'?'selected':''}>Painted Steel</option><option ${t.coat==='Stainless Steel (SS 304)'?'selected':''}>Stainless Steel (SS 304)</option><option ${t.coat==='Stainless Steel (SS 316)'?'selected':''}>Stainless Steel (SS 316)</option></select></div>
                 </div>
                 <div class="dim-grid">
-                    <div class="form-group"><label>Length</label><input type="number" id="t_${i}_L" value="${t.L}" step="0.01" oninput="updateTankField(${i}, 'L', this.value, true)"></div>
-                    <div class="form-group"><label>Width</label><input type="number" id="t_${i}_W" value="${t.W}" step="0.01" oninput="updateTankField(${i}, 'W', this.value, true)"></div>
-                    <div class="form-group"><label>Height</label><input type="number" id="t_${i}_H" value="${t.H}" step="0.01" oninput="updateTankField(${i}, 'H', this.value, true)"></div>
-                    <div class="form-group" style="grid-column: span 3;"><label style="color:#0ea5e9;">Custom Size Override Text</label><input type="text" id="t_${i}_override" value="${t.override}" placeholder="e.g. 2m x 3m Custom Shape" style="border:1px dashed #0ea5e9;" oninput="updateTankField(${i}, 'override', this.value)"></div>
+                    <div class="form-group"><label>Length</label><input type="number" value="${t.L}" step="0.01" oninput="updateTankField(${i}, 'L', this.value, true)"></div>
+                    <div class="form-group"><label>Width</label><input type="number" value="${t.W}" step="0.01" oninput="updateTankField(${i}, 'W', this.value, true)"></div>
+                    <div class="form-group"><label>Height</label><input type="number" value="${t.H}" step="0.01" oninput="updateTankField(${i}, 'H', this.value, true)"></div>
+                    <div class="form-group" style="grid-column: span 3;"><label style="color:#0ea5e9;">Custom Size Override Text</label><input type="text" value="${t.override}" style="border:1px dashed #0ea5e9;" oninput="updateTankField(${i}, 'override', this.value)"></div>
                 </div>
                 
                 <div class="tank-section-title" style="margin-top:10px; background:#f1f5f9;">Tank ${i+1} Panel Thicknesses</div>
                 <div class="dim-grid" style="padding:10px; border:1px solid #e2e8f0; margin-bottom:15px; border-radius:6px;">
-                    <div class="form-group"><label>Roof</label><input type="text" id="t_${i}_tRoof" value="${t.tRoof}" oninput="updateTankField(${i}, 'tRoof', this.value)"></div>
-                    <div class="form-group"><label>Base</label><input type="text" id="t_${i}_tBase" value="${t.tBase}" oninput="updateTankField(${i}, 'tBase', this.value)"></div>
-                    <div class="form-group"><label>Wall L1</label><input type="text" id="t_${i}_tW1" value="${t.tW1}" oninput="updateTankField(${i}, 'tW1', this.value)"></div>
-                    <div class="form-group"><label>Wall L2</label><input type="text" id="t_${i}_tW2" value="${t.tW2}" oninput="updateTankField(${i}, 'tW2', this.value)"></div>
-                    <div class="form-group"><label>Wall L3</label><input type="text" id="t_${i}_tW3" value="${t.tW3}" oninput="updateTankField(${i}, 'tW3', this.value)"></div>
-                    <div class="form-group"><label>Wall L4</label><input type="text" id="t_${i}_tW4" value="${t.tW4}" oninput="updateTankField(${i}, 'tW4', this.value)"></div>
+                    <div class="form-group"><label>Roof</label><input type="text" value="${t.tRoof}" oninput="updateTankField(${i}, 'tRoof', this.value)"></div>
+                    <div class="form-group"><label>Base</label><input type="text" value="${t.tBase}" oninput="updateTankField(${i}, 'tBase', this.value)"></div>
+                    <div class="form-group"><label>Wall L1</label><input type="text" value="${t.tW1}" oninput="updateTankField(${i}, 'tW1', this.value)"></div>
+                    <div class="form-group"><label>Wall L2</label><input type="text" value="${t.tW2}" oninput="updateTankField(${i}, 'tW2', this.value)"></div>
+                    <div class="form-group"><label>Wall L3</label><input type="text" value="${t.tW3}" oninput="updateTankField(${i}, 'tW3', this.value)"></div>
+                    <div class="form-group"><label>Wall L4</label><input type="text" value="${t.tW4}" oninput="updateTankField(${i}, 'tW4', this.value)"></div>
                 </div>
 
                 <div class="config-grid">
-                    <div class="form-group" style="grid-column:span 2;"><label>Partition Choice</label><select id="t_${i}_partChoice" onchange="updateTankField(${i}, 'partChoice', this.value); document.getElementById('partDet_${i}').style.display=this.value==='yes'?'flex':'none';">
+                    <div class="form-group" style="grid-column:span 2;"><label>Partition Choice</label><select onchange="updateTankField(${i}, 'partChoice', this.value); document.getElementById('partDet_${i}').style.display=this.value==='yes'?'flex':'none';">
                         <option value="no" ${t.partChoice==='no'?'selected':''}>No</option>
                         <option value="yes" ${t.partChoice==='yes'?'selected':''}>Yes</option>
                     </select></div>
                 </div>
                 <div id="partDet_${i}" style="display:${t.partChoice==='yes'?'flex':'none'}; background:#fff7ed; padding:15px; border-radius:8px; margin-bottom:15px; gap:10px; flex-wrap:wrap;">
-                    <div class="form-group"><label>Qty</label><input type="number" id="t_${i}_partQty" value="${t.partQty}" oninput="updateTankField(${i}, 'partQty', this.value, true)"></div>
-                    <div class="form-group"><label>L/W (Size)</label><input type="number" id="t_${i}_partL" value="${t.partL}" step="0.01" oninput="updateTankField(${i}, 'partL', this.value, true)"></div>
-                    <div class="form-group"><label>Height</label><input type="number" id="t_${i}_partH" value="${t.partH}" step="0.01" oninput="updateTankField(${i}, 'partH', this.value, true)"></div>
-                    <div class="form-group"><label>Position</label><input type="number" id="t_${i}_partPos" value="${t.partPos}" oninput="updateTankField(${i}, 'partPos', this.value, true)"></div>
-                    <div class="form-group" style="flex:1.5;"><label>Type</label><input type="text" id="t_${i}_partType" value="${t.partType}" oninput="updateTankField(${i}, 'partType', this.value)"></div>
+                    <div class="form-group"><label>Qty</label><input type="number" value="${t.partQty}" oninput="updateTankField(${i}, 'partQty', this.value, true)"></div>
+                    <div class="form-group"><label>L/W (Size)</label><input type="number" value="${t.partL}" step="0.01" oninput="updateTankField(${i}, 'partL', this.value, true)"></div>
+                    <div class="form-group"><label>Height</label><input type="number" value="${t.partH}" step="0.01" oninput="updateTankField(${i}, 'partH', this.value, true)"></div>
+                    <div class="form-group"><label>Position</label><input type="number" value="${t.partPos}" oninput="updateTankField(${i}, 'partPos', this.value, true)"></div>
+                    <div class="form-group" style="flex:1.5;"><label>Type</label><input type="text" value="${t.partType}" oninput="updateTankField(${i}, 'partType', this.value)"></div>
                 </div>
             </div>`;
 
-            // BOM HTML
             let bRows = "";
             t.bom.forEach((sec, sIdx) => {
                 let isSvc = (sec.category === "Services");
                 bRows += `<tr class="section-header-row"><td colspan="5" class="section-header" style="padding:0;"><div style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; font-weight:800; background:#f1f5f9;"><span>${sec.category}</span><div class="no-print"><button type="button" onclick="addBomRow(${i}, ${sIdx})" style="padding:4px 8px; font-size:11px; background:#fff; border:1px solid #ea580c; color:#ea580c; border-radius:4px; cursor:pointer; font-weight:700;">+ Row</button> <button type="button" onclick="removeBomRow(${i}, ${sIdx})" style="padding:4px 8px; font-size:11px; background:#fff; border:1px solid #e11d48; color:#e11d48; border-radius:4px; cursor:pointer; font-weight:700;">- Row</button></div></div></td></tr>`;
                 sec.items.forEach((it, iIdx) => {
                     let selHtml = it.selectId ? `<select id="t_${i}_sel_${sIdx}_${iIdx}" class="bom-inline-select" onchange="updateBomField(${i}, ${sIdx}, ${iIdx}, 'selVal', this.value)">${it.options.map(o=>`<option value="${o}" ${it.selVal===o?'selected':''}>${o}</option>`).join('')}</select>` : '';
-                    let qtyHtml = isSvc ? 
-                        `<input type="hidden" id="t_${i}_q_${sIdx}_${iIdx}" value="1">` : 
-                        `<input type="number" id="t_${i}_q_${sIdx}_${iIdx}" value="${it.qty||0}" oninput="updateBomField(${i}, ${sIdx}, ${iIdx}, 'qty', this.value, true)">`;
-
-                    bRows += `<tr>
-                        <td class="col-item"><div style="display:flex; align-items:center; gap:4px;"><input type="text" class="desc-input" id="t_${i}_n_${sIdx}_${iIdx}" value="${it.name}" oninput="updateBomField(${i}, ${sIdx}, ${iIdx}, 'name', this.value)">${selHtml}</div></td>
-                        <td class="col-input col-qty">${qtyHtml}</td>
-                        <td class="col-input"><input type="number" step="0.1" id="t_${i}_w_${sIdx}_${iIdx}" value="${it.wt||0}" oninput="updateBomField(${i}, ${sIdx}, ${iIdx}, 'wt', this.value, true)"></td>
-                        <td class="col-input"><input type="number" step="0.01" id="t_${i}_p_${sIdx}_${iIdx}" value="${(it.def||0).toFixed(2)}" oninput="updateBomField(${i}, ${sIdx}, ${iIdx}, 'def', this.value, true)"></td>
-                        <td class="col-total" id="tot_${i}_${sIdx}_${iIdx}">0.00</td>
-                    </tr>`;
+                    let qtyHtml = isSvc ? `<input type="hidden" id="t_${i}_q_${sIdx}_${iIdx}" value="1">` : `<input type="number" id="t_${i}_q_${sIdx}_${iIdx}" value="${it.qty||0}" oninput="updateBomField(${i}, ${sIdx}, ${iIdx}, 'qty', this.value, true)">`;
+                    bRows += `<tr><td class="col-item"><div style="display:flex; align-items:center; gap:4px;"><input type="text" class="desc-input" id="t_${i}_n_${sIdx}_${iIdx}" value="${it.name}" oninput="updateBomField(${i}, ${sIdx}, ${iIdx}, 'name', this.value)">${selHtml}</div></td><td class="col-input col-qty">${qtyHtml}</td><td class="col-input"><input type="number" step="0.1" id="t_${i}_w_${sIdx}_${iIdx}" value="${it.wt||0}" oninput="updateBomField(${i}, ${sIdx}, ${iIdx}, 'wt', this.value, true)"></td><td class="col-input"><input type="number" step="0.01" id="t_${i}_p_${sIdx}_${iIdx}" value="${(it.def||0).toFixed(2)}" oninput="updateBomField(${i}, ${sIdx}, ${iIdx}, 'def', this.value, true)"></td><td class="col-total" id="tot_${i}_${sIdx}_${iIdx}">0.00</td></tr>`;
                 });
             });
             bomHtml += `<div class="module-card"><div class="card-header"><div><span>⚙️</span> BOM - TANK ${i+1}</div></div><table><thead><tr><th>Description</th><th class="text-center">Qty</th><th class="text-center">Wt(kg)</th><th class="text-right">Price</th><th class="text-right">Total</th></tr></thead><tbody>${bRows}</tbody></table></div>`;
 
-            // VISUALS
             screenVisHtml += `<div class="module-card no-print"><div class="card-header">Tank ${i+1} Visuals</div><div class="visual-container"><div class="view-box"><div class="view-title">Top</div><div id="grid_top_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Bottom</div><div id="grid_bot_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Front</div><div id="grid_fr_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Back</div><div id="grid_bk_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Left</div><div id="grid_lt_s_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Right</div><div id="grid_rt_s_${i}" class="grid-draft"></div></div></div></div>`;
-            printVisHtml += `<div class="tank-section-title avoid-break" style="margin-top:25px;">Tank ${i+1} Exterior Panels</div><div class="visual-container avoid-break"><div class="view-box"><div class="view-title">Top</div><div id="grid_top_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Bottom</div><div id="grid_bot_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Front</div><div id="grid_fr_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Back</div><div id="grid_bk_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Left</div><div id="grid_lt_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">Right</div><div id="grid_rt_p_${i}" class="grid-draft"></div></div></div>`;
-            
-            chkVisHtml += `<div class="avoid-break"><div style="font-size:10pt; font-weight:bold; margin-top:15px; border-top:1px solid #000; padding-top:5px;">Tank ${i+1} Drawings</div><div style="display:flex; flex-wrap:wrap; gap:5px; width:100%; margin-bottom:20px;"><div class="view-box"><div style="font-size:7pt; font-weight:bold;">TOP</div><div id="grid_top_c_${i}" class="grid-draft"></div></div><div class="view-box"><div style="font-size:7pt; font-weight:bold;">BOT</div><div id="grid_bot_c_${i}" class="grid-draft"></div></div><div class="view-box"><div style="font-size:7pt; font-weight:bold;">FR</div><div id="grid_fr_c_${i}" class="grid-draft"></div></div><div class="view-box"><div style="font-size:7pt; font-weight:bold;">BK</div><div id="grid_bk_c_${i}" class="grid-draft"></div></div><div class="view-box"><div style="font-size:7pt; font-weight:bold;">LT</div><div id="grid_lt_c_${i}" class="grid-draft"></div></div><div class="view-box"><div style="font-size:7pt; font-weight:bold;">RT</div><div id="grid_rt_c_${i}" class="grid-draft"></div></div></div></div>`;
+            printVisHtml += `<div class="avoid-break"><div class="tank-section-title avoid-break" style="margin-top:20px; font-size:11pt; border-bottom:2px solid #000;">TANK ${i+1} EXTERIOR DRAWINGS</div><div class="visual-container avoid-break"><div class="view-box"><div class="view-title">1. TOP VIEW</div><div id="grid_top_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">2. BOTTOM VIEW</div><div id="grid_bot_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">3. FRONT ELEVATION</div><div id="grid_fr_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">4. BACK ELEVATION</div><div id="grid_bk_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">5. LEFT ELEVATION</div><div id="grid_lt_p_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">6. RIGHT ELEVATION</div><div id="grid_rt_p_${i}" class="grid-draft"></div></div></div></div>`;
+            chkVisHtml += `<div class="avoid-break"><div style="font-size:10pt; font-weight:bold; margin-top:15px; border-top:1px solid #000; padding-top:5px;">Tank ${i+1} Drawings</div><div class="visual-container"><div class="view-box"><div class="view-title">TOP</div><div id="grid_top_c_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">BOT</div><div id="grid_bot_c_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">FR</div><div id="grid_fr_c_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">BK</div><div id="grid_bk_c_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">LT</div><div id="grid_lt_c_${i}" class="grid-draft"></div></div><div class="view-box"><div class="view-title">RT</div><div id="grid_rt_c_${i}" class="grid-draft"></div></div></div></div>`;
         });
 
         let customHtml = "";
         appCustomItems.forEach((c, i) => {
-            customHtml += `<div class="tank-block" style="background:#f5f3ff; padding:15px; border-radius:6px; border:1px solid #ddd6fe; margin-top:10px;">
-                <div style="display:flex; justify-content:space-between; font-weight:bold; color:#4c1d95; margin-bottom:10px;">Custom Item ${i+1} <button class="del-btn" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; font-size:11px; font-weight:bold; cursor:pointer;" onclick="removeCustomItem(${i})">X REMOVE</button></div>
-                <div style="display:flex; gap:10px;"><div class="form-group" style="flex:2;"><label>Description</label><input type="text" value="${c.desc}" oninput="updateCustomField(${i}, 'desc', this.value)"></div><div class="form-group" style="flex:1;"><label>Qty</label><input type="number" value="${c.qty}" oninput="updateCustomField(${i}, 'qty', this.value, true)"></div><div class="form-group" style="flex:1;"><label>Base Price (Unit)</label><input type="number" value="${c.cost}" oninput="updateCustomField(${i}, 'cost', this.value, true)"></div></div>
-            </div>`;
+            customHtml += `<div class="tank-block" style="background:#f5f3ff; padding:15px; border-radius:6px; border:1px solid #ddd6fe; margin-top:10px;"><div style="display:flex; justify-content:space-between; font-weight:bold; color:#4c1d95; margin-bottom:10px;">Custom Item ${i+1} <button class="del-btn" onclick="removeCustomItem(${i})">X REMOVE</button></div><div style="display:flex; gap:10px;"><div class="form-group" style="flex:2;"><label>Description</label><input type="text" value="${c.desc}" oninput="updateCustomField(${i}, 'desc', this.value)"></div><div class="form-group" style="flex:1;"><label>Qty</label><input type="number" value="${c.qty}" oninput="updateCustomField(${i}, 'qty', this.value, true)"></div><div class="form-group" style="flex:1;"><label>Base Price (Unit)</label><input type="number" value="${c.cost}" oninput="updateCustomField(${i}, 'cost', this.value, true)"></div></div></div>`;
         });
 
         setHtml('dynamicTanksContainer', tanksHtml);
@@ -668,9 +640,8 @@ Note:
 
     function drawGrid(id, c, r, maxDim, pType = null, pPos = -1) {
         let el = document.getElementById(id); if (!el) return;
-        c = isNaN(c) ? 0 : c; r = isNaN(r) ? 0 : r; maxDim = isNaN(maxDim) ? 0 : maxDim;
+        c = Math.max(0, isNaN(c)?0:c); r = Math.max(0, isNaN(r)?0:r); maxDim = isNaN(maxDim)?0:maxDim;
         if ((c * r) > 2500) { el.style.display = 'block'; el.innerHTML = '<div style="padding: 10px; font-size:12px; color:#ef4444; font-weight:bold; border:1px dashed #ef4444; width:100%;">Too large to draw.</div>'; return; }
-        
         let wp = maxDim > 0 ? (c / maxDim) * 100 : 100; let html = '';
         for(let i=0; i<(c*r); i++) {
             let ex = ''; if (pType === 'v' && (i%c) === pPos) ex += 'border-right: 3px solid #ef4444 !important; z-index: 10; '; else if (pType === 'h' && Math.floor(i/c) === pPos) ex += 'border-bottom: 3px solid #ef4444 !important; z-index: 10; ';
@@ -685,270 +656,116 @@ Note:
             window.currentUnit = u;
             let pSfx = u === 'ft' ? " (4'x4')" : (u === 'm_122' ? " (1.22x1.22m)" : " (1x1m)");
             let totalC = 0, totalP = 0, totalW = 0, totalBase = 0;
-
             let soTableHtml = "";
             let soIdx = 1;
 
             appTanks.forEach((t, i) => {
                 t.effLiters = ((u === 'ft') ? (t.L * t.W * t.H * 28.3168) : (t.L * t.W * t.H * 1000)) * 0.9; 
                 totalC += t.effLiters;
-
                 const L = Math.round(t.L / factor); const W = Math.round(t.W / factor); const H = Math.round(t.H / factor);
                 const pL = Math.round(t.partL / factor); const pH = Math.round(t.partH / factor); const pPosIdx = Math.max(0, t.partPos - 1);
-                
                 let r=L*W, b=L*W, pm=(L+W)*2, s=pm*H, pp=(t.partChoice==='yes'&&t.partQty>0)?(pL*pH*t.partQty):0;
                 t.totalPanels = r + b + s + pp; totalP += t.totalPanels;
 
-                // Build Exact Image SO Display Format
-                let walls = `L1 : ${t.tW1}`;
-                if (H >= 2) walls += ` | L2 : ${t.tW2}`;
-                if (H >= 3) walls += ` | L3 : ${t.tW3}`;
-                if (H >= 4) walls += ` | L4 : ${t.tW4}`;
-                
+                let walls = `L1 : ${t.tW1}`; if (H >= 2) walls += ` | L2 : ${t.tW2}`; if (H >= 3) walls += ` | L3 : ${t.tW3}`; if (H >= 4) walls += ` | L4 : ${t.tW4}`;
                 let extLadStr = t.bom[3] && t.bom[3].items[0] && t.bom[3].items[0].qty > 0 ? t.bom[3].items[0].qty : 0;
                 let intLadStr = t.bom[3] && t.bom[3].items[1] && t.bom[3].items[1].qty > 0 ? t.bom[3].items[1].qty : 0;
                 let wliStr = t.bom[3] && t.bom[3].items[2] && t.bom[3].items[2].qty > 0 ? t.bom[3].items[2].qty : 0;
-
                 let partStr = (t.partChoice === 'yes' && t.partQty > 0) ? `<tr><td style="width:140px; padding:0;">Partition</td><td style="padding:0;">: ${t.partQty}x ${t.partType} (${t.partL}${u} x ${t.partH}${u})</td></tr>` : '';
 
-                soTableHtml += `
-                <tr class="avoid-break">
-                    <td style="border:1px solid #000; text-align:center; vertical-align:top; padding:8px 5px;">${soIdx++}</td>
-                    <td style="border:1px solid #000; padding:8px 5px; vertical-align:top;">
-                        <strong>Supply Pressed Steel Tank Size: ${t.override || t.L+u+'(L) x '+t.W+u+'(W) x '+t.H+u+'(H)'}</strong><br>
-                        <div style="margin-left: 5px; margin-top: 5px;">
-                            <table style="border:none; width:100%; font-size:9pt; line-height: 1.4;">
-                                <tr><td style="width:140px; padding:0;">Roof</td><td style="padding:0;">: ${t.tRoof}</td></tr>
-                                <tr><td style="padding:0;">Base</td><td style="padding:0;">: ${t.tBase}</td></tr>
-                                <tr><td style="padding:0;">Wall</td><td style="padding:0;">: ${walls}</td></tr>
-                                ${partStr}
-                                <tr><td style="padding:0;">Ladder</td><td style="padding:0;">: Int - ${intLadStr} / Ext - ${extLadStr}</td></tr>
-                                <tr><td style="padding:0;">Water Level Indicator</td><td style="padding:0;">: ${wliStr} set</td></tr>
-                                <tr><td style="padding:0;">Accessories</td><td style="padding:0;">: Foam Tape , Bolts , Nuts & Washers</td></tr>
-                            </table>
-                        </div>
-                    </td>
-                    <td style="border:1px solid #000; text-align:center; vertical-align:top; padding:8px 5px;">set</td>
-                    <td style="border:1px solid #000; text-align:center; vertical-align:top; padding:8px 5px;">1</td>
-                </tr>`;
+                soTableHtml += `<tr class="avoid-break"><td style="border:1px solid #000; text-align:center; padding:8px 5px;">${soIdx++}</td><td style="border:1px solid #000; padding:8px 5px;"><strong>Tank Size: ${t.override || t.L+u+'(L)x'+t.W+u+'(W)x'+t.H+u+'(H)'}</strong><br><div style="margin-left: 5px; margin-top: 5px;"><table style="border:none; width:100%; font-size:9pt; line-height: 1.4;"><tr><td style="width:140px; padding:0;">Roof</td><td style="padding:0;">: ${t.tRoof}</td></tr><tr><td style="padding:0;">Base</td><td style="padding:0;">: ${t.tBase}</td></tr><tr><td style="padding:0;">Wall</td><td style="padding:0;">: ${walls}</td></tr>${partStr}<tr><td style="padding:0;">Ladder</td><td style="padding:0;">: Int - ${intLadStr} / Ext - ${extLadStr}</td></tr><tr><td style="padding:0;">WLI</td><td style="padding:0;">: ${wliStr} set</td></tr><tr><td style="padding:0;">Accessories</td><td style="padding:0;">: Foam Tape, Bolts, Nuts, Washers</td></tr></table></div></td><td style="border:1px solid #000; text-align:center;">set</td><td style="border:1px solid #000; text-align:center;">1</td></tr>`;
 
-                let pTT = null, pPT = -1, pTF = null, pPF = -1, pTS = null, pPS = -1;
-                if (t.partChoice==='yes' && t.partQty>0) {
-                    if (pL === W) { pTT='v'; pPT=Math.min(L-2, pPosIdx); pTF='v'; pPF=Math.min(L-2, pPosIdx); } 
-                    else if (pL === L) { pTT='h'; pPT=Math.min(W-2, pPosIdx); pTS='v'; pPS=Math.min(W-2, pPosIdx); } 
-                    else { pTT='v'; pPT=Math.min(L-2, pPosIdx); pTF='v'; pPF=Math.min(L-2, pPosIdx); }
-                }
-
+                let pTT=null, pPT=-1, pTF=null, pPF=-1, pTS=null, pPS=-1;
+                if (t.partChoice==='yes' && t.partQty>0) { if (pL===W) { pTT='v'; pPT=Math.min(L-2,pPosIdx); pTF='v'; pPF=Math.min(L-2,pPosIdx); } else if (pL===L) { pTT='h'; pPT=Math.min(W-2,pPosIdx); pTS='v'; pPS=Math.min(W-2,pPosIdx); } else { pTT='v'; pPT=Math.min(L-2,pPosIdx); pTF='v'; pPF=Math.min(L-2,pPosIdx); } }
                 const mx = Math.max(L, W, H);
-                drawGrid(`grid_top_s_${i}`, L, W, mx, pTT, pPT); drawGrid(`grid_top_p_${i}`, L, W, mx, pTT, pPT); drawGrid(`grid_top_c_${i}`, L, W, mx, pTT, pPT);
-                drawGrid(`grid_bot_s_${i}`, L, W, mx, pTT, pPT); drawGrid(`grid_bot_p_${i}`, L, W, mx, pTT, pPT); drawGrid(`grid_bot_c_${i}`, L, W, mx, pTT, pPT);
-                drawGrid(`grid_fr_s_${i}`, L, H, mx, pTF, pPF); drawGrid(`grid_fr_p_${i}`, L, H, mx, pTF, pPF); drawGrid(`grid_fr_c_${i}`, L, H, mx, pTF, pPF);
-                drawGrid(`grid_bk_s_${i}`, L, H, mx, pTF, pPF); drawGrid(`grid_bk_p_${i}`, L, H, mx, pTF, pPF); drawGrid(`grid_bk_c_${i}`, L, H, mx, pTF, pPF);
-                drawGrid(`grid_lt_s_${i}`, W, H, mx, pTS, pPS); drawGrid(`grid_lt_p_${i}`, W, H, mx, pTS, pPS); drawGrid(`grid_lt_c_${i}`, W, H, mx, pTS, pPS);
-                drawGrid(`grid_rt_s_${i}`, W, H, mx, pTS, pPS); drawGrid(`grid_rt_p_${i}`, W, H, mx, pTS, pPS); drawGrid(`grid_rt_c_${i}`, W, H, mx, pTS, pPS);
+                drawGrid(`grid_top_s_${i}`,L,W,mx,pTT,pPT); drawGrid(`grid_top_p_${i}`,L,W,mx,pTT,pPT); drawGrid(`grid_top_c_${i}`,L,W,mx,pTT,pPT);
+                drawGrid(`grid_bot_s_${i}`,L,W,mx,pTT,pPT); drawGrid(`grid_bot_p_${i}`,L,W,mx,pTT,pPT); drawGrid(`grid_bot_c_${i}`,L,W,mx,pTT,pPT);
+                drawGrid(`grid_fr_s_${i}`,L,H,mx,pTF,pPF); drawGrid(`grid_fr_p_${i}`,L,H,mx,pTF,pPF); drawGrid(`grid_fr_c_${i}`,L,H,mx,pTF,pPF);
+                drawGrid(`grid_bk_s_${i}`,L,H,mx,pTF,pPF); drawGrid(`grid_bk_p_${i}`,L,H,mx,pTF,pPF); drawGrid(`grid_bk_c_${i}`,L,H,mx,pTF,pPF);
+                drawGrid(`grid_lt_s_${i}`,W,H,mx,pTS,pPS); drawGrid(`grid_lt_p_${i}`,W,H,mx,pTS,pPS); drawGrid(`grid_lt_c_${i}`,W,H,mx,pTS,pPS);
+                drawGrid(`grid_rt_s_${i}`,W,H,mx,pTS,pPS); drawGrid(`grid_rt_p_${i}`,W,H,mx,pTS,pPS); drawGrid(`grid_rt_c_${i}`,W,H,mx,pTS,pPS);
 
-                let bQ = (sI, iI, v) => t.bom[sI].items[iI].qty = isNaN(v)?0:v;
-                let bD = (sI, iI, v) => t.bom[sI].items[iI].name = v;
-                
+                let bQ=(sI,iI,v)=>t.bom[sI].items[iI].qty=isNaN(v)?0:v;
+                let bD=(sI,iI,v)=>t.bom[sI].items[iI].name=v;
                 if(t.bom[0]) {
-                    if(t.bom[0].items[0]) bD(0,0, "Manhole Panel"+pSfx); if(t.bom[0].items[1]) bD(0,1, t.tRoof+" Roof Panel"+pSfx); if(t.bom[0].items[2]) bD(0,2, t.tBase+" Base Panel"+pSfx); if(t.bom[0].items[3]) bD(0,3, t.tW1+" Wall Panel (L1)"+pSfx); if(t.bom[0].items[4]) bD(0,4, t.tW2+" Wall Panel (L2)"+pSfx); if(t.bom[0].items[5]) bD(0,5, t.tW3+" Wall Panel (L3)"+pSfx); if(t.bom[0].items[6]) bD(0,6, t.tW4+" Wall Panel (L4)"+pSfx); if(t.bom[0].items[7]) bD(0,7, "Partition Panel"+pSfx);
-                    
-                    if(t.bom[0].items[0]) bQ(0,0, r>0?1:0); if(t.bom[0].items[1]) bQ(0,1, Math.max(0, r - 1)); if(t.bom[0].items[2]) bQ(0,2, b); if(t.bom[0].items[3]) bQ(0,3, H>=1?pm:0); if(t.bom[0].items[4]) bQ(0,4, H>=2?pm:0); if(t.bom[0].items[5]) bQ(0,5, H>=3?pm:0); if(t.bom[0].items[6]) bQ(0,6, H>=4?pm*(H-3):0); if(t.bom[0].items[7]) bQ(0,7, pp);
+                    bD(0,0,"Manhole Panel"+pSfx); bD(0,1,t.tRoof+" Roof Panel"+pSfx); bD(0,2,t.tBase+" Base Panel"+pSfx); bD(0,3,t.tW1+" Wall Panel (L1)"+pSfx); bD(0,4,t.tW2+" Wall Panel (L2)"+pSfx); bD(0,5,t.tW3+" Wall Panel (L3)"+pSfx); bD(0,6,t.tW4+" Wall Panel (L4)"+pSfx); bD(0,7,"Partition Panel"+pSfx);
+                    bQ(0,0,r>0?1:0); bQ(0,1,Math.max(0,r-1)); bQ(0,2,b); bQ(0,3,H>=1?pm:0); bQ(0,4,H>=2?pm:0); bQ(0,5,H>=3?pm:0); bQ(0,6,H>=4?pm*(H-3):0); bQ(0,7,pp);
                 }
-                if(t.bom[1]) { if(t.bom[1].items[0]) bQ(1,0, H*4); if(t.bom[1].items[1]) bQ(1,1, pm); if(t.bom[1].items[2]) bQ(1,2, pm); if(t.bom[1].items[3]) bQ(1,3, t.L); if(t.bom[1].items[4]) bQ(1,4, t.L); }
+                if(t.bom[1]) { bQ(1,0,H*4); bQ(1,1,pm); bQ(1,2,pm); bQ(1,3,t.L); bQ(1,4,t.L); }
+                if(t.bom[2]) { bQ(2,0,H>=1?pm:0); bQ(2,1,H>=2?pm:0); bQ(2,2,H>=3?pm:0); bQ(2,3,H>=4?pm*(H-3):0); }
+                if(t.bom[3]) { bQ(3,0,t.H); bQ(3,1,t.H); bQ(3,2,(u!=='ft')?t.H:1); bQ(3,3,1); let sP=(u==='ft')?4.88:4.0; let bP=(u==='ft')?16:12; bQ(3,4,Math.ceil(((r+b+s+pp)*sP)/15)); bQ(3,5,Math.ceil((r+b+s+pp)*bP*1.05)); }
                 
-                if(t.bom[2]) { if(t.bom[2].items[0]) bQ(2,0, H>=1?pm:0); if(t.bom[2].items[1]) bQ(2,1, H>=2?pm:0); if(t.bom[2].items[2]) bQ(2,2, H>=3?pm:0); if(t.bom[2].items[3]) bQ(2,3, H>=4?pm*(H-3):0); }
-                
-                if(t.bom[3]) {
-                    if(t.bom[3].items[0]) bQ(3,0, t.H); if(t.bom[3].items[1]) bQ(3,1, t.H); if(t.bom[3].items[2]) bQ(3,2, (u!=='ft')?t.H:1); if(t.bom[3].items[3]) bQ(3,3, 1);
-                    let sP=(u==='ft')?4.88:4.0; let bP=(u==='ft')?16:12; 
-                    if(t.bom[3].items[4]) bQ(3,4, Math.ceil(((r+b+s+pp)*sP)/15)); if(t.bom[3].items[5]) bQ(3,5, Math.ceil((r+b+s+pp)*bP*1.05));
-                }
-                
-                t.baseCost = 0; t.weight = 0;
+                t.baseCost=0; t.weight=0;
                 t.bom.forEach((sec, sIdx) => sec.items.forEach((it, iIdx) => { 
-                    let isSvc = (sec.category === "Services");
-                    let qEl = document.getElementById(`t_${i}_q_${sIdx}_${iIdx}`);
-                    let nEl = document.getElementById(`t_${i}_n_${sIdx}_${iIdx}`);
-                    if(qEl && document.activeElement !== qEl && !isSvc) qEl.value = it.qty; 
-                    if(nEl && document.activeElement !== nEl) nEl.value = it.name;
-
-                    let calcQty = isSvc ? 1 : it.qty;
-                    let lTot = calcQty * (it.def||0); 
-                    t.baseCost += lTot; 
-                    t.weight += isSvc ? 0 : (calcQty * (it.wt||0)); 
-                    
-                    let te = document.getElementById(`tot_${i}_${sIdx}_${iIdx}`); 
-                    if(te) { te.innerText = lTot.toLocaleString('en-MY',{minimumFractionDigits:2}); te.style.color = calcQty>0?'#b91c1c':'#94a3b8'; } 
+                    let isSvc=(sec.category==="Services"); let calcQty=isSvc?1:it.qty; let lTot=calcQty*(it.def||0); 
+                    t.baseCost+=lTot; t.weight+=isSvc?0:(calcQty*(it.wt||0));
+                    let te=document.getElementById(`tot_${i}_${sIdx}_${iIdx}`); if(te) te.innerText=lTot.toLocaleString('en-MY',{minimumFractionDigits:2});
                 }));
-                totalW += t.weight; totalBase += t.baseCost;
+                totalW+=t.weight; totalBase+=t.baseCost;
             });
 
             appCustomItems.forEach(c => { 
-                totalBase += (c.cost * (c.qty||0)); 
-                soTableHtml += `<tr class="avoid-break">
-                    <td style="border:1px solid #000; text-align:center; vertical-align:top; padding:8px 5px;">${soIdx++}</td>
-                    <td style="border:1px solid #000; padding:8px 5px; vertical-align:top;"><strong>${c.desc}</strong></td>
-                    <td style="border:1px solid #000; text-align:center; vertical-align:top; padding:8px 5px;">unit</td>
-                    <td style="border:1px solid #000; text-align:center; vertical-align:top; padding:8px 5px;">${c.qty||0}</td>
-                </tr>`;
+                totalBase+=(c.cost*(c.qty||0)); 
+                soTableHtml+=`<tr class="avoid-break"><td style="border:1px solid #000; text-align:center;">${soIdx++}</td><td style="border:1px solid #000; padding:8px 5px;"><strong>${c.desc}</strong></td><td style="border:1px solid #000; text-align:center;">unit</td><td style="border:1px solid #000; text-align:center;">${c.qty||0}</td></tr>`;
             });
-
             setHtml('so_table_body', soTableHtml);
 
-            let mkp = getNum('markupPct'); let mkAmt = totalBase * (mkp / 100); let sub = totalBase + mkAmt; 
-            let dsc = getNum('discountPct'); let dscAmt = sub * (dsc / 100); let net = sub - dscAmt;
-            let sst = getNum('sstPct'); let sstAmt = net * (sst / 100); let grand = net + sstAmt;
+            let mkp=getNum('markupPct'); let mkAmt=totalBase*(mkp/100); let sub=totalBase+mkAmt; 
+            let dsc=getNum('discountPct'); let dscAmt=sub*(dsc/100); let net=sub-dscAmt;
+            let sst=getNum('sstPct'); let sstAmt=net*(sst/100); let grand=net+sstAmt;
 
-            const setM = (ids, v) => ids.forEach(id => setTxt(id, v));
-            setM(['sumPanels_screen', 'sumPanels_print'], totalP); setM(['sumCapacity_screen', 'sumCapacity_print'], isNaN(totalC)?"0 L":totalC.toLocaleString('en-MY',{maximumFractionDigits:0})+" L");
-            setM(['sumBaseCost_screen', 'sumBaseCost_print'], totalBase.toLocaleString('en-MY', {minimumFractionDigits: 2}));
-            setM(['sumMarkup_screen', 'sumMarkup_print'], mkAmt.toLocaleString('en-MY', {minimumFractionDigits: 2}));
-            setM(['sumSubtotal_screen', 'sumSubtotal_print'], sub.toLocaleString('en-MY', {minimumFractionDigits: 2}));
-            setM(['sumDiscount_screen', 'sumDiscount_print'], dscAmt.toLocaleString('en-MY', {minimumFractionDigits: 2}));
-            setM(['sumSST_screen', 'sumSST_print'], sstAmt.toLocaleString('en-MY', {minimumFractionDigits: 2}));
-            setM(['grandTotal_screen', 'grandTotal_print', 'cpGrandTotal'], grand.toLocaleString('en-MY', {minimumFractionDigits: 2}));
-            setM(['sumWeight_screen', 'sumWeight_print'], totalW.toLocaleString('en-MY', {maximumFractionDigits: 1}) + " kg");
+            const setM=(ids,v)=>ids.forEach(id=>setTxt(id,v));
+            setM(['sumPanels_screen','sumPanels_print'],totalP); setM(['sumCapacity_screen','sumCapacity_print'],isNaN(totalC)?"0 L":totalC.toLocaleString('en-MY',{maximumFractionDigits:0})+" L");
+            setM(['sumBaseCost_screen','sumBaseCost_print'],totalBase.toLocaleString('en-MY',{minimumFractionDigits:2}));
+            setM(['sumMarkup_screen','sumMarkup_print'],mkAmt.toLocaleString('en-MY',{minimumFractionDigits:2}));
+            setM(['sumSubtotal_screen','sumSubtotal_print'],sub.toLocaleString('en-MY',{minimumFractionDigits:2}));
+            setM(['sumDiscount_screen','sumDiscount_print'],dscAmt.toLocaleString('en-MY',{minimumFractionDigits:2}));
+            setM(['sumSST_screen','sumSST_print'],sstAmt.toLocaleString('en-MY',{minimumFractionDigits:2}));
+            setM(['grandTotal_screen','grandTotal_print','cpGrandTotal'],grand.toLocaleString('en-MY',{minimumFractionDigits:2}));
+            setM(['sumWeight_screen','sumWeight_print'],totalW.toLocaleString('en-MY',{maximumFractionDigits:1})+" kg");
 
-            // Customer PDF Generator
-            let globalRef = totalBase === 0 ? 1 : totalBase;
-            let cpRows = ""; let cpIdx = 1;
-
+            let globalRef=totalBase===0?1:totalBase; let cpRows=""; let cpIdx=1;
             appTanks.forEach((t, i) => {
-                let trPct = t.baseCost / globalRef; let trFinal = net * trPct; t.finalPrice = trFinal;
-                let dStr = t.override || `${t.L}${u} (L) x ${t.W}${u} (W) x ${t.H}${u} (H)`;
-                let pStr = (t.partChoice === 'yes' && t.partQty > 0) ? `<tr style="border:none;"><td style="border:none; vertical-align:top;">d)</td><td style="border:none; vertical-align:top;" colspan="3">Partition: ${t.partQty}x ${t.partType} (${t.partL}${u} x ${t.partH}${u})</td></tr>` : '';
-                
-                let extLadStr = t.bom[3] && t.bom[3].items[0] ? `${t.bom[3].items[0].selVal} External - ${t.bom[3].items[0].qty} sets` : '';
-                let intLadStr = t.bom[3] && t.bom[3].items[1] ? `${t.bom[3].items[1].selVal} Internal - ${t.bom[3].items[1].qty} sets` : '';
-                let wliStr = t.bom[3] && t.bom[3].items[2] ? `${t.bom[3].items[2].selVal} - ${t.bom[3].items[2].qty} sets` : '';
-
-                cpRows += `<tr class="avoid-break">
-                    <td style="text-align:center; border:1px solid #000; padding:6px; vertical-align:top;">${cpIdx++}</td>
-                    <td style="border:1px solid #000; padding:6px; vertical-align:top;">
-                        <strong>Supply and Install ${t.coat} Tank Size:<br>${dStr} (Total: ${t.totalPanels} Pcs)</strong><br>Comply to ${t.std}<br>
-                        <table style="border:none; width:100%; font-size:8.5pt;">
-                            <tr style="border:none;"><td style="width:20px; border:none; vertical-align:top;">a)</td><td style="width:75px; border:none; vertical-align:top;">Thickness:</td><td style="width:50px; border:none; vertical-align:top;">Roof</td><td style="border:none; vertical-align:top;">: ${t.tRoof}</td></tr>
-                            <tr style="border:none;"><td style="border:none; vertical-align:top;"></td><td style="border:none; vertical-align:top;"></td><td style="border:none; vertical-align:top;">Base</td><td style="border:none; vertical-align:top;">: ${t.tBase}</td></tr>
-                            <tr style="border:none;"><td style="border:none; vertical-align:top;"></td><td style="border:none; vertical-align:top;"></td><td style="border:none; vertical-align:top;">Wall</td><td style="border:none; vertical-align:top;">: L1: ${t.tW1} | L2: ${t.tW2} | L3: ${t.tW3} | L4: ${t.tW4}</td></tr>
-                            <tr style="border:none;"><td style="border:none; vertical-align:top;">b)</td><td style="border:none; vertical-align:top;" colspan="3">Ladders: ${intLadStr}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${extLadStr}</td></tr>
-                            <tr style="border:none;"><td style="border:none; vertical-align:top;">c)</td><td style="border:none; vertical-align:top;" colspan="3">WLI: ${wliStr}</td></tr>
-                            ${pStr}
-                            <tr style="border:none;"><td style="border:none; vertical-align:top;">${pStr?'e)':'d)'}</td><td style="border:none; vertical-align:top;" colspan="3">Tank to be sit on existing I-Beam or RC plinths</td></tr>
-                        </table>
-                    </td>
-                    <td style="text-align:center; border:1px solid #000; padding:6px; vertical-align:top;">1</td>
-                    <td style="text-align:right; border:1px solid #000; padding:6px; vertical-align:top;">${trFinal.toLocaleString('en-MY',{minimumFractionDigits:2})}</td>
-                </tr>`;
+                let trPct=t.baseCost/globalRef; let trFinal=net*trPct; t.finalPrice=trFinal;
+                let dStr=t.override||`${t.L}${u}(L)x${t.W}${u}(W)x${t.H}${u}(H)`;
+                let pStr=(t.partChoice==='yes'&&t.partQty>0)?`<tr style="border:none;"><td style="border:none; vertical-align:top;">d)</td><td style="border:none; vertical-align:top;" colspan="3">Partition: ${t.partQty}x ${t.partType} (${t.partL}${u}x${t.partH}${u})</td></tr>`:'';
+                let extLadStr=t.bom[3]&&t.bom[3].items[0]?`${t.bom[3].items[0].selVal} External - ${t.bom[3].items[0].qty} sets`:'';
+                let intLadStr=t.bom[3]&&t.bom[3].items[1]?`${t.bom[3].items[1].selVal} Internal - ${t.bom[3].items[1].qty} sets`:'';
+                let wliStr=t.bom[3]&&t.bom[3].items[2]?`${t.bom[3].items[2].selVal} - ${t.bom[3].items[2].qty} sets`:'';
+                cpRows += `<tr class="avoid-break"><td style="text-align:center; border:1px solid #000;">${cpIdx++}</td><td style="border:1px solid #000; padding:6px; vertical-align:top;"><strong>Supply and Install ${t.coat} Tank Size:<br>${dStr} (Total: ${t.totalPanels} Pcs)</strong><br>Comply to ${t.std}<br><table style="border:none; width:100%; font-size:8.5pt;"><tr style="border:none;"><td style="width:20px; border:none; vertical-align:top;">a)</td><td style="width:75px; border:none; vertical-align:top;">Thickness:</td><td style="width:50px; border:none; vertical-align:top;">Roof</td><td style="border:none; vertical-align:top;">: ${t.tRoof}</td></tr><tr style="border:none;"><td style="border:none; vertical-align:top;"></td><td style="border:none; vertical-align:top;"></td><td style="border:none; vertical-align:top;">Base</td><td style="border:none; vertical-align:top;">: ${t.tBase}</td></tr><tr style="border:none;"><td style="border:none; vertical-align:top;"></td><td style="border:none; vertical-align:top;"></td><td style="border:none; vertical-align:top;">Wall</td><td style="border:none; vertical-align:top;">: L1:${t.tW1}|L2:${t.tW2}|L3:${t.tW3}|L4:${t.tW4}</td></tr><tr style="border:none;"><td style="border:none; vertical-align:top;">b)</td><td style="border:none; vertical-align:top;" colspan="3">Ladders: ${intLadStr}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${extLadStr}</td></tr><tr style="border:none;"><td style="border:none; vertical-align:top;">c)</td><td style="border:none; vertical-align:top;" colspan="3">WLI: ${wliStr}</td></tr>${pStr}<tr style="border:none;"><td style="border:none; vertical-align:top;">${pStr?'e)':'d)'}</td><td style="border:none; vertical-align:top;" colspan="3">Tank to sit on existing Beam/RC plinths</td></tr></table></td><td style="text-align:center; border:1px solid #000;">1</td><td style="text-align:right; border:1px solid #000; padding:6px;">${trFinal.toLocaleString('en-MY',{minimumFractionDigits:2})}</td></tr>`;
             });
-
-            appCustomItems.forEach((c, i) => {
-                let trPct = (c.cost * (c.qty||0)) / globalRef; let trFinal = net * trPct; c.finalPrice = trFinal;
-                cpRows += `<tr class="avoid-break">
-                    <td style="text-align:center; border:1px solid #000; padding:6px; vertical-align:top;">${cpIdx++}</td>
-                    <td style="border:1px solid #000; padding:6px; vertical-align:top;"><strong>${c.desc}</strong></td>
-                    <td style="text-align:center; border:1px solid #000; padding:6px; vertical-align:top;">${c.qty||0}</td>
-                    <td style="text-align:right; border:1px solid #000; padding:6px; vertical-align:top;">${trFinal.toLocaleString('en-MY',{minimumFractionDigits:2})}</td>
-                </tr>`;
+            appCustomItems.forEach(c => {
+                let trPct=(c.cost*(c.qty||0))/globalRef; let trFinal=net*trPct;
+                cpRows += `<tr class="avoid-break"><td style="text-align:center; border:1px solid #000;">${cpIdx++}</td><td style="border:1px solid #000; padding:6px; vertical-align:top;"><strong>${c.desc}</strong></td><td style="text-align:center; border:1px solid #000;">${c.qty||0}</td><td style="text-align:right; border:1px solid #000; padding:6px;">${trFinal.toLocaleString('en-MY',{minimumFractionDigits:2})}</td></tr>`;
             });
-
             setHtml('cpDynamicTanksBody', cpRows);
-            setTxt('cpSstPct', sst || 0); setTxt('cpSstAmt', sstAmt.toLocaleString('en-MY', {minimumFractionDigits: 2}));
+            setTxt('cpSstPct', sst||0); setTxt('cpSstAmt', sstAmt.toLocaleString('en-MY',{minimumFractionDigits:2}));
             
-            // Generate the Material List on the attached page
             let chkBomHtml = ``;
             appTanks.forEach((t, i) => {
-                chkBomHtml += `<div class="avoid-break"><div style="font-weight:bold; background:#e2e8f0; padding:4px 8px; margin-top:10px; border:1px solid #000; border-bottom:none;">TANK ${i+1} : ${t.override || t.L+u+' x '+t.W+u+' x '+t.H+u}</div>
-                <table style="width:100%; border-collapse:collapse; font-size:8.5pt; border:1px solid #000; margin-bottom:15px;">
-                    <thead>
-                        <tr style="background:#d1d5db;">
-                            <th style="border:1px solid #000; padding:4px; text-align:center; width:8%;">Item</th>
-                            <th style="border:1px solid #000; padding:4px; text-align:left; width:72%;">Description</th>
-                            <th style="border:1px solid #000; padding:4px; text-align:center; width:20%;">Qty</th>
-                        </tr>
-                    </thead>
-                    <tbody>`;
-                
-                let idx = 1;
-                t.bom.forEach((sec) => {
-                    if (sec.category === "Services") return; // Exclude Services from Factory Order
-                    
-                    let hasItems = false;
-                    let rows = '';
-                    sec.items.forEach((it) => {
-                        let q = it.qty || 0;
-                        if (q > 0) {
-                            hasItems = true;
-                            let desc = it.name;
-                            if (it.selectId && it.selVal) desc += ` (${it.selVal})`;
-                            rows += `<tr class="avoid-break">
-                                <td style="border:1px solid #000; padding:4px; text-align:center;">${idx++}</td>
-                                <td style="border:1px solid #000; padding:4px;"><strong>[${sec.category}]</strong> ${desc}</td>
-                                <td style="border:1px solid #000; padding:4px; text-align:center; font-weight:bold;">${q}</td>
-                            </tr>`;
-                        }
-                    });
-                    if (hasItems) chkBomHtml += rows;
-                });
-                chkBomHtml += `</tbody></table></div>`;
+                chkBomHtml += `<div class="avoid-break"><div style="font-weight:bold; background:#e2e8f0; padding:4px 8px; margin-top:10px; border:1px solid #000; border-bottom:none;">TANK ${i+1} : ${t.override || t.L+u+'x'+t.W+u+'x'+t.H+u}</div><table style="width:100%; border-collapse:collapse; font-size:8.5pt; border:1px solid #000; margin-bottom:15px;"><thead><tr style="background:#d1d5db;"><th style="border:1px solid #000; padding:4px; text-align:center; width:8%;">Item</th><th style="border:1px solid #000; padding:4px; text-align:left; width:72%;">Description</th><th style="border:1px solid #000; padding:4px; text-align:center; width:20%;">Qty</th></tr></thead><tbody>`;
+                let idx = 1; t.bom.forEach((sec) => { if (sec.category === "Services") return; let hasItems = false; let rows = ''; sec.items.forEach((it) => { let q = it.qty || 0; if (q > 0) { hasItems = true; let desc = it.name; if (it.selectId && it.selVal) desc += ` (${it.selVal})`; rows += `<tr class="avoid-break"><td style="border:1px solid #000; padding:4px; text-align:center;">${idx++}</td><td style="border:1px solid #000; padding:4px;"><strong>[${sec.category}]</strong> ${desc}</td><td style="border:1px solid #000; padding:4px; text-align:center; font-weight:bold;">${q}</td></tr>`; } }); if (hasItems) chkBomHtml += rows; }); chkBomHtml += `</tbody></table></div>`;
             });
-
             if (appCustomItems.length > 0) {
-                chkBomHtml += `<div class="avoid-break"><div style="font-weight:bold; background:#e2e8f0; padding:4px 8px; margin-top:10px; border:1px solid #000; border-bottom:none;">CUSTOM ITEMS</div>
-                <table style="width:100%; border-collapse:collapse; font-size:8.5pt; border:1px solid #000; margin-bottom:15px;">
-                    <thead>
-                        <tr style="background:#d1d5db;">
-                            <th style="border:1px solid #000; padding:4px; text-align:center; width:8%;">Item</th>
-                            <th style="border:1px solid #000; padding:4px; text-align:left; width:72%;">Description</th>
-                            <th style="border:1px solid #000; padding:4px; text-align:center; width:20%;">Qty</th>
-                        </tr>
-                    </thead>
-                    <tbody>`;
-                let idx = 1;
-                appCustomItems.forEach((c) => {
-                    chkBomHtml += `<tr class="avoid-break">
-                        <td style="border:1px solid #000; padding:4px; text-align:center;">${idx++}</td>
-                        <td style="border:1px solid #000; padding:4px;">${c.desc}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:center; font-weight:bold;">${c.qty || 0}</td>
-                    </tr>`;
-                });
-                chkBomHtml += `</tbody></table></div>`;
+                chkBomHtml += `<div class="avoid-break"><div style="font-weight:bold; background:#e2e8f0; padding:4px 8px; margin-top:10px; border:1px solid #000; border-bottom:none;">CUSTOM ITEMS</div><table style="width:100%; border-collapse:collapse; font-size:8.5pt; border:1px solid #000; margin-bottom:15px;"><thead><tr style="background:#d1d5db;"><th style="border:1px solid #000; padding:4px; text-align:center; width:8%;">Item</th><th style="border:1px solid #000; padding:4px; text-align:left; width:72%;">Description</th><th style="border:1px solid #000; padding:4px; text-align:center; width:20%;">Qty</th></tr></thead><tbody>`;
+                let idx = 1; appCustomItems.forEach((c) => { chkBomHtml += `<tr class="avoid-break"><td style="border:1px solid #000; padding:4px; text-align:center;">${idx++}</td><td style="border:1px solid #000; padding:4px;">${c.desc}</td><td style="border:1px solid #000; padding:4px; text-align:center; font-weight:bold;">${c.qty || 0}</td></tr>`; }); chkBomHtml += `</tbody></table></div>`;
             }
             setHtml('dynamicChecklistBomContainer', chkBomHtml);
-
             syncPrintHeader(u);
-            
-            // Populate Sales Order Specific meta-data
-            setTxt('so_customer', getVal('custCompany') || getVal('projectName'));
-            setTxt('so_project', getVal('projectName'));
-            setTxt('so_custpo', getVal('custPoNo'));
-            setTxt('so_projno', getVal('quoteIdInput'));
-            setTxt('so_deldate', getVal('custDelDate'));
-            
-            let mStds = [...new Set(appTanks.map(t=>t.std))];
-            setTxt('so_std', mStds.length ? mStds.join(', ') : '-');
-            
-            let hasPart = appTanks.some(t => t.partChoice === 'yes');
-            setTxt('so_part', hasPart ? 'YES' : 'NO');
-            
-            setTxt('so_material', [...new Set(appTanks.map(t=>t.coat))].join(', '));
-            setTxt('so_totpanels', totalP);
-
+            setTxt('so_customer', getVal('custCompany') || getVal('projectName')); setTxt('so_project', getVal('projectName')); setTxt('so_custpo', getVal('custPoNo')); setTxt('so_projno', getVal('quoteIdInput')); setTxt('so_deldate', getVal('custDelDate'));
+            setTxt('so_std', [...new Set(appTanks.map(t=>t.std))].join(', ') || '-'); setTxt('so_part', appTanks.some(t => t.partChoice === 'yes') ? 'YES' : 'NO'); setTxt('so_material', [...new Set(appTanks.map(t=>t.coat))].join(', ')); setTxt('so_totpanels', totalP);
         } catch(e) { console.error(e); }
     }
 
     function syncPrintHeader(u) {
         setTxt('metaQuoteId', getVal('quoteIdInput') || "N/A"); setTxt('metaProject', getVal('projectName') || "_____________________"); 
-        let dDims = appTanks.map((t,i) => `T${i+1}: ${t.override || t.L+u+'x'+t.W+u+'x'+t.H+u}`).join(' | '); setTxt('metaDims', dDims); 
-        setTxt('metaCoat', [...new Set(appTanks.map(t=>t.coat))].join(', '));
-        setTxt('metaStd', appTanks.length>0 ? appTanks[0].std : '-'); 
+        setTxt('metaDims', appTanks.map((t,i) => `T${i+1}: ${t.override || t.L+u+'x'+t.W+u+'x'+t.H+u}`).join(' | ')); 
+        setTxt('metaCoat', [...new Set(appTanks.map(t=>t.coat))].join(', ')); setTxt('metaStd', appTanks.length>0 ? appTanks[0].std : '-'); 
         setTxt('metaPart', appTanks.filter(t=>t.partChoice==='yes').map((t,i)=>`T${i+1}: ${t.partQty}x${t.partType}`).join(' | ') || 'None');
-        
-        setTxt('cpCustName', getVal('custCompany') || getVal('projectName') || "Client Name"); document.getElementById('cpCustAddress').innerHTML = (getVal('custAddr') || '').replace(/\n/g, '<br>'); setTxt('cpAttention', getVal('custAttn')); setTxt('cpProject', getVal('projectName')); setTxt('cpRef', getVal('quoteIdInput'));
+        setTxt('cpCustName', getVal('custCompany') || getVal('projectName') || "Client"); document.getElementById('cpCustAddress').innerHTML = (getVal('custAddr') || '').replace(/\n/g, '<br>'); setTxt('cpAttention', getVal('custAttn')); setTxt('cpProject', getVal('projectName')); setTxt('cpRef', getVal('quoteIdInput'));
         document.getElementById('cpShortExclusionsText').innerHTML = (getVal('shortExclusions') || '').replace(/\n/g, '<br>'); document.getElementById('cpFullTermsText').innerHTML = getVal('fullTermsNotes') || '';
         let ls = (v) => `<span style="border-bottom: 1px solid #000; display: inline-block; width: 100%; margin-bottom: 3px;">${v}</span>`;
         document.getElementById('cpValidity').innerHTML = ls(getVal('tcValidity')); document.getElementById('cpPayment').innerHTML = (getVal('tcPayment')||'').split('\n').filter(l=>l.trim()!=='').map(l=>ls(l)).join(''); document.getElementById('cpDeliveryTerm').innerHTML = ls(getVal('tcDelivery')); document.getElementById('cpLeadTime').innerHTML = ls(getVal('tcLead')); setTxt('cpSignName', getVal('signName')); setTxt('intSigSales', getVal('signName')); setTxt('cpSignPhone', getVal('signPhone')); 
-        
         setBox('box_local', getVal('marketChoice') === 'local'); setBox('box_export', getVal('marketChoice') === 'export'); 
     }
 
@@ -956,27 +773,21 @@ Note:
         systemBaseStructure.forEach(sec => sec.items.forEach(it => { let bn = it.name.replace(/ \(1x1m\)| \(1\.22x1\.22m\)| \(4'x4'\)/g, ''); if(!winkoInventory[bn]) winkoInventory[bn] = { stock: 0, alert: 10 }; }));
         const presets = { "Base Panel":344, "Wall Panel (L1)":344, "Wall Panel (L2)":407, "Wall Panel (L3)":407, "Wall Panel (L4)":119, "Manhole Panel":200, "Roof Panel":186, "Partition Panel":50, "Type A Cleat":297, "Type B Cleat":130, "Type C Cleat":500, "44 1/4\" (L1 Stay)":76, "67\" (L2 Stay)":262, "11' 3\" (L3 Stay)":96, "15' 8.5\" (L4 Stay)":40, "Air Vent":48, "Mastic Sealant (Rolls)":89, "Bolt & Nut Sets":72, "Water Level Indicator":25, "Ext. Ladder":15, "Int. Ladder":15 }; let updated = false; Object.keys(presets).forEach(k => { if(winkoInventory[k] && winkoInventory[k].stock === 0) { winkoInventory[k].stock = presets[k]; updated = true; } }); if(updated) localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory));
     }
-    
     let winkoInventory = {}; try { winkoInventory = JSON.parse(localStorage.getItem('winkoInventoryDB')) || {}; } catch(e) { winkoInventory = {}; }
-    function renderInventoryTable() { let html = ''; Object.keys(winkoInventory).sort().forEach(k => { let d = winkoInventory[k]; let st = ''; let rc = ''; if(d.stock <= 0) { st = '<span class="inv-status inv-out">OUT OF STOCK</span>'; rc = 'stock-row-warning'; } else if (d.stock <= d.alert) { st = '<span class="inv-status inv-low">LOW STOCK</span>'; rc = 'stock-row-warning'; } else { st = '<span class="inv-status inv-ok">OK</span>'; } let sId = k.replace(/[^a-zA-Z0-9]/g, ''); html += `<tr class="${rc}"><td style="font-weight:700;">${k} <div style="margin-top:4px;">${st}</div></td><td class="text-center"><input type="number" class="inv-input" id="inv_stock_${sId}" value="${d.stock}"></td><td class="text-center"><input type="number" class="inv-input" id="inv_alert_${sId}" value="${d.alert}"></td></tr>`; }); setHtml('invBody', html); }
-    function saveInventory() { Object.keys(winkoInventory).forEach(k => { let sId = k.replace(/[^a-zA-Z0-9]/g, ''); winkoInventory[k].stock = getNum(`inv_stock_${sId}`); winkoInventory[k].alert = getNum(`inv_alert_${sId}`); }); localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory)); alert("Stock Levels updated."); renderInventoryTable(); }
-
-    function deductInventoryFromSO() {
-        if(!confirm("Deduct these items from Live Inventory?")) return; let c = 0;
-        appTanks.forEach(t => { t.bom.forEach(s => s.items.forEach(it => { if(s.category === "Services") return; if(it.qty > 0) { let bn = it.name.replace(/ \(1x1m\)| \(1\.22x1\.22m\)| \(4'x4'\)/g, ''); if(winkoInventory[bn]) { winkoInventory[bn].stock -= it.qty; c++; } } })); });
-        localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory)); alert(`Deducted items from stock.`);
-    }
+    function renderInventoryTable() { let html = ''; Object.keys(winkoInventory).sort().forEach(k => { let d = winkoInventory[k]; let st = ''; let rc = ''; if(d.stock <= 0) st = '<span class="inv-status inv-out">OUT</span>'; else if (d.stock <= d.alert) st = '<span class="inv-status inv-low">LOW</span>'; else st = '<span class="inv-status inv-ok">OK</span>'; let sId = k.replace(/[^a-zA-Z0-9]/g, ''); html += `<tr class="${rc}"><td style="font-weight:700;">${k} ${st}</td><td class="text-center"><input type="number" class="inv-input" id="inv_stock_${sId}" value="${d.stock}"></td><td class="text-center"><input type="number" class="inv-input" id="inv_alert_${sId}" value="${d.alert}"></td></tr>`; }); setHtml('invBody', html); }
+    function saveInventory() { Object.keys(winkoInventory).forEach(k => { let sId = k.replace(/[^a-zA-Z0-9]/g, ''); winkoInventory[k].stock = getNum(`inv_stock_${sId}`); winkoInventory[k].alert = getNum(`inv_alert_${sId}`); }); localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory)); alert("Stock updated."); renderInventoryTable(); }
+    function deductInventoryFromSO() { if(!confirm("Deduct stock?")) return; appTanks.forEach(t => { t.bom.forEach(s => s.items.forEach(it => { if(s.category === "Services") return; if(it.qty > 0) { let bn = it.name.replace(/ \(1x1m\)| \(1\.22x1\.22m\)| \(4'x4'\)/g, ''); if(winkoInventory[bn]) winkoInventory[bn].stock -= it.qty; } })); }); localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory)); alert(`Deducted.`); }
 
     function buildAdminTable() { let h = ''; systemBaseStructure.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { h += `<tr><td style="font-weight:800; background:#f1f5f9; text-align:left;">${sec.category}</td><td><input type="text" class="admin-input text-left" id="adm_name_${sIdx}_${iIdx}" value="${it.name}"></td><td><input type="number" step="0.1" class="admin-input" id="adm_wt_${sIdx}_${iIdx}" value="${it.wt || 0}"></td><td><input type="number" step="0.01" class="admin-input" id="adm_price_${sIdx}_${iIdx}" value="${it.def.toFixed(2)}"></td></tr>`; }); }); setHtml('adminBody', h); }
-    function saveAdminDefaults() { let nd = JSON.parse(JSON.stringify(systemBaseStructure)); nd.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { it.name = getVal(`adm_name_${sIdx}_${iIdx}`); it.wt = getNum(`adm_wt_${sIdx}_${iIdx}`); it.def = getNum(`adm_price_${sIdx}_${iIdx}`); }); }); localStorage.setItem('winkoMasterDefaults', JSON.stringify(nd)); alert("Success! Master Defaults updated."); location.reload(); }
+    function saveAdminDefaults() { let nd = JSON.parse(JSON.stringify(systemBaseStructure)); nd.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { it.name = getVal(`adm_name_${sIdx}_${iIdx}`); it.wt = getNum(`adm_wt_${sIdx}_${iIdx}`); it.def = getNum(`adm_price_${sIdx}_${iIdx}`); }); }); localStorage.setItem('winkoMasterDefaults', JSON.stringify(nd)); alert("Success!"); location.reload(); }
 
-    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV100', JSON.stringify(d)); }
-    function loadPrices() { let s = localStorage.getItem('winkoProDataV100'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; } renderAllDynamicUI(); processTankData(); }
+    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV101', JSON.stringify(d)); }
+    function loadPrices() { let s = localStorage.getItem('winkoProDataV101'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else appTanks = [defaultTank()]; renderAllDynamicUI(); processTankData(); }
 
-    function refreshMemoryDropdown() { let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; let s = document.getElementById('memoryDropdown'); if(s) { s.innerHTML = '<option value="">-- Load a Saved Project --</option>'; Object.keys(m).forEach(k => { s.innerHTML += `<option value="${k}">${k}</option>`; }); } }
-    function saveToMemory() { let p = getVal('projectName').trim(); if(!p) { alert("Type a Project Name first."); return; } let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; m[p] = d; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); alert("Saved."); refreshMemoryDropdown(); setVal('memoryDropdown', p); }
+    function refreshMemoryDropdown() { let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; let s = document.getElementById('memoryDropdown'); if(s) { s.innerHTML = '<option value="">-- Load Saved Project --</option>'; Object.keys(m).forEach(k => { s.innerHTML += `<option value="${k}">${k}</option>`; }); } }
+    function saveToMemory() { let p = getVal('projectName').trim(); if(!p) return; let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; m[p] = d; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); alert("Saved."); refreshMemoryDropdown(); }
     function loadFromMemory() { let p = getVal('memoryDropdown'); if(!p) return; let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; let d = m[p]; if (d) { appTanks = d.tanks || []; appCustomItems = d.custom || []; configIDs.forEach(id => { if (d[id] !== undefined) setVal(id, d[id]); }); renderAllDynamicUI(); processTankData(); } }
-    function deleteFromMemory() { let p = getVal('memoryDropdown'); if(p && confirm("Delete '"+p+"'?")) { let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; delete m[p]; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); refreshMemoryDropdown(); } }
+    function deleteFromMemory() { let p = getVal('memoryDropdown'); if(p && confirm("Delete?")) { let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; delete m[p]; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); refreshMemoryDropdown(); } }
 
     function printInternal() { document.body.className = 'print-internal'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => window.print(), 300); }
     function printCustomer() { document.body.className = 'print-customer'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => window.print(), 300); }
@@ -987,15 +798,13 @@ Note:
     setInterval(() => { let d = new Date(); let s = d.toLocaleDateString('en-MY').replace(/\//g, '-'); setTxt('liveClock', s + " " + d.toLocaleTimeString('en-MY')); setTxt('metaDate', s); setTxt('cpDate', s); }, 1000);
 
     function exportCSV() {
-        let csv = "\uFEFFWINKO INDUSTRIAL SDN BHD\nOFFICIAL TECHNICAL QUOTATION\n\n";
-        csv += `"Quote No:","${getVal('quoteIdInput')}"\n"Project:","${getVal('projectName')}"\n"Date:","${new Date().toLocaleDateString('en-MY')}"\n\n`;
+        let csv = "\uFEFFWINKO ERP EXPORT\n\n";
+        csv += `"Quote No:","${getVal('quoteIdInput')}"\n"Project:","${getVal('projectName')}"\n\n`;
         appTanks.forEach((t, i) => {
-            csv += `TANK ${i+1} BILL OF MATERIALS\nCategory,Item Description,Qty,Unit Wt (kg),Unit Price (RM),Total (RM)\n`;
-            t.bom.forEach((s) => s.items.forEach((it) => { let isSvc=(s.category==="Services"); let q = isSvc?1:it.qty; if(q>0) csv += `"${s.category}","${it.name}",${isSvc?'Lump Sum':q},${it.wt},${it.def},${(q*(it.def||0))}\n`; })); csv += `\n`;
+            csv += `TANK ${i+1}\nCategory,Description,Qty,Wt,Price,Total\n`;
+            t.bom.forEach((s) => s.items.forEach((it) => { let q = (s.category==="Services")?1:it.qty; if(q>0) csv += `"${s.category}","${it.name}",${q},${it.wt},${it.def},${(q*(it.def||0))}\n`; }));
         });
-        if(appCustomItems.length > 0) { csv += `CUSTOM ITEMS\n"Description","Qty","Unit Base Cost (RM)","Total (RM)"\n`; appCustomItems.forEach(c => csv+=`"${c.desc}",${c.qty},${c.cost},${c.qty*c.cost}\n`); csv += `\n`; }
-        csv += `,,,,"Gross Subtotal (RM)",${document.getElementById('sumSubtotal_screen').innerText.replace(/,/g,'')}\n,,,,"GRAND TOTAL (RM)",${document.getElementById('grandTotal_screen').innerText.replace(/,/g,'')}\n`;
-        const a = document.createElement('a'); a.href = window.URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' })); a.download = `Jutarama_Quote_${getVal('quoteIdInput')}.csv`; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        const a = document.createElement('a'); a.href = window.URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' })); a.download = `Winko_Quote_${getVal('quoteIdInput')}.csv`; document.body.appendChild(a); a.click(); document.body.removeChild(a);
     }
 </script>
 </body>
