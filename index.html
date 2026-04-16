@@ -98,6 +98,12 @@
         .admin-table td { border-color: #e2e8f0; padding: 8px;}
         .admin-input { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-weight: bold; text-align: center;}
         
+        /* FILE UPLOAD STYLES */
+        .file-upload-wrapper { border: 2px dashed #94a3b8; border-radius: 8px; padding: 20px; text-align: center; background: #f8fafc; transition: all 0.3s; margin-top: 10px;}
+        .file-upload-wrapper:hover { border-color: #ea580c; background: #fff7ed; }
+        .file-upload-wrapper input[type="file"] { display: none; }
+        .file-upload-label { cursor: pointer; display: inline-block; padding: 10px 20px; background: #ea580c; color: white; border-radius: 6px; font-weight: bold; }
+        
         #customerPreviewContainer { background: #94a3b8; padding: 20px; overflow-y: auto; flex-direction: column; align-items: center; }
         .preview-toolbar { background: #0f172a; padding: 10px 20px; border-radius: 6px; margin-bottom: 15px; color: white; display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 210mm;}
         #customerPrintViewEditor { display: block; background: white; width: 100%; max-width: 210mm; min-height: 297mm; padding: 15mm; box-shadow: 0 10px 20px rgba(0,0,0,0.2); margin: 0 auto; color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 9pt; }
@@ -156,10 +162,10 @@
     </style>
     <script>
         // --- VERSION CONTROL & BUG FIX FORCED RESET ---
-        const cv = "V109";
+        const cv = "V110";
         if(localStorage.getItem("winkoAppVersion") !== cv) {
             localStorage.setItem("winkoAppVersion", cv);
-            for(let i=13; i<=108; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=109; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -203,6 +209,16 @@
     </div>
     
     <div class="module-card" style="margin-top: 20px;">
+        <div class="card-header"><span>📥</span> Bulk Data & Stock Import</div>
+        <p style="font-size: 13px; color: #64748b; margin-bottom: 5px;">Upload your Excel/CSV format Stock Sheet (ITEM, DESCRIPTION, QUANTITY, UNIT (RM)). The system will extract new items, update existing stock, and sync your prices globally automatically.</p>
+        <div class="file-upload-wrapper">
+            <label for="csvFileInput" class="file-upload-label">📁 Select Excel CSV File to Sync Inventory</label>
+            <input type="file" id="csvFileInput" accept=".csv" onchange="processBulkCSV(event)">
+            <p id="csvStatusText" style="margin-top: 10px; font-weight: bold; color: #0f172a;"></p>
+        </div>
+    </div>
+
+    <div class="module-card" style="margin-top: 20px;">
         <div class="card-header"><span>👥</span> User Account Management</div>
         <table class="admin-table">
             <thead><tr><th>Username</th><th>Password</th><th>Role</th><th style="text-align:center;">Action</th></tr></thead>
@@ -222,7 +238,10 @@
 
 <div id="inventoryContent"><div class="container"><div class="module-card">
     <div class="card-header"><span>📦</span> Live Stock Management</div>
-    <table class="admin-table"><thead><tr><th style="width:50%;">Item Name</th><th class="text-center">Current Stock Qty</th><th class="text-center">Low Alert Level</th></tr></thead><tbody id="invBody"></tbody></table>
+    <div style="margin-bottom: 15px; display:flex; justify-content:space-between; align-items:center;">
+        <input type="text" id="invSearchBox" placeholder="🔍 Search Item Description..." style="padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; width: 300px;" onkeyup="filterInventory()">
+    </div>
+    <table class="admin-table"><thead><tr><th style="width:50%;">Item Name</th><th class="text-center">Current Stock Qty</th><th class="text-center">Low Alert Level</th><th class="text-center">Base Price (RM)</th></tr></thead><tbody id="invBody"></tbody></table>
     <div style="margin-top: 15px; text-align: right;"><button class="action-btn print-btn" style="width:auto;" onclick="saveInventory()">💾 Save Stock Levels</button></div>
 </div></div></div>
 
@@ -864,14 +883,96 @@ Note:
     }
 
     function initInventory() {
-        systemBaseStructure.forEach(sec => sec.items.forEach(it => { let bn = it.name.replace(/ \(1x1m\)| \(1\.22x1\.22m\)| \(4'x4'\)/g, ''); if(!winkoInventory[bn]) winkoInventory[bn] = { stock: 0, alert: 10 }; }));
+        systemBaseStructure.forEach(sec => sec.items.forEach(it => { let bn = it.name.replace(/ \(1x1m\)| \(1\.22x1\.22m\)| \(4'x4'\)/g, ''); if(!winkoInventory[bn]) winkoInventory[bn] = { stock: 0, alert: 10, price: it.def }; }));
         const presets = { "Base Panel":344, "Wall Panel (L1)":344, "Wall Panel (L2)":407, "Wall Panel (L3)":407, "Wall Panel (L4)":119, "Manhole Panel":200, "Roof Panel":186, "Partition Panel":50, "Type A Cleat":297, "Type B Cleat":130, "Type C Cleat":500, "44 1/4\" (L1 Stay)":76, "67\" (L2 Stay)":262, "11' 3\" (L3 Stay)":96, "15' 8.5\" (L4 Stay)":40, "Air Vent":48, "Mastic Sealant (Rolls)":89, "Bolt & Nut Sets":72, "Water Level Indicator":25, "Ext. Ladder":15, "Int. Ladder":15 }; let updated = false; Object.keys(presets).forEach(k => { if(winkoInventory[k] && winkoInventory[k].stock === 0) { winkoInventory[k].stock = presets[k]; updated = true; } }); if(updated) localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory));
     }
     let winkoInventory = {}; try { winkoInventory = JSON.parse(localStorage.getItem('winkoInventoryDB')) || {}; } catch(e) { winkoInventory = {}; }
     
-    function renderInventoryTable() { let html = ''; Object.keys(winkoInventory).sort().forEach(k => { let d = winkoInventory[k]; let st = ''; let rc = ''; if(d.stock <= 0) st = '<span class="inv-status inv-out">OUT</span>'; else if (d.stock <= d.alert) st = '<span class="inv-status inv-low">LOW</span>'; else st = '<span class="inv-status inv-ok">OK</span>'; let sId = k.replace(/[^a-zA-Z0-9]/g, ''); html += `<tr class="${rc}"><td style="font-weight:700;">${k} ${st}</td><td class="text-center"><input type="number" class="inv-input" id="inv_stock_${sId}" value="${d.stock}"></td><td class="text-center"><input type="number" class="inv-input" id="inv_alert_${sId}" value="${d.alert}"></td></tr>`; }); setHtml('invBody', html); }
-    function saveInventory() { Object.keys(winkoInventory).forEach(k => { let sId = k.replace(/[^a-zA-Z0-9]/g, ''); winkoInventory[k].stock = getNum(`inv_stock_${sId}`); winkoInventory[k].alert = getNum(`inv_alert_${sId}`); }); localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory)); alert("Stock updated."); renderInventoryTable(); }
+    function renderInventoryTable() { 
+        let html = ''; 
+        let filterText = getVal('invSearchBox').toLowerCase();
+        
+        Object.keys(winkoInventory).sort().forEach(k => { 
+            if(filterText && !k.toLowerCase().includes(filterText)) return;
+            
+            let d = winkoInventory[k]; let st = ''; let rc = ''; 
+            if(d.stock <= 0) st = '<span class="inv-status inv-out">OUT</span>'; else if (d.stock <= d.alert) st = '<span class="inv-status inv-low">LOW</span>'; else st = '<span class="inv-status inv-ok">OK</span>'; 
+            let sId = k.replace(/[^a-zA-Z0-9]/g, ''); 
+            html += `<tr class="${rc}"><td style="font-weight:700;">${k} ${st}</td><td class="text-center"><input type="number" class="inv-input" id="inv_stock_${sId}" value="${d.stock||0}"></td><td class="text-center"><input type="number" class="inv-input" id="inv_alert_${sId}" value="${d.alert||10}"></td><td class="text-center"><input type="number" step="0.01" class="inv-input" id="inv_price_${sId}" value="${d.price||0}"></td></tr>`; 
+        }); 
+        setHtml('invBody', html); 
+    }
+    
+    function filterInventory() { renderInventoryTable(); }
+    
+    function saveInventory() { 
+        Object.keys(winkoInventory).forEach(k => { 
+            let sId = k.replace(/[^a-zA-Z0-9]/g, ''); 
+            let stockEl = document.getElementById(`inv_stock_${sId}`);
+            let alertEl = document.getElementById(`inv_alert_${sId}`);
+            let priceEl = document.getElementById(`inv_price_${sId}`);
+            if(stockEl) winkoInventory[k].stock = parseFloat(stockEl.value) || 0; 
+            if(alertEl) winkoInventory[k].alert = parseFloat(alertEl.value) || 10; 
+            if(priceEl) winkoInventory[k].price = parseFloat(priceEl.value) || 0; 
+        }); 
+        localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory)); 
+        alert("Stock & Prices updated globally."); 
+        renderInventoryTable(); 
+    }
+    
     function deductInventoryFromSO() { if(!confirm("Deduct stock?")) return; appTanks.forEach(t => { t.bom.forEach(s => s.items.forEach(it => { if(s.category === "Services") return; if(it.qty > 0) { let bn = it.name.replace(/ \(1x1m\)| \(1\.22x1\.22m\)| \(4'x4'\)/g, ''); if(winkoInventory[bn]) winkoInventory[bn].stock -= it.qty; } })); }); localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory)); alert(`Deducted.`); }
+
+    // --- CSV BULK IMPORTER SYSTEM ---
+    function processBulkCSV(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const text = e.target.result;
+            const rows = text.split('\n');
+            let addedCount = 0;
+            let updateCount = 0;
+            
+            // Start reading from row 10 (index 9) to skip headers based on Winko's standard Excel format
+            for (let i = 9; i < rows.length; i++) {
+                const row = rows[i].trim();
+                if (!row) continue;
+                
+                // Assuming standard CSV comma split
+                const cols = row.split(',');
+                if (cols.length < 5) continue; 
+                
+                // Column 1 is DESCRIPTION, Col 3 is QUANTITY, Col 4 is UNIT (RM)
+                let desc = cols[1].replace(/^"|"$/g, '').trim();
+                let qtyStr = cols[3].replace(/^"|"$/g, '').trim();
+                let priceStr = cols[4].replace(/^"|"$/g, '').trim();
+                
+                if (!desc || desc.toLowerCase().includes('calculation:')) continue;
+                
+                let qty = parseFloat(qtyStr); if (isNaN(qty)) qty = 0;
+                let price = parseFloat(priceStr); if (isNaN(price)) price = 0;
+                
+                // Ignore perfectly empty rows where no qty and no price exists
+                if (qty === 0 && price === 0) continue;
+                
+                if (winkoInventory[desc]) {
+                    winkoInventory[desc].stock = qty;
+                    if(price > 0) winkoInventory[desc].price = price;
+                    updateCount++;
+                } else {
+                    winkoInventory[desc] = { stock: qty, alert: 10, price: price };
+                    addedCount++;
+                }
+            }
+            
+            localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory));
+            document.getElementById('csvStatusText').innerText = `✅ Success! Added ${addedCount} new items, updated ${updateCount} existing items.`;
+            document.getElementById('csvStatusText').style.color = "#059669";
+            renderInventoryTable();
+        };
+        reader.readAsText(file);
+    }
 
     // --- ADMIN CONTROLS ---
     function renderUserTable() {
@@ -916,8 +1017,8 @@ Note:
 
     function saveAdminDefaults() { let nd = JSON.parse(JSON.stringify(systemBaseStructure)); nd.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { it.name = getVal(`adm_name_${sIdx}_${iIdx}`); it.wt = getNum(`adm_wt_${sIdx}_${iIdx}`); it.def = getNum(`adm_price_${sIdx}_${iIdx}`); }); }); localStorage.setItem('winkoMasterDefaults', JSON.stringify(nd)); alert("Success!"); location.reload(); }
 
-    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV109', JSON.stringify(d)); }
-    function loadPrices() { let s = localStorage.getItem('winkoProDataV109'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else appTanks = [defaultTank()]; renderAllDynamicUI(); processTankData(); }
+    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV110', JSON.stringify(d)); }
+    function loadPrices() { let s = localStorage.getItem('winkoProDataV110'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else appTanks = [defaultTank()]; renderAllDynamicUI(); processTankData(); }
 
     function refreshMemoryDropdown() { let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; let s = document.getElementById('memoryDropdown'); if(s) { s.innerHTML = '<option value="">-- Load Saved Project --</option>'; Object.keys(m).forEach(k => { s.innerHTML += `<option value="${k}">${k}</option>`; }); } }
     function saveToMemory() { let p = getVal('projectName').trim(); if(!p) return; let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; m[p] = d; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); alert("Saved."); refreshMemoryDropdown(); }
