@@ -15,8 +15,7 @@ const setHtml = (id, v) => { let e = document.getElementById(id); if(e) e.innerH
 const setDisp = (id, show) => { let e = document.getElementById(id); if(e) e.style.display = show ? 'block' : 'none'; };
 const setBox = (id, show) => { let e = document.getElementById(id); if(e) e.innerHTML = show ? '&#10003;' : '&nbsp;'; };
 
-const SECRET_PASSWORD = "winko2026";
-const ADMIN_PASSWORD = "adminmaster99";
+
 
 const systemBaseStructure = [
     { category: "Panels", items: [{name: "Manhole Panel", def: 450, wt: 55}, {name: "Roof Panel", def: 220, wt: 26}, {name: "Base Panel", def: 350, wt: 68}, {name: "Wall Panel (L1)", def: 350, wt: 68}, {name: "Wall Panel (L2)", def: 280, wt: 48}, {name: "Wall Panel (L3)", def: 280, wt: 48}, {name: "Wall Panel (L4)", def: 220, wt: 26}, {name: "Partition Panel", def: 280, wt: 48}] },
@@ -63,15 +62,99 @@ function removeBomRow(tIdx, sIdx) { let minLen = systemBaseStructure[sIdx].items
 
 function safeProcess() { processTankData(); savePrices(); }
 
-function checkPassword() {
-    let p = getVal('passInput').trim().toLowerCase();
-    if(p === SECRET_PASSWORD) {
-        setDisp('securityOverlay', false); setDisp('topNav', true); setDisp('mainContent', true);
+// --- USER ACCOUNT SYSTEM ---
+let winkoUsers = [];
+let currentUserRole = "user";
+
+function initUsers() {
+    let stored = localStorage.getItem('winkoUsersDB');
+    if (stored) {
+        winkoUsers = JSON.parse(stored);
+    } else {
+        // Default users if system is brand new
+        winkoUsers = [
+            { username: "sam", password: "winko2026", role: "user" },
+            { username: "admin", password: "adminmaster99", role: "admin" }
+        ];
+        localStorage.setItem('winkoUsersDB', JSON.stringify(winkoUsers));
+    }
+}
+initUsers(); // Run this immediately to load users
+
+function checkLogin() {
+    let u = getVal('userInput').trim().toLowerCase();
+    let p = getVal('passInput').trim();
+    
+    // Find matching user
+    let foundUser = winkoUsers.find(user => user.username.toLowerCase() === u && user.password === p);
+    
+    if (foundUser) {
+        currentUserRole = foundUser.role;
+        setDisp('securityOverlay', false);
+        setDisp('topNav', true);
+        setDisp('mainContent', true);
+        
+        // Hide the Admin Tab if the person is just a standard user
+        if (currentUserRole !== "admin") {
+            document.getElementById('btnTabAdmin').style.display = 'none';
+        } else {
+            document.getElementById('btnTabAdmin').style.display = 'inline-block';
+        }
+
         if(!getVal('quoteIdInput')) setVal('quoteIdInput', "QP-" + new Date().getFullYear().toString().substr(-2) + "-00" + Math.floor(Math.random() * 9 + 1));
-        refreshMemoryDropdown(); initInventory(); loadPrices();
-    } else if (p === ADMIN_PASSWORD) {
-        setDisp('securityOverlay', false); setDisp('topNav', true); setDisp('adminContent', true); buildAdminTable();
-    } else { alert("Incorrect Password!"); }
+        refreshMemoryDropdown(); 
+        initInventory(); 
+        loadPrices();
+    } else {
+        alert("Incorrect Username or Password!");
+    }
+}
+
+// --- ADMIN USER MANAGEMENT ---
+function renderUserTable() {
+    let html = '';
+    winkoUsers.forEach((user, index) => {
+        // Protect the master admin account from being deleted accidentally
+        let delBtn = (user.username.toLowerCase() === 'admin') 
+            ? `<span style="color:#94a3b8; font-size:11px; font-weight:bold;">MASTER</span>` 
+            : `<button class="del-btn" onclick="deleteUser(${index})">X Remove</button>`;
+        
+        html += `<tr>
+            <td><strong>${user.username}</strong></td>
+            <td><input type="text" class="admin-input" value="${user.password}" onchange="updateUserPass(${index}, this.value)"></td>
+            <td style="text-transform: capitalize; font-weight:bold;">${user.role}</td>
+            <td style="text-align:center;">${delBtn}</td>
+        </tr>`;
+    });
+    setHtml('userTableBody', html);
+}
+
+function updateUserPass(index, newPass) {
+    if(newPass.trim() === "") return alert("Password cannot be empty");
+    winkoUsers[index].password = newPass.trim();
+    localStorage.setItem('winkoUsersDB', JSON.stringify(winkoUsers));
+}
+
+function addUser() {
+    let u = getVal('newUsername').trim();
+    let p = getVal('newPassword').trim();
+    let r = getVal('newRole');
+    
+    if(!u || !p) return alert("Username and Password are required!");
+    if(winkoUsers.some(user => user.username.toLowerCase() === u.toLowerCase())) return alert("Username already exists!");
+    
+    winkoUsers.push({ username: u, password: p, role: r });
+    localStorage.setItem('winkoUsersDB', JSON.stringify(winkoUsers));
+    setVal('newUsername', ''); setVal('newPassword', ''); // clear inputs
+    renderUserTable();
+}
+
+function deleteUser(index) {
+    if(confirm(`Are you sure you want to delete user: ${winkoUsers[index].username}?`)) {
+        winkoUsers.splice(index, 1);
+        localStorage.setItem('winkoUsersDB', JSON.stringify(winkoUsers));
+        renderUserTable();
+    }
 }
 
 function switchTab(tabId) {
@@ -305,8 +388,17 @@ function renderInventoryTable() { let html = ''; Object.keys(winkoInventory).sor
 function saveInventory() { Object.keys(winkoInventory).forEach(k => { let sId = k.replace(/[^a-zA-Z0-9]/g, ''); winkoInventory[k].stock = getNum(`inv_stock_${sId}`); winkoInventory[k].alert = getNum(`inv_alert_${sId}`); }); localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory)); alert("Stock updated."); renderInventoryTable(); }
 function deductInventoryFromSO() { if(!confirm("Deduct stock?")) return; appTanks.forEach(t => { t.bom.forEach(s => s.items.forEach(it => { if(s.category === "Services") return; if(it.qty > 0) { let bn = it.name.replace(/ \(1x1m\)| \(1\.22x1\.22m\)| \(4'x4'\)/g, ''); if(winkoInventory[bn]) winkoInventory[bn].stock -= it.qty; } })); }); localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory)); alert(`Deducted.`); }
 
-function buildAdminTable() { let h = ''; systemBaseStructure.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { h += `<tr><td style="font-weight:800; background:#f1f5f9; text-align:left;">${sec.category}</td><td><input type="text" class="admin-input text-left" id="adm_name_${sIdx}_${iIdx}" value="${it.name}"></td><td><input type="number" step="0.1" class="admin-input" id="adm_wt_${sIdx}_${iIdx}" value="${it.wt || 0}"></td><td><input type="number" step="0.01" class="admin-input" id="adm_price_${sIdx}_${iIdx}" value="${it.def.toFixed(2)}"></td></tr>`; }); }); setHtml('adminBody', h); }
-function saveAdminDefaults() { let nd = JSON.parse(JSON.stringify(systemBaseStructure)); nd.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { it.name = getVal(`adm_name_${sIdx}_${iIdx}`); it.wt = getNum(`adm_wt_${sIdx}_${iIdx}`); it.def = getNum(`adm_price_${sIdx}_${iIdx}`); }); }); localStorage.setItem('winkoMasterDefaults', JSON.stringify(nd)); alert("Success!"); location.reload(); }
+function buildAdminTable() { 
+    let h = ''; 
+    systemBaseStructure.forEach((sec, sIdx) => { 
+        sec.items.forEach((it, iIdx) => { 
+            h += `<tr><td style="font-weight:800; background:#f1f5f9; text-align:left;">${sec.category}</td><td><input type="text" class="admin-input text-left" id="adm_name_${sIdx}_${iIdx}" value="${it.name}"></td><td><input type="number" step="0.1" class="admin-input" id="adm_wt_${sIdx}_${iIdx}" value="${it.wt || 0}"></td><td><input type="number" step="0.01" class="admin-input" id="adm_price_${sIdx}_${iIdx}" value="${it.def.toFixed(2)}"></td></tr>`; 
+        }); 
+    }); 
+    setHtml('adminBody', h); 
+   
+    renderUserTable(); 
+}
 
 function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV103', JSON.stringify(d)); }
 function loadPrices() { let s = localStorage.getItem('winkoProDataV103'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else appTanks = [defaultTank()]; renderAllDynamicUI(); processTankData(); }
