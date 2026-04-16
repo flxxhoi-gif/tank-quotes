@@ -36,6 +36,23 @@
 
 <div id="adminContent"><div class="container"><div class="module-card">
     <div class="card-header"><span>⚙️</span> Base BOM & Cost Control</div>
+    <div class="module-card" style="margin-top: 20px;">
+        <div class="card-header"><span>👥</span> User Account Management</div>
+        <table class="admin-table">
+            <thead><tr><th>Username</th><th>Password</th><th>Role</th><th style="text-align:center;">Action</th></tr></thead>
+            <tbody id="userTableBody"></tbody>
+        </table>
+        
+        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #cbd5e1; display: flex; gap: 10px; flex-wrap: wrap;">
+            <input type="text" id="newUsername" placeholder="New Username" class="admin-input" style="flex:1; min-width: 150px;">
+            <input type="text" id="newPassword" placeholder="New Password" class="admin-input" style="flex:1; min-width: 150px;">
+            <select id="newRole" class="admin-input" style="flex:1; min-width: 150px;">
+                <option value="user">Standard User</option>
+                <option value="admin">Administrator</option>
+            </select>
+            <button class="action-btn print-btn" style="width:auto; background:#3b82f6;" onclick="addUser()">+ Add User</button>
+        </div>
+    </div>
     <table class="admin-table"><thead><tr><th style="width:20%;">Category</th><th style="width:40%;">Default Item Name</th><th style="width:20%;">Default Wt (kg)</th><th style="width:20%;">Default Price (RM)</th></tr></thead><tbody id="adminBody"></tbody></table>
     <div style="margin-top: 15px; text-align: right;"><button class="action-btn print-btn" style="width:auto; background:#10b981;" onclick="saveAdminDefaults()">💾 Save Master Defaults</button></div>
 </div></div></div>
