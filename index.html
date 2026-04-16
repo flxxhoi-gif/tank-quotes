@@ -148,17 +148,16 @@
             .cp-table th { background: #d1d5db !important; font-weight: bold; text-align: center;}
 
             body.print-checklist #mainContent, body.print-checklist #customerPreviewContainer { display: none !important; }
-            body.print-checklist #checklistPrintView { display: block !important; font-size: 9pt; padding: 0 10px; }
+            body.print-checklist #checklistPrintView { display: flex !important; flex-direction: column; min-height: 270mm; font-size: 9pt; padding: 0; }
             .chk-box { display: inline-block; width: 12px; height: 12px; border: 1px solid #000; text-align: center; line-height: 12px; margin-right: 4px; font-weight:bold;}
         }
     </style>
     <script>
         // --- VERSION CONTROL & BUG FIX FORCED RESET ---
-        const cv = "V104";
+        const cv = "V105";
         if(localStorage.getItem("winkoAppVersion") !== cv) {
             localStorage.setItem("winkoAppVersion", cv);
-            for(let i=13; i<=103; i++) localStorage.removeItem("winkoProDataV" + i);
-            localStorage.removeItem("winkoUsersDB"); // Force clear broken logins!
+            for(let i=13; i<=104; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -442,60 +441,62 @@ Note:
 </div>
 
 <div id="checklistPrintView">
-    <div style="text-align:right; font-weight:bold; margin-bottom:5px;"><span class="chk-box" id="box_local"></span> LOCAL &nbsp;&nbsp;&nbsp; <span class="chk-box" id="box_export"></span> EXPORT</div>
-    <div style="text-align:center; font-size: 14pt; font-weight: bold; text-decoration: underline; margin-bottom: 15px;">SALES ORDER</div>
+    <div style="display: flex; flex-direction: column; flex: 1;">
+        <div style="text-align:right; font-weight:bold; margin-bottom:5px;"><span class="chk-box" id="box_local"></span> LOCAL &nbsp;&nbsp;&nbsp; <span class="chk-box" id="box_export"></span> EXPORT</div>
+        <div style="text-align:center; font-size: 14pt; font-weight: bold; text-decoration: underline; margin-bottom: 15px;">SALES ORDER</div>
 
-    <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-size: 9pt;">
-        <div style="width: 55%; border: 1px solid #000; padding: 5px;">
-            <table style="width:100%; border:none; line-height:1.4;">
-                <tr style="border:none;"><td style="width:100px; font-weight:bold; border:none; padding:1px;">Customer</td><td style="border:none; padding:1px;">: <span id="so_customer"></span></td></tr>
-                <tr style="border:none;"><td style="font-weight:bold; border:none; padding:1px;">Project Name</td><td style="border:none; padding:1px;">: <span id="so_project"></span></td></tr>
-                <tr style="border:none;"><td style="font-weight:bold; border:none; padding:1px;">PO No</td><td style="border:none; padding:1px;">: <span id="so_custpo"></span></td></tr>
-                <tr style="border:none;"><td style="font-weight:bold; border:none; padding:1px;">Standard</td><td style="border:none; padding:1px;">: <span id="so_std"></span></td></tr>
-                <tr style="border:none;"><td style="font-weight:bold; border:none; padding:1px;">Partition</td><td style="border:none; padding:1px;">: <span id="so_part"></span></td></tr>
-            </table>
+        <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-size: 9pt;">
+            <div style="width: 55%;">
+                <table style="width:100%; border:none; line-height:1.4;">
+                    <tr style="border:none;"><td style="width:100px; font-weight:bold; border:none; padding:1px;">Customer</td><td style="border:none; padding:1px;">: <span id="so_customer"></span></td></tr>
+                    <tr style="border:none;"><td style="font-weight:bold; border:none; padding:1px;">Project Name</td><td style="border:none; padding:1px;">: <span id="so_project"></span></td></tr>
+                    <tr style="border:none;"><td style="font-weight:bold; border:none; padding:1px;">PO No</td><td style="border:none; padding:1px;">: <span id="so_custpo"></span></td></tr>
+                    <tr style="border:none;"><td style="font-weight:bold; border:none; padding:1px;">Standard</td><td style="border:none; padding:1px;">: <span id="so_std"></span></td></tr>
+                    <tr style="border:none;"><td style="font-weight:bold; border:none; padding:1px;">Partition</td><td style="border:none; padding:1px;">: <span id="so_part"></span></td></tr>
+                </table>
+            </div>
+            <div style="width: 40%;">
+                <table style="width:100%; border:none; line-height:1.4;">
+                    <tr style="border:none;"><td style="width:110px; font-weight:bold; border:none; padding:1px;">Project No.</td><td style="border:none; padding:1px;">: <span id="so_projno"></span></td></tr>
+                    <tr style="border:none;"><td style="font-weight:bold; border:none; padding:1px;">Delivery Target</td><td style="border:none; padding:1px;">: <span id="so_deldate"></span></td></tr>
+                    <tr style="border:none;"><td style="font-weight:bold; border:none; padding:1px;">Total Panel</td><td style="border:none; padding:1px;">: <span id="so_totpanels"></span> pcs</td></tr>
+                    <tr style="border:none;"><td style="font-weight:bold; border:none; padding:1px;">Material</td><td style="border:none; padding:1px;">: <span id="so_material"></span></td></tr>
+                </table>
+            </div>
         </div>
-        <div style="width: 40%; border: 1px solid #000; padding: 5px;">
-            <table style="width:100%; border:none; line-height:1.4;">
-                <tr style="border:none;"><td style="width:110px; font-weight:bold; border:none; padding:1px;">Project No.</td><td style="border:none; padding:1px;">: <span id="so_projno"></span></td></tr>
-                <tr style="border:none;"><td style="font-weight:bold; border:none; padding:1px;">Delivery Target</td><td style="border:none; padding:1px;">: <span id="so_deldate"></span></td></tr>
-                <tr style="border:none;"><td style="font-weight:bold; border:none; padding:1px;">Total Panel</td><td style="border:none; padding:1px;">: <span id="so_totpanels"></span> pcs</td></tr>
-                <tr style="border:none;"><td style="font-weight:bold; border:none; padding:1px;">Material</td><td style="border:none; padding:1px;">: <span id="so_material"></span></td></tr>
-            </table>
-        </div>
-    </div>
 
-    <table style="width:100%; border-collapse:collapse; border:2px solid #000; font-size:9pt; margin-bottom: 10px;">
-        <thead>
-            <tr style="background:#e2e8f0;">
-                <th style="border:1px solid #000; width:6%; padding:6px; text-align:center;">Item</th>
-                <th style="border:1px solid #000; width:74%; padding:6px; text-align:center;">Description</th>
-                <th style="border:1px solid #000; width:10%; padding:6px; text-align:center;">Unit</th>
-                <th style="border:1px solid #000; width:10%; padding:6px; text-align:center;">Qty</th>
-            </tr>
-        </thead>
-        <tbody id="so_table_body"></tbody>
-    </table>
+        <table style="width:100%; border-collapse:collapse; border:2px solid #000; font-size:9pt; margin-bottom: 10px;">
+            <thead>
+                <tr style="background:#e2e8f0;">
+                    <th style="border:1px solid #000; width:6%; padding:6px; text-align:center;">Item</th>
+                    <th style="border:1px solid #000; width:74%; padding:6px; text-align:center;">Description</th>
+                    <th style="border:1px solid #000; width:10%; padding:6px; text-align:center;">Unit</th>
+                    <th style="border:1px solid #000; width:10%; padding:6px; text-align:center;">Qty</th>
+                </tr>
+            </thead>
+            <tbody id="so_table_body"></tbody>
+        </table>
 
-    <div class="avoid-break" style="margin-top: 10px; font-size: 9pt;">
-        <strong>Note :</strong><br>
-        <span style="margin-left: 5px;">- Pls prepare tank dimension / Nozzle orientation to engineering dept for drawing arrangement</span>
-        <div id="so_special_remarks" contenteditable="true" style="margin-top:5px; min-height: 20px; outline:none; margin-left: 5px; color:#475569; white-space:pre-wrap; border: 1px dashed transparent;">[Additional remarks here...]</div>
-    </div>
-
-    <div class="avoid-break" style="display:flex; justify-content:space-between; margin-top:50px; font-size:9pt; text-align:center;">
-        <div style="width:30%;">
-            <div style="border-top:1px solid #000; padding-top:5px; font-weight:bold;">Prepared By,</div>
-            <div style="text-align:left; margin-top:30px;">Name:<br>Date:</div>
+        <div style="margin-top: 10px; font-size: 9pt;">
+            <strong>Note :</strong><br>
+            <span style="margin-left: 5px;">- Pls prepare tank dimension / Nozzle orientation to engineering dept for drawing arrangement</span>
+            <div id="so_special_remarks" contenteditable="true" style="margin-top:5px; min-height: 20px; outline:none; margin-left: 5px; color:#475569; white-space:pre-wrap; border: 1px dashed transparent;">[Additional remarks here...]</div>
         </div>
-        <div style="width:30%;">
-            <div style="border-top:1px solid #000; padding-top:5px; font-weight:bold;">Checked & Approval By,</div>
-            <div style="text-align:left; margin-top:30px;">Name:<br>Date:</div>
-        </div>
-        <div style="width:30%;">
-            <div style="border-top:1px solid #000; padding-top:5px; font-weight:bold;">Received By,</div>
-            <div>(Production)</div>
-            <div style="text-align:left; margin-top:15px;">Name:<br>Date:</div>
+        
+        <div style="display:flex; justify-content:space-between; margin-top:50px; font-size:9pt; text-align:center;">
+            <div style="width:30%;">
+                <div style="border-top:1px solid #000; padding-top:5px; font-weight:bold;">Prepared By,</div>
+                <div style="text-align:left; margin-top:30px;">Name:<br>Date:</div>
+            </div>
+            <div style="width:30%;">
+                <div style="border-top:1px solid #000; padding-top:5px; font-weight:bold;">Checked & Approval By,</div>
+                <div style="text-align:left; margin-top:30px;">Name:<br>Date:</div>
+            </div>
+            <div style="width:30%;">
+                <div style="border-top:1px solid #000; padding-top:5px; font-weight:bold;">Received By,</div>
+                <div>(Production)</div>
+                <div style="text-align:left; margin-top:15px;">Name:<br>Date:</div>
+            </div>
         </div>
     </div>
     
@@ -507,7 +508,6 @@ Note:
 </div>
 
 <script>
-    // --- UTILITY FUNCTIONS ---
     const getVal = (id) => { let e = document.getElementById(id); return e ? e.value : ''; };
     const getNum = (id) => { let v = parseFloat(getVal(id)); return isNaN(v) ? 0 : v; };
     const setTxt = (id, v) => { let e = document.getElementById(id); if(e) e.innerText = v; };
@@ -516,7 +516,7 @@ Note:
     const setDisp = (id, show) => { let e = document.getElementById(id); if(e) e.style.display = show ? 'block' : 'none'; };
     const setBox = (id, show) => { let e = document.getElementById(id); if(e) e.innerHTML = show ? '&#10003;' : '&nbsp;'; };
 
-    // --- USER ACCOUNT SYSTEM (BULLETPROOF) ---
+    // --- USER ACCOUNT SYSTEM ---
     let winkoUsers = [];
     let currentUserRole = "user";
 
@@ -792,7 +792,6 @@ Note:
             let globalRef=totalBase===0?1:totalBase; let cpRows=""; let cpIdx=1;
             appTanks.forEach((t, i) => {
                 let trPct=t.baseCost/globalRef; 
-                // V104 FIX: Uses 'grand' instead of 'net' so individual items include SST on customer PDF
                 let trFinal=grand*trPct; 
                 t.finalPrice=trFinal;
                 
@@ -805,7 +804,6 @@ Note:
             });
             appCustomItems.forEach(c => {
                 let trPct=(c.cost*(c.qty||0))/globalRef; 
-                // V104 FIX: Uses 'grand' instead of 'net' so individual items include SST on customer PDF
                 let trFinal=grand*trPct;
                 cpRows += `<tr class="avoid-break"><td style="text-align:center; border:1px solid #000;">${cpIdx++}</td><td style="border:1px solid #000; padding:6px; vertical-align:top;"><strong>${c.desc}</strong></td><td style="text-align:center; border:1px solid #000;">${c.qty||0}</td><td style="text-align:right; border:1px solid #000; padding:6px;">${trFinal.toLocaleString('en-MY',{minimumFractionDigits:2})}</td></tr>`;
             });
@@ -892,8 +890,8 @@ Note:
 
     function saveAdminDefaults() { let nd = JSON.parse(JSON.stringify(systemBaseStructure)); nd.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { it.name = getVal(`adm_name_${sIdx}_${iIdx}`); it.wt = getNum(`adm_wt_${sIdx}_${iIdx}`); it.def = getNum(`adm_price_${sIdx}_${iIdx}`); }); }); localStorage.setItem('winkoMasterDefaults', JSON.stringify(nd)); alert("Success!"); location.reload(); }
 
-    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV104', JSON.stringify(d)); }
-    function loadPrices() { let s = localStorage.getItem('winkoProDataV104'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else appTanks = [defaultTank()]; renderAllDynamicUI(); processTankData(); }
+    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV105', JSON.stringify(d)); }
+    function loadPrices() { let s = localStorage.getItem('winkoProDataV105'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else appTanks = [defaultTank()]; renderAllDynamicUI(); processTankData(); }
 
     function refreshMemoryDropdown() { let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; let s = document.getElementById('memoryDropdown'); if(s) { s.innerHTML = '<option value="">-- Load Saved Project --</option>'; Object.keys(m).forEach(k => { s.innerHTML += `<option value="${k}">${k}</option>`; }); } }
     function saveToMemory() { let p = getVal('projectName').trim(); if(!p) return; let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; m[p] = d; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); alert("Saved."); refreshMemoryDropdown(); }
