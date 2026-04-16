@@ -147,17 +147,18 @@
             .cp-table th, .cp-table td { border: 1px solid #000; padding: 6px !important; vertical-align: top;}
             .cp-table th { background: #d1d5db !important; font-weight: bold; text-align: center;}
 
+            /* RESTORED V104 ORIGINAL CSS FOR CHECKLIST TO PREVENT FLEX-BOX DISTORTION */
             body.print-checklist #mainContent, body.print-checklist #customerPreviewContainer { display: none !important; }
-            body.print-checklist #checklistPrintView { display: block !important; font-size: 9pt; padding: 0 10px; }
+            body.print-checklist #checklistPrintView { display: block !important; font-size: 9pt; padding: 0; }
             .chk-box { display: inline-block; width: 12px; height: 12px; border: 1px solid #000; text-align: center; line-height: 12px; margin-right: 4px; font-weight:bold;}
         }
     </style>
     <script>
         // --- VERSION CONTROL & BUG FIX FORCED RESET ---
-        const cv = "V106";
+        const cv = "V107";
         if(localStorage.getItem("winkoAppVersion") !== cv) {
             localStorage.setItem("winkoAppVersion", cv);
-            for(let i=13; i<=105; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=106; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -888,8 +889,8 @@ Note:
 
     function saveAdminDefaults() { let nd = JSON.parse(JSON.stringify(systemBaseStructure)); nd.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { it.name = getVal(`adm_name_${sIdx}_${iIdx}`); it.wt = getNum(`adm_wt_${sIdx}_${iIdx}`); it.def = getNum(`adm_price_${sIdx}_${iIdx}`); }); }); localStorage.setItem('winkoMasterDefaults', JSON.stringify(nd)); alert("Success!"); location.reload(); }
 
-    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV106', JSON.stringify(d)); }
-    function loadPrices() { let s = localStorage.getItem('winkoProDataV106'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else appTanks = [defaultTank()]; renderAllDynamicUI(); processTankData(); }
+    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV107', JSON.stringify(d)); }
+    function loadPrices() { let s = localStorage.getItem('winkoProDataV107'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else appTanks = [defaultTank()]; renderAllDynamicUI(); processTankData(); }
 
     function refreshMemoryDropdown() { let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; let s = document.getElementById('memoryDropdown'); if(s) { s.innerHTML = '<option value="">-- Load Saved Project --</option>'; Object.keys(m).forEach(k => { s.innerHTML += `<option value="${k}">${k}</option>`; }); } }
     function saveToMemory() { let p = getVal('projectName').trim(); if(!p) return; let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; m[p] = d; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); alert("Saved."); refreshMemoryDropdown(); }
