@@ -147,10 +147,10 @@
         }
     </style>
     <script>
-        const cv = "V113";
+        const cv = "V114";
         if(localStorage.getItem("winkoAppVersion") !== cv) {
             localStorage.setItem("winkoAppVersion", cv);
-            for(let i=13; i<=112; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=113; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -200,8 +200,20 @@
 </div></div>
 
 <div id="adminContent"><div class="container">
-    
+
     <div class="module-card">
+        <div class="card-header"><span>💾</span> System Backup & Restore</div>
+        <p style="font-size: 13px; color: #64748b; margin-bottom: 10px;">Protect your data! Download your entire system database (Quotes, Customers, Inventory, Settings) to your computer, or restore from a previous backup file.</p>
+        <div class="btn-group" style="align-items: center; justify-content: flex-start; gap: 20px;">
+            <button class="action-btn print-btn" style="background:#10b981; max-width: 300px;" onclick="backupSystem()">⬇️ Download Master Backup</button>
+            <div class="file-upload-wrapper" style="flex:none; width: 300px; padding: 10px; margin: 0; border-color:#ef4444;">
+                <label for="restoreFileInput" class="file-upload-label" style="background:#ef4444; font-size:12px;">⬆️ Upload Backup to Restore</label>
+                <input type="file" id="restoreFileInput" accept=".json" onchange="restoreSystem(event)">
+            </div>
+        </div>
+    </div>
+    
+    <div class="module-card" style="margin-top: 20px;">
         <div class="card-header">
             <span>🏢</span> Global Company Profile
             <button class="action-btn print-btn" style="width:auto; padding: 8px 15px; background:#10b981;" onclick="saveCompanyProfile()">💾 Save Company Profile</button>
@@ -572,98 +584,100 @@
     };
 
     function initSystemData() {
-        // Company Profile Check
         try { let cp = JSON.parse(localStorage.getItem('winkoCompanyProfile')); if(cp) companyProfile = cp; } catch(e) {}
-        
-        // Users
-        try { let s = localStorage.getItem('winkoUsersDB'); if (s) { winkoUsers = JSON.parse(s); if (!winkoUsers.length) throw "e"; } else throw "e";
-        } catch(e) { winkoUsers = [{ username: "sam", password: "winko2026", role: "user" }, { username: "admin", password: "adminmaster99", role: "admin" }]; localStorage.setItem('winkoUsersDB', JSON.stringify(winkoUsers)); }
-        
-        // Customers
+        try { let s = localStorage.getItem('winkoUsersDB'); if (s) { winkoUsers = JSON.parse(s); if (!winkoUsers.length) throw "e"; } else throw "e"; } catch(e) { winkoUsers = [{ username: "sam", password: "winko2026", role: "user" }, { username: "admin", password: "adminmaster99", role: "admin" }]; localStorage.setItem('winkoUsersDB', JSON.stringify(winkoUsers)); }
         try { winkoCustomers = JSON.parse(localStorage.getItem('winkoCustomersDB')) || {}; } catch(e) { winkoCustomers = {}; }
         updateCustomerDatalist();
-        
         applyCompanyProfileToAdmin();
         applyCompanyProfileToHeaders();
     }
     initSystemData();
 
     function applyCompanyProfileToAdmin() {
-        setVal('profileName', companyProfile.name);
-        setVal('profileReg', companyProfile.reg);
-        setVal('profileAddress', companyProfile.address);
-        setVal('profileContact', companyProfile.contact);
-        setVal('profileWebsite', companyProfile.website);
-        setVal('profileTax', companyProfile.taxRate);
-        setVal('profileTerms', companyProfile.terms);
-        setTxt('navLogoText', companyProfile.name.split(' ')[0] + " ERP");
-        setTxt('loginTitleText', companyProfile.name + " QUOTING GATEWAY");
+        setVal('profileName', companyProfile.name); setVal('profileReg', companyProfile.reg); setVal('profileAddress', companyProfile.address); setVal('profileContact', companyProfile.contact); setVal('profileWebsite', companyProfile.website); setVal('profileTax', companyProfile.taxRate); setVal('profileTerms', companyProfile.terms);
+        setTxt('navLogoText', companyProfile.name.split(' ')[0] + " ERP"); setTxt('loginTitleText', companyProfile.name + " QUOTING GATEWAY");
     }
 
     function applyCompanyProfileToHeaders() {
-        // Internal PDF
-        setTxt('printHeaderName1', companyProfile.name);
-        setTxt('printHeaderReg1', companyProfile.reg);
-        setTxt('printHeaderAddr1', companyProfile.address);
-        
-        // Customer PDF
-        setTxt('cpHeaderName', companyProfile.name);
-        setTxt('cpHeaderReg', companyProfile.reg);
-        setTxt('cpHeaderAddr', companyProfile.address);
-        setTxt('cpHeaderContact', companyProfile.contact);
-        setTxt('cpHeaderWeb', companyProfile.website);
-        setTxt('cpSignCompany', companyProfile.name);
+        setTxt('printHeaderName1', companyProfile.name); setTxt('printHeaderReg1', companyProfile.reg); setTxt('printHeaderAddr1', companyProfile.address);
+        setTxt('cpHeaderName', companyProfile.name); setTxt('cpHeaderReg', companyProfile.reg); setTxt('cpHeaderAddr', companyProfile.address); setTxt('cpHeaderContact', companyProfile.contact); setTxt('cpHeaderWeb', companyProfile.website); setTxt('cpSignCompany', companyProfile.name);
     }
 
     function saveCompanyProfile() {
-        companyProfile.name = getVal('profileName');
-        companyProfile.reg = getVal('profileReg');
-        companyProfile.address = getVal('profileAddress');
-        companyProfile.contact = getVal('profileContact');
-        companyProfile.website = getVal('profileWebsite');
-        companyProfile.taxRate = getNum('profileTax');
-        companyProfile.terms = getVal('profileTerms');
-        
+        companyProfile.name = getVal('profileName'); companyProfile.reg = getVal('profileReg'); companyProfile.address = getVal('profileAddress'); companyProfile.contact = getVal('profileContact'); companyProfile.website = getVal('profileWebsite'); companyProfile.taxRate = getNum('profileTax'); companyProfile.terms = getVal('profileTerms');
         localStorage.setItem('winkoCompanyProfile', JSON.stringify(companyProfile));
         applyCompanyProfileToHeaders();
         alert('Global Company Profile Updated! Changes will apply to all new Quotes immediately.');
     }
 
     function updateCustomerDatalist() {
-        let html = '';
-        Object.keys(winkoCustomers).sort().forEach(c => { html += `<option value="${c}">`; });
-        setHtml('customerDatalist', html);
+        let html = ''; Object.keys(winkoCustomers).sort().forEach(c => { html += `<option value="${c}">`; }); setHtml('customerDatalist', html);
     }
 
     function checkCustomerAutoFill() {
         safeProcess();
         let c = getVal('custCompany').trim();
-        if (winkoCustomers[c]) {
-            if (winkoCustomers[c].attn && !getVal('custAttn')) setVal('custAttn', winkoCustomers[c].attn);
-            if (winkoCustomers[c].addr && !getVal('custAddr')) setVal('custAddr', winkoCustomers[c].addr);
-        }
+        if (winkoCustomers[c]) { if (winkoCustomers[c].attn && !getVal('custAttn')) setVal('custAttn', winkoCustomers[c].attn); if (winkoCustomers[c].addr && !getVal('custAddr')) setVal('custAddr', winkoCustomers[c].addr); }
     }
 
     function checkLogin() {
-        let u = getVal('userInput').trim().toLowerCase();
-        let p = getVal('passInput').trim();
+        let u = getVal('userInput').trim().toLowerCase(); let p = getVal('passInput').trim();
         let foundUser = winkoUsers.find(user => user.username.toLowerCase() === u && user.password === p);
-        
         if (foundUser) {
             currentUserRole = foundUser.role;
             setDisp('securityOverlay', false); setDisp('topNav', true); setDisp('mainContent', true);
-            if (currentUserRole !== "admin") document.getElementById('btnTabAdmin').style.display = 'none';
-            else document.getElementById('btnTabAdmin').style.display = 'inline-block';
-            if(!getVal('quoteIdInput')) {
-                setVal('quoteIdInput', "QP-" + new Date().getFullYear().toString().substr(-2) + "-00" + Math.floor(Math.random() * 9 + 1));
-                setVal('sstPct', companyProfile.taxRate); // apply default tax on new load
-                setVal('fullTermsNotes', companyProfile.terms); // apply default terms
-            }
-            initInventory(); 
-            loadPrices();
-            renderProjectBank();
-            renderCustomerAdmin();
+            if (currentUserRole !== "admin") document.getElementById('btnTabAdmin').style.display = 'none'; else document.getElementById('btnTabAdmin').style.display = 'inline-block';
+            if(!getVal('quoteIdInput')) { setVal('quoteIdInput', "QP-" + new Date().getFullYear().toString().substr(-2) + "-00" + Math.floor(Math.random() * 9 + 1)); setVal('sstPct', companyProfile.taxRate); setVal('fullTermsNotes', companyProfile.terms); }
+            initInventory(); loadPrices(); renderProjectBank(); renderCustomerAdmin();
         } else alert("Incorrect Username or Password! Please try again.");
+    }
+
+    // --- SYSTEM BACKUP & RESTORE ---
+    function backupSystem() {
+        let backupData = {};
+        for (let i = 0; i < localStorage.length; i++) {
+            let key = localStorage.key(i);
+            if (key.startsWith('winko')) backupData[key] = localStorage.getItem(key);
+        }
+        let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData));
+        let downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        let dateStr = new Date().toISOString().split('T')[0];
+        downloadAnchorNode.setAttribute("download", "winko_backup_" + dateStr + ".json");
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+    }
+
+    function restoreSystem(event) {
+        let file = event.target.files[0];
+        if (!file) return;
+        if (!confirm("⚠️ WARNING: Restoring a backup will overwrite ALL current data (Quotes, Inventory, Users, Settings). Are you absolutely sure?")) {
+            event.target.value = ''; // reset input
+            return;
+        }
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                let data = JSON.parse(e.target.result);
+                let hasData = false;
+                Object.keys(data).forEach(key => {
+                    if (key.startsWith('winko')) {
+                        localStorage.setItem(key, data[key]);
+                        hasData = true;
+                    }
+                });
+                if (hasData) {
+                    alert("✅ System successfully restored! The application will now reload.");
+                    window.location.reload(true);
+                } else {
+                    alert("❌ Invalid backup file. No Winko data found.");
+                }
+            } catch(err) {
+                alert("❌ Error reading backup file. The file might be corrupted.");
+            }
+        };
+        reader.readAsText(file);
     }
 
     let systemBaseStructure = [
@@ -681,17 +695,7 @@
     let appCustomItems = [];
     const configIDs = ['quoteIdInput', 'custPoNo', 'custDelDate', 'marketChoice', 'unitChoice', 'markupPct','discountPct','sstPct', 'shortExclusions', 'fullTermsNotes', 'custCompany', 'custAttn', 'custAddr', 'tcValidity', 'tcLead', 'tcDelivery', 'tcPayment', 'signName', 'signPhone'];
 
-    function defaultTank() {
-        return {
-            id: Date.now() + Math.random(),
-            std: "SANS 10329:2020 Approved by SIRIM & SPAN", coat: "Hot Dipped Galvanised",
-            L: 12, W: 4, H: 4, override: "",
-            tRoof: "1.5mm", tBase: "4.5mm", tW1: "4.5mm", tW2: "3.0mm", tW3: "3.0mm", tW4: "1.5mm",
-            partChoice: "no", partQty: 0, partL: 0, partH: 0, partPos: 1, partType: "Divider",
-            bom: JSON.parse(JSON.stringify(systemBaseStructure)),
-            baseCost: 0, finalPrice: 0, totalPanels: 0, weight: 0
-        };
-    }
+    function defaultTank() { return { id: Date.now() + Math.random(), std: "SANS 10329:2020 Approved by SIRIM & SPAN", coat: "Hot Dipped Galvanised", L: 12, W: 4, H: 4, override: "", tRoof: "1.5mm", tBase: "4.5mm", tW1: "4.5mm", tW2: "3.0mm", tW3: "3.0mm", tW4: "1.5mm", partChoice: "no", partQty: 0, partL: 0, partH: 0, partPos: 1, partType: "Divider", bom: JSON.parse(JSON.stringify(systemBaseStructure)), baseCost: 0, finalPrice: 0, totalPanels: 0, weight: 0 }; }
     function defaultCustomItem() { return { id: Date.now() + Math.random(), desc: "Custom Structure / Pump Room", cost: 0, qty: 1, finalPrice: 0 }; }
     function updateTankField(tIdx, field, val, isNum = false) { appTanks[tIdx][field] = isNum ? (parseFloat(val) || 0) : val; safeProcess(); }
     function updateBomField(tIdx, sIdx, iIdx, field, val, isNum = false) { appTanks[tIdx].bom[sIdx].items[iIdx][field] = isNum ? (parseFloat(val) || 0) : val; safeProcess(); }
@@ -939,7 +943,7 @@
         setBox('box_local', getVal('marketChoice') === 'local'); setBox('box_export', getVal('marketChoice') === 'export'); 
     }
 
-    // --- NEW PROJECT BANK & CRM FUNCTIONS ---
+    // --- PROJECT BANK CLONING ENGINE ---
     function renderProjectBank() {
         let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {};
         let filter = getVal('projSearchBox').toLowerCase();
@@ -956,97 +960,69 @@
             html += `<tr><td>${j}</td><td><strong>${k}</strong></td><td>${cust}</td><td class="text-right" style="font-weight:bold; color:#059669;">RM ${t}</td><td>${date}</td>
             <td class="text-center">
                 <button class="action-btn" style="width:auto; padding:4px 8px; background:#10b981; display:inline;" onclick="loadFromMemory('${k}')">Load</button>
+                <button class="action-btn" style="width:auto; padding:4px 8px; background:#3b82f6; display:inline;" onclick="cloneProject('${k}')">Clone</button>
                 <button class="action-btn" style="width:auto; padding:4px 8px; background:#ef4444; display:inline;" onclick="deleteFromMemory('${k}')">Delete</button>
             </td></tr>`;
         });
         if(html === '') html = '<tr><td colspan="6" style="text-align:center; padding: 20px; color:#64748b;">No projects found. Create and save a quote to build your project bank.</td></tr>';
         setHtml('projectBankBody', html);
     }
+    
+    function cloneProject(originalName) {
+        let newName = prompt("Enter new name for the cloned project:", originalName + " - Rev B");
+        if (!newName || newName.trim() === "") return;
+        newName = newName.trim();
+        
+        let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {};
+        if (m[newName]) {
+            alert("A project with that name already exists. Please choose a different name.");
+            return;
+        }
+        
+        let d = JSON.parse(JSON.stringify(m[originalName])); // Deep copy original data
+        d.projectName = newName; // Override name
+        d.savedDate = new Date().toLocaleDateString('en-MY'); // Reset save date
+        
+        // Slightly modify the Quote Number to indicate revision if it ends in a number
+        if(d.quoteIdInput) d.quoteIdInput = d.quoteIdInput + "-R";
+        
+        m[newName] = d;
+        localStorage.setItem('winkoMemoryBank', JSON.stringify(m));
+        renderProjectBank();
+        alert(`Project successfully cloned to "${newName}". You can now load it to make changes.`);
+    }
 
     function renderCustomerAdmin() {
-        let filter = getVal('custSearchBox').toLowerCase();
-        let html = '';
+        let filter = getVal('custSearchBox').toLowerCase(); let html = '';
         Object.keys(winkoCustomers).sort().forEach(c => {
-            if(filter && !c.toLowerCase().includes(filter)) return;
-            let d = winkoCustomers[c];
-            html += `<tr>
-                <td><strong>${c}</strong></td>
-                <td><input type="text" class="admin-input" value="${d.attn || ''}" onchange="updateCustomerAdmin('${c}', 'attn', this.value)"></td>
-                <td><input type="text" class="admin-input" value="${d.addr || ''}" onchange="updateCustomerAdmin('${c}', 'addr', this.value)"></td>
-                <td style="text-align:center;"><button class="del-btn" onclick="deleteCustomerAdmin('${c}')">X Remove</button></td>
-            </tr>`;
+            if(filter && !c.toLowerCase().includes(filter)) return; let d = winkoCustomers[c];
+            html += `<tr><td><strong>${c}</strong></td><td><input type="text" class="admin-input" value="${d.attn || ''}" onchange="updateCustomerAdmin('${c}', 'attn', this.value)"></td><td><input type="text" class="admin-input" value="${d.addr || ''}" onchange="updateCustomerAdmin('${c}', 'addr', this.value)"></td><td style="text-align:center;"><button class="del-btn" onclick="deleteCustomerAdmin('${c}')">X Remove</button></td></tr>`;
         });
-        if(html === '') html = '<tr><td colspan="4" style="text-align:center; padding: 20px; color:#64748b;">No customers found in CRM database.</td></tr>';
-        setHtml('customerAdminBody', html);
+        if(html === '') html = '<tr><td colspan="4" style="text-align:center; padding: 20px; color:#64748b;">No customers found in CRM database.</td></tr>'; setHtml('customerAdminBody', html);
     }
 
-    function updateCustomerAdmin(company, field, val) {
-        if(winkoCustomers[company]) {
-            winkoCustomers[company][field] = val;
-            localStorage.setItem('winkoCustomersDB', JSON.stringify(winkoCustomers));
-        }
-    }
-
-    function deleteCustomerAdmin(company) {
-        if(confirm(`Delete customer ${company} from CRM?`)) {
-            delete winkoCustomers[company];
-            localStorage.setItem('winkoCustomersDB', JSON.stringify(winkoCustomers));
-            updateCustomerDatalist();
-            renderCustomerAdmin();
-        }
-    }
+    function updateCustomerAdmin(company, field, val) { if(winkoCustomers[company]) { winkoCustomers[company][field] = val; localStorage.setItem('winkoCustomersDB', JSON.stringify(winkoCustomers)); } }
+    function deleteCustomerAdmin(company) { if(confirm(`Delete customer ${company} from CRM?`)) { delete winkoCustomers[company]; localStorage.setItem('winkoCustomersDB', JSON.stringify(winkoCustomers)); updateCustomerDatalist(); renderCustomerAdmin(); } }
 
     function saveToMemory() { 
-        let p = getVal('projectName').trim(); 
-        if(!p) return alert("Project Name is required to save to Project Bank."); 
-        
-        let d = { tanks: appTanks, custom: appCustomItems, savedTotal: window.currentGrandTotal, savedDate: new Date().toLocaleDateString('en-MY') }; 
-        configIDs.forEach(id => d[id] = getVal(id)); 
-        let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; 
-        m[p] = d; 
-        localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); 
-        
-        // Upsert Customer to CRM
-        let c = getVal('custCompany').trim();
-        if(c) {
-            winkoCustomers[c] = { attn: getVal('custAttn'), addr: getVal('custAddr') };
-            localStorage.setItem('winkoCustomersDB', JSON.stringify(winkoCustomers));
-            updateCustomerDatalist();
-            renderCustomerAdmin();
-        }
-
-        alert("Project Saved Successfully!"); 
-        renderProjectBank(); 
+        let p = getVal('projectName').trim(); if(!p) return alert("Project Name is required to save to Project Bank."); 
+        let d = { tanks: appTanks, custom: appCustomItems, savedTotal: window.currentGrandTotal, savedDate: new Date().toLocaleDateString('en-MY') }; configIDs.forEach(id => d[id] = getVal(id)); 
+        let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; m[p] = d; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); 
+        let c = getVal('custCompany').trim(); if(c) { winkoCustomers[c] = { attn: getVal('custAttn'), addr: getVal('custAddr') }; localStorage.setItem('winkoCustomersDB', JSON.stringify(winkoCustomers)); updateCustomerDatalist(); renderCustomerAdmin(); }
+        alert("Project Saved Successfully!"); renderProjectBank(); 
     }
     
     function loadFromMemory(p) { 
-        let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; 
-        let d = m[p]; 
-        if (d) { 
-            appTanks = d.tanks || []; 
-            appCustomItems = d.custom || []; 
-            configIDs.forEach(id => { if (d[id] !== undefined) setVal(id, d[id]); }); 
-            renderAllDynamicUI(); 
-            processTankData(); 
-            switchTab('quote'); // Auto switch back to workspace
-            alert(`Project ${p} loaded.`);
-        } 
+        let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; let d = m[p]; 
+        if (d) { appTanks = d.tanks || []; appCustomItems = d.custom || []; configIDs.forEach(id => { if (d[id] !== undefined) setVal(id, d[id]); }); renderAllDynamicUI(); processTankData(); switchTab('quote'); } 
     }
     
-    function deleteFromMemory(p) { 
-        if(p && confirm(`Are you sure you want to delete Project: ${p}?`)) { 
-            let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; 
-            delete m[p]; 
-            localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); 
-            renderProjectBank(); 
-        } 
-    }
+    function deleteFromMemory(p) { if(p && confirm(`Are you sure you want to delete Project: ${p}?`)) { let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; delete m[p]; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); renderProjectBank(); } }
 
     // --- INVENTORY / BULK CSV ---
     function initInventory() {
         systemBaseStructure.forEach(sec => sec.items.forEach(it => { let bn = it.name.replace(/ \(1x1m\)| \(1\.22x1\.22m\)| \(4'x4'\)/g, ''); if(!winkoInventory[bn]) winkoInventory[bn] = { stock: 0, alert: 10, price: it.def }; }));
-        let updated = false; 
-        if(updated) localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory));
+        let updated = false; if(updated) localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory));
     }
     let winkoInventory = {}; try { winkoInventory = JSON.parse(localStorage.getItem('winkoInventoryDB')) || {}; } catch(e) { winkoInventory = {}; }
     
@@ -1064,14 +1040,10 @@
     function filterInventory() { renderInventoryTable(); }
     function saveInventory() { 
         Object.keys(winkoInventory).forEach(k => { 
-            let sId = k.replace(/[^a-zA-Z0-9]/g, ''); 
-            let stockEl = document.getElementById(`inv_stock_${sId}`); let alertEl = document.getElementById(`inv_alert_${sId}`); let priceEl = document.getElementById(`inv_price_${sId}`);
-            if(stockEl) winkoInventory[k].stock = parseFloat(stockEl.value) || 0; 
-            if(alertEl) winkoInventory[k].alert = parseFloat(alertEl.value) || 10; 
-            if(priceEl) winkoInventory[k].price = parseFloat(priceEl.value) || 0; 
+            let sId = k.replace(/[^a-zA-Z0-9]/g, ''); let stockEl = document.getElementById(`inv_stock_${sId}`); let alertEl = document.getElementById(`inv_alert_${sId}`); let priceEl = document.getElementById(`inv_price_${sId}`);
+            if(stockEl) winkoInventory[k].stock = parseFloat(stockEl.value) || 0; if(alertEl) winkoInventory[k].alert = parseFloat(alertEl.value) || 10; if(priceEl) winkoInventory[k].price = parseFloat(priceEl.value) || 0; 
         }); 
-        localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory)); 
-        alert("Stock & Prices updated globally."); renderInventoryTable(); 
+        localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory)); alert("Stock & Prices updated globally."); renderInventoryTable(); 
     }
     function deductInventoryFromSO() { if(!confirm("Deduct stock?")) return; appTanks.forEach(t => { t.bom.forEach(s => s.items.forEach(it => { if(s.category === "Services") return; if(it.qty > 0) { let bn = it.name.replace(/ \(1x1m\)| \(1\.22x1\.22m\)| \(4'x4'\)/g, ''); if(winkoInventory[bn]) winkoInventory[bn].stock -= it.qty; } })); }); localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory)); alert(`Deducted.`); }
 
@@ -1118,13 +1090,12 @@
             sec.items.forEach((it, iIdx) => { h += `<tr><td style="text-align:center;"><button class="del-btn" style="background:#f43f5e; padding:4px 8px;" onclick="removeAdminItem(${sIdx}, ${iIdx})">X Delete</button></td><td><input type="text" class="admin-input text-left" value="${it.name}" onchange="updateAdminDraft(${sIdx}, ${iIdx}, 'name', this.value, false)"></td><td><input type="number" step="0.1" class="admin-input" value="${it.wt || 0}" onchange="updateAdminDraft(${sIdx}, ${iIdx}, 'wt', this.value, true)"></td><td><input type="number" step="0.01" class="admin-input" value="${(it.def||0).toFixed(2)}" onchange="updateAdminDraft(${sIdx}, ${iIdx}, 'def', this.value, true)"></td></tr>`; }); 
             h += `<tr><td colspan="4" style="text-align:right; padding:10px; background:#f8fafc; border-bottom:2px solid #cbd5e1;"><button class="action-btn" style="width:auto; padding:6px 12px; font-size:11px; background:#3b82f6; display:inline-block;" onclick="addAdminItem(${sIdx})">+ Add Item to ${sec.category}</button></td></tr>`;
         }); 
-        setHtml('adminBody', h); 
-        renderUserTable(); 
+        setHtml('adminBody', h); renderUserTable(); 
     }
     function saveAdminDefaults() { localStorage.setItem('winkoMasterDefaults', JSON.stringify(systemBaseStructure)); alert("Master Structure Saved! The system will reload to apply changes globally."); location.reload(); }
 
-    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV113', JSON.stringify(d)); }
-    function loadPrices() { let s = localStorage.getItem('winkoProDataV113'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; setVal('sstPct', companyProfile.taxRate); setVal('fullTermsNotes', companyProfile.terms); } renderAllDynamicUI(); processTankData(); }
+    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV114', JSON.stringify(d)); }
+    function loadPrices() { let s = localStorage.getItem('winkoProDataV114'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; setVal('sstPct', companyProfile.taxRate); setVal('fullTermsNotes', companyProfile.terms); } renderAllDynamicUI(); processTankData(); }
 
     function printInternal() { document.body.className = 'print-internal'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => window.print(), 300); }
     function printCustomer() { document.body.className = 'print-customer'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => window.print(), 300); }
