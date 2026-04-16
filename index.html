@@ -8,12 +8,13 @@
         * { box-sizing: border-box; font-family: system-ui, sans-serif; }
         body { background-color: #f8fafc; padding: 0; color: #334155; margin: 0; line-height: 1.5; }
         
-        #securityOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.95); backdrop-filter: blur(5px); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; color: white; text-align: center; }
-        .login-card { background: white; padding: 40px; border-radius: 12px; color: #333; box-shadow: 0 20px 40px rgba(0,0,0,0.5); width: 90%; max-width: 400px; display: flex; flex-direction: column; align-items: center; }
-        .login-card input { width: 100%; padding: 12px; margin: 20px 0 15px 0; border: 2px solid #e2e8f0; border-radius: 6px; text-align: center; font-size: 18px; outline: none; }
-        .login-card input:focus { border-color: #ea580c; box-shadow: 0 0 0 3px rgba(234,88,12,0.1); }
-        .login-card button { width: 100%; padding: 12px; background: #ea580c; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px; transition: transform 0.2s; }
-        .login-card button:hover { transform: translateY(-2px); }
+        /* MODERN PROFESSIONAL LOGIN UI */
+        #securityOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; color: white; text-align: center; }
+        .login-card { background: white; padding: 50px 40px; border-radius: 16px; color: #333; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); width: 90%; max-width: 420px; display: flex; flex-direction: column; align-items: center; border: 1px solid rgba(255,255,255,0.1); }
+        .login-card input { width: 100%; padding: 14px 16px; margin: 8px 0 15px 0; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; outline: none; background: #f8fafc; transition: all 0.2s ease; font-weight: 500;}
+        .login-card input:focus { border-color: #ea580c; background: #fff; box-shadow: 0 0 0 4px rgba(234,88,12,0.1); }
+        .login-card button { width: 100%; padding: 14px; background: linear-gradient(to right, #ea580c, #c2410c); color: white; border: none; border-radius: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; font-size: 14px; transition: transform 0.2s, box-shadow 0.2s; margin-top: 15px; }
+        .login-card button:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(234,88,12,0.4); }
         
         #topNav { display: none; background: #0f172a; padding: 10px 20px; position: sticky; top: 0; z-index: 1000; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;}
         .nav-links { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -155,10 +156,10 @@
     </style>
     <script>
         // --- VERSION CONTROL & BUG FIX FORCED RESET ---
-        const cv = "V108";
+        const cv = "V109";
         if(localStorage.getItem("winkoAppVersion") !== cv) {
             localStorage.setItem("winkoAppVersion", cv);
-            for(let i=13; i<=107; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=108; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -167,14 +168,20 @@
 
 <div id="securityOverlay">
     <div class="login-card">
-        <img src="winko logo.png" alt="Winko Logo" style="max-width: 160px; margin-bottom: 10px;">
-        <p style="color:#64748b; margin-top: 0; font-weight: 600;">Technical Quoting Gateway</p>
+        <img src="winko logo.png" alt="Winko Logo" style="max-width: 180px; margin-bottom: 5px;">
+        <p style="color:#64748b; margin-top: 0; font-weight: 700; font-size: 13px; letter-spacing: 0.5px; text-transform: uppercase;">Enterprise Quoting Gateway</p>
         
-        <input type="text" id="userInput" placeholder="Username" onkeypress="if(event.key==='Enter') document.getElementById('passInput').focus()">
-        <input type="password" id="passInput" placeholder="Password" onkeypress="if(event.key==='Enter') checkLogin()">
+        <div style="width: 100%; text-align: left; margin-top: 30px;">
+            <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 4px;">Username</label>
+            <input type="text" id="userInput" placeholder="Enter username" onkeypress="if(event.key==='Enter') document.getElementById('passInput').focus()">
+        </div>
         
-        <button onclick="checkLogin()">Unlock System</button>
-        <p style="font-size: 11px; margin-top:20px; color:#ef4444; font-weight: 600;">User: sam | Admin: admin</p>
+        <div style="width: 100%; text-align: left; margin-top: 5px;">
+            <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 4px;">Password</label>
+            <input type="password" id="passInput" placeholder="••••••••" onkeypress="if(event.key==='Enter') checkLogin()">
+        </div>
+        
+        <button onclick="checkLogin()">Secure Login</button>
     </div>
 </div>
 
@@ -726,7 +733,6 @@ Note:
                 let wliStr = t.bom[3] && t.bom[3].items[2] && t.bom[3].items[2].qty > 0 ? t.bom[3].items[2].qty : 0;
                 let partStr = (t.partChoice === 'yes' && t.partQty > 0) ? `<div><span style="font-weight:bold; color:#475569;">Partition:</span> ${t.partQty}x ${t.partType} (${t.partL}${u} x ${t.partH}${u})</div>` : '';
 
-                // NEW OPEN LIST FORMAT (NO TABLES)
                 soTableHtml += `<div class="avoid-break" style="display:flex; margin-bottom:15px; padding-bottom:15px; border-bottom:1px dashed #cbd5e1;">
                     <div style="width:6%; text-align:center; font-weight:bold;">${soIdx++}.</div>
                     <div style="width:74%;">
@@ -910,8 +916,8 @@ Note:
 
     function saveAdminDefaults() { let nd = JSON.parse(JSON.stringify(systemBaseStructure)); nd.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { it.name = getVal(`adm_name_${sIdx}_${iIdx}`); it.wt = getNum(`adm_wt_${sIdx}_${iIdx}`); it.def = getNum(`adm_price_${sIdx}_${iIdx}`); }); }); localStorage.setItem('winkoMasterDefaults', JSON.stringify(nd)); alert("Success!"); location.reload(); }
 
-    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV108', JSON.stringify(d)); }
-    function loadPrices() { let s = localStorage.getItem('winkoProDataV108'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else appTanks = [defaultTank()]; renderAllDynamicUI(); processTankData(); }
+    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV109', JSON.stringify(d)); }
+    function loadPrices() { let s = localStorage.getItem('winkoProDataV109'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else appTanks = [defaultTank()]; renderAllDynamicUI(); processTankData(); }
 
     function refreshMemoryDropdown() { let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; let s = document.getElementById('memoryDropdown'); if(s) { s.innerHTML = '<option value="">-- Load Saved Project --</option>'; Object.keys(m).forEach(k => { s.innerHTML += `<option value="${k}">${k}</option>`; }); } }
     function saveToMemory() { let p = getVal('projectName').trim(); if(!p) return; let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; m[p] = d; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); alert("Saved."); refreshMemoryDropdown(); }
