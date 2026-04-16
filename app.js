@@ -63,15 +63,24 @@ function removeBomRow(tIdx, sIdx) { let minLen = systemBaseStructure[sIdx].items
 function safeProcess() { processTankData(); savePrices(); }
 
 // --- USER ACCOUNT SYSTEM ---
+// --- USER ACCOUNT SYSTEM (BULLETPROOF VERSION) ---
 let winkoUsers = [];
 let currentUserRole = "user";
 
 function initUsers() {
-    let stored = localStorage.getItem('winkoUsersDB');
-    if (stored) {
-        winkoUsers = JSON.parse(stored);
-    } else {
-        // Default users if system is brand new
+    try {
+        let stored = localStorage.getItem('winkoUsersDB');
+        if (stored) {
+            winkoUsers = JSON.parse(stored);
+            // Failsafe: If the saved data isn't a proper array, force a system reset
+            if (!Array.isArray(winkoUsers) || !winkoUsers[0].username) {
+                throw new Error("Corrupted user data");
+            }
+        } else {
+            throw new Error("No users found");
+        }
+    } catch(e) {
+        // If memory is corrupted or empty, reset to factory defaults
         winkoUsers = [
             { username: "sam", password: "winko2026", role: "user" },
             { username: "admin", password: "adminmaster99", role: "admin" }
@@ -84,6 +93,34 @@ initUsers(); // Run this immediately to load users
 function checkLogin() {
     let u = getVal('userInput').trim().toLowerCase();
     let p = getVal('passInput').trim();
+    
+    // Safety check to ensure users are loaded
+    if (winkoUsers.length === 0) initUsers();
+    
+    // Find matching user
+    let foundUser = winkoUsers.find(user => user.username.toLowerCase() === u && user.password === p);
+    
+    if (foundUser) {
+        currentUserRole = foundUser.role;
+        setDisp('securityOverlay', false);
+        setDisp('topNav', true);
+        setDisp('mainContent', true);
+        
+        // Hide Admin Tab for standard users
+        if (currentUserRole !== "admin") {
+            document.getElementById('btnTabAdmin').style.display = 'none';
+        } else {
+            document.getElementById('btnTabAdmin').style.display = 'inline-block';
+        }
+
+        if(!getVal('quoteIdInput')) setVal('quoteIdInput', "QP-" + new Date().getFullYear().toString().substr(-2) + "-00" + Math.floor(Math.random() * 9 + 1));
+        refreshMemoryDropdown(); 
+        initInventory(); 
+        loadPrices();
+    } else {
+        alert("Incorrect Username or Password! Please try again.");
+    }
+}
     
     // Find matching user
     let foundUser = winkoUsers.find(user => user.username.toLowerCase() === u && user.password === p);
