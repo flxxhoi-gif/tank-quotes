@@ -162,10 +162,10 @@
     </style>
     <script>
         // --- VERSION CONTROL & BUG FIX FORCED RESET ---
-        const cv = "V110";
+        const cv = "V111";
         if(localStorage.getItem("winkoAppVersion") !== cv) {
             localStorage.setItem("winkoAppVersion", cv);
-            for(let i=13; i<=109; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=110; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -203,9 +203,26 @@
 
 <div id="adminContent"><div class="container">
     <div class="module-card">
-        <div class="card-header"><span>⚙️</span> Base BOM & Cost Control</div>
-        <table class="admin-table"><thead><tr><th style="width:20%;">Category</th><th style="width:40%;">Default Item Name</th><th style="width:20%;">Default Wt (kg)</th><th style="width:20%;">Default Price (RM)</th></tr></thead><tbody id="adminBody"></tbody></table>
-        <div style="margin-top: 15px; text-align: right;"><button class="action-btn print-btn" style="width:auto; background:#10b981;" onclick="saveAdminDefaults()">💾 Save Master Defaults</button></div>
+        <div class="card-header">
+            <span>⚙️</span> Dynamic Base BOM & Cost Control
+            <div style="display: flex; gap: 10px;">
+                <button class="action-btn print-btn" style="width:auto; padding: 8px 12px; background:#38bdf8; color:#0f172a;" onclick="addAdminCat()">+ Add New Category</button>
+                <button class="action-btn print-btn" style="width:auto; padding: 8px 12px; background:#10b981;" onclick="saveAdminDefaults()">💾 Save Master Structure</button>
+            </div>
+        </div>
+        <p style="font-size: 13px; color: #ef4444; margin-bottom: 15px; font-weight: 600;">Warning: Modifying the names or removing standard items inside the first 4 categories may affect automatic tank calculations. It is recommended to add new items/categories rather than deleting default ones.</p>
+        
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th style="width:10%; text-align:center;">Action</th>
+                    <th style="width:50%;">Item Name</th>
+                    <th style="width:20%;">Default Wt (kg)</th>
+                    <th style="width:20%;">Default Price (RM)</th>
+                </tr>
+            </thead>
+            <tbody id="adminBody"></tbody>
+        </table>
     </div>
     
     <div class="module-card" style="margin-top: 20px;">
@@ -590,7 +607,8 @@ Note:
         }
     }
 
-    const systemBaseStructure = [
+    // --- GLOBAL BASE STRUCTURE ---
+    let systemBaseStructure = [
         { category: "Panels", items: [{name: "Manhole Panel", def: 450, wt: 55}, {name: "Roof Panel", def: 220, wt: 26}, {name: "Base Panel", def: 350, wt: 68}, {name: "Wall Panel (L1)", def: 350, wt: 68}, {name: "Wall Panel (L2)", def: 280, wt: 48}, {name: "Wall Panel (L3)", def: 280, wt: 48}, {name: "Wall Panel (L4)", def: 220, wt: 26}, {name: "Partition Panel", def: 280, wt: 48}] },
         { category: "Cleat & Trusses", items: [{name: "Type A Cleat", def: 25, wt: 1.2}, {name: "Type B Cleat", def: 28, wt: 1.8}, {name: "Type C Cleat", def: 30, wt: 2.5}, {name: "Ø1\" Pipe", def: 12, wt: 1.6}, {name: "2\" x 2\" angle", def: 15, wt: 2.2}] },
         { category: "Angle Stay", items: [{name: "44 1/4\" (L1 Stay)", def: 45, wt: 4.5}, {name: "67\" (L2 Stay)", def: 65, wt: 7.2}, {name: "11' 3\" (L3 Stay)", def: 95, wt: 14.5}, {name: "15' 8.5\" (L4 Stay)", def: 125, wt: 19.8}] },
@@ -598,7 +616,15 @@ Note:
         { category: "Services", items: [{name: "Installation & Labor", def: 3500, wt: 0}, {name: "Transport", def: 850, wt: 0}] }
     ];
 
-    try { let md = JSON.parse(localStorage.getItem('winkoMasterDefaults')); if(md) md.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { if(systemBaseStructure[sIdx] && systemBaseStructure[sIdx].items[iIdx]) { systemBaseStructure[sIdx].items[iIdx].name = it.name; systemBaseStructure[sIdx].items[iIdx].def = it.def; systemBaseStructure[sIdx].items[iIdx].wt = it.wt; } }); }); } catch(e) {}
+    try { 
+        let md = JSON.parse(localStorage.getItem('winkoMasterDefaults')); 
+        if(md && Array.isArray(md)) {
+            // Overwrite memory completely to allow new unlimited categories & items
+            systemBaseStructure = md;
+        } 
+    } catch(e) {}
+    
+    // Ensure standard drop downs persist in loaded memory
     systemBaseStructure.forEach(sec => sec.items.forEach(it => { if(it.selectId && !it.selVal) it.selVal = it.options[0]; }));
 
     let appTanks = [];
@@ -746,6 +772,7 @@ Note:
                 let r=L*W, b=L*W, pm=(L+W)*2, s=pm*H, pp=(t.partChoice==='yes'&&t.partQty>0)?(pL*pH*t.partQty):0;
                 t.totalPanels = r + b + s + pp; totalP += t.totalPanels;
 
+                // Safely grab names based on bounds of the standard arrays (if admin hasn't deleted them)
                 let walls = `L1 : ${t.tW1}`; if (H >= 2) walls += ` | L2 : ${t.tW2}`; if (H >= 3) walls += ` | L3 : ${t.tW3}`; if (H >= 4) walls += ` | L4 : ${t.tW4}`;
                 let extLadStr = t.bom[3] && t.bom[3].items[0] && t.bom[3].items[0].qty > 0 ? t.bom[3].items[0].qty : 0;
                 let intLadStr = t.bom[3] && t.bom[3].items[1] && t.bom[3].items[1].qty > 0 ? t.bom[3].items[1].qty : 0;
@@ -784,8 +811,10 @@ Note:
                 drawGrid(`grid_lt_s_${i}`,W,H,mx,pTS,pPS); drawGrid(`grid_lt_p_${i}`,W,H,mx,pTS,pPS); drawGrid(`grid_lt_c_${i}`,W,H,mx,pTS,pPS);
                 drawGrid(`grid_rt_s_${i}`,W,H,mx,pTS,pPS); drawGrid(`grid_rt_p_${i}`,W,H,mx,pTS,pPS); drawGrid(`grid_rt_c_${i}`,W,H,mx,pTS,pPS);
 
-                let bQ=(sI,iI,v)=>t.bom[sI].items[iI].qty=isNaN(v)?0:v;
-                let bD=(sI,iI,v)=>t.bom[sI].items[iI].name=v;
+                // Safe access methods to prevent crashes if Admin deleted standard items
+                let bQ=(sI,iI,v)=>{ if(t.bom[sI] && t.bom[sI].items[iI]) t.bom[sI].items[iI].qty=isNaN(v)?0:v; };
+                let bD=(sI,iI,v)=>{ if(t.bom[sI] && t.bom[sI].items[iI]) t.bom[sI].items[iI].name=v; };
+                
                 if(t.bom[0]) {
                     bD(0,0,"Manhole Panel"+pSfx); bD(0,1,t.tRoof+" Roof Panel"+pSfx); bD(0,2,t.tBase+" Base Panel"+pSfx); bD(0,3,t.tW1+" Wall Panel (L1)"+pSfx); bD(0,4,t.tW2+" Wall Panel (L2)"+pSfx); bD(0,5,t.tW3+" Wall Panel (L3)"+pSfx); bD(0,6,t.tW4+" Wall Panel (L4)"+pSfx); bD(0,7,"Partition Panel"+pSfx);
                     bQ(0,0,r>0?1:0); bQ(0,1,Math.max(0,r-1)); bQ(0,2,b); bQ(0,3,H>=1?pm:0); bQ(0,4,H>=2?pm:0); bQ(0,5,H>=3?pm:0); bQ(0,6,H>=4?pm*(H-3):0); bQ(0,7,pp);
@@ -1008,17 +1037,67 @@ Note:
         }
     }
 
+    function updateAdminDraft(sIdx, iIdx, field, val, isNum) {
+        if(isNum) systemBaseStructure[sIdx].items[iIdx][field] = parseFloat(val) || 0;
+        else systemBaseStructure[sIdx].items[iIdx][field] = val;
+    }
+
+    function addAdminItem(sIdx) {
+        systemBaseStructure[sIdx].items.push({name: "New Item", def: 0, wt: 0});
+        buildAdminTable();
+    }
+
+    function addAdminCat() {
+        let cat = prompt("Enter new Category Name (e.g., 'Pumps', 'Scaffolding'):");
+        if(cat && cat.trim()) {
+            systemBaseStructure.push({ category: cat.trim(), items: [] });
+            buildAdminTable();
+        }
+    }
+
+    function removeAdminItem(sIdx, iIdx) {
+        if(confirm("Delete this master item? (Warning: Deleting standard items might alter auto-calculations mapping)")) {
+            systemBaseStructure[sIdx].items.splice(iIdx, 1);
+            buildAdminTable();
+        }
+    }
+
+    function removeAdminCat(sIdx) {
+        if(confirm("Remove this entire category and all its items?")) {
+            systemBaseStructure.splice(sIdx, 1);
+            buildAdminTable();
+        }
+    }
+
     function buildAdminTable() { 
         let h = ''; 
-        systemBaseStructure.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { h += `<tr><td style="font-weight:800; background:#f1f5f9; text-align:left;">${sec.category}</td><td><input type="text" class="admin-input text-left" id="adm_name_${sIdx}_${iIdx}" value="${it.name}"></td><td><input type="number" step="0.1" class="admin-input" id="adm_wt_${sIdx}_${iIdx}" value="${it.wt || 0}"></td><td><input type="number" step="0.01" class="admin-input" id="adm_price_${sIdx}_${iIdx}" value="${it.def.toFixed(2)}"></td></tr>`; }); }); 
+        systemBaseStructure.forEach((sec, sIdx) => { 
+            h += `<tr style="background:#1e293b; color:white;">
+                    <th colspan="3" style="text-align:left; padding:10px; font-size:14px; text-transform:uppercase;">📁 ${sec.category}</th>
+                    <th style="text-align:right; padding:10px;"><button class="del-btn" style="background:#ef4444;" onclick="removeAdminCat(${sIdx})">X Remove Category</button></th>
+                  </tr>`;
+            sec.items.forEach((it, iIdx) => { 
+                h += `<tr>
+                        <td style="text-align:center;"><button class="del-btn" style="background:#f43f5e; padding:4px 8px;" onclick="removeAdminItem(${sIdx}, ${iIdx})">X Delete</button></td>
+                        <td><input type="text" class="admin-input text-left" value="${it.name}" onchange="updateAdminDraft(${sIdx}, ${iIdx}, 'name', this.value, false)"></td>
+                        <td><input type="number" step="0.1" class="admin-input" value="${it.wt || 0}" onchange="updateAdminDraft(${sIdx}, ${iIdx}, 'wt', this.value, true)"></td>
+                        <td><input type="number" step="0.01" class="admin-input" value="${(it.def||0).toFixed(2)}" onchange="updateAdminDraft(${sIdx}, ${iIdx}, 'def', this.value, true)"></td>
+                      </tr>`; 
+            }); 
+            h += `<tr><td colspan="4" style="text-align:right; padding:10px; background:#f8fafc; border-bottom:2px solid #cbd5e1;"><button class="action-btn" style="width:auto; padding:6px 12px; font-size:11px; background:#3b82f6; display:inline-block;" onclick="addAdminItem(${sIdx})">+ Add Item to ${sec.category}</button></td></tr>`;
+        }); 
         setHtml('adminBody', h); 
         renderUserTable(); 
     }
 
-    function saveAdminDefaults() { let nd = JSON.parse(JSON.stringify(systemBaseStructure)); nd.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { it.name = getVal(`adm_name_${sIdx}_${iIdx}`); it.wt = getNum(`adm_wt_${sIdx}_${iIdx}`); it.def = getNum(`adm_price_${sIdx}_${iIdx}`); }); }); localStorage.setItem('winkoMasterDefaults', JSON.stringify(nd)); alert("Success!"); location.reload(); }
+    function saveAdminDefaults() { 
+        localStorage.setItem('winkoMasterDefaults', JSON.stringify(systemBaseStructure)); 
+        alert("Master Structure Saved! The system will reload to apply changes globally."); 
+        location.reload(); 
+    }
 
-    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV110', JSON.stringify(d)); }
-    function loadPrices() { let s = localStorage.getItem('winkoProDataV110'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else appTanks = [defaultTank()]; renderAllDynamicUI(); processTankData(); }
+    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV111', JSON.stringify(d)); }
+    function loadPrices() { let s = localStorage.getItem('winkoProDataV111'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else appTanks = [defaultTank()]; renderAllDynamicUI(); processTankData(); }
 
     function refreshMemoryDropdown() { let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; let s = document.getElementById('memoryDropdown'); if(s) { s.innerHTML = '<option value="">-- Load Saved Project --</option>'; Object.keys(m).forEach(k => { s.innerHTML += `<option value="${k}">${k}</option>`; }); } }
     function saveToMemory() { let p = getVal('projectName').trim(); if(!p) return; let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; m[p] = d; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); alert("Saved."); refreshMemoryDropdown(); }
