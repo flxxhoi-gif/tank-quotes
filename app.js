@@ -373,7 +373,10 @@ function processTankData() {
 
         let globalRef=totalBase===0?1:totalBase; let cpRows=""; let cpIdx=1;
         appTanks.forEach((t, i) => {
-            let trPct=t.baseCost/globalRef; let trFinal=net*trPct; t.finalPrice=trFinal;
+           appTanks.forEach((t, i) => {
+            let trPct=t.baseCost/globalRef; 
+            let trFinal=grand*trPct; 
+            t.finalPrice=trFinal;
             let dStr=t.override||`${t.L}${u}(L)x${t.W}${u}(W)x${t.H}${u}(H)`;
             let pStr=(t.partChoice==='yes'&&t.partQty>0)?`<tr style="border:none;"><td style="border:none; vertical-align:top;">d)</td><td style="border:none; vertical-align:top;" colspan="3">Partition: ${t.partQty}x ${t.partType} (${t.partL}${u}x${t.partH}${u})</td></tr>`:'';
             let extLadStr=t.bom[3]&&t.bom[3].items[0]?`${t.bom[3].items[0].selVal} External - ${t.bom[3].items[0].qty} sets`:'';
@@ -382,7 +385,9 @@ function processTankData() {
             cpRows += `<tr class="avoid-break"><td style="text-align:center; border:1px solid #000;">${cpIdx++}</td><td style="border:1px solid #000; padding:6px; vertical-align:top;"><strong>Supply and Install ${t.coat} Tank Size:<br>${dStr} (Total: ${t.totalPanels} Pcs)</strong><br>Comply to ${t.std}<br><table style="border:none; width:100%; font-size:8.5pt;"><tr style="border:none;"><td style="width:20px; border:none; vertical-align:top;">a)</td><td style="width:75px; border:none; vertical-align:top;">Thickness:</td><td style="width:50px; border:none; vertical-align:top;">Roof</td><td style="border:none; vertical-align:top;">: ${t.tRoof}</td></tr><tr style="border:none;"><td style="border:none; vertical-align:top;"></td><td style="border:none; vertical-align:top;"></td><td style="border:none; vertical-align:top;">Base</td><td style="border:none; vertical-align:top;">: ${t.tBase}</td></tr><tr style="border:none;"><td style="border:none; vertical-align:top;"></td><td style="border:none; vertical-align:top;"></td><td style="border:none; vertical-align:top;">Wall</td><td style="border:none; vertical-align:top;">: L1:${t.tW1}|L2:${t.tW2}|L3:${t.tW3}|L4:${t.tW4}</td></tr><tr style="border:none;"><td style="border:none; vertical-align:top;">b)</td><td style="border:none; vertical-align:top;" colspan="3">Ladders: ${intLadStr}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${extLadStr}</td></tr><tr style="border:none;"><td style="border:none; vertical-align:top;">c)</td><td style="border:none; vertical-align:top;" colspan="3">WLI: ${wliStr}</td></tr>${pStr}<tr style="border:none;"><td style="border:none; vertical-align:top;">${pStr?'e)':'d)'}</td><td style="border:none; vertical-align:top;" colspan="3">Tank to sit on existing Beam/RC plinths</td></tr></table></td><td style="text-align:center; border:1px solid #000;">1</td><td style="text-align:right; border:1px solid #000; padding:6px;">${trFinal.toLocaleString('en-MY',{minimumFractionDigits:2})}</td></tr>`;
         });
         appCustomItems.forEach(c => {
-            let trPct=(c.cost*(c.qty||0))/globalRef; let trFinal=net*trPct;
+            appCustomItems.forEach(c => {
+            let trPct=(c.cost*(c.qty||0))/globalRef; 
+            let trFinal=grand*trPct; 
             cpRows += `<tr class="avoid-break"><td style="text-align:center; border:1px solid #000;">${cpIdx++}</td><td style="border:1px solid #000; padding:6px; vertical-align:top;"><strong>${c.desc}</strong></td><td style="text-align:center; border:1px solid #000;">${c.qty||0}</td><td style="text-align:right; border:1px solid #000; padding:6px;">${trFinal.toLocaleString('en-MY',{minimumFractionDigits:2})}</td></tr>`;
         });
         setHtml('cpDynamicTanksBody', cpRows);
