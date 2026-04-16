@@ -153,10 +153,10 @@
         }
     </style>
     <script>
-        const cv = "V102";
+        const cv = "V103";
         if(localStorage.getItem("winkoAppVersion") !== cv) {
             localStorage.setItem("winkoAppVersion", cv);
-            for(let i=13; i<=101; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=102; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -692,7 +692,16 @@ Note:
                 
                 t.baseCost=0; t.weight=0;
                 t.bom.forEach((sec, sIdx) => sec.items.forEach((it, iIdx) => { 
-                    let isSvc=(sec.category==="Services"); let calcQty=isSvc?1:it.qty; let lTot=calcQty*(it.def||0); 
+                    let isSvc=(sec.category==="Services"); 
+                    
+                    // THIS IS THE RESTORED SYNC LOGIC
+                    let qEl = document.getElementById(`t_${i}_q_${sIdx}_${iIdx}`);
+                    if(qEl && document.activeElement !== qEl && !isSvc) qEl.value = it.qty;
+                    let nEl = document.getElementById(`t_${i}_n_${sIdx}_${iIdx}`);
+                    if(nEl && document.activeElement !== nEl) nEl.value = it.name;
+                    // END SYNC LOGIC
+
+                    let calcQty=isSvc?1:it.qty; let lTot=calcQty*(it.def||0); 
                     t.baseCost+=lTot; t.weight+=isSvc?0:(calcQty*(it.wt||0));
                     let te=document.getElementById(`tot_${i}_${sIdx}_${iIdx}`); if(te) te.innerText=lTot.toLocaleString('en-MY',{minimumFractionDigits:2});
                 }));
@@ -776,8 +785,8 @@ Note:
     function buildAdminTable() { let h = ''; systemBaseStructure.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { h += `<tr><td style="font-weight:800; background:#f1f5f9; text-align:left;">${sec.category}</td><td><input type="text" class="admin-input text-left" id="adm_name_${sIdx}_${iIdx}" value="${it.name}"></td><td><input type="number" step="0.1" class="admin-input" id="adm_wt_${sIdx}_${iIdx}" value="${it.wt || 0}"></td><td><input type="number" step="0.01" class="admin-input" id="adm_price_${sIdx}_${iIdx}" value="${it.def.toFixed(2)}"></td></tr>`; }); }); setHtml('adminBody', h); }
     function saveAdminDefaults() { let nd = JSON.parse(JSON.stringify(systemBaseStructure)); nd.forEach((sec, sIdx) => { sec.items.forEach((it, iIdx) => { it.name = getVal(`adm_name_${sIdx}_${iIdx}`); it.wt = getNum(`adm_wt_${sIdx}_${iIdx}`); it.def = getNum(`adm_price_${sIdx}_${iIdx}`); }); }); localStorage.setItem('winkoMasterDefaults', JSON.stringify(nd)); alert("Success!"); location.reload(); }
 
-    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV102', JSON.stringify(d)); }
-    function loadPrices() { let s = localStorage.getItem('winkoProDataV102'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else appTanks = [defaultTank()]; renderAllDynamicUI(); processTankData(); }
+    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV103', JSON.stringify(d)); }
+    function loadPrices() { let s = localStorage.getItem('winkoProDataV103'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else appTanks = [defaultTank()]; renderAllDynamicUI(); processTankData(); }
 
     function refreshMemoryDropdown() { let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; let s = document.getElementById('memoryDropdown'); if(s) { s.innerHTML = '<option value="">-- Load Saved Project --</option>'; Object.keys(m).forEach(k => { s.innerHTML += `<option value="${k}">${k}</option>`; }); } }
     function saveToMemory() { let p = getVal('projectName').trim(); if(!p) return; let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); let m = JSON.parse(localStorage.getItem('winkoMemoryBank')) || {}; m[p] = d; localStorage.setItem('winkoMemoryBank', JSON.stringify(m)); alert("Saved."); refreshMemoryDropdown(); }
