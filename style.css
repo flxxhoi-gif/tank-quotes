@@ -1,1 +1,147 @@
 
+* { box-sizing: border-box; font-family: system-ui, sans-serif; }
+body { background-color: #f8fafc; padding: 0; color: #334155; margin: 0; line-height: 1.5; }
+
+#securityOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.95); backdrop-filter: blur(5px); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; color: white; text-align: center; }
+.login-card { background: white; padding: 40px; border-radius: 12px; color: #333; box-shadow: 0 20px 40px rgba(0,0,0,0.5); width: 90%; max-width: 400px; display: flex; flex-direction: column; align-items: center; }
+.login-card input { width: 100%; padding: 12px; margin: 20px 0 15px 0; border: 2px solid #e2e8f0; border-radius: 6px; text-align: center; font-size: 18px; outline: none; }
+.login-card input:focus { border-color: #ea580c; box-shadow: 0 0 0 3px rgba(234,88,12,0.1); }
+.login-card button { width: 100%; padding: 12px; background: #ea580c; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px; transition: transform 0.2s; }
+.login-card button:hover { transform: translateY(-2px); }
+
+#topNav { display: none; background: #0f172a; padding: 10px 20px; position: sticky; top: 0; z-index: 1000; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;}
+.nav-links { display: flex; gap: 8px; flex-wrap: wrap; }
+.nav-btn { background: transparent; color: #cbd5e1; border: none; font-size: 13px; font-weight: 700; cursor: pointer; padding: 8px 12px; border-radius: 4px; }
+.nav-btn.active, .nav-btn:hover { background: #ea580c; color: white; }
+.nav-logo { color: white; font-weight: 900; font-size: 1.1em; }
+
+#mainContent, #adminContent, #inventoryContent, #customerPreviewContainer { display: none; padding: 20px; }
+#checklistPrintView, .print-only, .internal-only-tag { display: none; }
+
+.container { max-width: 1500px; margin: auto; }
+.app-header-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #cbd5e1; padding-bottom: 10px; margin-bottom: 20px; }
+.app-header-bar h2 { margin: 0; font-weight: 900; color: #0f172a; }
+.live-clock { font-size: 0.85em; color: #64748b; font-weight: 600; background: #e2e8f0; padding: 4px 10px; border-radius: 15px; }
+.memory-panel { background: #fff7ed; border: 1px dashed #fed7aa; padding: 10px 15px; border-radius: 8px; display: flex; gap: 10px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
+.memory-panel select { flex: 1; min-width: 180px; padding: 8px; border-radius: 4px; border: 1px solid #fdba74; font-weight: 600; color: #ea580c; outline: none; }
+.memory-btn { padding: 8px 14px; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; color: white; }
+.btn-save { background: #10b981; } .btn-del { background: #f43f5e; }
+
+.app-layout { display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; }
+.col-left { flex: 1.4; min-width: 480px; display: flex; flex-direction: column; gap: 15px; }
+.col-right { flex: 0.9; min-width: 350px; display: flex; flex-direction: column; gap: 15px; position: sticky; top: 70px; }
+@media (max-width: 1024px) { .col-left, .col-right { flex: 100%; min-width: 100%; position: relative; top: 0; } }
+
+.module-card { background: #fff; border-radius: 8px; padding: 20px; border: 1px solid #e2e8f0; }
+.card-header { font-size: 1.1em; font-weight: 800; color: #0f172a; margin: 0 0 15px 0; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; }
+.reset-btn, .stock-check-btn { color: white; border: none; padding: 5px 10px; font-size: 11px; border-radius: 4px; cursor: pointer; font-weight: 600; }
+.reset-btn { background: #94a3b8; } .stock-check-btn { background: #3b82f6; margin-right: 5px; }
+
+.config-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 10px; }
+.dim-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px; width: 100%; }
+.form-group { display: flex; flex-direction: column; }
+.form-group label { font-size: 0.75em; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase; }
+.form-group input, .form-group select, .form-group textarea { padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px; font-weight: 600; background: #f8fafc; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #ea580c; background: #fff; outline: none; }
+
+table { width: 100%; border-collapse: separate; border-spacing: 0; margin-bottom: 10px; font-size: 0.85em; border-radius: 6px; overflow: hidden; border: 1px solid #e2e8f0; }
+th { background: #f1f5f9; color: #475569; padding: 10px; text-align: left; border-bottom: 2px solid #e2e8f0; text-transform: uppercase; font-size: 0.75em; }
+th.text-center { text-align: center; } th.text-right { text-align: right; }
+td { padding: 6px 8px; border-bottom: 1px solid #f1f5f9; }
+.col-item { background: #fff; font-weight: 600; width: 45%; color: #1e293b; }
+.col-input { width: 12%; text-align: center; } .col-total { text-align: right; font-weight: 700; width: 19%; background: #fafafa; color: #b91c1c; }
+.desc-input { width: 100%; padding: 4px; border: 1px solid transparent; background: transparent; font-weight: 600; font-size: 1em; color: #0f172a; }
+.col-input input { width: 100%; padding: 4px; text-align: center; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc; font-weight: 600; color: #0f172a; }
+.bom-inline-select { max-width: 100px; margin-left: 4px; padding: 2px 4px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.8em; font-weight: 600; color: #ea580c; background: #fff; }
+
+.summary-box { background: linear-gradient(145deg, #0f172a, #1e293b); color: white; padding: 20px; border-radius: 10px; }
+.sum-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95em; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; color: #cbd5e1; }
+.sum-row span:last-child { font-weight: 600; color: white; }
+.sum-row.total { font-size: 1.5em; font-weight: 800; color: #fbbf24; border-bottom: none; border-top: 2px solid rgba(255,255,255,0.2); padding-top: 12px; margin-top: 12px; }
+.sum-row.total span:last-child { color: #fbbf24; }
+
+.btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+.action-btn { flex: 1; min-width: 110px; padding: 12px; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 700; background: #ea580c; display: flex; align-items: center; justify-content: center; gap: 6px;}
+.export-btn { background: #334155; } .print-btn { background: #059669; }
+.add-btn { background: #38bdf8; margin-top:10px; width:100%; color: #0f172a; border: 2px dashed #0284c7; } .add-btn:hover { background: #0ea5e9; color:white; }
+.del-btn { background: #ef4444; color:white; padding:4px 8px; border:none; border-radius:4px; font-size:11px; cursor:pointer; font-weight:bold; }
+
+/* VISUAL DRAFT SYSTEM */
+.visual-container { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-start; margin-bottom: 10px; }
+.view-box { text-align: center; background: #f8fafc; padding: 8px; border: 1px solid #e2e8f0; border-radius: 6px; width: 135px; } 
+.view-title { font-size: 0.7em; font-weight: 800; margin-bottom: 6px; color: #64748b; text-transform: uppercase; }
+
+.grid-draft { display: grid; gap: 1px; background: #94a3b8; border: 2px solid #475569; margin: 0 auto; overflow: hidden; } 
+.panel { background: #e0f2fe; position: relative; border: none; box-sizing: border-box; }
+.panel::before { content: ""; display: block; padding-top: 100%; }
+
+.tank-section-title { background: #e2e8f0; padding: 5px 10px; border-radius: 4px; font-weight: 800; color: #0f172a; margin-bottom: 8px; font-size: 0.85em; text-transform: uppercase; border-left: 4px solid #3b82f6; display:flex; justify-content:space-between; align-items:center; }
+
+/* INVENTORY STYLES */
+.inv-status { padding: 3px 6px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
+.inv-ok { background: #dcfce7; color: #059669; } .inv-low { background: #fef9c3; color: #d97706; } .inv-out { background: #fee2e2; color: #e11d48; }
+.stock-row-warning { background: #fef2f2 !important; border-left: 4px solid #ef4444; }
+.inv-input { width: 100%; max-width: 100px; padding: 8px; border: 2px solid #cbd5e1; border-radius: 4px; font-weight: 800; text-align: center; font-size: 14px; }
+
+/* ADMIN STYLES */
+.admin-header { background: #0f172a; color: white; padding: 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;}
+.admin-btn { padding: 10px 20px; background: #e11d48; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;}
+.admin-table { width: 100%; border-collapse: collapse; background: white; color: #0f172a; border-radius: 8px;}
+.admin-table th { background: #334155; color: white; padding: 12px; font-size: 0.85em; text-transform: uppercase;}
+.admin-table td { border-color: #e2e8f0; padding: 8px;}
+.admin-input { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-weight: bold; text-align: center;}
+
+#customerPreviewContainer { background: #94a3b8; padding: 20px; overflow-y: auto; flex-direction: column; align-items: center; }
+.preview-toolbar { background: #0f172a; padding: 10px 20px; border-radius: 6px; margin-bottom: 15px; color: white; display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 210mm;}
+#customerPrintViewEditor { display: block; background: white; width: 100%; max-width: 210mm; min-height: 297mm; padding: 15mm; box-shadow: 0 10px 20px rgba(0,0,0,0.2); margin: 0 auto; color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 9pt; }
+.editable-section { transition: background 0.2s; border-radius: 4px; padding: 4px; border: 1px solid transparent;}
+.editable-section:hover { background: #fef9c3; cursor: text; border: 1px dashed #eab308; }
+
+@media print {
+    @page { size: A4; margin: 10mm 15mm; }
+    body { background: white; padding: 0; font-size: 9pt; color: #0f172a; font-family: Arial, Helvetica, sans-serif; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    #topNav, .no-print, .internal-hide { display: none !important; }
+    .print-only { display: block !important; }
+    .container { max-width: 100%; padding: 0; }
+    
+    /* PRINT PAGE BREAK CONTROLS */
+    tr, td, th { page-break-inside: avoid; }
+    .avoid-break { page-break-inside: avoid; }
+    .page-break { page-break-before: always; }
+    
+    /* SHARED PRINT STYLES */
+    .grid-draft { gap: 0 !important; border: 1.5px solid #000 !important; background: transparent !important;}
+    .panel { background: transparent !important; border: 1px solid #000 !important; box-sizing: border-box !important; }
+    
+    /* --- MASSIVE DRAWINGS (INTERNAL & CHECKLIST) - 2 PER ROW --- */
+    body.print-internal .visual-container, body.print-checklist .visual-container { display: flex !important; flex-wrap: wrap !important; gap: 2% !important; width: 100% !important; margin: 0 auto 20px auto !important; justify-content: flex-start !important;}
+    body.print-internal .view-box, body.print-checklist .view-box { padding: 15px !important; border: 2px solid #000 !important; border-radius: 6px !important; width: 48% !important; margin-bottom: 20px !important; height: fit-content !important; box-sizing: border-box !important; page-break-inside: avoid !important;}
+    body.print-internal .view-title, body.print-checklist .view-title { font-size: 14pt !important; margin-bottom: 10px !important; font-weight: 900 !important; text-decoration: underline; color: #000 !important;}
+
+    /* INTERNAL LAYOUTOVERRIDES */
+    body.print-internal #mainContent { display: block !important; }
+    body.print-internal #customerPreviewContainer, body.print-internal #checklistPrintView, body.print-internal .col-right { display: none !important; }
+    body.print-internal .app-layout, body.print-internal .col-left { display: block !important; width: 100% !important; }
+    body.print-internal .module-card { border: none !important; padding: 0 !important; margin-bottom: 15px !important; box-shadow: none !important; }
+    body.print-internal .card-header { display: block !important; border-bottom: 2.5px solid #0f172a !important; margin-bottom: 8px !important; font-size: 12pt !important; padding: 0 0 5px 0 !important;}
+    body.print-internal::before { content: "INTERNAL COSTING - DO NOT SHARE"; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 60pt; font-weight: 900; color: rgba(239, 68, 68, 0.08); z-index: -1; white-space: nowrap; pointer-events: none; }
+    body.print-internal .print-header { display: flex !important; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #ea580c; padding-bottom: 10px; margin-bottom: 15px; }
+    body.print-internal table { font-size: 8.5pt; margin-bottom: 10px; border-collapse: collapse; width: 100%; border: 1.5px solid #0f172a; }
+    body.print-internal th { background-color: #0f172a !important; color: #ffffff !important; padding: 6px 8px;}
+    body.print-internal td { border-right: 1px solid #cbd5e1; padding: 4px 8px; border-bottom: 1px solid #cbd5e1;}
+    body.print-internal td.text-right { text-align: right; font-weight: 700;}
+    body.print-internal input, body.print-internal .desc-input, body.print-internal .bom-inline-select { border: none !important; background: transparent !important; padding: 0 !important; width: auto;}
+    body.print-internal .summary-box { background: #fff !important; border: 2.5px solid #0f172a !important; border-radius: 8px !important; padding: 0 !important; width: 40% !important; float: right !important;}
+    body.print-internal .drawings-page { page-break-before: always !important; padding-top: 20px !important; clear: both !important;}
+
+    body.print-customer #mainContent, body.print-customer #inventoryContent, body.print-customer #adminContent { display: none !important; }
+    body.print-customer #customerPreviewContainer { display: block !important; padding: 0 !important; background: none !important; }
+    body.print-customer #customerPrintViewEditor { max-width: none !important; padding: 0 !important; margin: 0 !important; }
+    .cp-table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 10px; font-size: 8.5pt; border: 2px solid #000; }
+    .cp-table th, .cp-table td { border: 1px solid #000; padding: 6px !important; vertical-align: top;}
+    .cp-table th { background: #d1d5db !important; font-weight: bold; text-align: center;}
+
+    body.print-checklist #mainContent, body.print-checklist #customerPreviewContainer { display: none !important; }
+    body.print-checklist #checklistPrintView { display: block !important; font-size: 9pt; padding: 0 10px; }
+    .chk-box { display: inline-block; width: 12px; height: 12px; border: 1px solid #000; text-align: center; line-height: 12px; margin-right: 4px; font-weight:bold;}
+}
