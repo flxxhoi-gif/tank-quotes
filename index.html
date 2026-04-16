@@ -147,10 +147,10 @@
         }
     </style>
     <script>
-        const cv = "V112";
+        const cv = "V113";
         if(localStorage.getItem("winkoAppVersion") !== cv) {
             localStorage.setItem("winkoAppVersion", cv);
-            for(let i=13; i<=111; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=112; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
     </script>
@@ -161,8 +161,8 @@
 
 <div id="securityOverlay">
     <div class="login-card">
-        <img src="winko logo.png" alt="Winko Logo" style="max-width: 180px; margin-bottom: 5px;">
-        <p style="color:#64748b; margin-top: 0; font-weight: 700; font-size: 13px; letter-spacing: 0.5px; text-transform: uppercase;">Enterprise Quoting Gateway</p>
+        <img src="winko logo.png" alt="Winko Logo" style="max-width: 180px; margin-bottom: 5px;" onerror="this.style.display='none'">
+        <p style="color:#64748b; margin-top: 0; font-weight: 700; font-size: 13px; letter-spacing: 0.5px; text-transform: uppercase;" id="loginTitleText">Enterprise Quoting Gateway</p>
         <div style="width: 100%; text-align: left; margin-top: 30px;">
             <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-left: 4px;">Username</label>
             <input type="text" id="userInput" placeholder="Enter username" onkeypress="if(event.key==='Enter') document.getElementById('passInput').focus()">
@@ -176,7 +176,7 @@
 </div>
 
 <div id="topNav">
-    <div class="nav-logo">WINKO ERP</div>
+    <div class="nav-logo" id="navLogoText">WINKO ERP</div>
     <div class="nav-links">
         <button class="nav-btn active" id="btnTabQuote" onclick="switchTab('quote')">📝 Workspace</button>
         <button class="nav-btn" id="btnTabProjects" onclick="switchTab('projects')">📂 Project Bank</button>
@@ -200,8 +200,27 @@
 </div></div>
 
 <div id="adminContent"><div class="container">
+    
     <div class="module-card">
-        <div class="card-header"><span>🏢</span> Customer CRM Directory</div>
+        <div class="card-header">
+            <span>🏢</span> Global Company Profile
+            <button class="action-btn print-btn" style="width:auto; padding: 8px 15px; background:#10b981;" onclick="saveCompanyProfile()">💾 Save Company Profile</button>
+        </div>
+        <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Update your company details here. This will automatically sync to all Quotes, Internal Output, and Sales Orders.</p>
+        
+        <div class="config-grid">
+            <div class="form-group"><label>Official Company Name</label><input type="text" id="profileName"></div>
+            <div class="form-group"><label>Company Reg No.</label><input type="text" id="profileReg"></div>
+            <div class="form-group" style="grid-column: span 2;"><label>Full Address</label><input type="text" id="profileAddress"></div>
+            <div class="form-group"><label>Contact Line (Tel / Fax)</label><input type="text" id="profileContact"></div>
+            <div class="form-group"><label>Website / Email Line</label><input type="text" id="profileWebsite"></div>
+            <div class="form-group"><label>Default SST Tax Rate (%)</label><input type="number" id="profileTax"></div>
+            <div class="form-group" style="grid-column: span 2;"><label>Global Default Terms & Conditions (Appears on all new quotes)</label><textarea id="profileTerms" rows="6"></textarea></div>
+        </div>
+    </div>
+
+    <div class="module-card" style="margin-top: 20px;">
+        <div class="card-header"><span>👥</span> Customer CRM Directory</div>
         <p style="font-size: 13px; color: #64748b; margin-bottom: 10px;">Customers are saved automatically when you save a project. You can edit them manually here.</p>
         <div style="margin-bottom: 15px; display:flex; gap:10px;">
             <input type="text" id="custSearchBox" placeholder="🔍 Search Customers..." onkeyup="renderCustomerAdmin()" class="admin-input" style="max-width: 300px; text-align:left;">
@@ -273,10 +292,10 @@
         <div class="print-only internal-only-tag">Strictly Confidential - Internal Costing</div>
         <div class="print-header print-only">
             <div class="header-left">
-                <img src="winko logo.png" alt="Winko Logo" style="width:100px; height:auto;">
+                <img src="winko logo.png" alt="Company Logo" style="width:100px; height:auto;" onerror="this.style.display='none'">
                 <div style="margin-left: 15px;">
-                    <h1 style="margin:0; font-size:14pt;">JUTARAMA INDUSTRIES (M) SDN BHD <span style="font-size: 10pt; color: #475569;">20260103014 (749861-V)</span></h1>
-                    <p style="margin:0; font-size:8pt;">No. 19, Kawasan Perindustrian Mega 2, Jln Mega 2/1, 43500 Semenyih, Selangor, Malaysia.</p>
+                    <h1 style="margin:0; font-size:14pt;"><span id="printHeaderName1">COMPANY NAME</span> <span style="font-size: 10pt; color: #475569;" id="printHeaderReg1">REG NO</span></h1>
+                    <p style="margin:0; font-size:8pt;" id="printHeaderAddr1">ADDRESS</p>
                 </div>
             </div>
             <div class="header-right"><h2 style="margin:0; color:#ea580c;">INTERNAL QUOTATION</h2><p style="margin:0;">Quote No: <span id="metaQuoteId"></span></p><p style="margin:0;">Date: <span id="metaDate"></span></p></div>
@@ -325,7 +344,7 @@
                     <div class="dim-grid" style="background: #ecfdf5; padding:15px; border:2px solid #10b981;">
                         <div class="form-group"><label>Mark-Up (%)</label><input type="number" id="markupPct" value="0" oninput="safeProcess()"></div>
                         <div class="form-group"><label>Discount (%)</label><input type="number" id="discountPct" value="0" oninput="safeProcess()"></div>
-                        <div class="form-group"><label>SST Tax (%)</label><input type="number" id="sstPct" value="5" oninput="safeProcess()"></div>
+                        <div class="form-group"><label>SST Tax (%)</label><input type="number" id="sstPct" oninput="safeProcess()"></div>
                     </div>
                     <div class="config-grid">
                         <div class="form-group" style="grid-column: span 2;"><label>Validity</label><input type="text" id="tcValidity" value="14 Days from quotation date." oninput="safeProcess()"></div>
@@ -337,29 +356,7 @@
                         <div class="form-group"><label>Sign-off Phone</label><input type="text" id="signPhone" value="019-2215558" oninput="safeProcess()"></div>
                     </div>
                     <div class="form-group"><label>Short Exclusions</label><textarea id="shortExclusions" rows="5" oninput="safeProcess()">- Float valve chamber or top sumps&#10;- Flanges, nozzles, pipes, vortex, valves, electrode sensor, pumps and filter.&#10;- Scaffolding&#10;- Unloading and hoisting of materials.&#10;- HIRARC, permit application, medical test and site safety supervisor.</textarea></div>
-                    <div class="form-group"><label>Full T&C</label><textarea id="fullTermsNotes" rows="10" oninput="safeProcess()">Scope of Supply
-1. Standard tank accessories such as bolt, nut, washer, foam tape, air vent, 600x600mm access manhole, internal stays & brackets, internal & external ladder, water level indicator, subject to manufacturer's design and standard and item mentioned in quotation.
-2. Pipe hole opening at factory (Exclude flange). Pipe hole opening on site will be an additional charge.
-
-Excluded from the Supply
-1. Float valve chamber or top sump.
-2. Flanges, nozzles, pipes, valves, vortex, electrode sensor, pumps and filter.
-3. RC works and RC plinths.
-4. Scaffolding & safety platform for installation.
-5. Unloading, shifting and hoisting of materials at site.
-6. Safety training courses, equipment and medical test require to install tank.
-
-Note:
-1. Tank design to sit on 1M Center to center RC tank support/Plinths with at least 500mm height and 200mm width. Design to be provided by others.
-2. RC plinths MUST be level with maximum tolerance of ± 3mm.
-3. Leak test should be done within 3 months from completion of tank installation to maintain the quality of foam tape.
-4. The customer shall be responsible for the security of materials at site after delivery. Missing item shall be replaced with additional charges.
-5. The customer should arrange manpower/equipment/machine to unload the materials from lorry and transfer/hoist to the RC plinths area.
-6. Is responsible of customer to make sure RC plinths are level before call for delivery and installation.
-7. For installation of Elevated tank, the customer shall provide, at its own expense, equipment to ensure workers' safety. Customer shall provide working at height equipment such as boom lift, hoisting crane, erection of scaffolding and platform and any other equipment deemed necessaries.
-8. Additional charges will be imposed for projects with excessive work site requirements. Customer shall pre-empt on all the excessive/additional work site requirements before request for quotation or confirming the order.
-9. Delivery and installation time: Monday to Saturday, 8am to 5pm. Additional charges will be imposed if requested to deliver or install tank out of above working hours or Public Holidays.
-10. Upon PO received, the delivery and installation of tank shall be done within 6 months. Any date extension will be subjected to price revision and storage charges.</textarea></div>
+                    <div class="form-group"><label>Full T&C</label><textarea id="fullTermsNotes" rows="10" oninput="safeProcess()"></textarea></div>
                 </div>
 
                 <div id="dynamicBomContainer"></div>
@@ -430,11 +427,11 @@ Note:
     
     <div id="customerPrintViewEditor">
         <div style="display:flex; margin-bottom:15px;">
-            <div style="width:35%; display:flex; align-items:center; justify-content:center; padding:5px;"><img src="winko logo.png" alt="Winko Logo" style="width:100px;"></div>
+            <div style="width:35%; display:flex; align-items:center; justify-content:center; padding:5px;"><img src="winko logo.png" alt="Company Logo" style="width:100px;" onerror="this.style.display='none'"></div>
             <div style="flex:1;">
-                <h2 style="margin:0 0 5px 0; font-size:16pt; font-weight:800;">JUTARAMA INDUSTRIES (M) SDN. BHD. <span style="font-size:10pt; color:#475569;">20260103014 (749861-V)</span></h2>
-                <p style="margin:2px 0; font-size:9pt;">No. 19, Kawasan Perindustrian Mega 2, 43500 Semenyih, Selangor, Malaysia.</p>
-                <p style="margin:2px 0; font-size:9pt;">Tel: (60)-8727 7540 | Web: www.winko.my</p>
+                <h2 style="margin:0 0 5px 0; font-size:16pt; font-weight:800;"><span id="cpHeaderName">COMPANY NAME</span> <span style="font-size:10pt; color:#475569;" id="cpHeaderReg">REG NO</span></h2>
+                <p style="margin:2px 0; font-size:9pt;" id="cpHeaderAddr">ADDRESS</p>
+                <p style="margin:2px 0; font-size:9pt;"><span id="cpHeaderContact">PHONE</span> | <span id="cpHeaderWeb">WEB</span></p>
             </div>
         </div>
 
@@ -482,7 +479,7 @@ Note:
             </div>
             <div class="editable-section avoid-break" contenteditable="true" style="display:flex; justify-content:space-between; margin-top:15px;">
                 <div style="width:50%; font-size:8.5pt;">
-                    <p>Best Regards.</p><p style="font-weight:bold; margin-bottom: 40px;">JUTARAMA INDUSTRIES (M) SDN BHD</p>
+                    <p>Best Regards.</p><p style="font-weight:bold; margin-bottom: 40px;" id="cpSignCompany"></p>
                     <p style="font-weight:bold; text-decoration:underline;" id="cpSignName"></p><p id="cpSignPhone"></p>
                 </div>
             </div>
@@ -564,8 +561,20 @@ Note:
     let winkoUsers = [];
     let currentUserRole = "user";
     let winkoCustomers = {}; 
+    let companyProfile = {
+        name: "JUTARAMA INDUSTRIES (M) SDN. BHD.",
+        reg: "20260103014 (749861-V)",
+        address: "No. 19, Kawasan Perindustrian Mega 2, Jln Mega 2/1, 43500 Semenyih, Selangor, Malaysia.",
+        contact: "Tel: (60)-8727 7540",
+        website: "Web: www.winko.my",
+        taxRate: 5,
+        terms: "Scope of Supply\n1. Standard tank accessories such as bolt, nut, washer, foam tape, air vent, 600x600mm access manhole, internal stays & brackets, internal & external ladder, water level indicator, subject to manufacturer's design and standard and item mentioned in quotation.\n2. Pipe hole opening at factory (Exclude flange). Pipe hole opening on site will be an additional charge.\n\nExcluded from the Supply\n1. Float valve chamber or top sump.\n2. Flanges, nozzles, pipes, valves, vortex, electrode sensor, pumps and filter.\n3. RC works and RC plinths.\n4. Scaffolding & safety platform for installation.\n5. Unloading, shifting and hoisting of materials at site.\n6. Safety training courses, equipment and medical test require to install tank.\n\nNote:\n1. Tank design to sit on 1M Center to center RC tank support/Plinths with at least 500mm height and 200mm width. Design to be provided by others.\n2. RC plinths MUST be level with maximum tolerance of ± 3mm.\n3. Leak test should be done within 3 months from completion of tank installation to maintain the quality of foam tape.\n4. The customer shall be responsible for the security of materials at site after delivery. Missing item shall be replaced with additional charges."
+    };
 
     function initSystemData() {
+        // Company Profile Check
+        try { let cp = JSON.parse(localStorage.getItem('winkoCompanyProfile')); if(cp) companyProfile = cp; } catch(e) {}
+        
         // Users
         try { let s = localStorage.getItem('winkoUsersDB'); if (s) { winkoUsers = JSON.parse(s); if (!winkoUsers.length) throw "e"; } else throw "e";
         } catch(e) { winkoUsers = [{ username: "sam", password: "winko2026", role: "user" }, { username: "admin", password: "adminmaster99", role: "admin" }]; localStorage.setItem('winkoUsersDB', JSON.stringify(winkoUsers)); }
@@ -573,8 +582,52 @@ Note:
         // Customers
         try { winkoCustomers = JSON.parse(localStorage.getItem('winkoCustomersDB')) || {}; } catch(e) { winkoCustomers = {}; }
         updateCustomerDatalist();
+        
+        applyCompanyProfileToAdmin();
+        applyCompanyProfileToHeaders();
     }
     initSystemData();
+
+    function applyCompanyProfileToAdmin() {
+        setVal('profileName', companyProfile.name);
+        setVal('profileReg', companyProfile.reg);
+        setVal('profileAddress', companyProfile.address);
+        setVal('profileContact', companyProfile.contact);
+        setVal('profileWebsite', companyProfile.website);
+        setVal('profileTax', companyProfile.taxRate);
+        setVal('profileTerms', companyProfile.terms);
+        setTxt('navLogoText', companyProfile.name.split(' ')[0] + " ERP");
+        setTxt('loginTitleText', companyProfile.name + " QUOTING GATEWAY");
+    }
+
+    function applyCompanyProfileToHeaders() {
+        // Internal PDF
+        setTxt('printHeaderName1', companyProfile.name);
+        setTxt('printHeaderReg1', companyProfile.reg);
+        setTxt('printHeaderAddr1', companyProfile.address);
+        
+        // Customer PDF
+        setTxt('cpHeaderName', companyProfile.name);
+        setTxt('cpHeaderReg', companyProfile.reg);
+        setTxt('cpHeaderAddr', companyProfile.address);
+        setTxt('cpHeaderContact', companyProfile.contact);
+        setTxt('cpHeaderWeb', companyProfile.website);
+        setTxt('cpSignCompany', companyProfile.name);
+    }
+
+    function saveCompanyProfile() {
+        companyProfile.name = getVal('profileName');
+        companyProfile.reg = getVal('profileReg');
+        companyProfile.address = getVal('profileAddress');
+        companyProfile.contact = getVal('profileContact');
+        companyProfile.website = getVal('profileWebsite');
+        companyProfile.taxRate = getNum('profileTax');
+        companyProfile.terms = getVal('profileTerms');
+        
+        localStorage.setItem('winkoCompanyProfile', JSON.stringify(companyProfile));
+        applyCompanyProfileToHeaders();
+        alert('Global Company Profile Updated! Changes will apply to all new Quotes immediately.');
+    }
 
     function updateCustomerDatalist() {
         let html = '';
@@ -601,7 +654,11 @@ Note:
             setDisp('securityOverlay', false); setDisp('topNav', true); setDisp('mainContent', true);
             if (currentUserRole !== "admin") document.getElementById('btnTabAdmin').style.display = 'none';
             else document.getElementById('btnTabAdmin').style.display = 'inline-block';
-            if(!getVal('quoteIdInput')) setVal('quoteIdInput', "QP-" + new Date().getFullYear().toString().substr(-2) + "-00" + Math.floor(Math.random() * 9 + 1));
+            if(!getVal('quoteIdInput')) {
+                setVal('quoteIdInput', "QP-" + new Date().getFullYear().toString().substr(-2) + "-00" + Math.floor(Math.random() * 9 + 1));
+                setVal('sstPct', companyProfile.taxRate); // apply default tax on new load
+                setVal('fullTermsNotes', companyProfile.terms); // apply default terms
+            }
             initInventory(); 
             loadPrices();
             renderProjectBank();
@@ -1066,8 +1123,8 @@ Note:
     }
     function saveAdminDefaults() { localStorage.setItem('winkoMasterDefaults', JSON.stringify(systemBaseStructure)); alert("Master Structure Saved! The system will reload to apply changes globally."); location.reload(); }
 
-    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV112', JSON.stringify(d)); }
-    function loadPrices() { let s = localStorage.getItem('winkoProDataV112'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else appTanks = [defaultTank()]; renderAllDynamicUI(); processTankData(); }
+    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV113', JSON.stringify(d)); }
+    function loadPrices() { let s = localStorage.getItem('winkoProDataV113'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; setVal('sstPct', companyProfile.taxRate); setVal('fullTermsNotes', companyProfile.terms); } renderAllDynamicUI(); processTankData(); }
 
     function printInternal() { document.body.className = 'print-internal'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => window.print(), 300); }
     function printCustomer() { document.body.className = 'print-customer'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => window.print(), 300); }
