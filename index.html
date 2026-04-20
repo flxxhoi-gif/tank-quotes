@@ -161,10 +161,11 @@
         }
     </style>
     <script>
-        const cv = "V116";
+        const cv = "V117";
         if(localStorage.getItem("winkoAppVersion") !== cv) {
             localStorage.setItem("winkoAppVersion", cv);
-            for(let i=13; i<=115; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=116; i++) localStorage.removeItem("winkoProDataV" + i);
+            localStorage.removeItem('winkoMasterDefaults'); // Force reset BOM for Fasteners update
             window.location.reload(true);
         }
 
@@ -199,6 +200,11 @@
             tc.appendChild(toast);
             setTimeout(() => { toast.style.animation = 'fadeOut 0.5s ease forwards'; setTimeout(() => toast.remove(), 500); }, 3500);
         }
+        
+        function togglePass(id) {
+            let el = document.getElementById(id);
+            if(el) { el.type = el.type === "password" ? "text" : "password"; }
+        }
     </script>
 </head>
 <body>
@@ -213,9 +219,10 @@
             <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-left: 4px;">Username</label>
             <input type="text" id="userInput" placeholder="Enter username" onkeypress="if(event.key==='Enter') document.getElementById('passInput').focus()">
         </div>
-        <div style="width: 100%; text-align: left; margin-top: 5px;">
+        <div style="position: relative; width: 100%; text-align: left; margin-top: 5px;">
             <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-left: 4px;">Password</label>
-            <input type="password" id="passInput" placeholder="••••••••" onkeypress="if(event.key==='Enter') checkLogin()">
+            <input type="password" id="passInput" placeholder="••••••••" onkeypress="if(event.key==='Enter') checkLogin()" style="width: 100%; padding-right: 40px;">
+            <span onclick="togglePass('passInput')" style="position: absolute; right: 12px; top: 35px; cursor: pointer; font-size: 16px;" title="Show/Hide Password">👁️</span>
         </div>
         <button onclick="checkLogin()">Secure Login</button>
     </div>
@@ -265,6 +272,26 @@
         </div>
     </div>
     
+    <div class="module-card" style="margin-top: 20px;">
+        <div class="card-header" onclick="this.parentElement.classList.toggle('collapsed')"><span>🔑</span> Account & User Management</div>
+        <div class="card-body">
+            <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Create accounts for your staff. Master Admins can access Master Control; Standard Users can only create and save quotes.</p>
+            <div style="display:flex; gap:10px; margin-bottom:20px; background:#f1f5f9; padding:15px; border-radius:8px; border:1px solid #cbd5e1; align-items:center;">
+                <input type="text" id="newUsername" placeholder="New Username" class="admin-input" style="flex:1;">
+                <div style="position:relative; flex:1;">
+                    <input type="password" id="newPassword" placeholder="New Password" class="admin-input" style="width:100%; padding-right:35px;">
+                    <span onclick="togglePass('newPassword')" style="position:absolute; right:10px; top:8px; cursor:pointer;">👁️</span>
+                </div>
+                <select id="newRole" class="admin-input" style="flex:1; padding:8px;"><option value="user">Standard User</option><option value="admin">Master Admin</option></select>
+                <button class="action-btn" style="width:auto; padding:8px 20px; background:#3b82f6;" onclick="addUser()">+ Create User</button>
+            </div>
+            <table class="admin-table">
+                <thead><tr><th style="width:25%;">Username</th><th style="width:35%;">Password</th><th style="width:20%;">Role</th><th style="width:20%; text-align:center;">Action</th></tr></thead>
+                <tbody id="userTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
     <div class="module-card" style="margin-top: 20px;">
         <div class="card-header" onclick="this.parentElement.classList.toggle('collapsed')">
             <span>🏢</span> Global Company Profile
@@ -668,7 +695,6 @@
         let html = ''; Object.keys(winkoCustomers).sort().forEach(c => { html += `<option value="${c}"></option>`; }); setHtml('customerDatalist', html);
     }
 
-    // FIX: Force update address and attention regardless of whether it was empty or not.
     function checkCustomerAutoFill() {
         let c = getVal('custCompany').trim();
         if (winkoCustomers[c]) { 
@@ -741,11 +767,13 @@
         reader.readAsText(file);
     }
 
+    // V117 UPDATE: New Fasteners Category added by default
     let systemBaseStructure = [
         { category: "Panels", items: [{name: "Manhole Panel", def: 450, wt: 55}, {name: "Roof Panel", def: 220, wt: 26}, {name: "Base Panel", def: 350, wt: 68}, {name: "Wall Panel (L1)", def: 350, wt: 68}, {name: "Wall Panel (L2)", def: 280, wt: 48}, {name: "Wall Panel (L3)", def: 280, wt: 48}, {name: "Wall Panel (L4)", def: 220, wt: 26}, {name: "Partition Panel", def: 280, wt: 48}] },
         { category: "Cleat & Trusses", items: [{name: "Type A Cleat", def: 25, wt: 1.2}, {name: "Type B Cleat", def: 28, wt: 1.8}, {name: "Type C Cleat", def: 30, wt: 2.5}, {name: "Ø1\" Pipe", def: 12, wt: 1.6}, {name: "2\" x 2\" angle", def: 15, wt: 2.2}] },
         { category: "Angle Stay", items: [{name: "44 1/4\" (L1 Stay)", def: 45, wt: 4.5}, {name: "67\" (L2 Stay)", def: 65, wt: 7.2}, {name: "11' 3\" (L3 Stay)", def: 95, wt: 14.5}, {name: "15' 8.5\" (L4 Stay)", def: 125, wt: 19.8}] },
-        { category: "Accessories", items: [{name: "Ext. Ladder", def: 55, wt: 3.5, selectId: "extLadMat", options: ["HDG", "SS 304", "SS 316"]}, {name: "Int. Ladder", def: 75, wt: 3.5, selectId: "intLadMat", options: ["HDG", "SS 304", "SS 316"]}, {name: "Water Level Indicator", def: 220, wt: 2.5, selectId: "wliType", options: ["Ball Float", "Tube Type"]}, {name: "Air Vent", def: 85, wt: 1.5, selectId: "ventType", options: ["HDG Steel", "ABS Plastic"]}, {name: "Mastic Sealant (Rolls)", def: 38, wt: 0.8}, {name: "Bolt & Nut Sets", def: 1.60, wt: 0.15}] },
+        { category: "Fasteners", items: [{name: "M10 x 35mm HDG (Roof)", def: 1.20, wt: 0.10}, {name: "M12 x 45mm HDG (Wall & Base)", def: 1.50, wt: 0.15}, {name: "M16 x 50mm HDG (Stays & Cleats)", def: 2.50, wt: 0.25}] },
+        { category: "Accessories", items: [{name: "Ext. Ladder", def: 55, wt: 3.5, selectId: "extLadMat", options: ["HDG", "SS 304", "SS 316"]}, {name: "Int. Ladder", def: 75, wt: 3.5, selectId: "intLadMat", options: ["HDG", "SS 304", "SS 316"]}, {name: "Water Level Indicator", def: 220, wt: 2.5, selectId: "wliType", options: ["Ball Float", "Tube Type"]}, {name: "Air Vent", def: 85, wt: 1.5, selectId: "ventType", options: ["HDG Steel", "ABS Plastic"]}, {name: "Mastic Sealant (Rolls)", def: 38, wt: 0.8}] },
         { category: "Services", items: [{name: "Installation & Labor", def: 3500, wt: 0}, {name: "Transport", def: 850, wt: 0}] }
     ];
 
@@ -756,7 +784,6 @@
     let appCustomItems = [];
     const configIDs = ['quoteIdInput', 'custPoNo', 'custDelDate', 'marketChoice', 'unitChoice', 'markupPct','discountPct','sstPct', 'shortExclusions', 'fullTermsNotes', 'custCompany', 'custAttn', 'custAddr', 'tcValidity', 'tcLead', 'tcDelivery', 'tcPayment', 'signName', 'signPhone'];
 
-    // FIX: Nozzles are now attached directly to the Tank object.
     function defaultTank() { return { id: Date.now() + Math.random(), std: "SANS 10329:2020 Approved by SIRIM & SPAN", coat: "Hot Dipped Galvanised", L: 12, W: 4, H: 4, override: "", tRoof: "1.5mm", tBase: "4.5mm", tW1: "4.5mm", tW2: "3.0mm", tW3: "3.0mm", tW4: "1.5mm", partChoice: "no", partQty: 0, partL: 0, partH: 0, partPos: 1, partType: "Divider", bom: JSON.parse(JSON.stringify(systemBaseStructure)), nozzles: [], baseCost: 0, finalPrice: 0, totalPanels: 0, weight: 0 }; }
     function defaultCustomItem() { return { id: Date.now() + Math.random(), desc: "Custom Structure / Pump Room", cost: 0, qty: 1, finalPrice: 0 }; }
 
@@ -764,7 +791,6 @@
     function updateBomField(tIdx, sIdx, iIdx, field, val, isNum = false) { appTanks[tIdx].bom[sIdx].items[iIdx][field] = isNum ? (parseFloat(val) || 0) : val; safeProcess(); }
     function updateCustomField(cIdx, field, val, isNum = false) { appCustomItems[cIdx][field] = isNum ? (parseFloat(val) || 0) : val; safeProcess(); }
     
-    // FIX: Update nozzle functions to operate inside the specific Tank.
     function addNewNozzle(tIdx) { if(!appTanks[tIdx].nozzles) appTanks[tIdx].nozzles = []; appTanks[tIdx].nozzles.push({ id: Date.now() + Math.random(), type: "Inlet", size: '4"', qty: 1, pos: "Top Side" }); renderAllDynamicUI(); processTankData(); }
     function updateNozzle(tIdx, nId, field, val) { let n = appTanks[tIdx].nozzles.find(nz => nz.id === nId); if(n) n[field] = val; safeProcess(); }
     function removeNozzle(tIdx, nId) { appTanks[tIdx].nozzles = appTanks[tIdx].nozzles.filter(n => n.id !== nId); renderAllDynamicUI(); processTankData(); }
@@ -792,9 +818,8 @@
     function renderAllDynamicUI() {
         let tanksHtml = "", bomHtml = "", screenVisHtml = "", printVisHtml = "", chkVisHtml = "";
         appTanks.forEach((t, i) => {
-            if(!t.nozzles) t.nozzles = []; // Failsafe for older saved projects without nozzles
+            if(!t.nozzles) t.nozzles = []; 
             
-            // FIX: Render Nozzle Configurator inside the tank loop
             let nozzleHtml = "";
             t.nozzles.forEach((n) => {
                 nozzleHtml += `<div class="nozzle-row">
@@ -911,9 +936,12 @@
                 t.totalPanels = r + b + s + pp; totalP += t.totalPanels;
 
                 let walls = `L1 : ${t.tW1}`; if (H >= 2) walls += ` | L2 : ${t.tW2}`; if (H >= 3) walls += ` | L3 : ${t.tW3}`; if (H >= 4) walls += ` | L4 : ${t.tW4}`;
-                let extLadStr = t.bom[3] && t.bom[3].items[0] && t.bom[3].items[0].qty > 0 ? t.bom[3].items[0].qty : 0;
-                let intLadStr = t.bom[3] && t.bom[3].items[1] && t.bom[3].items[1].qty > 0 ? t.bom[3].items[1].qty : 0;
-                let wliStr = t.bom[3] && t.bom[3].items[2] && t.bom[3].items[2].qty > 0 ? t.bom[3].items[2].qty : 0;
+                
+                // Flexible accessor to check if category exists to print safely
+                let accSec = t.bom.find(sec => sec.category.includes("Access"));
+                let extLadStr = accSec && accSec.items[0] && accSec.items[0].qty > 0 ? accSec.items[0].qty : 0;
+                let intLadStr = accSec && accSec.items[1] && accSec.items[1].qty > 0 ? accSec.items[1].qty : 0;
+                let wliStr = accSec && accSec.items[2] && accSec.items[2].qty > 0 ? accSec.items[2].qty : 0;
                 let partStr = (t.partChoice === 'yes' && t.partQty > 0) ? `<div><span style="font-weight:bold; color:#475569;">Partition:</span> ${t.partQty}x ${t.partType} (${t.partL}${u} x ${t.partH}${u})</div>` : '';
 
                 soTableHtml += `<div class="avoid-break" style="display:flex; margin-bottom:15px; padding-bottom:15px; border-bottom:1px dashed #cbd5e1;">
@@ -943,13 +971,32 @@
                 let bQ=(sI,iI,v)=>{ if(t.bom[sI] && t.bom[sI].items[iI]) t.bom[sI].items[iI].qty=isNaN(v)?0:v; };
                 let bD=(sI,iI,v)=>{ if(t.bom[sI] && t.bom[sI].items[iI]) t.bom[sI].items[iI].name=v; };
                 
-                if(t.bom[0]) {
-                    bD(0,0,"Manhole Panel"+pSfx); bD(0,1,t.tRoof+" Roof Panel"+pSfx); bD(0,2,t.tBase+" Base Panel"+pSfx); bD(0,3,t.tW1+" Wall Panel (L1)"+pSfx); bD(0,4,t.tW2+" Wall Panel (L2)"+pSfx); bD(0,5,t.tW3+" Wall Panel (L3)"+pSfx); bD(0,6,t.tW4+" Wall Panel (L4)"+pSfx); bD(0,7,"Partition Panel"+pSfx);
-                    bQ(0,0,r>0?1:0); bQ(0,1,Math.max(0,r-1)); bQ(0,2,b); bQ(0,3,H>=1?pm:0); bQ(0,4,H>=2?pm:0); bQ(0,5,H>=3?pm:0); bQ(0,6,H>=4?pm*(H-3):0); bQ(0,7,pp);
-                }
-                if(t.bom[1]) { bQ(1,0,H*4); bQ(1,1,pm); bQ(1,2,pm); bQ(1,3,t.L); bQ(1,4,t.L); }
-                if(t.bom[2]) { bQ(2,0,H>=1?pm:0); bQ(2,1,H>=2?pm:0); bQ(2,2,H>=3?pm:0); bQ(2,3,H>=4?pm*(H-3):0); }
-                if(t.bom[3]) { bQ(3,0,t.H); bQ(3,1,t.H); bQ(3,2,(u!=='ft')?t.H:1); bQ(3,3,1); let sP=(u==='ft')?4.88:4.0; let bP=(u==='ft')?16:12; bQ(3,4,Math.ceil(((r+b+s+pp)*sP)/15)); bQ(3,5,Math.ceil((r+b+s+pp)*bP*1.05)); }
+                // Auto Calculations Logic
+                t.bom.forEach((sec, sIdx) => {
+                    let cat = sec.category.toLowerCase();
+                    if(cat.includes("panel")) {
+                        bD(sIdx,0,"Manhole Panel"+pSfx); bD(sIdx,1,t.tRoof+" Roof Panel"+pSfx); bD(sIdx,2,t.tBase+" Base Panel"+pSfx); bD(sIdx,3,t.tW1+" Wall Panel (L1)"+pSfx); bD(sIdx,4,t.tW2+" Wall Panel (L2)"+pSfx); bD(sIdx,5,t.tW3+" Wall Panel (L3)"+pSfx); bD(sIdx,6,t.tW4+" Wall Panel (L4)"+pSfx); bD(sIdx,7,"Partition Panel"+pSfx);
+                        bQ(sIdx,0,r>0?1:0); bQ(sIdx,1,Math.max(0,r-1)); bQ(sIdx,2,b); bQ(sIdx,3,H>=1?pm:0); bQ(sIdx,4,H>=2?pm:0); bQ(sIdx,5,H>=3?pm:0); bQ(sIdx,6,H>=4?pm*(H-3):0); bQ(sIdx,7,pp);
+                    }
+                    if(cat.includes("cleat")) { bQ(sIdx,0,H*4); bQ(sIdx,1,pm); bQ(sIdx,2,pm); bQ(sIdx,3,t.L); bQ(sIdx,4,t.L); }
+                    if(cat.includes("stay")) { bQ(sIdx,0,H>=1?pm:0); bQ(sIdx,1,H>=2?pm:0); bQ(sIdx,2,H>=3?pm:0); bQ(sIdx,3,H>=4?pm*(H-3):0); }
+                    if(cat.includes("access")) { 
+                        bQ(sIdx,0,t.H); bQ(sIdx,1,t.H); bQ(sIdx,2,(u!=='ft')?t.H:1); bQ(sIdx,3,1); 
+                        let sP=(u==='ft')?4.88:4.0; bQ(sIdx,4,Math.ceil(((r+b+s+pp)*sP)/15)); 
+                    }
+                    // V117: SMART FASTENER ENGINE
+                    if(cat.includes("fastener")) {
+                        sec.items.forEach((it, iIdx) => {
+                            let n = it.name.toLowerCase();
+                            if(n.includes("m10") || n.includes("roof")) bQ(sIdx, iIdx, Math.ceil((r * 14) * 1.05));
+                            else if(n.includes("m12") || n.includes("wall") || n.includes("base")) bQ(sIdx, iIdx, Math.ceil((b + s + pp) * 16 * 1.05));
+                            else if(n.includes("m14") || n.includes("m16") || n.includes("stay")) {
+                                let stayQty = (H>=1?pm:0) + (H>=2?pm:0) + (H>=3?pm:0) + (H>=4?pm*(H-3):0);
+                                bQ(sIdx, iIdx, Math.ceil(stayQty * 2.2));
+                            }
+                        });
+                    }
+                });
                 
                 t.baseCost=0; t.weight=0;
                 t.bom.forEach((sec, sIdx) => sec.items.forEach((it, iIdx) => { 
@@ -972,7 +1019,6 @@
             });
             setHtml('so_table_body', soTableHtml);
 
-            // FIX: Print nozzles organized by Tank
             let nPrint = "";
             let hasAnyNozzles = false;
             appTanks.forEach((t, i) => {
@@ -1007,9 +1053,12 @@
                 let trPct=t.baseCost/globalRef; let trFinal=grand*trPct; t.finalPrice=trFinal;
                 let dStr=t.override||`${t.L}${u}(L)x${t.W}${u}(W)x${t.H}${u}(H)`;
                 let pStr=(t.partChoice==='yes'&&t.partQty>0)?`<tr style="border:none;"><td style="border:none; vertical-align:top;">d)</td><td style="border:none; vertical-align:top;" colspan="3">Partition: ${t.partQty}x ${t.partType} (${t.partL}${u}x${t.partH}${u})</td></tr>`:'';
-                let extLadStr=t.bom[3]&&t.bom[3].items[0]?`${t.bom[3].items[0].selVal} External - ${t.bom[3].items[0].qty} sets`:'';
-                let intLadStr=t.bom[3]&&t.bom[3].items[1]?`${t.bom[3].items[1].selVal} Internal - ${t.bom[3].items[1].qty} sets`:'';
-                let wliStr=t.bom[3]&&t.bom[3].items[2]?`${t.bom[3].items[2].selVal} - ${t.bom[3].items[2].qty} sets`:'';
+                
+                let accSec = t.bom.find(sec => sec.category.includes("Access"));
+                let extLadStr = accSec&&accSec.items[0]?`${accSec.items[0].selVal} External - ${accSec.items[0].qty} sets`:'';
+                let intLadStr = accSec&&accSec.items[1]?`${accSec.items[1].selVal} Internal - ${accSec.items[1].qty} sets`:'';
+                let wliStr = accSec&&accSec.items[2]?`${accSec.items[2].selVal} - ${accSec.items[2].qty} sets`:'';
+                
                 cpRows += `<tr class="avoid-break"><td style="text-align:center; border:1px solid #000;">${cpIdx++}</td><td style="border:1px solid #000; padding:6px; vertical-align:top;"><strong>Supply and Install ${t.coat} Tank Size:<br>${dStr} (Total: ${t.totalPanels} Pcs)</strong><br>Comply to ${t.std}<br><table style="border:none; width:100%; font-size:8.5pt;"><tr style="border:none;"><td style="width:20px; border:none; vertical-align:top;">a)</td><td style="width:75px; border:none; vertical-align:top;">Thickness:</td><td style="width:50px; border:none; vertical-align:top;">Roof</td><td style="border:none; vertical-align:top;">: ${t.tRoof}</td></tr><tr style="border:none;"><td style="border:none; vertical-align:top;"></td><td style="border:none; vertical-align:top;"></td><td style="border:none; vertical-align:top;">Base</td><td style="border:none; vertical-align:top;">: ${t.tBase}</td></tr><tr style="border:none;"><td style="border:none; vertical-align:top;"></td><td style="border:none; vertical-align:top;"></td><td style="border:none; vertical-align:top;">Wall</td><td style="border:none; vertical-align:top;">: L1:${t.tW1}|L2:${t.tW2}|L3:${t.tW3}|L4:${t.tW4}</td></tr><tr style="border:none;"><td style="border:none; vertical-align:top;">b)</td><td style="border:none; vertical-align:top;" colspan="3">Ladders: ${intLadStr}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${extLadStr}</td></tr><tr style="border:none;"><td style="border:none; vertical-align:top;">c)</td><td style="border:none; vertical-align:top;" colspan="3">WLI: ${wliStr}</td></tr>${pStr}<tr style="border:none;"><td style="border:none; vertical-align:top;">${pStr?'e)':'d)'}</td><td style="border:none; vertical-align:top;" colspan="3">Tank to sit on existing Beam/RC plinths</td></tr></table></td><td style="text-align:center; border:1px solid #000;">1</td><td style="text-align:right; border:1px solid #000; padding:6px;">${trFinal.toLocaleString('en-MY',{minimumFractionDigits:2})}</td></tr>`;
             });
             appCustomItems.forEach(c => {
@@ -1140,12 +1189,7 @@
         
         if (d) { 
             appTanks = d.tanks || []; appCustomItems = d.custom || []; 
-            
-            // Migration handling: moving old global nozzles into Tank 1
-            if(d.nozzles && d.nozzles.length > 0 && appTanks.length > 0 && (!appTanks[0].nozzles || appTanks[0].nozzles.length === 0)) {
-                appTanks[0].nozzles = d.nozzles;
-            }
-
+            if(d.nozzles && d.nozzles.length > 0 && appTanks.length > 0 && (!appTanks[0].nozzles || appTanks[0].nozzles.length === 0)) { appTanks[0].nozzles = d.nozzles; }
             configIDs.forEach(id => { if (d[id] !== undefined) setVal(id, d[id]); }); 
             renderAllDynamicUI(); processTankData(); switchTab('quote'); 
             showToast("Project Loaded Successfully");
@@ -1190,34 +1234,37 @@
     }
     function deductInventoryFromSO() { if(!confirm("Deduct stock?")) return; appTanks.forEach(t => { t.bom.forEach(s => s.items.forEach(it => { if(s.category === "Services") return; if(it.qty > 0) { let bn = it.name.replace(/ \(1x1m\)| \(1\.22x1\.22m\)| \(4'x4'\)/g, ''); if(winkoInventory[bn]) winkoInventory[bn].stock -= it.qty; } })); }); localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory)); showToast(`Stock Deducted Successfully!`); }
 
-    function processBulkCSV(event) {
-        const file = event.target.files[0]; if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const rows = e.target.result.split('\n'); let addedCount = 0; let updateCount = 0;
-            for (let i = 9; i < rows.length; i++) {
-                const row = rows[i].trim(); if (!row) continue;
-                const cols = row.split(','); if (cols.length < 5) continue; 
-                let desc = cols[1].replace(/^"|"$/g, '').trim(); let qtyStr = cols[3].replace(/^"|"$/g, '').trim(); let priceStr = cols[4].replace(/^"|"$/g, '').trim();
-                if (!desc || desc.toLowerCase().includes('calculation:')) continue;
-                let qty = parseFloat(qtyStr); if (isNaN(qty)) qty = 0; let price = parseFloat(priceStr); if (isNaN(price)) price = 0;
-                if (qty === 0 && price === 0) continue;
-                if (winkoInventory[desc]) { winkoInventory[desc].stock = qty; if(price > 0) winkoInventory[desc].price = price; updateCount++; } 
-                else { winkoInventory[desc] = { stock: qty, alert: 10, price: price }; addedCount++; }
-            }
-            localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory));
-            document.getElementById('csvStatusText').innerText = `✅ Success! Added ${addedCount} new items, updated ${updateCount} existing items.`; document.getElementById('csvStatusText').style.color = "#059669";
-            renderInventoryTable();
-        };
-        reader.readAsText(file);
-    }
-
     // --- ADMIN CONTROLS ---
     function renderUserTable() {
-        let html = ''; winkoUsers.forEach((user, index) => { let delBtn = (user.username.toLowerCase() === 'admin') ? `<span style="color:#94a3b8; font-size:11px; font-weight:bold;">MASTER</span>` : `<button class="del-btn" onclick="deleteUser(${index})">X Remove</button>`; html += `<tr><td><strong>${user.username}</strong></td><td><input type="password" class="admin-input" value="${user.password}" onchange="updateUserPass(${index}, this.value)"></td><td style="text-transform: capitalize; font-weight:bold;">${user.role}</td><td style="text-align:center;">${delBtn}</td></tr>`; }); setHtml('userTableBody', html);
+        let html = ''; 
+        winkoUsers.forEach((user, index) => { 
+            let delBtn = (user.username.toLowerCase() === 'admin') ? `<span style="color:#94a3b8; font-size:11px; font-weight:bold;">MASTER</span>` : `<button class="del-btn" onclick="deleteUser(${index})">X Remove</button>`; 
+            html += `<tr>
+                <td><strong>${user.username}</strong></td>
+                <td>
+                    <div style="position:relative; display:flex; align-items:center;">
+                        <input type="password" id="adminPass_${index}" class="admin-input" value="${user.password}" onchange="updateUserPass(${index}, this.value)" style="padding-right:35px; width:100%;">
+                        <span onclick="togglePass('adminPass_${index}')" style="position:absolute; right:10px; cursor:pointer;" title="Show/Hide Password">👁️</span>
+                    </div>
+                </td>
+                <td style="text-transform: capitalize; font-weight:bold;">${user.role}</td>
+                <td style="text-align:center;">${delBtn}</td>
+            </tr>`; 
+        }); 
+        setHtml('userTableBody', html);
     }
+    
     function updateUserPass(index, newPass) { if(newPass.trim() === "") return alert("Password cannot be empty"); winkoUsers[index].password = newPass.trim(); localStorage.setItem('winkoUsersDB', JSON.stringify(winkoUsers)); showToast("Password updated!"); }
-    function addUser() { let u = getVal('newUsername').trim(); let p = getVal('newPassword').trim(); let r = getVal('newRole'); if(!u || !p) return alert("Username and Password required!"); if(winkoUsers.some(user => user.username.toLowerCase() === u.toLowerCase())) return alert("Username exists!"); winkoUsers.push({ username: u, password: p, role: r }); localStorage.setItem('winkoUsersDB', JSON.stringify(winkoUsers)); setVal('newUsername', ''); setVal('newPassword', ''); renderUserTable(); showToast("User added!"); }
+    
+    function addUser() { 
+        let u = getVal('newUsername').trim(); let p = getVal('newPassword').trim(); let r = getVal('newRole'); 
+        if(!u || !p) return alert("Username and Password required!"); 
+        if(winkoUsers.some(user => user.username.toLowerCase() === u.toLowerCase())) return alert("Username exists!"); 
+        winkoUsers.push({ username: u, password: p, role: r }); 
+        localStorage.setItem('winkoUsersDB', JSON.stringify(winkoUsers)); 
+        setVal('newUsername', ''); setVal('newPassword', ''); renderUserTable(); showToast("User created successfully!"); 
+    }
+    
     function deleteUser(index) { if(confirm(`Delete user: ${winkoUsers[index].username}?`)) { winkoUsers.splice(index, 1); localStorage.setItem('winkoUsersDB', JSON.stringify(winkoUsers)); renderUserTable(); showToast("User deleted.", "error"); } }
 
     function updateAdminDraft(sIdx, iIdx, field, val, isNum) { if(isNum) systemBaseStructure[sIdx].items[iIdx][field] = parseFloat(val) || 0; else systemBaseStructure[sIdx].items[iIdx][field] = val; }
@@ -1237,8 +1284,8 @@
     }
     function saveAdminDefaults() { localStorage.setItem('winkoMasterDefaults', JSON.stringify(systemBaseStructure)); alert("Master Structure Saved! The system will reload to apply changes globally."); location.reload(); }
 
-    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV116', JSON.stringify(d)); }
-    function loadPrices() { let s = localStorage.getItem('winkoProDataV116'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; setVal('sstPct', companyProfile.taxRate); setVal('fullTermsNotes', companyProfile.terms); } renderAllDynamicUI(); processTankData(); }
+    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV117', JSON.stringify(d)); }
+    function loadPrices() { let s = localStorage.getItem('winkoProDataV117'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; setVal('sstPct', companyProfile.taxRate); setVal('fullTermsNotes', companyProfile.terms); } renderAllDynamicUI(); processTankData(); }
 
     function printInternal() { document.body.className = 'print-internal'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => window.print(), 300); }
     function printCustomer() { document.body.className = 'print-customer'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => window.print(), 300); }
