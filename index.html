@@ -170,17 +170,17 @@
             body.print-qr #qrModalInner { padding: 20px; text-align: left; max-width: none; width: auto; border: none; }
             body.print-qr .action-btn { display: none !important; }
 
-            /* V122 PO PRINT STYLES */
+            /* PO PRINT STYLES */
             body.print-po #mainContent, body.print-po #inventoryContent, body.print-po #adminContent, body.print-po #topNav { display: none !important; }
             body.print-po #poPrintView { display: block !important; padding: 20px; background: white; color: black; }
             body.print-po .cp-table th { background: #e2e8f0 !important; }
         }
     </style>
     <script>
-        const cv = "V122";
+        const cv = "V123";
         if(localStorage.getItem("winkoAppVersion") !== cv) {
             localStorage.setItem("winkoAppVersion", cv);
-            for(let i=13; i<=121; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=122; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
 
@@ -378,14 +378,17 @@
 <div id="inventoryContent"><div class="container"><div class="module-card">
     <div class="card-header">
         <span>📦</span> Live Warehouse Management
-        <button class="action-btn print-btn" style="width:auto; padding: 8px 15px; background:#8b5cf6; font-size:12px;" onclick="printRestockPO()">📄 Print Restock PO</button>
+        <div style="display:flex; gap:10px;">
+            <button class="action-btn print-btn" style="width:auto; padding: 8px 15px; background:#0ea5e9; font-size:12px;" onclick="addCustomInventoryItem()">➕ Add Custom Item</button>
+            <button class="action-btn print-btn" style="width:auto; padding: 8px 15px; background:#8b5cf6; font-size:12px;" onclick="printRestockPO()">📄 Print Restock PO</button>
+        </div>
     </div>
     <div class="card-body">
-        <p style="font-size:13px; color:#64748b;">Use the +/- buttons to instantly log stock receiving or manual pull-outs. Changes are saved automatically.</p>
+        <p style="font-size:13px; color:#64748b;">Use the Phone Scanner to instantly deduct stock via QR, or add standalone items to the warehouse list.</p>
         
         <div style="margin-bottom: 15px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
             <input type="text" id="invSearchBox" placeholder="🔍 Search Item Description..." style="padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; width: 100%; max-width: 300px; font-weight:bold;" onkeyup="filterInventory()">
-            <button class="action-btn" style="width:auto; padding: 10px 15px; background: #3b82f6;" onclick="startCameraScanner()">📷 Scan QR with Phone</button>
+            <button class="action-btn" style="width:auto; padding: 10px 15px; background: #3b82f6;" onclick="startCameraScanner()">📷 Scan QR to Deduct</button>
             <button class="action-btn" style="width:auto; padding: 10px 15px; background: #ef4444; display: none;" id="stopScanBtn" onclick="stopCameraScanner()">Stop Camera</button>
         </div>
         
@@ -393,7 +396,7 @@
 
         <table class="admin-table">
             <thead>
-                <tr><th style="width:40%;">Item Name</th><th class="text-center" style="width:25%;">Current Stock (Auto-Save)</th><th class="text-center" style="width:10%;">Low Alert</th><th class="text-center" style="width:15%;">Base Price (RM)</th><th class="text-center" style="width:10%;">Labels</th></tr>
+                <tr><th style="width:35%;">Item Name</th><th class="text-center" style="width:25%;">Current Stock (Auto-Save)</th><th class="text-center" style="width:10%;">Low Alert</th><th class="text-center" style="width:15%;">Base Price (RM)</th><th class="text-center" style="width:15%;">Actions</th></tr>
             </thead>
             <tbody id="invBody"></tbody>
         </table>
@@ -1327,7 +1330,7 @@
         }
     }
 
-    // --- V122 WAREHOUSE, INVENTORY, QR & SCANNER LOGIC ---
+    // --- V123 WAREHOUSE, INVENTORY, QR & SCANNER LOGIC ---
     let winkoInventory = {}; try { winkoInventory = JSON.parse(localStorage.getItem('winkoInventoryDB')) || {}; } catch(e) { winkoInventory = {}; }
 
     function initInventory() {
@@ -1365,6 +1368,30 @@
         }
     }
     
+    // NEW V123 FEATURE: ADD / DELETE WAREHOUSE ITEMS
+    function addCustomInventoryItem() {
+        let name = prompt("Enter the name of the new item to track (e.g. Safety Gloves):");
+        if(!name || name.trim() === "") return;
+        name = name.trim();
+        if(winkoInventory[name]) return alert("This item already exists in the warehouse!");
+        
+        winkoInventory[name] = { stock: 0, alert: 10, price: 0 };
+        localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory));
+        document.getElementById("invSearchBox").value = name;
+        renderInventoryTable();
+        showToast("Item added successfully!");
+    }
+    
+    function deleteInventoryItem(safeK) {
+        let k = decodeURIComponent(safeK);
+        if(confirm(`⚠️ Are you sure you want to completely remove "${k}" from the warehouse list?`)) {
+            delete winkoInventory[k];
+            localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory));
+            renderInventoryTable();
+            showToast("Item removed permanently.", "error");
+        }
+    }
+    
     function renderInventoryTable() { 
         let html = ''; let filterText = getVal('invSearchBox').toLowerCase();
         Object.keys(winkoInventory).sort().forEach(k => { 
@@ -1387,7 +1414,12 @@
                 </td>
                 <td class="text-center"><input type="number" class="inv-input" id="inv_alert_${sId}" value="${d.alert||10}" onchange="updateInvVal('${safeK}', 'alert', this.value)"></td>
                 <td class="text-center"><input type="number" step="0.01" class="inv-input" id="inv_price_${sId}" value="${d.price||0}" onchange="updateInvVal('${safeK}', 'price', this.value)"></td>
-                <td class="text-center"><button class="action-btn" style="width:auto; padding:6px 12px; font-size:11px; background:#8b5cf6;" onclick="showQRModal('${safeK}')">🔲 QR</button></td>
+                <td class="text-center">
+                    <div style="display:flex; justify-content:center; gap:5px;">
+                        <button class="action-btn" style="width:auto; padding:6px 10px; font-size:11px; background:#8b5cf6;" onclick="showQRModal('${safeK}')">🔲 QR</button>
+                        <button class="del-btn" style="padding:6px 10px;" onclick="deleteInventoryItem('${safeK}')">🗑️</button>
+                    </div>
+                </td>
             </tr>`; 
         }); 
         setHtml('invBody', html); 
@@ -1433,13 +1465,36 @@
         });
     }
 
+    // NEW V123 FEATURE: SCAN TO DEDUCT
     function onScanSuccess(decodedText, decodedResult) {
         if(decodedText.startsWith("WINKO-ITEM:")) {
             let itemName = decodedText.replace("WINKO-ITEM:", "");
-            document.getElementById("invSearchBox").value = itemName;
-            filterInventory();
-            stopCameraScanner();
-            showToast("✅ Found: " + itemName);
+            stopCameraScanner(); // Immediately stop the camera feed
+            
+            if(!winkoInventory[itemName]) {
+                return showToast(`Item not found: ${itemName}`, "error");
+            }
+
+            // Slight delay so the camera UI closes cleanly before the prompt blocks the thread
+            setTimeout(() => {
+                let currentStock = winkoInventory[itemName].stock || 0;
+                let qty = prompt(`📦 Scanned: ${itemName}\nCurrent Stock: ${currentStock}\n\nEnter quantity to DEDUCT:`, "1");
+                
+                if (qty !== null && !isNaN(qty) && qty.trim() !== "") {
+                    let deductAmount = parseFloat(qty);
+                    winkoInventory[itemName].stock -= deductAmount;
+                    if(winkoInventory[itemName].stock < 0) winkoInventory[itemName].stock = 0;
+                    
+                    localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory));
+                    document.getElementById("invSearchBox").value = itemName; // Filter to show the changed item
+                    filterInventory();
+                    
+                    showToast(`✅ Deducted ${deductAmount} from ${itemName}`);
+                } else {
+                    showToast("Scan cancelled.", "info");
+                }
+            }, 300);
+
         } else {
             showToast("Invalid Winko QR Code", "error");
         }
@@ -1454,7 +1509,7 @@
         }
     }
     
-    // --- V122 PO GENERATOR LOGIC ---
+    // --- V123 PO GENERATOR LOGIC ---
     function printRestockPO() {
         let html = `<table style="width:100%; border-collapse:collapse; border:2px solid #000;" class="cp-table">
             <thead><tr><th style="width:55%;">Item Description</th><th style="width:15%;">Current Stock</th><th style="width:15%;">Alert Level</th><th style="width:15%;">Suggested Order</th></tr></thead><tbody>`;
@@ -1538,8 +1593,8 @@
     }
     function saveAdminDefaults() { localStorage.setItem('winkoMasterDefaults', JSON.stringify(systemBaseStructure)); alert("Master Structure Saved! The system will reload to apply changes globally."); location.reload(); }
 
-    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV122', JSON.stringify(d)); }
-    function loadPrices() { let s = localStorage.getItem('winkoProDataV122'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; setVal('sstPct', companyProfile.taxRate); setVal('fullTermsNotes', companyProfile.terms); } renderAllDynamicUI(); processTankData(); }
+    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV123', JSON.stringify(d)); }
+    function loadPrices() { let s = localStorage.getItem('winkoProDataV123'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; setVal('sstPct', companyProfile.taxRate); setVal('fullTermsNotes', companyProfile.terms); } renderAllDynamicUI(); processTankData(); }
 
     function printInternal() { document.body.className = 'print-internal'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => window.print(), 300); }
     function printCustomer() { document.body.className = 'print-customer'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => window.print(), 300); }
