@@ -161,11 +161,11 @@
         }
     </style>
     <script>
-        const cv = "V117";
+        const cv = "V118";
         if(localStorage.getItem("winkoAppVersion") !== cv) {
             localStorage.setItem("winkoAppVersion", cv);
-            for(let i=13; i<=116; i++) localStorage.removeItem("winkoProDataV" + i);
-            localStorage.removeItem('winkoMasterDefaults'); // Force reset BOM for Fasteners update
+            for(let i=13; i<=117; i++) localStorage.removeItem("winkoProDataV" + i);
+            localStorage.removeItem('winkoMasterDefaults'); // Force reset BOM for V118 Accessories update
             window.location.reload(true);
         }
 
@@ -767,13 +767,31 @@
         reader.readAsText(file);
     }
 
-    // V117 UPDATE: New Fasteners Category added by default
+    // V118 UPDATE: Massive Fasteners Injection into Accessories
     let systemBaseStructure = [
         { category: "Panels", items: [{name: "Manhole Panel", def: 450, wt: 55}, {name: "Roof Panel", def: 220, wt: 26}, {name: "Base Panel", def: 350, wt: 68}, {name: "Wall Panel (L1)", def: 350, wt: 68}, {name: "Wall Panel (L2)", def: 280, wt: 48}, {name: "Wall Panel (L3)", def: 280, wt: 48}, {name: "Wall Panel (L4)", def: 220, wt: 26}, {name: "Partition Panel", def: 280, wt: 48}] },
         { category: "Cleat & Trusses", items: [{name: "Type A Cleat", def: 25, wt: 1.2}, {name: "Type B Cleat", def: 28, wt: 1.8}, {name: "Type C Cleat", def: 30, wt: 2.5}, {name: "Ø1\" Pipe", def: 12, wt: 1.6}, {name: "2\" x 2\" angle", def: 15, wt: 2.2}] },
         { category: "Angle Stay", items: [{name: "44 1/4\" (L1 Stay)", def: 45, wt: 4.5}, {name: "67\" (L2 Stay)", def: 65, wt: 7.2}, {name: "11' 3\" (L3 Stay)", def: 95, wt: 14.5}, {name: "15' 8.5\" (L4 Stay)", def: 125, wt: 19.8}] },
-        { category: "Fasteners", items: [{name: "M10 x 35mm HDG (Roof)", def: 1.20, wt: 0.10}, {name: "M12 x 45mm HDG (Wall & Base)", def: 1.50, wt: 0.15}, {name: "M16 x 50mm HDG (Stays & Cleats)", def: 2.50, wt: 0.25}] },
-        { category: "Accessories", items: [{name: "Ext. Ladder", def: 55, wt: 3.5, selectId: "extLadMat", options: ["HDG", "SS 304", "SS 316"]}, {name: "Int. Ladder", def: 75, wt: 3.5, selectId: "intLadMat", options: ["HDG", "SS 304", "SS 316"]}, {name: "Water Level Indicator", def: 220, wt: 2.5, selectId: "wliType", options: ["Ball Float", "Tube Type"]}, {name: "Air Vent", def: 85, wt: 1.5, selectId: "ventType", options: ["HDG Steel", "ABS Plastic"]}, {name: "Mastic Sealant (Rolls)", def: 38, wt: 0.8}] },
+        { category: "Accessories", items: [
+            {name: "Ext. Ladder", def: 55, wt: 3.5, selectId: "extLadMat", options: ["HDG", "SS 304", "SS 316"]}, 
+            {name: "Int. Ladder", def: 75, wt: 3.5, selectId: "intLadMat", options: ["HDG", "SS 304", "SS 316"]}, 
+            {name: "Water Level Indicator", def: 220, wt: 2.5, selectId: "wliType", options: ["Ball Float", "Tube Type"]}, 
+            {name: "Air Vent", def: 85, wt: 1.5, selectId: "ventType", options: ["HDG Steel", "ABS Plastic"]}, 
+            {name: "Mastic Sealant (Rolls)", def: 38, wt: 0.8},
+            {name: "M10 x 35mm HDG (Bolt, Nut & Washer)", def: 1.20, wt: 0.10}, 
+            {name: "M10 x 35mm SS304 (Bolt, Nut & Washer)", def: 3.50, wt: 0.10}, 
+            {name: "M12 x 45mm HDG (Bolt, Nut & Washer)", def: 1.50, wt: 0.15}, 
+            {name: "M12 x 45mm SS304 (Bolt, Nut & Washer)", def: 4.20, wt: 0.15}, 
+            {name: "M12 x 50mm HDG (Bolt, Nut & Washer)", def: 1.60, wt: 0.16}, 
+            {name: "M14 x 50mm HDG (Bolt, Nut & Washer)", def: 2.20, wt: 0.20}, 
+            {name: "M16 x 50mm HDG (Bolt, Nut & Washer)", def: 2.50, wt: 0.25}, 
+            {name: "M16 x 65mm HDG (Bolt, Nut & Washer)", def: 2.80, wt: 0.28}, 
+            {name: "M12 x 100mm Expansion Bolt (HDG)", def: 3.00, wt: 0.30}, 
+            {name: "M16 x 120mm Expansion Bolt (HDG)", def: 5.00, wt: 0.50}, 
+            {name: "PVC Bolt Head Cover (M12)", def: 0.20, wt: 0.01}, 
+            {name: "PVC Bolt Head Cover (M16)", def: 0.30, wt: 0.02}, 
+            {name: "M12 EPDM Rubber Washer", def: 0.40, wt: 0.01}
+        ]},
         { category: "Services", items: [{name: "Installation & Labor", def: 3500, wt: 0}, {name: "Transport", def: 850, wt: 0}] }
     ];
 
@@ -937,7 +955,6 @@
 
                 let walls = `L1 : ${t.tW1}`; if (H >= 2) walls += ` | L2 : ${t.tW2}`; if (H >= 3) walls += ` | L3 : ${t.tW3}`; if (H >= 4) walls += ` | L4 : ${t.tW4}`;
                 
-                // Flexible accessor to check if category exists to print safely
                 let accSec = t.bom.find(sec => sec.category.includes("Access"));
                 let extLadStr = accSec && accSec.items[0] && accSec.items[0].qty > 0 ? accSec.items[0].qty : 0;
                 let intLadStr = accSec && accSec.items[1] && accSec.items[1].qty > 0 ? accSec.items[1].qty : 0;
@@ -983,14 +1000,14 @@
                     if(cat.includes("access")) { 
                         bQ(sIdx,0,t.H); bQ(sIdx,1,t.H); bQ(sIdx,2,(u!=='ft')?t.H:1); bQ(sIdx,3,1); 
                         let sP=(u==='ft')?4.88:4.0; bQ(sIdx,4,Math.ceil(((r+b+s+pp)*sP)/15)); 
-                    }
-                    // V117: SMART FASTENER ENGINE
-                    if(cat.includes("fastener")) {
+                        
+                        // V118 SMART FASTENER ENGINE (Merged into Accessories)
                         sec.items.forEach((it, iIdx) => {
                             let n = it.name.toLowerCase();
-                            if(n.includes("m10") || n.includes("roof")) bQ(sIdx, iIdx, Math.ceil((r * 14) * 1.05));
-                            else if(n.includes("m12") || n.includes("wall") || n.includes("base")) bQ(sIdx, iIdx, Math.ceil((b + s + pp) * 16 * 1.05));
-                            else if(n.includes("m14") || n.includes("m16") || n.includes("stay")) {
+                            // Only auto-calc Standard HDG bolts so we don't accidentally double-charge for SS304.
+                            if (n === "m10 x 35mm hdg (bolt, nut & washer)") bQ(sIdx, iIdx, Math.ceil((r * 14) * 1.05));
+                            else if (n === "m12 x 45mm hdg (bolt, nut & washer)") bQ(sIdx, iIdx, Math.ceil((b + s + pp) * 16 * 1.05));
+                            else if (n === "m14 x 50mm hdg (bolt, nut & washer)") {
                                 let stayQty = (H>=1?pm:0) + (H>=2?pm:0) + (H>=3?pm:0) + (H>=4?pm*(H-3):0);
                                 bQ(sIdx, iIdx, Math.ceil(stayQty * 2.2));
                             }
@@ -1284,8 +1301,8 @@
     }
     function saveAdminDefaults() { localStorage.setItem('winkoMasterDefaults', JSON.stringify(systemBaseStructure)); alert("Master Structure Saved! The system will reload to apply changes globally."); location.reload(); }
 
-    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV117', JSON.stringify(d)); }
-    function loadPrices() { let s = localStorage.getItem('winkoProDataV117'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; setVal('sstPct', companyProfile.taxRate); setVal('fullTermsNotes', companyProfile.terms); } renderAllDynamicUI(); processTankData(); }
+    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV118', JSON.stringify(d)); }
+    function loadPrices() { let s = localStorage.getItem('winkoProDataV118'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; setVal('sstPct', companyProfile.taxRate); setVal('fullTermsNotes', companyProfile.terms); } renderAllDynamicUI(); processTankData(); }
 
     function printInternal() { document.body.className = 'print-internal'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => window.print(), 300); }
     function printCustomer() { document.body.className = 'print-customer'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => window.print(), 300); }
