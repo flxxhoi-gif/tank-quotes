@@ -161,11 +161,10 @@
         }
     </style>
     <script>
-        const cv = "V118";
+        const cv = "V119";
         if(localStorage.getItem("winkoAppVersion") !== cv) {
             localStorage.setItem("winkoAppVersion", cv);
-            for(let i=13; i<=117; i++) localStorage.removeItem("winkoProDataV" + i);
-            localStorage.removeItem('winkoMasterDefaults'); // Force reset BOM for V118 Accessories update
+            for(let i=13; i<=118; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
 
@@ -767,7 +766,6 @@
         reader.readAsText(file);
     }
 
-    // V118 UPDATE: Massive Fasteners Injection into Accessories
     let systemBaseStructure = [
         { category: "Panels", items: [{name: "Manhole Panel", def: 450, wt: 55}, {name: "Roof Panel", def: 220, wt: 26}, {name: "Base Panel", def: 350, wt: 68}, {name: "Wall Panel (L1)", def: 350, wt: 68}, {name: "Wall Panel (L2)", def: 280, wt: 48}, {name: "Wall Panel (L3)", def: 280, wt: 48}, {name: "Wall Panel (L4)", def: 220, wt: 26}, {name: "Partition Panel", def: 280, wt: 48}] },
         { category: "Cleat & Trusses", items: [{name: "Type A Cleat", def: 25, wt: 1.2}, {name: "Type B Cleat", def: 28, wt: 1.8}, {name: "Type C Cleat", def: 30, wt: 2.5}, {name: "Ø1\" Pipe", def: 12, wt: 1.6}, {name: "2\" x 2\" angle", def: 15, wt: 2.2}] },
@@ -1004,7 +1002,6 @@
                         // V118 SMART FASTENER ENGINE (Merged into Accessories)
                         sec.items.forEach((it, iIdx) => {
                             let n = it.name.toLowerCase();
-                            // Only auto-calc Standard HDG bolts so we don't accidentally double-charge for SS304.
                             if (n === "m10 x 35mm hdg (bolt, nut & washer)") bQ(sIdx, iIdx, Math.ceil((r * 14) * 1.05));
                             else if (n === "m12 x 45mm hdg (bolt, nut & washer)") bQ(sIdx, iIdx, Math.ceil((b + s + pp) * 16 * 1.05));
                             else if (n === "m14 x 50mm hdg (bolt, nut & washer)") {
@@ -1019,13 +1016,20 @@
                 t.bom.forEach((sec, sIdx) => sec.items.forEach((it, iIdx) => { 
                     let isSvc=(sec.category==="Services"); 
                     let qEl = document.getElementById(`t_${i}_q_${sIdx}_${iIdx}`);
-                    if(qEl && document.activeElement !== qEl && !isSvc) qEl.value = it.qty;
+                    // V119 BUG FIX: Force undefined/blank qty to 0 so math doesn't break
+                    if(qEl && document.activeElement !== qEl && !isSvc) qEl.value = it.qty || 0;
                     let nEl = document.getElementById(`t_${i}_n_${sIdx}_${iIdx}`);
                     if(nEl && document.activeElement !== nEl) nEl.value = it.name;
 
-                    let calcQty=isSvc?1:it.qty; let lTot=calcQty*(it.def||0); 
-                    t.baseCost+=lTot; t.weight+=isSvc?0:(calcQty*(it.wt||0));
-                    let te=document.getElementById(`tot_${i}_${sIdx}_${iIdx}`); if(te) te.innerText=lTot.toLocaleString('en-MY',{minimumFractionDigits:2});
+                    // V119 BUG FIX: Ensure calculation treats empty manual items as 0
+                    let calcQty = isSvc ? 1 : (parseFloat(it.qty) || 0); 
+                    let lTot = calcQty * (parseFloat(it.def) || 0); 
+                    
+                    t.baseCost += lTot; 
+                    t.weight += isSvc ? 0 : (calcQty * (parseFloat(it.wt) || 0));
+                    
+                    let te=document.getElementById(`tot_${i}_${sIdx}_${iIdx}`); 
+                    if(te) te.innerText=lTot.toLocaleString('en-MY',{minimumFractionDigits:2});
                 }));
                 totalW+=t.weight; totalBase+=t.baseCost;
             });
@@ -1301,8 +1305,8 @@
     }
     function saveAdminDefaults() { localStorage.setItem('winkoMasterDefaults', JSON.stringify(systemBaseStructure)); alert("Master Structure Saved! The system will reload to apply changes globally."); location.reload(); }
 
-    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV118', JSON.stringify(d)); }
-    function loadPrices() { let s = localStorage.getItem('winkoProDataV118'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; setVal('sstPct', companyProfile.taxRate); setVal('fullTermsNotes', companyProfile.terms); } renderAllDynamicUI(); processTankData(); }
+    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV119', JSON.stringify(d)); }
+    function loadPrices() { let s = localStorage.getItem('winkoProDataV119'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; setVal('sstPct', companyProfile.taxRate); setVal('fullTermsNotes', companyProfile.terms); } renderAllDynamicUI(); processTankData(); }
 
     function printInternal() { document.body.className = 'print-internal'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => window.print(), 300); }
     function printCustomer() { document.body.className = 'print-customer'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => window.print(), 300); }
