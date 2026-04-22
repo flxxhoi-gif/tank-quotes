@@ -7,8 +7,6 @@
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://unpkg.com/html5-qrcode"></script>
 
     <style>
         * { box-sizing: border-box; font-family: system-ui, sans-serif; }
@@ -36,8 +34,8 @@
         .cloud-indicator { width: 10px; height: 10px; border-radius: 50%; background: #64748b; display: inline-block; }
         .cloud-indicator.online { background: #10b981; box-shadow: 0 0 8px #10b981; }
         
-        #mainContent, #adminContent, #inventoryContent, #customerPreviewContainer, #projectsContent { display: none; padding: 20px; }
-        #checklistPrintView, #poPrintView, .print-only, .internal-only-tag { display: none; }
+        #mainContent, #adminContent, #customerPreviewContainer, #projectsContent { display: none; padding: 20px; }
+        #checklistPrintView, .print-only, .internal-only-tag { display: none; }
         
         .container { max-width: 1500px; margin: auto; }
         .app-header-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #cbd5e1; padding-bottom: 10px; margin-bottom: 20px; }
@@ -97,13 +95,6 @@
         
         .tank-section-title { background: #e2e8f0; padding: 5px 10px; border-radius: 4px; font-weight: 800; color: #0f172a; margin-bottom: 8px; font-size: 0.85em; text-transform: uppercase; border-left: 4px solid #3b82f6; display:flex; justify-content:space-between; align-items:center; }
         
-        /* INVENTORY STYLES */
-        .inv-status { padding: 3px 6px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
-        .inv-ok { background: #dcfce7; color: #059669; } .inv-low { background: #fef9c3; color: #d97706; } .inv-out { background: #fee2e2; color: #e11d48; }
-        .inv-input { width: 100%; max-width: 100px; padding: 8px; border: 2px solid #cbd5e1; border-radius: 4px; font-weight: 800; text-align: center; font-size: 14px; }
-        .stock-btn { background: #e2e8f0; color: #0f172a; border: 1px solid #cbd5e1; padding: 6px 12px; font-weight: 900; font-size: 16px; cursor: pointer; border-radius: 4px; transition: 0.2s;}
-        .stock-btn:hover { background: #cbd5e1; }
-        
         .admin-table { width: 100%; border-collapse: collapse; background: white; color: #0f172a; border-radius: 8px;}
         .admin-table th { background: #334155; color: white; padding: 12px; font-size: 0.85em; text-transform: uppercase;}
         .admin-table td { border-color: #e2e8f0; padding: 8px; border-bottom: 1px solid #cbd5e1;}
@@ -137,7 +128,7 @@
             body.print-internal .view-title, body.print-checklist .view-title { font-size: 14pt !important; margin-bottom: 10px !important; font-weight: 900 !important; text-decoration: underline; color: #000 !important;}
 
             body.print-internal #mainContent { display: block !important; }
-            body.print-internal #customerPreviewContainer, body.print-internal #checklistPrintView, body.print-internal .col-right, body.print-internal #poPrintView { display: none !important; }
+            body.print-internal #customerPreviewContainer, body.print-internal #checklistPrintView, body.print-internal .col-right { display: none !important; }
             body.print-internal .app-layout, body.print-internal .col-left { display: block !important; width: 100% !important; }
             body.print-internal .module-card { border: none !important; padding: 0 !important; margin-bottom: 15px !important; box-shadow: none !important; }
             body.print-internal .card-header, body.print-internal .card-body { display: block !important; }
@@ -153,38 +144,27 @@
             body.print-internal .summary-box { background: #fff !important; border: 2.5px solid #0f172a !important; border-radius: 8px !important; padding: 0 !important; width: 40% !important; float: right !important;}
             body.print-internal .drawings-page { page-break-before: always !important; padding-top: 20px !important; clear: both !important;}
 
-            body.print-customer #mainContent, body.print-customer #inventoryContent, body.print-customer #adminContent, body.print-customer #poPrintView { display: none !important; }
+            body.print-customer #mainContent, body.print-customer #adminContent { display: none !important; }
             body.print-customer #customerPreviewContainer { display: block !important; padding: 0 !important; background: none !important; }
             body.print-customer #customerPrintViewEditor { max-width: none !important; padding: 0 !important; margin: 0 !important; }
             .cp-table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 10px; font-size: 8.5pt; border: 2px solid #000; }
             .cp-table th, .cp-table td { border: 1px solid #000; padding: 6px !important; vertical-align: top;}
             .cp-table th { background: #d1d5db !important; font-weight: bold; text-align: center;}
 
-            body.print-checklist #mainContent, body.print-checklist #customerPreviewContainer, body.print-checklist #poPrintView { display: none !important; }
+            body.print-checklist #mainContent, body.print-checklist #customerPreviewContainer { display: none !important; }
             body.print-checklist #checklistPrintView { display: block !important; font-size: 9.5pt; padding: 0; }
             .chk-box { display: inline-block; width: 12px; height: 12px; border: 1px solid #000; text-align: center; line-height: 12px; margin-right: 4px; font-weight:bold;}
-            
-            body.print-qr * { visibility: hidden; }
-            body.print-qr #qrModal, body.print-qr #qrModal * { visibility: visible; }
-            body.print-qr #qrModal { position: absolute; left: 0; top: 0; background: white; color: black; display: flex; align-items: flex-start; justify-content: flex-start; width: 100%; height: 100%; }
-            body.print-qr #qrModalInner { padding: 20px; text-align: left; max-width: none; width: auto; border: none; }
-            body.print-qr .action-btn { display: none !important; }
-
-            /* PO PRINT STYLES */
-            body.print-po #mainContent, body.print-po #inventoryContent, body.print-po #adminContent, body.print-po #topNav { display: none !important; }
-            body.print-po #poPrintView { display: block !important; padding: 20px; background: white; color: black; }
-            body.print-po .cp-table th { background: #e2e8f0 !important; }
         }
     </style>
     <script>
-        const cv = "V126";
+        const cv = "V128";
         if(localStorage.getItem("winkoAppVersion") !== cv) {
             localStorage.setItem("winkoAppVersion", cv);
-            for(let i=13; i<=125; i++) localStorage.removeItem("winkoProDataV" + i);
+            for(let i=13; i<=127; i++) localStorage.removeItem("winkoProDataV" + i);
             window.location.reload(true);
         }
 
-        // --- CORE SYSTEM HELPERS (RESTORED!) ---
+        // --- CORE SYSTEM HELPERS ---
         const getVal = (id) => { let e = document.getElementById(id); return e ? e.value : ''; };
         const getNum = (id) => { let v = parseFloat(getVal(id)); return isNaN(v) ? 0 : v; };
         const setTxt = (id, v) => { let e = document.getElementById(id); if(e) e.innerText = v; };
@@ -260,21 +240,7 @@
         <button class="nav-btn active" id="btnTabQuote" onclick="switchTab('quote')">📝 Workspace</button>
         <button class="nav-btn" id="btnTabProjects" onclick="switchTab('projects')">📂 Project Bank</button>
         <button class="nav-btn" id="btnTabPreview" onclick="switchTab('preview')">📄 Edit Quote PDF</button>
-        <button class="nav-btn" id="btnTabInv" onclick="switchTab('inventory')">📦 Inventory</button>
         <button class="nav-btn" id="btnTabAdmin" onclick="switchTab('admin')">⚙️ Master Control</button>
-    </div>
-</div>
-
-<div id="qrModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:10001; justify-content:center; align-items:center;">
-    <div id="qrModalInner" style="background:white; padding:30px; border-radius:12px; text-align:center; max-width:400px; width:90%; border: 2px solid #cbd5e1;">
-        <h3 style="margin-top:0; font-size:18px; text-transform:uppercase; color:#0f172a;">Warehouse Bin Label</h3>
-        <p id="qrModalDesc" style="font-weight:900; font-size:16px; color:#ea580c; border-bottom:2px dashed #cbd5e1; padding-bottom:10px;"></p>
-        <div id="qrcodeBox" style="margin:20px auto; width:250px; height:250px; display:flex; justify-content:center;"></div>
-        <p style="font-size:10px; color:#64748b;">Scan to access Winko Stock Interface</p>
-        <div style="display:flex; gap:10px; justify-content:center; margin-top:20px;" class="no-print">
-            <button class="action-btn" style="background:#64748b;" onclick="document.getElementById('qrModal').style.display='none'">Close</button>
-            <button class="action-btn print-btn" onclick="printQR()">🖨️ Print Label</button>
-        </div>
     </div>
 </div>
 
@@ -383,34 +349,6 @@
         </div>
     </div>
 </div></div>
-
-<div id="inventoryContent"><div class="container"><div class="module-card">
-    <div class="card-header">
-        <span>📦</span> Live Warehouse Management
-        <div style="display:flex; gap:10px;">
-            <button class="action-btn print-btn" style="width:auto; padding: 8px 15px; background:#0ea5e9; font-size:12px;" onclick="addCustomInventoryItem()">➕ Add Custom Item</button>
-            <button class="action-btn print-btn" style="width:auto; padding: 8px 15px; background:#8b5cf6; font-size:12px;" onclick="printRestockPO()">📄 Print Restock PO</button>
-        </div>
-    </div>
-    <div class="card-body">
-        <p style="font-size:13px; color:#64748b;">Use the Phone Scanner to instantly deduct stock via QR, or add standalone items to the warehouse list. <strong>All actions automatically sync to the Cloud.</strong></p>
-        
-        <div style="margin-bottom: 15px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-            <input type="text" id="invSearchBox" placeholder="🔍 Search Item Description..." style="padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; width: 100%; max-width: 300px; font-weight:bold;" onkeyup="filterInventory()">
-            <button class="action-btn" style="width:auto; padding: 10px 15px; background: #3b82f6;" onclick="startCameraScanner()">📷 Scan QR to Deduct</button>
-            <button class="action-btn" style="width:auto; padding: 10px 15px; background: #ef4444; display: none;" id="stopScanBtn" onclick="stopCameraScanner()">Stop Camera</button>
-        </div>
-        
-        <div id="qr-reader" style="width: 100%; max-width: 400px; margin-bottom: 15px; display: none; border: 2px solid #3b82f6; border-radius: 8px; overflow: hidden;"></div>
-
-        <table class="admin-table">
-            <thead>
-                <tr><th style="width:35%;">Item Name</th><th class="text-center" style="width:25%;">Current Stock (Auto-Save)</th><th class="text-center" style="width:10%;">Low Alert</th><th class="text-center" style="width:15%;">Base Price (RM)</th><th class="text-center" style="width:15%;">Actions</th></tr>
-            </thead>
-            <tbody id="invBody"></tbody>
-        </table>
-    </div>
-</div></div></div>
 
 <div id="mainContent">
     <div class="container">
@@ -698,27 +636,15 @@
     </div>
 </div>
 
-<div id="poPrintView">
-    <div style="text-align:center; margin-bottom: 30px;">
-        <h2 style="margin:0; font-size:20pt; text-transform:uppercase;">Warehouse Restock Report</h2>
-        <p style="margin:5px 0 0 0; font-size:12pt; color:#475569;">Generated on: <strong id="poDate"></strong></p>
-    </div>
-    <div id="poTableContainer"></div>
-    <div style="margin-top: 50px; display:flex; justify-content:space-between; font-size:10pt;">
-        <div style="width:40%; border-top:1px solid #000; padding-top:5px; font-weight:bold;">Requested By (Warehouse Manager)</div>
-        <div style="width:40%; border-top:1px solid #000; padding-top:5px; font-weight:bold;">Approved By (Director)</div>
-    </div>
-</div>
-
 <script>
-    const cv = "V126";
+    const cv = "V128";
     if(localStorage.getItem("winkoAppVersion") !== cv) {
         localStorage.setItem("winkoAppVersion", cv);
-        for(let i=13; i<=125; i++) localStorage.removeItem("winkoProDataV" + i);
+        for(let i=13; i<=127; i++) localStorage.removeItem("winkoProDataV" + i);
         window.location.reload(true);
     }
 
-    // --- CORE SYSTEM HELPERS (RESTORED IN V126!) ---
+    // --- CORE SYSTEM HELPERS ---
     const getVal = (id) => { let e = document.getElementById(id); return e ? e.value : ''; };
     const getNum = (id) => { let v = parseFloat(getVal(id)); return isNaN(v) ? 0 : v; };
     const setTxt = (id, v) => { let e = document.getElementById(id); if(e) e.innerText = v; };
@@ -727,7 +653,7 @@
     const setDisp = (id, show) => { let e = document.getElementById(id); if(e) e.style.display = show ? 'block' : 'none'; };
     const setBox = (id, show) => { let e = document.getElementById(id); if(e) e.innerHTML = show ? '&#10003;' : '&nbsp;'; };
 
-    // --- ☁️ FIREBASE CLOUD SYNC SETUP V126 ---
+    // --- ☁️ FIREBASE CLOUD SYNC SETUP ---
     const FIREBASE_CONFIG = {
         apiKey: "AIzaSyC4ypeNoU9D_gFxjaDSZA11PJrqh4sOdbM",
         authDomain: "winko-erp.firebaseapp.com",
@@ -762,17 +688,10 @@
         terms: "Scope of Supply\n1. Standard tank accessories such as bolt, nut, washer, foam tape, air vent, 600x600mm access manhole, internal stays & brackets, internal & external ladder, water level indicator, subject to manufacturer's design and standard and item mentioned in quotation.\n2. Pipe hole opening at factory (Exclude flange). Pipe hole opening on site will be an additional charge.\n\nExcluded from the Supply\n1. Float valve chamber or top sump.\n2. Flanges, nozzles, pipes, valves, vortex, electrode sensor, pumps and filter.\n3. RC works and RC plinths.\n4. Scaffolding & safety platform for installation.\n5. Unloading, shifting and hoisting of materials at site.\n6. Safety training courses, equipment and medical test require to install tank.\n\nNote:\n1. Tank design to sit on 1M Center to center RC tank support/Plinths with at least 500mm height and 200mm width. Design to be provided by others.\n2. RC plinths MUST be level with maximum tolerance of ± 3mm.\n3. Leak test should be done within 3 months from completion of tank installation to maintain the quality of foam tape.\n4. The customer shall be responsible for the security of materials at site after delivery. Missing item shall be replaced with additional charges."
     };
     
-    let winkoInventory = {}; 
     let systemBaseStructure = [];
 
     function initCloudListeners() {
         if (!cloudDB) return;
-        
-        cloudDB.collection("winko_inventory").onSnapshot(snapshot => {
-            snapshot.forEach(doc => { winkoInventory[doc.id] = doc.data(); });
-            localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory));
-            if(document.getElementById('inventoryContent').style.display === 'block') renderInventoryTable();
-        });
         
         cloudDB.collection("winko_settings").doc("master_bom").onSnapshot(doc => {
             if(doc.exists) { 
@@ -830,7 +749,6 @@
         }
         
         try { winkoCustomers = JSON.parse(localStorage.getItem('winkoCustomersDB')) || {}; } catch(e) { winkoCustomers = {}; }
-        try { winkoInventory = JSON.parse(localStorage.getItem('winkoInventoryDB')) || {}; } catch(e) { winkoInventory = {}; }
         
         systemBaseStructure = [
             { category: "Panels", items: [{name: "Manhole Panel", def: 450, wt: 55}, {name: "Roof Panel", def: 220, wt: 26}, {name: "Base Panel", def: 350, wt: 68}, {name: "Wall Panel (L1)", def: 350, wt: 68}, {name: "Wall Panel (L2)", def: 280, wt: 48}, {name: "Wall Panel (L3)", def: 280, wt: 48}, {name: "Wall Panel (L4)", def: 220, wt: 26}, {name: "Partition Panel", def: 280, wt: 48}] },
@@ -932,7 +850,6 @@
                     setVal('fullTermsNotes', companyProfile.terms); 
                 }
                 
-                initInventory(); 
                 loadPrices(); 
                 renderProjectBank(); 
                 renderCustomerAdmin(); 
@@ -1000,7 +917,7 @@
     function restoreSystem(event) {
         let file = event.target.files[0];
         if (!file) return;
-        if (!confirm("⚠️ WARNING: Restoring a backup will overwrite ALL current data (Quotes, Inventory, Users, Settings). Are you absolutely sure?")) {
+        if (!confirm("⚠️ WARNING: Restoring a backup will overwrite ALL current data (Quotes, Users, Settings). Are you absolutely sure?")) {
             event.target.value = ''; 
             return;
         }
@@ -1075,11 +992,10 @@
     function safeProcess() { processTankData(); savePrices(); }
 
     function switchTab(tabId) {
-        setDisp('mainContent', false); setDisp('inventoryContent', false); setDisp('adminContent', false); setDisp('customerPreviewContainer', false); setDisp('projectsContent', false);
-        ['btnTabQuote', 'btnTabInv', 'btnTabAdmin', 'btnTabPreview', 'btnTabProjects'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).classList.remove('active'); });
+        setDisp('mainContent', false); setDisp('adminContent', false); setDisp('customerPreviewContainer', false); setDisp('projectsContent', false);
+        ['btnTabQuote', 'btnTabAdmin', 'btnTabPreview', 'btnTabProjects'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).classList.remove('active'); });
         if(tabId === 'quote') { setDisp('mainContent', true); document.getElementById('btnTabQuote').classList.add('active'); }
         else if(tabId === 'preview') { syncPrintHeader(window.currentUnit||'ft'); document.getElementById('customerPreviewContainer').style.display='flex'; document.getElementById('btnTabPreview').classList.add('active'); }
-        else if(tabId === 'inventory') { setDisp('inventoryContent', true); document.getElementById('btnTabInv').classList.add('active'); renderInventoryTable(); }
         else if(tabId === 'admin') { setDisp('adminContent', true); document.getElementById('btnTabAdmin').classList.add('active'); buildAdminTable(); renderCustomerAdmin(); }
         else if(tabId === 'projects') { setDisp('projectsContent', true); document.getElementById('btnTabProjects').classList.add('active'); renderProjectBank(); }
     }
@@ -1519,15 +1435,15 @@
         location.reload(); 
     }
 
-    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV126', JSON.stringify(d)); }
-    function loadPrices() { let s = localStorage.getItem('winkoProDataV126'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; setVal('sstPct', companyProfile.taxRate); setVal('fullTermsNotes', companyProfile.terms); } renderAllDynamicUI(); processTankData(); }
+    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV128', JSON.stringify(d)); }
+    function loadPrices() { let s = localStorage.getItem('winkoProDataV128'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; setVal('sstPct', companyProfile.taxRate); setVal('fullTermsNotes', companyProfile.terms); } renderAllDynamicUI(); processTankData(); }
 
     function printInternal() { document.body.className = 'print-internal'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => window.print(), 300); }
     function printCustomer() { document.body.className = 'print-customer'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => window.print(), 300); }
     function printCustomerFromPreview() { document.body.className = 'print-customer'; setTimeout(() => window.print(), 300); }
     function printChecklist() { document.body.className = 'print-checklist'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => { window.print(); }, 300); }
 
-    window.addEventListener('afterprint', () => { document.body.className = ''; document.getElementById('qrModal').style.display='none';});
+    window.addEventListener('afterprint', () => { document.body.className = ''; });
     setInterval(() => { let d = new Date(); let s = d.toLocaleDateString('en-MY').replace(/\//g, '-'); setTxt('liveClock', s + " " + d.toLocaleTimeString('en-MY')); setTxt('metaDate', s); setTxt('cpDate', s); }, 1000);
 
     function exportCSV() {
@@ -1536,74 +1452,8 @@
         appTanks.forEach((t, i) => { csv += `TANK ${i+1}\nCategory,Description,Qty,Wt,Price,Total\n`; t.bom.forEach((s) => s.items.forEach((it) => { let q = (s.category==="Services")?1:it.qty; if(q>0) csv += `"${s.category}","${it.name}",${q},${it.wt},${it.def},${(q*(it.def||0))}\n`; })); });
         const a = document.createElement('a'); a.href = window.URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' })); a.download = `Winko_Quote_${getVal('quoteIdInput')}.csv`; document.body.appendChild(a); a.click(); document.body.removeChild(a);
     }
-    // --- V127 RESTORED MISSING MODULES ---
     
-    // 1. INVENTORY MODULE
-    function initInventory() {
-        if(Object.keys(winkoInventory).length === 0) {
-            systemBaseStructure.forEach(sec => sec.items.forEach(it => {
-                if(it.name) winkoInventory[it.name] = { stock: 0, alert: 5, price: it.def || 0 };
-            }));
-            localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory));
-        }
-        renderInventoryTable();
-    }
-
-    function renderInventoryTable() {
-        let filter = getVal('invSearchBox').toLowerCase();
-        let h = '';
-        Object.keys(winkoInventory).sort().forEach(k => {
-            if(filter && !k.toLowerCase().includes(filter)) return;
-            let d = winkoInventory[k];
-            let status = d.stock <= 0 ? 'inv-out' : (d.stock <= d.alert ? 'inv-low' : 'inv-ok');
-            let safeK = encodeURIComponent(k);
-            h += `<tr>
-                <td><strong>${k}</strong></td>
-                <td class="text-center">
-                    <button class="stock-btn" onclick="updateStock('${safeK}', -1)">-</button>
-                    <input type="number" class="inv-input" value="${d.stock}" onchange="setStock('${safeK}', this.value)">
-                    <button class="stock-btn" onclick="updateStock('${safeK}', 1)">+</button>
-                </td>
-                <td class="text-center"><input type="number" class="admin-input" style="width:60px;" value="${d.alert}" onchange="updateInvAlert('${safeK}', this.value)"></td>
-                <td class="text-center">RM ${parseFloat(d.price||0).toFixed(2)}</td>
-                <td class="text-center"><button class="action-btn" style="padding:4px 8px; width:auto; display:inline;" onclick="showQR('${safeK}')">QR</button></td>
-            </tr>`;
-        });
-        setHtml('invBody', h);
-    }
-
-    function updateStock(safeK, amt) { let k = decodeURIComponent(safeK); winkoInventory[k].stock += amt; saveInv(); }
-    function setStock(safeK, val) { let k = decodeURIComponent(safeK); winkoInventory[k].stock = parseInt(val)||0; saveInv(); }
-    function updateInvAlert(safeK, val) { let k = decodeURIComponent(safeK); winkoInventory[k].alert = parseInt(val)||0; saveInv(); }
-    function saveInv() { 
-        localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory)); 
-        if(cloudDB) cloudDB.collection("winko_inventory").doc("data").set(winkoInventory); 
-        renderInventoryTable(); 
-    }
-    function filterInventory() { renderInventoryTable(); }
-
-    function addCustomInventoryItem() {
-        let name = prompt("Enter new inventory item name:");
-        if(name && !winkoInventory[name]) {
-            winkoInventory[name] = { stock: 0, alert: 5, price: 0 };
-            saveInv();
-        }
-    }
-
-    // 2. QR & CAMERA SCANNER MODULE
-    function showQR(safeK) {
-        let k = decodeURIComponent(safeK);
-        setTxt('qrModalDesc', k);
-        setHtml('qrcodeBox', '');
-        new QRCode(document.getElementById("qrcodeBox"), { text: "WINKO_INV:" + k, width: 200, height: 200 });
-        setDisp('qrModal', true);
-    }
-    function printQR() { document.body.className = 'print-qr'; window.print(); }
-    function startCameraScanner() { showToast("Camera scanner connecting...", "info"); }
-    function stopCameraScanner() { setDisp('qr-reader', false); setDisp('stopScanBtn', false); }
-    function printRestockPO() { document.body.className = 'print-po'; window.print(); }
-
-    // 3. USER MANAGEMENT MODULE
+    // --- USER MANAGEMENT MODULE ---
     function renderUserTable() {
         let h = '';
         winkoUsers.forEach((u, i) => {
