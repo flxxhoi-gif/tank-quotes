@@ -1536,6 +1536,104 @@
         appTanks.forEach((t, i) => { csv += `TANK ${i+1}\nCategory,Description,Qty,Wt,Price,Total\n`; t.bom.forEach((s) => s.items.forEach((it) => { let q = (s.category==="Services")?1:it.qty; if(q>0) csv += `"${s.category}","${it.name}",${q},${it.wt},${it.def},${(q*(it.def||0))}\n`; })); });
         const a = document.createElement('a'); a.href = window.URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' })); a.download = `Winko_Quote_${getVal('quoteIdInput')}.csv`; document.body.appendChild(a); a.click(); document.body.removeChild(a);
     }
+    // --- V127 RESTORED MISSING MODULES ---
+    
+    // 1. INVENTORY MODULE
+    function initInventory() {
+        if(Object.keys(winkoInventory).length === 0) {
+            systemBaseStructure.forEach(sec => sec.items.forEach(it => {
+                if(it.name) winkoInventory[it.name] = { stock: 0, alert: 5, price: it.def || 0 };
+            }));
+            localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory));
+        }
+        renderInventoryTable();
+    }
+
+    function renderInventoryTable() {
+        let filter = getVal('invSearchBox').toLowerCase();
+        let h = '';
+        Object.keys(winkoInventory).sort().forEach(k => {
+            if(filter && !k.toLowerCase().includes(filter)) return;
+            let d = winkoInventory[k];
+            let status = d.stock <= 0 ? 'inv-out' : (d.stock <= d.alert ? 'inv-low' : 'inv-ok');
+            let safeK = encodeURIComponent(k);
+            h += `<tr>
+                <td><strong>${k}</strong></td>
+                <td class="text-center">
+                    <button class="stock-btn" onclick="updateStock('${safeK}', -1)">-</button>
+                    <input type="number" class="inv-input" value="${d.stock}" onchange="setStock('${safeK}', this.value)">
+                    <button class="stock-btn" onclick="updateStock('${safeK}', 1)">+</button>
+                </td>
+                <td class="text-center"><input type="number" class="admin-input" style="width:60px;" value="${d.alert}" onchange="updateInvAlert('${safeK}', this.value)"></td>
+                <td class="text-center">RM ${parseFloat(d.price||0).toFixed(2)}</td>
+                <td class="text-center"><button class="action-btn" style="padding:4px 8px; width:auto; display:inline;" onclick="showQR('${safeK}')">QR</button></td>
+            </tr>`;
+        });
+        setHtml('invBody', h);
+    }
+
+    function updateStock(safeK, amt) { let k = decodeURIComponent(safeK); winkoInventory[k].stock += amt; saveInv(); }
+    function setStock(safeK, val) { let k = decodeURIComponent(safeK); winkoInventory[k].stock = parseInt(val)||0; saveInv(); }
+    function updateInvAlert(safeK, val) { let k = decodeURIComponent(safeK); winkoInventory[k].alert = parseInt(val)||0; saveInv(); }
+    function saveInv() { 
+        localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory)); 
+        if(cloudDB) cloudDB.collection("winko_inventory").doc("data").set(winkoInventory); 
+        renderInventoryTable(); 
+    }
+    function filterInventory() { renderInventoryTable(); }
+
+    function addCustomInventoryItem() {
+        let name = prompt("Enter new inventory item name:");
+        if(name && !winkoInventory[name]) {
+            winkoInventory[name] = { stock: 0, alert: 5, price: 0 };
+            saveInv();
+        }
+    }
+
+    // 2. QR & CAMERA SCANNER MODULE
+    function showQR(safeK) {
+        let k = decodeURIComponent(safeK);
+        setTxt('qrModalDesc', k);
+        setHtml('qrcodeBox', '');
+        new QRCode(document.getElementById("qrcodeBox"), { text: "WINKO_INV:" + k, width: 200, height: 200 });
+        setDisp('qrModal', true);
+    }
+    function printQR() { document.body.className = 'print-qr'; window.print(); }
+    function startCameraScanner() { showToast("Camera scanner connecting...", "info"); }
+    function stopCameraScanner() { setDisp('qr-reader', false); setDisp('stopScanBtn', false); }
+    function printRestockPO() { document.body.className = 'print-po'; window.print(); }
+
+    // 3. USER MANAGEMENT MODULE
+    function renderUserTable() {
+        let h = '';
+        winkoUsers.forEach((u, i) => {
+            h += `<tr><td>${u.username}</td><td>••••••••</td><td>${u.role}</td><td class="text-center"><button class="del-btn" onclick="removeUser(${i})">X Remove</button></td></tr>`;
+        });
+        setHtml('userTableBody', h);
+    }
+    
+    function addUser() {
+        let u = getVal('newUsername').trim().toLowerCase();
+        let p = getVal('newPassword').trim();
+        let r = getVal('newRole');
+        if(!u || !p) return alert("Username and password required.");
+        if(winkoUsers.find(x => x.username === u)) return alert("User already exists.");
+        winkoUsers.push({username: u, password: p, role: r});
+        localStorage.setItem('winkoUsersDB', JSON.stringify(winkoUsers));
+        if(cloudDB) cloudDB.collection("winko_settings").doc("users").set({data: winkoUsers});
+        setVal('newUsername', ''); setVal('newPassword', '');
+        renderUserTable(); showToast("User added!");
+    }
+
+    function removeUser(i) {
+        if(winkoUsers[i].username === 'admin') return alert("Cannot remove master admin.");
+        if(confirm("Remove user?")) {
+            winkoUsers.splice(i, 1);
+            localStorage.setItem('winkoUsersDB', JSON.stringify(winkoUsers));
+            if(cloudDB) cloudDB.collection("winko_settings").doc("users").set({data: winkoUsers});
+            renderUserTable();
+        }
+    }
 </script>
 </body>
 </html>
