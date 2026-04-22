@@ -156,60 +156,6 @@
             .chk-box { display: inline-block; width: 12px; height: 12px; border: 1px solid #000; text-align: center; line-height: 12px; margin-right: 4px; font-weight:bold;}
         }
     </style>
-    <script>
-        const cv = "V128";
-        if(localStorage.getItem("winkoAppVersion") !== cv) {
-            localStorage.setItem("winkoAppVersion", cv);
-            for(let i=13; i<=127; i++) localStorage.removeItem("winkoProDataV" + i);
-            window.location.reload(true);
-        }
-
-        // --- CORE SYSTEM HELPERS ---
-        const getVal = (id) => { let e = document.getElementById(id); return e ? e.value : ''; };
-        const getNum = (id) => { let v = parseFloat(getVal(id)); return isNaN(v) ? 0 : v; };
-        const setTxt = (id, v) => { let e = document.getElementById(id); if(e) e.innerText = v; };
-        const setVal = (id, v) => { let e = document.getElementById(id); if(e) e.value = v; };
-        const setHtml = (id, v) => { let e = document.getElementById(id); if(e) e.innerHTML = v; };
-        const setDisp = (id, show) => { let e = document.getElementById(id); if(e) e.style.display = show ? 'block' : 'none'; };
-        const setBox = (id, show) => { let e = document.getElementById(id); if(e) e.innerHTML = show ? '&#10003;' : '&nbsp;'; };
-
-        // --- ☁️ FIREBASE CLOUD SYNC SETUP ---
-        const FIREBASE_CONFIG = {
-            apiKey: "AIzaSyC4ypeNoU9D_gFxjaDSZA11PJrqh4sOdbM",
-            authDomain: "winko-erp.firebaseapp.com",
-            databaseURL: "https://winko-erp-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "winko-erp",
-            storageBucket: "winko-erp.firebasestorage.app",
-            messagingSenderId: "867891901683",
-            appId: "1:867891901683:web:a38bfd4c0715fcddbf3386",
-            measurementId: "G-253EENMY5N"
-        };
-
-        let cloudDB = null;
-        if(FIREBASE_CONFIG.apiKey !== "") {
-            firebase.initializeApp(FIREBASE_CONFIG);
-            cloudDB = firebase.firestore();
-            console.log("☁️ Winko ERP Cloud Sync Activated!");
-        } else {
-            console.log("🖥️ Winko ERP running in Local Offline Mode.");
-        }
-        
-        function showToast(message, type = 'success') {
-            let tc = document.getElementById('toast-container');
-            if(!tc) { tc = document.createElement('div'); tc.id = 'toast-container'; document.body.appendChild(tc); }
-            let toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            let icon = type === 'success' ? '✅' : (type === 'error' ? '❌' : 'ℹ️');
-            toast.innerHTML = `<div>${icon} &nbsp; ${message}</div> <button style="background:none; border:none; color:white; cursor:pointer; font-weight:bold; font-size:16px;" onclick="this.parentElement.remove()">×</button>`;
-            tc.appendChild(toast);
-            setTimeout(() => { toast.style.animation = 'fadeOut 0.5s ease forwards'; setTimeout(() => toast.remove(), 500); }, 3500);
-        }
-        
-        function togglePass(id) {
-            let el = document.getElementById(id);
-            if(el) { el.type = el.type === "password" ? "text" : "password"; }
-        }
-    </script>
 </head>
 <body>
 
@@ -637,10 +583,10 @@
 </div>
 
 <script>
-    const cv = "V128";
+    const cv = "V129";
     if(localStorage.getItem("winkoAppVersion") !== cv) {
         localStorage.setItem("winkoAppVersion", cv);
-        for(let i=13; i<=127; i++) localStorage.removeItem("winkoProDataV" + i);
+        for(let i=13; i<=128; i++) localStorage.removeItem("winkoProDataV" + i);
         window.location.reload(true);
     }
 
@@ -652,6 +598,22 @@
     const setHtml = (id, v) => { let e = document.getElementById(id); if(e) e.innerHTML = v; };
     const setDisp = (id, show) => { let e = document.getElementById(id); if(e) e.style.display = show ? 'block' : 'none'; };
     const setBox = (id, show) => { let e = document.getElementById(id); if(e) e.innerHTML = show ? '&#10003;' : '&nbsp;'; };
+
+    function showToast(message, type = 'success') {
+        let tc = document.getElementById('toast-container');
+        if(!tc) { tc = document.createElement('div'); tc.id = 'toast-container'; document.body.appendChild(tc); }
+        let toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        let icon = type === 'success' ? '✅' : (type === 'error' ? '❌' : 'ℹ️');
+        toast.innerHTML = `<div>${icon} &nbsp; ${message}</div> <button style="background:none; border:none; color:white; cursor:pointer; font-weight:bold; font-size:16px;" onclick="this.parentElement.remove()">×</button>`;
+        tc.appendChild(toast);
+        setTimeout(() => { toast.style.animation = 'fadeOut 0.5s ease forwards'; setTimeout(() => toast.remove(), 500); }, 3500);
+    }
+    
+    function togglePass(id) {
+        let el = document.getElementById(id);
+        if(el) { el.type = el.type === "password" ? "text" : "password"; }
+    }
 
     // --- ☁️ FIREBASE CLOUD SYNC SETUP ---
     const FIREBASE_CONFIG = {
@@ -1435,8 +1397,8 @@
         location.reload(); 
     }
 
-    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV128', JSON.stringify(d)); }
-    function loadPrices() { let s = localStorage.getItem('winkoProDataV128'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; setVal('sstPct', companyProfile.taxRate); setVal('fullTermsNotes', companyProfile.terms); } renderAllDynamicUI(); processTankData(); }
+    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV129', JSON.stringify(d)); }
+    function loadPrices() { let s = localStorage.getItem('winkoProDataV129'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; setVal('sstPct', companyProfile.taxRate); setVal('fullTermsNotes', companyProfile.terms); } renderAllDynamicUI(); processTankData(); }
 
     function printInternal() { document.body.className = 'print-internal'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => window.print(), 300); }
     function printCustomer() { document.body.className = 'print-customer'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => window.print(), 300); }
