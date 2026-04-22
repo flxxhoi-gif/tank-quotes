@@ -7,6 +7,7 @@
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         * { box-sizing: border-box; font-family: system-ui, sans-serif; }
@@ -34,7 +35,7 @@
         .cloud-indicator { width: 10px; height: 10px; border-radius: 50%; background: #64748b; display: inline-block; }
         .cloud-indicator.online { background: #10b981; box-shadow: 0 0 8px #10b981; }
         
-        #mainContent, #adminContent, #customerPreviewContainer, #projectsContent { display: none; padding: 20px; }
+        #mainContent, #adminContent, #customerPreviewContainer, #projectsContent, #inventoryContent { display: none; padding: 20px; }
         #checklistPrintView, .print-only, .internal-only-tag { display: none; }
         
         .container { max-width: 1500px; margin: auto; }
@@ -185,10 +186,44 @@
     <div class="nav-links">
         <button class="nav-btn active" id="btnTabQuote" onclick="switchTab('quote')">📝 Workspace</button>
         <button class="nav-btn" id="btnTabProjects" onclick="switchTab('projects')">📂 Project Bank</button>
+        <button class="nav-btn" id="btnTabInv" onclick="switchTab('inventory')">📦 Inventory</button>
         <button class="nav-btn" id="btnTabPreview" onclick="switchTab('preview')">📄 Edit Quote PDF</button>
         <button class="nav-btn" id="btnTabAdmin" onclick="switchTab('admin')">⚙️ Master Control</button>
     </div>
 </div>
+
+<div id="inventoryContent"><div class="container">
+    
+    <div class="module-card">
+        <div class="card-header" onclick="this.parentElement.classList.toggle('collapsed')"><span>📊</span> Stock Level Graph</div>
+        <div class="card-body" style="height: 350px; position: relative; padding-bottom: 20px;">
+            <canvas id="invChartCanvas"></canvas>
+        </div>
+    </div>
+
+    <div class="module-card" style="margin-top: 20px;">
+        <div class="card-header" onclick="this.parentElement.classList.toggle('collapsed')"><span>📦</span> Inventory Management</div>
+        <div class="card-body">
+            
+            <div style="display:flex; gap:10px; margin-bottom:20px; background:#f1f5f9; padding:15px; border-radius:8px; align-items: center; flex-wrap: wrap;">
+                <input type="text" id="newInvName" placeholder="Item Name (e.g. M10 Bolt)" class="admin-input" style="flex:2; text-align:left; min-width: 200px;">
+                <input type="number" id="newInvStock" placeholder="Initial Stock Qty" class="admin-input" style="flex:1; min-width: 120px;">
+                <input type="number" id="newInvAlert" placeholder="Low Alert Level" class="admin-input" style="flex:1; min-width: 120px;">
+                <button class="action-btn" style="width:auto; padding:8px 20px;" onclick="addInvItem()">+ Add Item</button>
+            </div>
+
+            <div style="margin-bottom: 15px;"><input type="text" id="invSearchBox" placeholder="🔍 Search Inventory..." onkeyup="renderInventoryUI()" style="padding: 10px; width: 100%; max-width: 400px; border-radius: 6px; border: 1px solid #cbd5e1; outline:none; font-weight:bold;"></div>
+            
+            <div style="overflow-x: auto;">
+                <table class="admin-table">
+                    <thead><tr><th>Item Name</th><th class="text-center">Stock Level</th><th class="text-center">Low Alert Level</th><th class="text-center">Action</th></tr></thead>
+                    <tbody id="inventoryBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div></div>
 
 <div id="projectsContent"><div class="container">
     <div class="module-card">
@@ -583,10 +618,10 @@
 </div>
 
 <script>
-    const cv = "V129";
+    const cv = "V130";
     if(localStorage.getItem("winkoAppVersion") !== cv) {
         localStorage.setItem("winkoAppVersion", cv);
-        for(let i=13; i<=128; i++) localStorage.removeItem("winkoProDataV" + i);
+        for(let i=13; i<=129; i++) localStorage.removeItem("winkoProDataV" + i);
         window.location.reload(true);
     }
 
@@ -639,6 +674,9 @@
     let winkoUsers = [];
     let currentUserRole = "user";
     let winkoCustomers = {}; 
+    let winkoInventory = {}; // <--- INVENTORY VAR
+    let invChart = null; // <--- CHART VAR
+    
     let companyProfile = {
         name: "JUTARAMA INDUSTRIES (M) SDN. BHD.",
         reg: "20260103014 (749861-V)",
@@ -670,6 +708,16 @@
                 localStorage.setItem('winkoCustomersDB', JSON.stringify(winkoCustomers));
                 updateCustomerDatalist(); 
                 if(document.getElementById('adminContent').style.display === 'block') renderCustomerAdmin(); 
+            }
+        });
+
+        // INVENTORY SYNC
+        cloudDB.collection("winko_settings").doc("inventory").onSnapshot(doc => {
+            if(doc.exists) {
+                let d = doc.data();
+                winkoInventory = d.data || d || winkoInventory;
+                localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory));
+                if(document.getElementById('inventoryContent').style.display === 'block') renderInventoryUI();
             }
         });
         
@@ -711,6 +759,7 @@
         }
         
         try { winkoCustomers = JSON.parse(localStorage.getItem('winkoCustomersDB')) || {}; } catch(e) { winkoCustomers = {}; }
+        try { winkoInventory = JSON.parse(localStorage.getItem('winkoInventoryDB')) || {}; } catch(e) { winkoInventory = {}; }
         
         systemBaseStructure = [
             { category: "Panels", items: [{name: "Manhole Panel", def: 450, wt: 55}, {name: "Roof Panel", def: 220, wt: 26}, {name: "Base Panel", def: 350, wt: 68}, {name: "Wall Panel (L1)", def: 350, wt: 68}, {name: "Wall Panel (L2)", def: 280, wt: 48}, {name: "Wall Panel (L3)", def: 280, wt: 48}, {name: "Wall Panel (L4)", def: 220, wt: 26}, {name: "Partition Panel", def: 280, wt: 48}] },
@@ -752,6 +801,117 @@
         }
     }
     initSystemData();
+
+    // ==========================================
+    // INVENTORY MODULE
+    // ==========================================
+    
+    function renderInventoryChart() {
+        let ctx = document.getElementById('invChartCanvas');
+        if(!ctx) return;
+        
+        let labels = Object.keys(winkoInventory).sort();
+        let data = labels.map(k => winkoInventory[k].stock);
+        let colors = labels.map(k => winkoInventory[k].stock <= winkoInventory[k].alert ? '#ef4444' : '#10b981'); // Red if low, Green if ok
+
+        if(invChart) {
+            invChart.data.labels = labels;
+            invChart.data.datasets[0].data = data;
+            invChart.data.datasets[0].backgroundColor = colors;
+            invChart.update();
+        } else {
+            invChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{ label: 'Current Stock Level', data: data, backgroundColor: colors, borderRadius: 4 }]
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, grid: { color: '#e2e8f0' } }, x: { grid: { display: false } } } 
+                }
+            });
+        }
+    }
+
+    function renderInventoryUI() {
+        let filterText = getVal('invSearchBox').toLowerCase();
+        let h = '';
+        
+        Object.keys(winkoInventory).sort().forEach(k => {
+            if(filterText && !k.toLowerCase().includes(filterText)) return;
+            let d = winkoInventory[k];
+            let safeK = encodeURIComponent(k);
+            let isLow = d.stock <= d.alert;
+            
+            h += `<tr style="${isLow ? 'background-color: #fef2f2;' : ''}">
+                <td><strong style="${isLow ? 'color:#dc2626;' : ''}">${k}</strong></td>
+                <td class="text-center" style="display:flex; justify-content:center; align-items:center; gap:5px;">
+                    <button class="action-btn" style="padding:4px 10px; width:auto; background:#64748b;" onclick="updateStock('${safeK}', -1)">-</button>
+                    <input type="number" class="admin-input" style="width:70px; margin:0;" value="${d.stock}" onchange="setStock('${safeK}', this.value)">
+                    <button class="action-btn" style="padding:4px 10px; width:auto; background:#3b82f6;" onclick="updateStock('${safeK}', 1)">+</button>
+                </td>
+                <td class="text-center"><input type="number" class="admin-input" style="width:70px;" value="${d.alert}" onchange="setInvAlert('${safeK}', this.value)"></td>
+                <td class="text-center"><button class="del-btn" onclick="removeInvItem('${safeK}')">X Remove</button></td>
+            </tr>`;
+        });
+        
+        if(h === '') h = '<tr><td colspan="4" style="text-align:center; padding: 20px; color:#64748b;">No items in inventory. Add one above!</td></tr>';
+        setHtml('inventoryBody', h);
+        
+        renderInventoryChart();
+    }
+
+    function addInvItem() {
+        let name = getVal('newInvName').trim();
+        let stock = getNum('newInvStock') || 0;
+        let alertLvl = getNum('newInvAlert') || 5;
+        
+        if(!name) return showToast("Item Name is required.", "error");
+        if(winkoInventory[name]) return showToast("Item already exists!", "error");
+        
+        winkoInventory[name] = { stock: stock, alert: alertLvl };
+        setVal('newInvName', ''); setVal('newInvStock', ''); setVal('newInvAlert', '');
+        saveInventoryDB();
+        showToast(`Added ${name} to inventory.`);
+    }
+
+    function removeInvItem(safeK) {
+        let k = decodeURIComponent(safeK);
+        if(confirm(`Remove ${k} from inventory?`)) {
+            delete winkoInventory[k];
+            saveInventoryDB();
+        }
+    }
+
+    function updateStock(safeK, amount) {
+        let k = decodeURIComponent(safeK);
+        winkoInventory[k].stock += amount;
+        saveInventoryDB();
+    }
+
+    function setStock(safeK, val) {
+        let k = decodeURIComponent(safeK);
+        winkoInventory[k].stock = parseInt(val) || 0;
+        saveInventoryDB();
+    }
+    
+    function setInvAlert(safeK, val) {
+        let k = decodeURIComponent(safeK);
+        winkoInventory[k].alert = parseInt(val) || 0;
+        saveInventoryDB();
+    }
+
+    function saveInventoryDB() {
+        localStorage.setItem('winkoInventoryDB', JSON.stringify(winkoInventory));
+        if(cloudDB) cloudDB.collection("winko_settings").doc("inventory").set({data: winkoInventory});
+        renderInventoryUI();
+    }
+    
+    // ==========================================
+
 
     function renderCustomerAdmin() {
         let filterText = getVal('custSearchBox').toLowerCase();
@@ -954,12 +1114,14 @@
     function safeProcess() { processTankData(); savePrices(); }
 
     function switchTab(tabId) {
-        setDisp('mainContent', false); setDisp('adminContent', false); setDisp('customerPreviewContainer', false); setDisp('projectsContent', false);
-        ['btnTabQuote', 'btnTabAdmin', 'btnTabPreview', 'btnTabProjects'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).classList.remove('active'); });
+        setDisp('mainContent', false); setDisp('adminContent', false); setDisp('customerPreviewContainer', false); setDisp('projectsContent', false); setDisp('inventoryContent', false);
+        ['btnTabQuote', 'btnTabAdmin', 'btnTabPreview', 'btnTabProjects', 'btnTabInv'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).classList.remove('active'); });
+        
         if(tabId === 'quote') { setDisp('mainContent', true); document.getElementById('btnTabQuote').classList.add('active'); }
         else if(tabId === 'preview') { syncPrintHeader(window.currentUnit||'ft'); document.getElementById('customerPreviewContainer').style.display='flex'; document.getElementById('btnTabPreview').classList.add('active'); }
         else if(tabId === 'admin') { setDisp('adminContent', true); document.getElementById('btnTabAdmin').classList.add('active'); buildAdminTable(); renderCustomerAdmin(); }
         else if(tabId === 'projects') { setDisp('projectsContent', true); document.getElementById('btnTabProjects').classList.add('active'); renderProjectBank(); }
+        else if(tabId === 'inventory') { setDisp('inventoryContent', true); document.getElementById('btnTabInv').classList.add('active'); renderInventoryUI(); }
     }
 
     function renderAllDynamicUI() {
@@ -1397,8 +1559,8 @@
         location.reload(); 
     }
 
-    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV129', JSON.stringify(d)); }
-    function loadPrices() { let s = localStorage.getItem('winkoProDataV129'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; setVal('sstPct', companyProfile.taxRate); setVal('fullTermsNotes', companyProfile.terms); } renderAllDynamicUI(); processTankData(); }
+    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV130', JSON.stringify(d)); }
+    function loadPrices() { let s = localStorage.getItem('winkoProDataV130'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; setVal('sstPct', companyProfile.taxRate); setVal('fullTermsNotes', companyProfile.terms); } renderAllDynamicUI(); processTankData(); }
 
     function printInternal() { document.body.className = 'print-internal'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => window.print(), 300); }
     function printCustomer() { document.body.className = 'print-customer'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => window.print(), 300); }
