@@ -152,7 +152,7 @@
             .cp-table th, .cp-table td { border: 1px solid #000; padding: 6px !important; vertical-align: top;}
             .cp-table th { background: #d1d5db !important; font-weight: bold; text-align: center;}
 
-            body.print-checklist #mainContent, body.print-checklist #customerPreviewContainer { display: none !important; }
+            body.print-checklist #mainContent, body.print-customer #customerPreviewContainer { display: none !important; }
             body.print-checklist #checklistPrintView { display: block !important; font-size: 9.5pt; padding: 0; }
             .chk-box { display: inline-block; width: 12px; height: 12px; border: 1px solid #000; text-align: center; line-height: 12px; margin-right: 4px; font-weight:bold;}
         }
@@ -679,7 +679,16 @@
     let winkoUsers = [{ username: "admin", password: "adminmaster99", role: "admin" }]; // Base fallback
     let currentUserRole = "user";
     let winkoCustomers = {}; 
-    let winkoInventory = {};
+    
+    let winkoInventory = {
+        "M14 x 32mm B/N MS (50kg Bag)": { stock: 10, alert: 3 },
+        "3/8\"Ø x 1.5\" HDG (50kg Bag)": { stock: 15, alert: 2 },
+        "9/16\"Ø Washers HDG (50kg Bag)": { stock: 8, alert: 2 },
+        "5/8\"Ø Washers MS (50kg Bag)": { stock: 12, alert: 2 },
+        "PVC Foam Tape 10m (Rolls)": { stock: 200, alert: 50 },
+        "Aseal Butyl Sealant 80m (Boxes)": { stock: 150, alert: 25 }
+    };
+    
     let invChart = null;
     window.cloudMemoryBank = {};
     
@@ -697,23 +706,45 @@
     };
     
     let systemBaseStructure = [
-        { category: "Panels", markup: 0, items: [{name: "Manhole Panel", def: 450, wt: 55}, {name: "Roof Panel", def: 220, wt: 26}, {name: "Base Panel", def: 350, wt: 68}, {name: "Wall Panel (L1)", def: 350, wt: 68}, {name: "Wall Panel (L2)", def: 280, wt: 48}, {name: "Wall Panel (L3)", def: 280, wt: 48}, {name: "Wall Panel (L4)", def: 220, wt: 26}, {name: "Partition Panel", def: 280, wt: 48}] },
-        { category: "Cleat & Trusses", markup: 0, items: [{name: "Type A Cleat", def: 25, wt: 1.2}, {name: "Type B Cleat", def: 28, wt: 1.8}, {name: "Type C Cleat", def: 30, wt: 2.5}, {name: "Ø1\" Pipe", def: 12, wt: 1.6}, {name: "2\" x 2\" angle", def: 15, wt: 2.2}] },
-        { category: "Angle Stay", markup: 0, items: [{name: "44 1/4\" (L1 Stay)", def: 45, wt: 4.5}, {name: "67\" (L2 Stay)", def: 65, wt: 7.2}, {name: "11' 3\" (L3 Stay)", def: 95, wt: 14.5}, {name: "15' 8.5\" (L4 Stay)", def: 125, wt: 19.8}] },
+        { category: "Panels", markup: 0, items: [
+            {name: "Manhole Panel", def: 450, wt: 55}, 
+            {name: "Roof Panel (3.0mm)", def: 162.75, wt: 26},
+            {name: "Base Panel (4.5mm)", def: 263.50, wt: 68},
+            {name: "Wall Panel (L1 - 4.5mm)", def: 263.50, wt: 68},
+            {name: "Wall Panel (L2 - 3.0mm)", def: 162.75, wt: 48},
+            {name: "Wall Panel (L3 - 3.0mm)", def: 162.75, wt: 48},
+            {name: "Wall Panel (L4)", def: 162.75, wt: 26},
+            {name: "Partition Panel", def: 253.50, wt: 48}
+        ] },
+        { category: "Cleat & Trusses", markup: 0, items: [
+            {name: "Partition Cleat HDG", def: 15.00, wt: 1.2},
+            {name: "8mm (B) Cleat HDG", def: 16.50, wt: 1.8},
+            {name: "Type C Cleat", def: 30, wt: 2.5}, 
+            {name: "Ø1\" Pipe (HDG AAA)", def: 18.00, wt: 1.6},
+            {name: "Ø1.5\" Pipe (HDG AAA)", def: 26.60, wt: 2.2},
+            {name: "50x50x4mm SHS Truss (4' HDG)", def: 28.20, wt: 5.0},
+            {name: "50x50x4mm SHS Truss (8' HDG)", def: 59.00, wt: 10.0},
+            {name: "50x50x4mm SHS Truss (12' HDG)", def: 74.40, wt: 15.0}
+        ] },
+        { category: "Angle Stay", markup: 0, items: [
+            {name: "67.5\" (L1 Stay - 50x50x5mm)", def: 27.25, wt: 4.5},
+            {name: "92.5\" (L2 Stay - 50x50x5mm)", def: 38.50, wt: 7.2},
+            {name: "135.5\" (L3 Stay - 50x50x5mm)", def: 49.60, wt: 14.5},
+            {name: "15' 8.5\" (L4 Stay)", def: 125, wt: 19.8}
+        ] },
         { category: "Accessories", markup: 0, items: [
             {name: "Ext. Ladder", def: 55, wt: 3.5, selectId: "extLadMat", options: ["HDG", "SS 304", "SS 316"]}, 
             {name: "Int. Ladder", def: 75, wt: 3.5, selectId: "intLadMat", options: ["HDG", "SS 304", "SS 316"]}, 
             {name: "Water Level Indicator", def: 220, wt: 2.5, selectId: "wliType", options: ["Ball Float", "Tube Type"]}, 
             {name: "Air Vent", def: 85, wt: 1.5, selectId: "ventType", options: ["HDG Steel", "ABS Plastic"]}, 
-            {name: "Mastic Sealant (Rolls)", def: 38, wt: 0.8},
+            {name: "PVC Foam Tape (10m x 3mm)", def: 8.00, wt: 0.8},
+            {name: "Aseal Butyl Sealant (80m)", def: 1.70, wt: 0.2},
             {name: "M10 x 35mm HDG (Bolt, Nut & Washer)", def: 1.20, wt: 0.10}, 
             {name: "M10 x 35mm SS304 (Bolt, Nut & Washer)", def: 3.50, wt: 0.10}, 
             {name: "M12 x 45mm HDG (Bolt, Nut & Washer)", def: 1.50, wt: 0.15}, 
             {name: "M12 x 45mm SS304 (Bolt, Nut & Washer)", def: 4.20, wt: 0.15}, 
-            {name: "M12 x 50mm HDG (Bolt, Nut & Washer)", def: 1.60, wt: 0.16}, 
-            {name: "M14 x 50mm HDG (Bolt, Nut & Washer)", def: 2.20, wt: 0.20}, 
-            {name: "M16 x 50mm HDG (Bolt, Nut & Washer)", def: 2.50, wt: 0.25}, 
-            {name: "M16 x 65mm HDG (Bolt, Nut & Washer)", def: 2.80, wt: 0.28}, 
+            {name: "M14 x 30mm HDG (Box/Unit cost)", def: 8.65, wt: 0.20},
+            {name: "M16 x 40mm HDG HT B/N", def: 1.10, wt: 0.25},
             {name: "M12 x 100mm Expansion Bolt (HDG)", def: 3.00, wt: 0.30}, 
             {name: "M16 x 120mm Expansion Bolt (HDG)", def: 5.00, wt: 0.50}, 
             {name: "PVC Bolt Head Cover (M12)", def: 0.20, wt: 0.01}, 
