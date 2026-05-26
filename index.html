@@ -616,10 +616,10 @@
 </div>
 
 <script>
-    const cv = "V135"; 
+    const cv = "V136"; 
     if(localStorage.getItem("winkoAppVersion") !== cv) {
         localStorage.setItem("winkoAppVersion", cv);
-        for(let i=13; i<=134; i++) localStorage.removeItem("winkoProDataV" + i);
+        for(let i=13; i<=135; i++) localStorage.removeItem("winkoProDataV" + i);
         
         localStorage.removeItem('winkoCustomersDB');
         localStorage.removeItem('winkoInventoryDB');
@@ -818,13 +818,12 @@
     initSystemData();
 
     // ==========================================
-    // INVENTORY MODULE (EXACT NAME MATCHING)
+    // INVENTORY MODULE (COMBINED MASSIVE LIST)
     // ==========================================
     
     function autoPopulateInventory() {
-        // EXACT string match to what processTankData() generates
         const masterItems = {
-            // Panels (HDG)
+            // --- BOM EXACT MATCH ITEMS (For Live Deduction) ---
             "Manhole Panel (4'x4') (HDG)": { stock: 50, alert: 10 },
             "1.5mm Roof Panel (4'x4') (HDG)": { stock: 150, alert: 30 },
             "4.5mm Base Panel (4'x4') (HDG)": { stock: 100, alert: 20 },
@@ -833,8 +832,6 @@
             "3.0mm Wall Panel (L3) (4'x4') (HDG)": { stock: 100, alert: 20 },
             "1.5mm Wall Panel (L4) (4'x4') (HDG)": { stock: 50, alert: 10 },
             "Partition Panel (4'x4') (HDG)": { stock: 30, alert: 5 },
-
-            // Cleats & Trusses
             "Partition Cleat HDG": { stock: 150, alert: 30 },
             "8mm (B) Cleat HDG": { stock: 500, alert: 100 },
             "Type C Cleat": { stock: 300, alert: 50 },
@@ -843,26 +840,48 @@
             "50x50x4mm SHS Truss (4' HDG)": { stock: 100, alert: 20 },
             "50x50x4mm SHS Truss (8' HDG)": { stock: 100, alert: 20 },
             "50x50x4mm SHS Truss (12' HDG)": { stock: 100, alert: 20 },
-
-            // Angle Stays
             "67.5\" (L1 Stay - 50x50x5mm)": { stock: 200, alert: 40 },
             "92.5\" (L2 Stay - 50x50x5mm)": { stock: 150, alert: 30 },
             "135.5\" (L3 Stay - 50x50x5mm)": { stock: 100, alert: 20 },
             "15' 8.5\" (L4 Stay)": { stock: 50, alert: 10 },
-
-            // Accessories 
             "Ext. Ladder": { stock: 40, alert: 5 },
             "Int. Ladder": { stock: 40, alert: 5 },
             "Water Level Indicator": { stock: 50, alert: 10 },
             "Air Vent": { stock: 80, alert: 15 },
             "PVC Foam Tape (10m x 3mm)": { stock: 300, alert: 50 },
             "Aseal Butyl Sealant (80m)": { stock: 200, alert: 30 },
-            
-            // Fasteners
             "M14 x 30mm HDG (Box/Unit cost)": { stock: 150, alert: 20 },
             "M16 x 40mm HDG HT B/N": { stock: 100, alert: 15 },
             "M10 x 35mm HDG (Bolt, Nut & Washer)": { stock: 80, alert: 10 },
-            "M12 x 45mm HDG (Bolt, Nut & Washer)": { stock: 80, alert: 10 }
+            "M12 x 45mm HDG (Bolt, Nut & Washer)": { stock: 80, alert: 10 },
+
+            // --- EXTRA RAW MATERIALS & SPARES (Your massive list) ---
+            "3.0mm Tank Plate MS (Painted)": { stock: 100, alert: 20 },
+            "4.3mm Type AB / C(L) MS": { stock: 50, alert: 10 },
+            "4.5mm Type A / D MS": { stock: 150, alert: 30 },
+            "5.0mm Type A / B MS": { stock: 50, alert: 10 },
+            "6.0mm Type B / C MS": { stock: 30, alert: 5 },
+            "4.0mm Type B / C MS (Metric)": { stock: 20, alert: 5 },
+            "4.0mm Type C HDG (Metric)": { stock: 20, alert: 5 },
+            "3.0mm thk x 1340 x 2680mm MS": { stock: 10, alert: 2 },
+            "4.5mm thk x 1340 x 2680mm MS": { stock: 10, alert: 2 },
+            "5.0mm thk x 1219 x 2438mm MS": { stock: 10, alert: 2 },
+            "6.0mm thk x 1500 x 2680mm MS": { stock: 10, alert: 2 },
+            "4' x 4' x 1.5mm thk Tank Cover MS": { stock: 100, alert: 20 },
+            "51\" x 106\" x 1.5mm thk HDG": { stock: 50, alert: 10 },
+            "50x50x4mm SHS Truss 16' HDG": { stock: 50, alert: 10 },
+            "1 1/4\" Pipe Roof Support 8'": { stock: 50, alert: 10 },
+            "L1 Angle Stay (67.5\") MS": { stock: 100, alert: 20 },
+            "Side Cleat (C1)": { stock: 300, alert: 50 },
+            "Small A Cleat MS (Not bent)": { stock: 200, alert: 40 },
+            "50 x 50 x 1.6mm Trunking (6m)": { stock: 20, alert: 5 },
+            "SS 304 1 1/4\"Ø x 3mm Pipe": { stock: 10, alert: 2 },
+            "M14 x 32mm B/N MS (50kg Bag)": { stock: 10, alert: 3 },
+            "3/8\"Ø x 1 1/2\" HDG (50kg Bag)": { stock: 15, alert: 2 },
+            "5/8\"Ø Washers MS (50kg Bag)": { stock: 12, alert: 2 },
+            "PVC Foam Tape (Norton 15m)": { stock: 100, alert: 20 },
+            "RB Sealastrip (13m box)": { stock: 50, alert: 10 },
+            "HTD Bar Y12mm x 14 3/4\"": { stock: 200, alert: 40 }
         };
 
         let itemsAdded = 0;
@@ -1731,8 +1750,8 @@
         location.reload(); 
     }
 
-    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV135', JSON.stringify(d)); }
-    function loadPrices() { let s = localStorage.getItem('winkoProDataV135'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; setVal('sstPct', companyProfile.taxRate); setVal('fullTermsNotes', companyProfile.terms); } renderAllDynamicUI(); processTankData(); }
+    function savePrices() { let d = { tanks: appTanks, custom: appCustomItems }; configIDs.forEach(id => d[id] = getVal(id)); localStorage.setItem('winkoProDataV136', JSON.stringify(d)); }
+    function loadPrices() { let s = localStorage.getItem('winkoProDataV136'); if(s) { let d = JSON.parse(s); configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); appTanks = d.tanks || []; appCustomItems = d.custom || []; } else { appTanks = [defaultTank()]; setVal('sstPct', companyProfile.taxRate); setVal('fullTermsNotes', companyProfile.terms); } renderAllDynamicUI(); processTankData(); }
 
     function printInternal() { document.body.className = 'print-internal'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => window.print(), 300); }
     function printCustomer() { document.body.className = 'print-customer'; syncPrintHeader(window.currentUnit||'ft'); setTimeout(() => window.print(), 300); }
