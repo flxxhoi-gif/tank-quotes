@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Winko / Jutarama - Enterprise Quoting ERP V150 (Master Fix)</title>
+    <title>Winko / Jutarama - Enterprise Quoting ERP V151 (Modern PDF Restored)</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -102,7 +102,7 @@
         
         #customerPreviewContainer { background: #94a3b8; padding: 20px; overflow-y: auto; flex-direction: column; align-items: center; }
         .preview-toolbar { background: #0f172a; padding: 10px 20px; border-radius: 6px; margin-bottom: 15px; color: white; display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 210mm;}
-        #customerPrintViewEditor { display: block; background: white; width: 100%; max-width: 210mm; min-height: 297mm; padding: 15mm; box-shadow: 0 10px 20px rgba(0,0,0,0.2); margin: 0 auto; color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 9pt; outline: none; }
+        #customerPrintViewEditor { display: block; background: white; width: 100%; max-width: 210mm; min-height: 297mm; padding: 15mm; box-shadow: 0 10px 20px rgba(0,0,0,0.2); margin: 0 auto; color: #0f172a; font-family: Arial, Helvetica, sans-serif; font-size: 9pt; outline: none; }
         .editable-section { transition: background 0.2s; border-radius: 4px; padding: 4px; border: 1px solid transparent;}
         .editable-section:hover { background: #fef9c3; cursor: text; border: 1px dashed #eab308; }
 
@@ -135,22 +135,35 @@
             body.print-internal td.text-right { text-align: right; font-weight: 700;}
             body.print-internal input, body.print-internal .desc-input { border: none !important; background: transparent !important; padding: 0 !important; width: auto;}
             body.print-internal .summary-box { background: #fff !important; border: 2.5px solid #0f172a !important; border-radius: 8px !important; padding: 0 !important; width: 40% !important; float: right !important;}
-            body.print-internal .drawings-page { page-break-before: always !important; padding-top: 20px !important; clear: both !important;}
+            body.print-internal .drawings-page { display: block !important; page-break-before: always !important; padding-top: 20px !important; clear: both !important;}
 
             /* --- CUSTOMER PRINT --- */
             body.print-customer #mainContent, body.print-customer #adminContent, body.print-customer #inventoryContent, body.print-customer #projectsContent, body.print-customer #checklistPrintView { display: none !important; }
             body.print-customer #customerPreviewContainer { display: flex !important; padding: 0 !important; margin: 0 !important; background: white !important; }
             body.print-customer .preview-toolbar { display: none !important; }
             body.print-customer #customerPrintViewEditor { max-width: none !important; padding: 0 !important; margin: 0 !important; border:none; box-shadow:none;}
-            .cp-table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 10px; font-size: 8.5pt; border: 1.5px solid #000; }
-            .cp-table th, .cp-table td { border: 1px solid #000; padding: 6px !important; vertical-align: top;}
-            .cp-table th { background: #d1d5db !important; font-weight: bold; text-align: center;}
+            
+            /* Modern CP Table Styles for Print */
+            .cp-modern-table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 20px; font-size: 9pt; }
+            .cp-modern-table th { background: #0f172a !important; color: #ffffff !important; padding: 10px; text-align: left; font-weight: 700; border-bottom: 2px solid #ea580c !important; }
+            .cp-modern-table td { border-bottom: 1px solid #cbd5e1 !important; padding: 10px; vertical-align: top;}
+            .cp-modern-table td.text-center { text-align: center; }
+            .cp-modern-table td.text-right { text-align: right; }
+            .cp-modern-table .total-row td { background: #f8fafc !important; font-weight: 900; font-size: 10pt; border-top: 2px solid #0f172a !important; border-bottom: none !important;}
 
             /* --- CHECKLIST PRINT --- */
             body.print-checklist #mainContent, body.print-checklist #customerPreviewContainer, body.print-checklist #adminContent, body.print-checklist #inventoryContent, body.print-checklist #projectsContent { display: none !important; }
             body.print-checklist #checklistPrintView { display: block !important; font-size: 9.5pt; padding: 0; }
             .chk-box { display: inline-block; width: 12px; height: 12px; border: 1px solid #000; text-align: center; line-height: 12px; margin-right: 4px; font-weight:bold;}
         }
+        
+        /* Modern Customer Preview Screen Styles */
+        .cp-modern-table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 20px; font-size: 9pt; }
+        .cp-modern-table th { background: #0f172a; color: #ffffff; padding: 10px; text-align: left; font-weight: 700; border-bottom: 2px solid #ea580c; }
+        .cp-modern-table td { border-bottom: 1px solid #cbd5e1; padding: 10px; vertical-align: top;}
+        .cp-modern-table td.text-center { text-align: center; }
+        .cp-modern-table td.text-right { text-align: right; }
+        .cp-modern-table .total-row td { background: #f8fafc; font-weight: 900; font-size: 10pt; border-top: 2px solid #0f172a; border-bottom: none;}
     </style>
 </head>
 <body>
@@ -171,7 +184,7 @@
             <span onclick="togglePass('passInput')" style="position: absolute; right: 12px; top: 35px; cursor: pointer; font-size: 16px;" title="Show/Hide Password">👁️</span>
         </div>
         <button onclick="forceLoginBypass()">Secure Login</button>
-        <p style="font-size: 10px; color: #94a3b8; margin-top: 20px;">V150 Core Restored</p>
+        <p style="font-size: 10px; color: #94a3b8; margin-top: 20px;">V151 Modern PDF Core</p>
     </div>
 </div>
 
@@ -381,7 +394,8 @@
                     </div>
                 </div>
 
-                <div class="module-card no-print drawings-page">
+                <!-- Removed no-print from drawings page so it displays properly in internal prints -->
+                <div class="module-card drawings-page internal-hide-except-print">
                     <div class="card-header" onclick="this.parentElement.classList.toggle('collapsed')"><span>📏</span> 3. Auto-Drawings (Panel Layout)</div>
                     <div class="card-body">
                         <p style="font-size:11px; color:#64748b; margin-top:0;">* Pure Schematics: Paddles & Partition logic applied automatically. No dots or text labels.</p>
@@ -471,67 +485,87 @@
 
 <div id="customerPreviewContainer">
     <div class="preview-toolbar no-print">
-        <div style="flex:1;"><h3 style="margin:0;">Customer Quote Editor</h3><p style="margin:0; font-size:12px;">Click to overwrite text anywhere on this document before printing.</p></div>
+        <div style="flex:1;"><h3 style="margin:0;">Customer Quote Editor</h3><p style="margin:0; font-size:12px;">Modern layout applied. Includes automatic drawing layout. Click to overwrite text.</p></div>
         <button class="action-btn print-btn" style="width: auto; background:#059669;" onclick="triggerPrint('customer_from_preview')">Print Final PDF</button>
     </div>
     
     <div id="customerPrintViewEditor" contenteditable="true">
-        <div style="display:flex; margin-bottom:15px;">
-            <div style="width:35%; display:flex; align-items:center; justify-content:center; padding:5px;"><img src="winko logo.png" alt="Company Logo" style="width:100px;" onerror="this.style.display='none'"></div>
-            <div style="flex:1;">
-                <h2 style="margin:0 0 5px 0; font-size:16pt; font-weight:800;"><span id="cpHeaderName">COMPANY NAME</span> <span style="font-size:10pt; color:#475569;" id="cpHeaderReg">REG NO</span></h2>
-                <p style="margin:2px 0; font-size:9pt;" id="cpHeaderAddr">ADDRESS</p>
-                <p style="margin:2px 0; font-size:9pt;"><span id="cpHeaderContact">PHONE</span> | <span id="cpHeaderWeb">WEB</span></p>
+        <!-- Modern Header -->
+        <div style="display:flex; border-bottom: 3px solid #ea580c; padding-bottom: 20px; margin-bottom: 25px; align-items:center;">
+            <div style="width:30%; padding:5px;"><img src="winko logo.png" alt="Company Logo" style="width:120px;" onerror="this.style.display='none'"></div>
+            <div style="width:70%; text-align:right;">
+                <h2 style="margin:0 0 5px 0; font-size:18pt; font-weight:900; color:#0f172a; text-transform:uppercase;"><span id="cpHeaderName">COMPANY NAME</span></h2>
+                <p style="margin:2px 0; font-size:9pt; font-weight:bold; color:#475569;" id="cpHeaderReg">REG NO</p>
+                <p style="margin:2px 0; font-size:9pt; color:#475569;" id="cpHeaderAddr">ADDRESS</p>
+                <p style="margin:2px 0; font-size:9pt; color:#0f172a;"><strong><span id="cpHeaderContact">PHONE</span> | <span id="cpHeaderWeb">WEB</span></strong></p>
             </div>
         </div>
 
-        <div class="editable-section" style="display:flex; justify-content:space-between; margin-bottom:10px;">
-            <div style="width:55%; font-size:8.5pt;">
-                <table style="border:none; margin:0;"><tr style="border:none;"><td style="width:70px; border:none;">Customer</td><td style="border:none;">: <strong id="cpCustName"></strong></td></tr><tr style="border:none;"><td style="border:none;">Address</td><td style="border:none;">: <span id="cpCustAddress"></span></td></tr><tr style="border:none;"><td style="border:none;">Attention</td><td style="border:none;">: <span id="cpAttention"></span></td></tr><tr style="border:none;"><td style="border:none;">Project</td><td style="border:none;">: <span id="cpProject"></span></td></tr></table>
+        <!-- Modern Meta Grid -->
+        <div class="editable-section" style="display: flex; justify-content: space-between; margin-bottom: 25px; font-size: 9pt;">
+            <div style="width: 55%; background: #f8fafc; padding: 15px; border-radius: 6px; border-left: 4px solid #0f172a;">
+                <div style="margin-bottom: 5px;"><strong>Customer:</strong> <span id="cpCustName"></span></div>
+                <div style="margin-bottom: 5px;"><strong>Address:</strong> <span id="cpCustAddress"></span></div>
+                <div style="margin-bottom: 5px;"><strong>Attention:</strong> <span id="cpAttention"></span></div>
+                <div><strong>Project:</strong> <span id="cpProject"></span></div>
             </div>
-            <div style="width:15%; text-align:center;"><div style="border:2px solid #000; padding:4px 10px; font-weight:bold;">QUOTATION</div></div>
-            <div style="width:30%; font-size:8.5pt; text-align:right;">
-                <table style="border:none; margin:0;"><tr style="border:none;"><td style="width:60px; border:none; text-align:right;">Date</td><td style="border:none; text-align:left;">: <strong id="cpDate"></strong></td></tr><tr style="border:none;"><td style="border:none; text-align:right;">Our Ref</td><td style="border:none; text-align:left;">: <strong id="cpRef"></strong></td></tr></table>
+            
+            <div style="width: 40%; text-align:right; padding: 15px;">
+                <h1 style="margin: 0 0 10px 0; font-size: 20pt; color: #0f172a; letter-spacing: 2px;">QUOTATION</h1>
+                <div style="margin-bottom: 5px;"><strong>Date:</strong> <span id="cpDate"></span></div>
+                <div><strong>Our Ref:</strong> <span id="cpRef"></span></div>
             </div>
         </div>
 
-        <div class="editable-section">
-            <p style="font-size: 9pt; margin-bottom: 10px;">With reference to your enquiry, we are pleased to provide our quotation for the following tanks:-</p>
-            <p style="font-size: 9pt; font-weight: bold; text-decoration: underline;">RE: SUPPLY, DELIVER AND INSTALL PRESSED STEEL TANK</p>
+        <div class="editable-section" style="margin-bottom: 15px;">
+            <p style="font-size: 9pt; margin-bottom: 5px;">With reference to your enquiry, we are pleased to provide our quotation for the following tanks:-</p>
+            <p style="font-size: 9.5pt; font-weight: 800; color: #0f172a; text-decoration: underline;">RE: SUPPLY, DELIVER AND INSTALL PRESSED STEEL TANK</p>
         </div>
 
-        <table class="editable-section cp-table" style="width:100%; border-collapse:collapse; margin:10px 0; font-size:8.5pt; border:2px solid #000;">
+        <!-- Modern Table -->
+        <table class="editable-section cp-modern-table avoid-break">
             <thead><tr>
-                <th style="width:6%; border:1px solid #000; text-align:center;">Item</th>
-                <th style="width:64%; border:1px solid #000; text-align:center;">Description</th>
-                <th style="width:10%; border:1px solid #000; text-align:center;">Qty</th>
-                <th style="width:20%; border:1px solid #000; text-align:center;">Total Price</th>
+                <th style="width:5%;">Item</th>
+                <th style="width:60%;">Description</th>
+                <th style="width:10%; text-align:center;">Qty</th>
+                <th style="width:25%; text-align:right;">Total Price</th>
             </tr></thead>
             <tbody id="cpDynamicTanksBody"></tbody>
             <tbody>
-                <tr><td colspan="2" style="border:none;"></td><td style="border:none; text-align:right; font-weight:bold;">TOTAL (Incl. SST)</td><td style="border:1px solid #000; text-align:right; font-weight:bold; border-bottom:4px double #000;" id="cpGrandTotal"></td></tr>
+                <tr class="total-row">
+                    <td colspan="2"></td>
+                    <td style="text-align:right; font-weight:bold;">TOTAL (Incl. SST)</td>
+                    <td style="text-align:right; font-weight:900; font-size:11pt; color:#ea580c;" id="cpGrandTotal"></td>
+                </tr>
             </tbody>
         </table>
 
+        <!-- Blueprint Section (Dynamically Injected) -->
+        <div id="cpDrawingsContainer" style="margin-top:20px;"></div>
+
         <div class="page-break">
-            <div class="editable-section" style="display:flex; margin-bottom:15px; font-size:8pt; border:1px solid #000;">
-                <div style="padding:6px 10px; font-weight:bold; border-right:1px solid #000; width:100px; text-align:center; background:#d1d5db;">Exclusion</div><div style="padding:6px 10px; flex:1;" id="cpShortExclusionsText"></div>
+            <div class="editable-section" style="display:flex; margin-bottom:20px; font-size:8.5pt; border: 1px solid #cbd5e1; border-radius: 6px; overflow: hidden;">
+                <div style="padding:10px 15px; font-weight:bold; background:#0f172a; color:white; width:120px; display:flex; align-items:center; justify-content:center; text-transform:uppercase;">Exclusion</div>
+                <div style="padding:10px 15px; flex:1; background:#f8fafc;" id="cpShortExclusionsText"></div>
             </div>
-            <div class="editable-section avoid-break" id="cpFullTermsText" style="font-size:8pt; white-space:pre-wrap; margin-bottom:15px;"></div>
-            <div class="editable-section avoid-break" style="font-size:8pt; margin-bottom:15px;">
-                <div style="font-weight:bold; text-decoration:underline; margin-bottom:5px;">TERMS & CONDITIONS :-</div>
+            
+            <div class="editable-section avoid-break" style="font-size:8pt; margin-bottom:20px;">
+                <div style="font-weight:bold; font-size: 10pt; color: #0f172a; margin-bottom:10px; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px;">TERMS & CONDITIONS</div>
                 <table style="border:none; width:100%; border-collapse:collapse;">
-                    <tr style="border:none;"><td style="width:130px; font-weight:bold; border:none; padding:3px 5px;">Quotation Validity:</td><td id="cpValidity" style="border:none; padding:3px 5px;"></td></tr>
-                    <tr style="border:none;"><td style="font-weight:bold; border:none; padding:3px 5px;">Terms of Payment:</td><td id="cpPayment" style="border:none; padding:3px 5px;"></td></tr>
-                    <tr style="border:none;"><td style="font-weight:bold; border:none; padding:3px 5px;">Delivery Lead Time:</td><td style="border:none; padding:3px 5px;"><span id="cpLeadTime"></span></td></tr>
-                    <tr style="border:none;"><td style="font-weight:bold; border:none; padding:3px 5px;">Delivery Location:</td><td style="border:none; padding:3px 5px;"><span id="cpDeliveryTerm"></span></td></tr>
+                    <tr style="border:none;"><td style="width:150px; font-weight:bold; border:none; padding:5px 0;">Quotation Validity:</td><td id="cpValidity" style="border:none; padding:5px 0;"></td></tr>
+                    <tr style="border:none;"><td style="font-weight:bold; border:none; padding:5px 0; vertical-align: top;">Terms of Payment:</td><td id="cpPayment" style="border:none; padding:5px 0;"></td></tr>
+                    <tr style="border:none;"><td style="font-weight:bold; border:none; padding:5px 0;">Delivery Lead Time:</td><td style="border:none; padding:5px 0;"><span id="cpLeadTime"></span></td></tr>
+                    <tr style="border:none;"><td style="font-weight:bold; border:none; padding:5px 0;">Delivery Location:</td><td style="border:none; padding:5px 0;"><span id="cpDeliveryTerm"></span></td></tr>
                 </table>
             </div>
-            <div class="editable-section avoid-break" style="display:flex; justify-content:space-between; margin-top:15px;">
-                <div style="width:50%; font-size:8.5pt;">
-                    <p>Best Regards.</p><p style="font-weight:bold; margin-bottom: 40px;" id="cpSignCompany"></p>
-                    <p style="font-weight:bold; text-decoration:underline;" id="cpSignName"></p><p id="cpSignPhone"></p>
-                </div>
+
+            <div class="editable-section avoid-break" id="cpFullTermsText" style="font-size:8pt; white-space:pre-wrap; margin-bottom:30px; color: #475569;"></div>
+            
+            <div class="editable-section avoid-break" style="margin-top:20px;">
+                <div style="font-size:9pt; margin-bottom: 50px;">Best Regards.</div>
+                <div style="font-weight:900; font-size: 11pt; color: #0f172a;" id="cpSignCompany"></div>
+                <div style="font-weight:bold; margin-top: 5px;" id="cpSignName"></div>
+                <div style="color: #475569;" id="cpSignPhone"></div>
             </div>
         </div>
     </div>
@@ -600,7 +634,7 @@
 </div>
 
 <script>
-    const cv = "V150"; 
+    const cv = "V151"; 
     
     const getVal = (id) => { let e = document.getElementById(id); return e ? e.value : ''; };
     const getNum = (id) => { let v = parseFloat(getVal(id)); return isNaN(v) ? 0 : v; };
@@ -715,7 +749,7 @@
     function initSystemData() {
         applyCompanyProfileToHeaders();
         applyCompanyProfileToAdmin();
-        setVal('quoteIdInput', (companyProfile.quotePrefix || "QP-26-") + (companyProfile.quoteSeq || 1001)); setVal('sstPct', companyProfile.taxRate); setVal('fullTermsNotes', companyProfile.terms);
+        setVal('quoteIdInput', (companyProfile.quotePrefix || "QP-26-") + (companyProfile.quoteSeq || 1001)); setVal('sstPct', companyProfile.taxRate); setVal('fullTermsNotes', companyProfile.terms); setVal('shortExclusions', "- Float valve chamber or top sumps\n- Flanges, nozzles, pipes, vortex, valves, electrode sensor, pumps and filter.\n- Scaffolding\n- Unloading and hoisting of materials.\n- HIRARC, permit application, medical test and site safety supervisor.");
         initCloudListeners();
         if (cloudDB) { document.getElementById('cloudStatusDot').classList.add('online'); document.getElementById('cloudStatusDot').title = "Live Cloud Sync Connected"; }
     }
@@ -731,7 +765,6 @@
         else if(tabId === 'inventory') { setDisp('inventoryContent', true); document.getElementById('btnTabInv').classList.add('active'); renderInventoryUI(); }
     }
 
-    // --- CRASH FIX: Restoring User Management Functions ---
     function renderUserTable() {
         let h = '';
         winkoUsers.forEach((u, i) => {
@@ -754,7 +787,6 @@
         }
     }
 
-    // --- CRASH FIX: Restoring Customer Autofill ---
     function checkCustomerAutoFill() {
         let c = getVal('custCompany');
         if(winkoCustomers[c]) {
@@ -764,7 +796,6 @@
         }
     }
 
-    // --- CRASH FIX: Restoring Bulk Inventory Upload ---
     function handleBulkInventoryUpload(event) {
         let file = event.target.files[0]; if(!file) return;
         let reader = new FileReader();
@@ -1065,10 +1096,9 @@
         setHtml('dynamicCustomContainer', cH);
     }
 
-    // --- LADDER ADJUSTMENT INTEGRATION ---
     function createSVG(cols, rows, title, isWall, partitionCol, ladder1Col, ladder2Col) {
         let pSize = 35; let w = Math.max(1, cols) * pSize; let h = Math.max(1, rows) * pSize;
-        let pad = 10; let svg = `<div style="text-align:center; background:#fff; padding:15px; border:1.5px solid #cbd5e1; border-radius:8px; display:inline-block; margin-bottom:15px;">
+        let pad = 10; let svg = `<div style="text-align:center; background:#fff; padding:15px; border:1.5px solid #cbd5e1; border-radius:8px; display:inline-block; margin-bottom:15px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05);">
             <h4 style="margin:0 0 10px 0; font-size:12px; font-weight:800; color:#0f172a; text-transform:uppercase;">${title}</h4>
             <svg width="${w + pad*2}" height="${h + pad*2}"><g transform="translate(${pad}, ${pad})">`;
         
@@ -1092,15 +1122,8 @@
                     for(let r=8; r<h; r+=8) { svg += `<line x1="${lx-6}" y1="${r}" x2="${lx+6}" y2="${r}" stroke="#ea580c" stroke-width="1"/>`; }
                 }
             };
-            
-            // If custom ladders are set, draw them. Otherwise, default fallback.
-            if(ladder1Col > 0 || ladder2Col > 0) {
-                drawLadder(ladder1Col);
-                drawLadder(ladder2Col);
-            } else if (cols >= 5) {
-                drawLadder(3);
-                drawLadder(5);
-            }
+            if(ladder1Col > 0 || ladder2Col > 0) { drawLadder(ladder1Col); drawLadder(ladder2Col); } 
+            else if (cols >= 5) { drawLadder(3); drawLadder(5); }
         }
 
         if (partitionCol > 0 && partitionCol < cols && (title === 'Front View' || title === 'Roof Plan' || title === 'Base Plan')) {
@@ -1191,22 +1214,47 @@
         setTxt('cpValidity', getVal('tcValidity')); setTxt('cpPayment', getVal('tcPayment').replace(/\n/g, '<br>'));
         setTxt('cpLeadTime', getVal('tcLead')); setTxt('cpDeliveryTerm', getVal('tcDelivery'));
         setTxt('cpSignName', getVal('signName')); setTxt('cpSignPhone', getVal('signPhone'));
+        setHtml('cpShortExclusionsText', getVal('shortExclusions').replace(/\n/g, '<br>'));
+        setTxt('cpFullTermsText', getVal('fullTermsNotes'));
         
         setTxt('cpGrandTotal', "RM " + window.currentGrandTotal);
         
         let tH = '';
         appTanks.forEach((t, i) => {
             let dimStr = u==='ft' ? `${t.L}' x ${t.W}' x ${t.H}' (H)` : `${t.L}m x ${t.W}m x ${t.H}m (H)`;
-            tH += `<tr><td style="border:1px solid #000; text-align:center;">${i+1}</td><td style="border:1px solid #000; padding:6px;"><strong>Pressed Steel Sectional Water Tank</strong><br>Standard: ${t.std}<br>Dimension: ${dimStr}<br>Material: ${t.coat}</td><td style="border:1px solid #000; text-align:center;">1 Set</td><td style="border:1px solid #000; text-align:right;">RM ${t.baseCost.toLocaleString('en-MY',{minimumFractionDigits:2})}</td></tr>`;
+            tH += `<tr><td class="text-center" style="font-weight:bold;">${i+1}</td><td><strong style="color:#0f172a; font-size:10pt;">Pressed Steel Sectional Water Tank</strong><br><span style="color:#475569;">Standard: ${t.std}<br>Dimension: ${dimStr}<br>Material: ${t.coat}</span></td><td class="text-center" style="font-weight:bold;">1 Set</td><td class="text-right" style="font-weight:bold;">RM ${t.baseCost.toLocaleString('en-MY',{minimumFractionDigits:2})}</td></tr>`;
         });
         
         appCustomItems.forEach((c, i) => {
             let lineCost = ((parseFloat(c.qty)||0) * (parseFloat(c.cost)||0));
-            tH += `<tr><td style="border:1px solid #000; text-align:center;">-</td><td style="border:1px solid #000; padding:6px;"><strong>${c.name}</strong></td><td style="border:1px solid #000; text-align:center;">${c.qty} ${c.unit}</td><td style="border:1px solid #000; text-align:right;">RM ${lineCost.toLocaleString('en-MY',{minimumFractionDigits:2})}</td></tr>`;
+            tH += `<tr><td class="text-center" style="font-weight:bold;">-</td><td><strong style="color:#0f172a; font-size:10pt;">${c.name}</strong></td><td class="text-center" style="font-weight:bold;">${c.qty} ${c.unit}</td><td class="text-right" style="font-weight:bold;">RM ${lineCost.toLocaleString('en-MY',{minimumFractionDigits:2})}</td></tr>`;
         });
         
         setHtml('cpDynamicTanksBody', tH);
         
+        // Render SVGs to Customer PDF
+        let cpDrawHtml = '';
+        appTanks.forEach((t, i) => {
+            let pL = Math.max(1, u === 'ft' ? Math.floor(t.L/4) : Math.floor(t.L));
+            let pW = Math.max(1, u === 'ft' ? Math.floor(t.W/4) : Math.floor(t.W));
+            let pH = Math.max(1, u === 'ft' ? Math.floor(t.H/4) : Math.floor(t.H));
+            let pCol = Math.max(0, parseInt(t.partitionCol) || 0);
+            let l1 = parseInt(t.ladder1Col) || 0;
+            let l2 = parseInt(t.ladder2Col) || 0;
+            
+            cpDrawHtml += `
+            <div class="avoid-break editable-section" style="margin-bottom:30px; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; background: #f8fafc;">
+                <h4 style="background:#0f172a; color:white; padding:8px 12px; margin:0 0 15px 0; font-size:10pt; border-radius: 4px; text-transform: uppercase;">Tank ${i+1} Schematic Layout</h4>
+                <div style="display:flex; gap:15px; flex-wrap:wrap; justify-content:center;">
+                    ${createSVG(pL, pH, 'Front View', true, pCol, l1, l2)}
+                    ${createSVG(pW, pH, 'Side View', true, 0, 0, 0)}
+                    ${createSVG(pL, pW, 'Roof Plan', false, pCol, 0, 0)}
+                    ${createSVG(pL, pW, 'Base Plan', false, pCol, 0, 0)}
+                </div>
+            </div>`;
+        });
+        setHtml('cpDrawingsContainer', cpDrawHtml);
+
         let nozH = ''; appTanks.forEach((t,i) => { if(t.nozzles) t.nozzles.forEach(n => { nozH += `<tr><td style="border:1px solid #000; text-align:center;">${n.type}</td><td style="border:1px solid #000; text-align:center;">${n.size}</td><td style="border:1px solid #000; text-align:center;">${n.qty}</td><td style="border:1px solid #000; padding-left:5px;">Tank ${i+1}: ${n.pos}</td></tr>`; }) });
         setHtml('so_nozzle_body', nozH);
     }
