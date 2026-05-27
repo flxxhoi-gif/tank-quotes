@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Winko / Jutarama - Enterprise Quoting ERP V147 (Master Fix)</title>
+    <title>Winko / Jutarama - Enterprise Quoting ERP V148</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -56,7 +56,7 @@
         .module-card.collapsed .card-body { display: none; }
         
         .config-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 10px; }
-        .dim-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px; width: 100%; }
+        .dim-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 10px; width: 100%; }
         .form-group { display: flex; flex-direction: column; position: relative; }
         .form-group label { font-size: 0.75em; font-weight: 700; color: #64748b; margin-bottom: 4px; text-transform: uppercase; }
         .form-group input, .form-group select, .form-group textarea { padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px; font-weight: 600; background: #f8fafc; }
@@ -161,11 +161,11 @@
         </div>
         <div style="position: relative; width: 100%; text-align: left; margin-top: 5px;">
             <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-left: 4px;">Password</label>
-            <input type="password" id="passInput" placeholder="••••••••" onkeypress="if(event.key==='Enter') checkLogin()" style="width: 100%; padding-right: 40px;">
+            <input type="password" id="passInput" placeholder="••••••••" onkeypress="if(event.key==='Enter') forceLoginBypass()" style="width: 100%; padding-right: 40px;">
             <span onclick="togglePass('passInput')" style="position: absolute; right: 12px; top: 35px; cursor: pointer; font-size: 16px;" title="Show/Hide Password">👁️</span>
         </div>
-        <button onclick="checkLogin()">Secure Login</button>
-        <p style="font-size: 10px; color: #94a3b8; margin-top: 20px;">Emergency Bypass Active</p>
+        <button onclick="forceLoginBypass()">Secure Login</button>
+        <p style="font-size: 10px; color: #94a3b8; margin-top: 20px;">Emergency Bypass Protocol Active</p>
     </div>
 </div>
 
@@ -378,7 +378,7 @@
                 <div class="module-card no-print drawings-page">
                     <div class="card-header" onclick="this.parentElement.classList.toggle('collapsed')"><span>📏</span> 3. Auto-Drawings (Panel Layout)</div>
                     <div class="card-body">
-                        <p style="font-size:11px; color:#64748b; margin-top:0;">* Technical blueprints auto-generated based on Engineering Configuration dimensions.</p>
+                        <p style="font-size:11px; color:#64748b; margin-top:0;">* Pure Schematics: Ladders & Partition logic applied automatically.</p>
                         <div id="dynamicDrawingsContainer"></div>
                     </div>
                 </div>
@@ -594,9 +594,8 @@
 </div>
 
 <script>
-    const cv = "V147"; 
+    const cv = "V148"; 
     
-    // --- CORE SYSTEM HELPERS ---
     const getVal = (id) => { let e = document.getElementById(id); return e ? e.value : ''; };
     const getNum = (id) => { let v = parseFloat(getVal(id)); return isNaN(v) ? 0 : v; };
     const setTxt = (id, v) => { let e = document.getElementById(id); if(e) e.innerText = v; };
@@ -617,7 +616,6 @@
     
     function togglePass(id) { let el = document.getElementById(id); if(el) { el.type = el.type === "password" ? "text" : "password"; } }
 
-    // --- FIREBASE CLOUD SYNC SETUP ---
     const FIREBASE_CONFIG = {
         apiKey: "AIzaSyC4ypeNoU9D_gFxjaDSZA11PJrqh4sOdbM",
         authDomain: "winko-erp.firebaseapp.com",
@@ -654,22 +652,22 @@
         terms: "Scope of Supply\n1. Standard tank accessories such as bolt, nut, washer, foam tape, air vent, 600x600mm access manhole, internal stays & brackets, internal & external ladder, water level indicator, subject to manufacturer's design and standard and item mentioned in quotation.\n2. Pipe hole opening at factory (Exclude flange). Pipe hole opening on site will be an additional charge.\n\nExcluded from the Supply\n1. Float valve chamber or top sump.\n2. Flanges, nozzles, pipes, valves, vortex, electrode sensor, pumps and filter.\n3. RC works and RC plinths.\n4. Scaffolding & safety platform for installation.\n5. Unloading, shifting and hoisting of materials at site.\n6. Safety training courses, equipment and medical test require to install tank.\n\nNote:\n1. Tank design to sit on 1M Center to center RC tank support/Plinths with at least 500mm height and 200mm width. Design to be provided by others.\n2. RC plinths MUST be level with maximum tolerance of ± 3mm.\n3. Leak test should be done within 3 months from completion of tank installation to maintain the quality of foam tape.\n4. The customer shall be responsible for the security of materials at site after delivery. Missing item shall be replaced with additional charges."
     };
     
-    // --- FULLY RESTORED BASE BOM STRUCTURE ---
+    // --- EXACT STRING MATCHES TO MASTER INVENTORY ---
     let systemBaseStructure = [
         { category: "Panels", markup: 0, items: [
-            {name: "Manhole Panel (HDG)", def: 450, wt: 55}, 
-            {name: "Roof Panel (1.5mm - 4'x4')", def: 162.75, wt: 26},
-            {name: "Base Panel (4.5mm - 4'x4')", def: 263.50, wt: 68},
-            {name: "Wall Panel (L1 - 4.5mm)", def: 263.50, wt: 68},
-            {name: "Wall Panel (L2 - 3.0mm)", def: 162.75, wt: 48},
-            {name: "Wall Panel (L3 - 3.0mm)", def: 162.75, wt: 48},
-            {name: "Wall Panel (L4 - 1.5mm)", def: 162.75, wt: 26},
-            {name: "Partition Panel", def: 253.50, wt: 48}
+            {name: "Manhole Panel (4'x4') (HDG)", def: 450, wt: 55}, 
+            {name: "1.5mm Roof Panel (4'x4') (HDG)", def: 162.75, wt: 26},
+            {name: "4.5mm Base Panel (4'x4') (HDG)", def: 263.50, wt: 68},
+            {name: "4.5mm Wall Panel (L1) (4'x4') (HDG)", def: 263.50, wt: 68},
+            {name: "3.0mm Wall Panel (L2) (4'x4') (HDG)", def: 162.75, wt: 48},
+            {name: "3.0mm Wall Panel (L3) (4'x4') (HDG)", def: 162.75, wt: 48},
+            {name: "1.5mm Wall Panel (L4) (4'x4') (HDG)", def: 162.75, wt: 26},
+            {name: "Partition Panel (4'x4') (HDG)", def: 253.50, wt: 48}
         ] },
         { category: "Cleat & Trusses", markup: 0, items: [
             {name: "Partition Cleat HDG", def: 15.00, wt: 1.2},
             {name: "8mm (B) Cleat HDG", def: 16.50, wt: 1.8},
-            {name: "Type C Cleat", def: 30, wt: 2.5}, 
+            {name: "Type C Cleat HDG", def: 30, wt: 2.5}, 
             {name: "Ø1\" Pipe (HDG AAA)", def: 18.00, wt: 1.6},
             {name: "Ø1.5\" Pipe (HDG AAA)", def: 26.60, wt: 2.2},
             {name: "50x50x1.9mm SHS Truss (4' HDG)", def: 28.20, wt: 5.0},
@@ -683,10 +681,10 @@
             {name: "15' 8.5\" (L4 Stay)", def: 125, wt: 19.8}
         ] },
         { category: "Accessories", markup: 0, items: [
-            {name: "Ext. Ladder", def: 55, wt: 3.5}, 
-            {name: "Int. Ladder", def: 75, wt: 3.5}, 
-            {name: "Water Level Indicator", def: 220, wt: 2.5}, 
-            {name: "Air Vent", def: 85, wt: 1.5}, 
+            {name: "Ext. Ladder (HDG)", def: 55, wt: 3.5}, 
+            {name: "Int. Ladder (HDG)", def: 75, wt: 3.5}, 
+            {name: "Water Level Indicator (Mechanical)", def: 220, wt: 2.5}, 
+            {name: "Air Vent (PVC)", def: 85, wt: 1.5}, 
             {name: "PVC Foam Tape (10m x 3mm)", def: 8.00, wt: 0.8},
             {name: "Aseal Butyl Sealant (80m)", def: 1.70, wt: 0.2},
             {name: "M10 x 35mm HDG (Bolt, Nut & Washer)", def: 1.20, wt: 0.10}, 
@@ -698,7 +696,10 @@
             {name: "PVC Bolt Head Cover (M12)", def: 0.20, wt: 0.01}, 
             {name: "M12 EPDM Rubber Washer", def: 0.40, wt: 0.01}
         ]},
-        { category: "Services", markup: 0, items: [{name: "Installation & Labor", def: 3500, wt: 0}, {name: "Transport", def: 850, wt: 0}] }
+        { category: "Services", markup: 0, items: [
+            {name: "Installation & Labor", def: 3500, wt: 0}, 
+            {name: "Transport", def: 850, wt: 0}
+        ]}
     ];
 
     function initCloudListeners() {
@@ -720,9 +721,6 @@
     }
     initSystemData();
 
-    // ==========================================
-    // EXTENDED 200+ ITEM INVENTORY ENGINE
-    // ==========================================
     function switchTab(tabId) {
         setDisp('mainContent', false); setDisp('adminContent', false); setDisp('customerPreviewContainer', false); setDisp('projectsContent', false); setDisp('inventoryContent', false);
         ['btnTabQuote', 'btnTabAdmin', 'btnTabPreview', 'btnTabProjects', 'btnTabInv'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).classList.remove('active'); });
@@ -734,9 +732,7 @@
     }
 
     function autoPopulateInventory() {
-        // Highly expanded 200+ items covering HDG, GRP, MS, SS, Fasteners, Flanges, Trusses, Stays, and Tools
         const masterItems = {
-            // Panels HDG
             "Manhole Panel (4'x4') (HDG)": { stock: 50, alert: 10, cost: 450.00 },
             "1.5mm Roof Panel (4'x4') (HDG)": { stock: 150, alert: 30, cost: 162.75 },
             "4.5mm Base Panel (4'x4') (HDG)": { stock: 100, alert: 20, cost: 263.50 },
@@ -753,8 +749,6 @@
             "1.22m x 1.22m Base Panel (HDG)": { stock: 50, alert: 10, cost: 265.00 },
             "1.22m x 1.22m Wall Panel (HDG)": { stock: 50, alert: 10, cost: 265.00 },
             "1.22m x 1.22m Roof Panel (HDG)": { stock: 50, alert: 10, cost: 165.00 },
-
-            // Panels SS304/SS316
             "Base Panel (4'x4') (SS 304)": { stock: 50, alert: 10, cost: 790.50 },
             "Wall Panel (4'x4') (SS 304)": { stock: 50, alert: 10, cost: 790.50 },
             "Roof Panel (4'x4') (SS 304)": { stock: 50, alert: 10, cost: 488.25 },
@@ -764,8 +758,6 @@
             "Base Panel (1m x 1m) (SS 304)": { stock: 20, alert: 5, cost: 630.00 },
             "Wall Panel (1m x 1m) (SS 304)": { stock: 20, alert: 5, cost: 630.00 },
             "Roof Panel (1m x 1m) (SS 304)": { stock: 20, alert: 5, cost: 390.00 },
-            
-            // Panels GRP/FRP
             "GRP Base Panel (1m x 1m)": { stock: 150, alert: 30, cost: 320.00 },
             "GRP Wall Panel (1m x 1m)": { stock: 150, alert: 30, cost: 320.00 },
             "GRP Roof Panel (1m x 1m)": { stock: 100, alert: 20, cost: 180.00 },
@@ -773,8 +765,6 @@
             "GRP Manhole Panel (1m x 1m)": { stock: 30, alert: 5, cost: 400.00 },
             "GRP Base Panel (1.22m x 1.22m)": { stock: 50, alert: 10, cost: 450.00 },
             "GRP Wall Panel (1.22m x 1.22m)": { stock: 50, alert: 10, cost: 450.00 },
-
-            // Cleats & Angle Stays
             "Partition Cleat HDG": { stock: 150, alert: 30, cost: 15.00 },
             "8mm (B) Cleat HDG": { stock: 500, alert: 100, cost: 16.50 },
             "Type C Cleat HDG": { stock: 300, alert: 50, cost: 30.00 },
@@ -789,8 +779,6 @@
             "L1 Angle Stay (67.5\") MS": { stock: 100, alert: 20, cost: 22.00 },
             "L2 Angle Stay (92.5\") MS": { stock: 100, alert: 20, cost: 32.00 },
             "SS 304 L1 Stay": { stock: 30, alert: 5, cost: 110.00 },
-
-            // Trusses & Roof Supports
             "50x50x1.9mm SHS Truss (4' HDG)": { stock: 100, alert: 20, cost: 28.20 },
             "50x50x1.9mm SHS Truss (8' HDG)": { stock: 100, alert: 20, cost: 59.00 },
             "50x50x1.9mm SHS Truss (12' HDG)": { stock: 100, alert: 20, cost: 74.40 },
@@ -805,8 +793,6 @@
             "C-Channel Support (75x38x5mm) - Per Meter": { stock: 300, alert: 50, cost: 35.00 },
             "C-Channel Support (100x50x5mm) - Per Meter": { stock: 200, alert: 40, cost: 55.00 },
             "50 x 50 x 1.6mm Trunking (6m)": { stock: 20, alert: 5, cost: 35.00 },
-
-            // Fasteners (HDG)
             "M10 x 35mm HDG (Bolt, Nut & Washer)": { stock: 800, alert: 100, cost: 1.20 },
             "M10 x 40mm HDG (Bolt, Nut & Washer)": { stock: 500, alert: 100, cost: 1.30 },
             "M12 x 45mm HDG (Bolt, Nut & Washer)": { stock: 800, alert: 100, cost: 1.50 },
@@ -818,16 +804,12 @@
             "5/8\"Ø Washers MS (50kg Bag)": { stock: 12, alert: 2, cost: 130.00 },
             "M12 x 100mm Expansion Bolt (HDG)": { stock: 200, alert: 50, cost: 3.00 },
             "M16 x 120mm Expansion Bolt (HDG)": { stock: 200, alert: 50, cost: 5.00 },
-            
-            // Fasteners (SS)
             "M10 x 35mm SS304 (Bolt, Nut & Washer)": { stock: 500, alert: 100, cost: 3.50 },
             "M12 x 45mm SS304 (Bolt, Nut & Washer)": { stock: 500, alert: 100, cost: 4.20 },
             "M14 x 40mm SS304 (Bolt, Nut & Washer)": { stock: 300, alert: 50, cost: 6.80 },
             "M16 x 50mm SS304 (Bolt, Nut & Washer)": { stock: 200, alert: 50, cost: 9.50 },
             "M10 x 35mm SS316 (Bolt, Nut & Washer)": { stock: 200, alert: 50, cost: 5.50 },
             "M12 x 45mm SS316 (Bolt, Nut & Washer)": { stock: 200, alert: 50, cost: 6.50 },
-
-            // Sealants & Consumables
             "PVC Foam Tape (10m x 3mm)": { stock: 300, alert: 50, cost: 8.00 },
             "PVC Foam Tape (Norton 15m)": { stock: 100, alert: 20, cost: 61.50 },
             "Aseal Butyl Sealant (80m)": { stock: 200, alert: 30, cost: 1.70 },
@@ -839,8 +821,6 @@
             "PVC Bolt Head Cover (M12)": { stock: 1000, alert: 200, cost: 0.20 },
             "PVC Bolt Head Cover (M16)": { stock: 1000, alert: 200, cost: 0.30 },
             "M12 EPDM Rubber Washer": { stock: 1000, alert: 200, cost: 0.40 },
-
-            // Accessories & Indicators
             "Ext. Ladder (HDG)": { stock: 40, alert: 5, cost: 55.00 },
             "Int. Ladder (HDG)": { stock: 40, alert: 5, cost: 75.00 },
             "Ext. Ladder (Aluminium)": { stock: 20, alert: 5, cost: 150.00 },
@@ -856,8 +836,6 @@
             "Air Vent (PVC)": { stock: 80, alert: 15, cost: 85.00 },
             "4' diameter air-vent MS": { stock: 80, alert: 15, cost: 20.00 },
             "24\" x 24\" manhole cover HDG": { stock: 50, alert: 10, cost: 90.00 },
-
-            // Flanges
             "2\" Flange (HDG)": { stock: 50, alert: 10, cost: 45.00 },
             "3\" Flange (HDG)": { stock: 50, alert: 10, cost: 65.00 },
             "4\" Flange (HDG)": { stock: 50, alert: 10, cost: 85.00 },
@@ -869,8 +847,6 @@
             "6\" Flange (SS304)": { stock: 10, alert: 2, cost: 380.00 },
             "2\" Flange (PVC)": { stock: 50, alert: 10, cost: 25.00 },
             "4\" Flange (PVC)": { stock: 50, alert: 10, cost: 45.00 },
-
-            // Valves & Vortex Inhibitors
             "2\" Float Valve (Brass)": { stock: 40, alert: 5, cost: 180.00 },
             "3\" Float Valve (Brass)": { stock: 30, alert: 5, cost: 350.00 },
             "4\" Float Valve (Brass)": { stock: 20, alert: 5, cost: 550.00 },
@@ -885,8 +861,6 @@
             "4\" Vortex Inhibitor (HDG)": { stock: 20, alert: 5, cost: 250.00 },
             "6\" Vortex Inhibitor (HDG)": { stock: 10, alert: 2, cost: 350.00 },
             "8\" Vortex Inhibitor (HDG)": { stock: 5, alert: 1, cost: 480.00 },
-            
-            // Raw Plates (MS)
             "3.0mm Tank Plate MS (Painted)": { stock: 100, alert: 20, cost: 138.00 },
             "4.3mm Type AB / C(L) MS": { stock: 50, alert: 10, cost: 220.00 },
             "4.5mm Type A / D MS": { stock: 150, alert: 30, cost: 250.00 },
@@ -901,8 +875,6 @@
             "4' x 4' x 1.5mm thk Tank Cover MS": { stock: 100, alert: 20, cost: 120.00 },
             "51\" x 106\" x 1.5mm thk HDG": { stock: 50, alert: 10, cost: 140.00 },
             "HTD Bar Y12mm x 14 3/4\"": { stock: 200, alert: 40, cost: 18.00 },
-
-            // Tools & Services
             "Scaffolding Rental (Per Set/Day)": { stock: 100, alert: 20, cost: 25.00 },
             "Hoisting Crane (Per Day)": { stock: 10, alert: 2, cost: 800.00 },
             "Safety Harness (PPE)": { stock: 30, alert: 5, cost: 120.00 },
@@ -912,9 +884,7 @@
         };
 
         let itemsAdded = 0;
-        for (let item in masterItems) {
-            if (!winkoInventory[item]) { winkoInventory[item] = masterItems[item]; itemsAdded++; }
-        }
+        for (let item in masterItems) { if (!winkoInventory[item]) { winkoInventory[item] = masterItems[item]; itemsAdded++; } }
         if (itemsAdded > 0) { saveInventoryDB(); showToast(`Success! Linked ${itemsAdded} hardcoded items into inventory.`); } 
         else { showToast("All exact items are already in the inventory.", "info"); }
     }
@@ -954,9 +924,6 @@
         else { invChart = new Chart(ctx, { type: 'bar', data: { labels: labels, datasets: [{ label: 'Current Stock', data: data, backgroundColor: colors, borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#e2e8f0' } }, x: { grid: { display: false } } } } }); }
     }
 
-    // ==========================================
-    // RESTORED CLOUD & EXPORT FUNCTIONS
-    // ==========================================
     function saveToMemory() {
         let qid = getVal('quoteIdInput');
         if(!qid) return showToast("Enter Quote ID first", "error");
@@ -971,7 +938,7 @@
         appTanks.forEach((t, i) => {
             csv += `TANK ${i+1} - ${t.L}x${t.W}x${t.H},,, \n`;
             t.bom.forEach(sec => sec.items.forEach(it => {
-                let qty = parseFloat(it.qty)||0;
+                let qty = Number(it.qty)||0;
                 if(qty > 0) {
                     let cost = (winkoInventory[it.name] && winkoInventory[it.name].cost > 0) ? winkoInventory[it.name].cost : (it.def||0);
                     csv += `"${it.name}",${qty},${cost},${qty*cost}\n`;
@@ -981,9 +948,7 @@
         
         if(appCustomItems.length > 0) {
             csv += `\nCUSTOM ITEMS & SERVICES,,,\n`;
-            appCustomItems.forEach(c => {
-                csv += `"${c.name}",${c.qty},${c.cost},${c.qty*c.cost}\n`;
-            });
+            appCustomItems.forEach(c => { csv += `"${c.name}",${c.qty},${c.cost},${c.qty*c.cost}\n`; });
         }
         
         let blob = new Blob([csv], { type: 'text/csv' }); let url = window.URL.createObjectURL(blob);
@@ -1004,8 +969,7 @@
     function loadFromMemory(k) {
         let d = window.cloudMemoryBank[k]; if(!d) return;
         configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); });
-        appTanks = d.tanks || []; 
-        appCustomItems = d.custom || [];
+        appTanks = d.tanks || []; appCustomItems = d.custom || [];
         switchTab('quote'); safeProcess(); showToast("Project Loaded!");
     }
 
@@ -1040,7 +1004,7 @@
         appTanks.forEach(t => t.bom.forEach(sec => {
             if(sec.category === "Services") return; 
             sec.items.forEach(it => {
-                let q = parseFloat(it.qty) || 0;
+                let q = Number(it.qty) || 0;
                 if(q > 0 && winkoInventory[it.name]) { winkoInventory[it.name].stock -= q; deducted++; if(winkoInventory[it.name].stock < 0) warns.push(`${it.name} is negative!`); }
             });
         }));
@@ -1048,15 +1012,11 @@
         else { alert("❌ No exact matching inventory items to deduct."); }
     }
 
-    // ==========================================
-    // RESTORED MAIN WORKSPACE ENGINE & CUSTOM ITEMS
-    // ==========================================
     let appTanks = [];
     let appCustomItems = [];
     const configIDs = ['quoteIdInput', 'custPoNo', 'custDelDate', 'marketChoice', 'unitChoice', 'markupPct','discountPct','sstPct', 'shortExclusions', 'fullTermsNotes', 'custCompany', 'custAttn', 'custAddr', 'tcValidity', 'tcLead', 'tcDelivery', 'tcPayment', 'signName', 'signPhone'];
 
-    // Height corrected to 12 as per ledger constraints
-    function defaultTank() { return { id: Date.now(), std: "SANS 10329:2020", coat: "Hot Dipped Galvanised", L: 12, W: 4, H: 12, override: "", bom: JSON.parse(JSON.stringify(systemBaseStructure)), nozzles: [], baseCost: 0, finalPrice: 0, effLiters: 0 }; }
+    function defaultTank() { return { id: Date.now(), std: "SANS 10329:2020", coat: "Hot Dipped Galvanised", L: 12, W: 4, H: 12, partitionCol: 0, override: "", bom: JSON.parse(JSON.stringify(systemBaseStructure)), nozzles: [], baseCost: 0, finalPrice: 0, effLiters: 0 }; }
     function handleUnitChange() { safeProcess(); }
     function addNewTank() { appTanks.push(defaultTank()); renderAllDynamicUI(); processTankData(); }
     function removeTank(i) { if(confirm("Remove tank?")) { appTanks.splice(i, 1); renderAllDynamicUI(); processTankData(); } }
@@ -1074,11 +1034,7 @@
     function updateNozzle(t, nId, f, v, isNum) { let n = appTanks[t].nozzles.find(x=>x.id==nId); if(n) { n[f] = isNum ? (parseFloat(v)||0) : v; safeProcess(); } }
     function addNozzle(t) { if(!appTanks[t].nozzles) appTanks[t].nozzles = []; appTanks[t].nozzles.push({id: Date.now(), type: "Warning", size: "2\"", qty: 1, pos: "Side panel"}); renderAllDynamicUI(); }
 
-    // CUSTOM ITEMS FIX (Fully restored from pre-V146 breakage)
-    function addNewCustomItem() {
-        appCustomItems.push({ id: Date.now(), name: "Custom Service / Add-on", qty: 1, unit: "Lot", cost: 0 });
-        renderAllDynamicUI(); safeProcess();
-    }
+    function addNewCustomItem() { appCustomItems.push({ id: Date.now(), name: "Custom Service / Add-on", qty: 1, unit: "Lot", cost: 0 }); renderAllDynamicUI(); safeProcess(); }
     function updateCustomItem(i, f, v, isNum) { appCustomItems[i][f] = isNum ? parseFloat(v)||0 : v; safeProcess(); }
     function removeCustomItem(i) { appCustomItems.splice(i, 1); renderAllDynamicUI(); safeProcess(); }
 
@@ -1098,7 +1054,12 @@
             tH += `<div class="tank-block" style="border-top:2px dashed #cbd5e1; margin-top:24px; padding-top:20px;">
                 <div class="tank-section-title"><span>Tank ${i+1} Specs</span><button class="del-btn no-print" onclick="removeTank(${i})">X REMOVE</button></div>
                 <div class="config-grid"><div class="form-group"><label>Standard</label><select onchange="updateTankField(${i}, 'std', this.value)"><option ${t.std.includes('SANS')?'selected':''}>SANS 10329:2020 Approved by SIRIM & SPAN</option><option ${t.std.includes('SS 22')?'selected':''}>SS 22: 1979</option></select></div><div class="form-group"><label>Material</label><select onchange="updateTankField(${i}, 'coat', this.value)"><option ${t.coat==='Hot Dipped Galvanised'?'selected':''}>Hot Dipped Galvanised</option><option ${t.coat==='Painted Steel'?'selected':''}>Painted Steel</option><option ${t.coat==='Stainless Steel (SS 304)'?'selected':''}>Stainless Steel (SS 304)</option><option ${t.coat==='Stainless Steel (SS 316)'?'selected':''}>Stainless Steel (SS 316)</option></select></div></div>
-                <div class="dim-grid"><div class="form-group"><label>Length</label><input type="number" value="${t.L}" oninput="updateTankField(${i}, 'L', this.value, true)"></div><div class="form-group"><label>Width</label><input type="number" value="${t.W}" oninput="updateTankField(${i}, 'W', this.value, true)"></div><div class="form-group"><label>Height (Default 12ft)</label><input type="number" value="${t.H}" oninput="updateTankField(${i}, 'H', this.value, true)"></div></div>
+                <div class="dim-grid">
+                    <div class="form-group"><label>Length</label><input type="number" value="${t.L}" oninput="updateTankField(${i}, 'L', this.value, true)"></div>
+                    <div class="form-group"><label>Width</label><input type="number" value="${t.W}" oninput="updateTankField(${i}, 'W', this.value, true)"></div>
+                    <div class="form-group"><label>Height (Default 12ft)</label><input type="number" value="${t.H}" oninput="updateTankField(${i}, 'H', this.value, true)"></div>
+                    <div class="form-group"><label>Partition Pos (Panel Column)</label><input type="number" value="${t.partitionCol||0}" oninput="updateTankField(${i}, 'partitionCol', this.value, true)"></div>
+                </div>
                 <div class="tank-section-title" style="margin-top:10px; background:#fff7ed; border-left-color:#ea580c;">🚰 Nozzles</div>${nozHtml}<button class="add-btn" style="width:auto; padding:4px 8px; font-size:12px;" onclick="addNozzle(${i})">+ Add Nozzle</button>
             </div>`;
             
@@ -1106,7 +1067,7 @@
             t.bom.forEach((sec, sIdx) => {
                 rH += `<tr><td colspan="5" style="background:#f1f5f9; font-weight:700;">${sec.category}</td></tr>`;
                 sec.items.forEach((it, iIdx) => {
-                    let qtyHtml = (sec.category==="Services") ? `<input type="hidden" id="t_${i}_q_${sIdx}_${iIdx}" value="1">` : `<input type="number" id="t_${i}_q_${sIdx}_${iIdx}" value="${it.qty||0}" oninput="updateBomField(${i}, ${sIdx}, ${iIdx}, 'qty', this.value, true)">`;
+                    let qtyHtml = `<input type="number" id="t_${i}_q_${sIdx}_${iIdx}" value="${it.qty||0}" oninput="updateBomField(${i}, ${sIdx}, ${iIdx}, 'qty', this.value, true)">`;
                     rH += `<tr><td><input type="text" class="desc-input" value="${it.name}" oninput="updateBomField(${i}, ${sIdx}, ${iIdx}, 'name', this.value)"><span id="price_tag_${i}_${sIdx}_${iIdx}" class="price-tag"></span></td><td class="col-input">${qtyHtml}</td><td><input type="number" class="admin-input" value="${it.wt||0}"></td><td><input type="number" class="admin-input" value="${(it.def||0).toFixed(2)}" oninput="updateBomField(${i}, ${sIdx}, ${iIdx}, 'def', this.value, true)"></td><td class="col-total" id="tot_${i}_${sIdx}_${iIdx}">0.00</td></tr>`;
                 });
             });
@@ -1127,12 +1088,9 @@
         setHtml('dynamicCustomContainer', cH);
     }
 
-    // ==========================================
-    // RESTORED: TECHNICAL DRAWING ENGINE (V140 Style + strict rules)
-    // ==========================================
-    function createSVG(cols, rows, title, isWall) {
+    function createSVG(cols, rows, title, isWall, partitionCol) {
         let pSize = 35; let w = Math.max(1, cols) * pSize; let h = Math.max(1, rows) * pSize;
-        let pad = 40; let svg = `<div style="text-align:center; background:#fff; padding:15px; border:1.5px solid #cbd5e1; border-radius:8px; display:inline-block; margin-bottom:15px;">
+        let pad = 20; let svg = `<div style="text-align:center; background:#fff; padding:15px; border:1.5px solid #cbd5e1; border-radius:8px; display:inline-block; margin-bottom:15px;">
             <h4 style="margin:0 0 10px 0; font-size:12px; font-weight:800; color:#0f172a; text-transform:uppercase;">${title}</h4>
             <svg width="${w + pad*2}" height="${h + pad*2}"><g transform="translate(${pad}, ${pad})">`;
         
@@ -1140,22 +1098,13 @@
             for(let c=0; c<cols; c++) {
                 let px = c*pSize; let py = r*pSize;
                 svg += `<rect x="${px}" y="${py}" width="${pSize}" height="${pSize}" fill="#f8fafc" stroke="#334155" stroke-width="1.2"/>`;
-                
-                // Correction Rule Applied: "X" pattern strictly only on walls
                 if(isWall) {
                     svg += `<line x1="${px}" y1="${py}" x2="${px+pSize}" y2="${py+pSize}" stroke="#94a3b8" stroke-width="0.5"/>
                             <line x1="${px+pSize}" y1="${py}" x2="${px}" y2="${py+pSize}" stroke="#94a3b8" stroke-width="0.5"/>`;
                 }
-                
-                if(title === 'Roof Plan' && r===0 && c===0) {
-                    svg += `<rect x="${px+(pSize*0.2)}" y="${py+(pSize*0.2)}" width="${pSize*0.6}" height="${pSize*0.6}" fill="none" stroke="#ea580c" stroke-width="2"/>
-                            <circle cx="${px+pSize/2}" cy="${py+pSize/2}" r="3" fill="#ea580c"/>`;
-                }
             }
         }
         
-        // Correction Rule Applied: "center ladders in columns 3 and 5 with a specific 390mm gap"
-        // 390mm gap on a 1220mm panel is roughly 1/3 of the panel. So lines are offset by 6px from center.
         if(title === 'Front View' && cols >= 5) {
             let drawLadder = (colIndex) => {
                 let lx = colIndex * pSize + (pSize/2);
@@ -1163,31 +1112,32 @@
                         <line x1="${lx+6}" y1="0" x2="${lx+6}" y2="${h}" stroke="#ea580c" stroke-width="1.5"/>`;
                 for(let r=8; r<h; r+=8) { svg += `<line x1="${lx-6}" y1="${r}" x2="${lx+6}" y2="${r}" stroke="#ea580c" stroke-width="1"/>`; }
             };
-            drawLadder(2); // Column 3
-            drawLadder(4); // Column 5
+            drawLadder(2); 
+            drawLadder(4); 
         }
 
-        svg += `<line x1="0" y1="${h+12}" x2="${w}" y2="${h+12}" stroke="#0f172a" stroke-width="1.2" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
-                <text x="${w/2}" y="${h+28}" text-anchor="middle" font-size="10" font-weight="800" fill="#0f172a">${cols} Panels</text>`;
-        svg += `<line x1="${w+12}" y1="0" x2="${w+12}" y2="${h}" stroke="#0f172a" stroke-width="1.2" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
-                <text x="${w+18}" y="${h/2}" transform="rotate(90 ${w+18},${h/2})" text-anchor="middle" font-size="10" font-weight="800" fill="#0f172a">${rows} Panels</text>`;
+        if (partitionCol > 0 && partitionCol < cols && (title === 'Front View' || title === 'Roof Plan' || title === 'Base Plan')) {
+            let px = partitionCol * pSize;
+            svg += `<line x1="${px}" y1="0" x2="${px}" y2="${h}" stroke="#dc2626" stroke-width="3" stroke-dasharray="6,4"/>`;
+        }
         
         svg += `</g></svg></div>`; return svg;
     }
 
     function renderDrawings() {
-        let h = `<svg style="width:0;height:0;position:absolute;"><defs><marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#0f172a"/></marker></defs></svg>`;
+        let h = ``;
         appTanks.forEach((t, i) => {
             let pL = Math.max(1, window.currentUnit === 'ft' ? Math.floor(t.L/4) : Math.floor(t.L));
             let pW = Math.max(1, window.currentUnit === 'ft' ? Math.floor(t.W/4) : Math.floor(t.W));
             let pH = Math.max(1, window.currentUnit === 'ft' ? Math.floor(t.H/4) : Math.floor(t.H));
+            let pCol = Math.max(0, parseInt(t.partitionCol) || 0);
             
             h += `<div class="tank-section-title" style="margin-top:20px; background:#e0e7ff; border-left-color:#4f46e5;">TANK ${i+1} BLUEPRINTS</div>
                   <div style="display:flex; gap:15px; flex-wrap:wrap; justify-content:flex-start;">
-                    ${createSVG(pL, pH, 'Front View', true)}
-                    ${createSVG(pW, pH, 'Side View', true)}
-                    ${createSVG(pL, pW, 'Roof Plan', false)}
-                    ${createSVG(pL, pW, 'Base Plan', false)}
+                    ${createSVG(pL, pH, 'Front View', true, pCol)}
+                    ${createSVG(pW, pH, 'Side View', true, 0)}
+                    ${createSVG(pL, pW, 'Roof Plan', false, pCol)}
+                    ${createSVG(pL, pW, 'Base Plan', false, pCol)}
                   </div>`;
         });
         setHtml('dynamicDrawingsContainer', h);
@@ -1196,7 +1146,7 @@
     function processTankData() {
         try {
             let u = getVal('unitChoice') || 'ft'; window.currentUnit = u;
-            let totalBase = 0, totalP = 0, totalC = 0, totalW = 0;
+            let totalBase = 0, totalC = 0;
             appTanks.forEach((t, i) => {
                 t.effLiters = ((u === 'ft') ? (t.L * t.W * t.H * 28.3168) : (t.L * t.W * t.H * 1000)) * 0.9;
                 totalC += t.effLiters; t.baseCost = 0;
@@ -1205,7 +1155,7 @@
                     sec.items.forEach((it, iIdx) => {
                         let invItem = winkoInventory[it.name];
                         let unitPrice = (invItem && invItem.cost > 0) ? invItem.cost : (parseFloat(it.def) || 0);
-                        let calcQty = (sec.category==="Services") ? 1 : (parseFloat(it.qty) || 0);
+                        let calcQty = Number(it.qty) || 0;
                         let lTot = calcQty * unitPrice;
                         t.baseCost += lTot;
                         
@@ -1218,7 +1168,6 @@
                 totalBase += t.baseCost;
             });
 
-            // Calculate Custom Items
             let customTotal = 0;
             appCustomItems.forEach(c => { customTotal += ((parseFloat(c.qty)||0) * (parseFloat(c.cost)||0)); });
 
@@ -1240,15 +1189,11 @@
             setM(['grandTotal_screen','grandTotal_print'],window.currentGrandTotal);
             setM(['sumCapacity_screen','sumCapacity_print'], totalC.toLocaleString('en-MY',{maximumFractionDigits:0})+" L");
             
-            // Re-render drawings on calc
             renderDrawings();
         } catch(e) { console.error("Calc error:", e); }
     }
     function safeProcess() { processTankData(); }
 
-    // ==========================================
-    // RESTORED PDF PRINT & SYNC
-    // ==========================================
     function syncPrintHeader(u) {
         setTxt('metaQuoteId', getVal('quoteIdInput')); setTxt('cpRef', getVal('quoteIdInput'));
         setTxt('metaDate', new Date().toLocaleDateString()); setTxt('cpDate', new Date().toLocaleDateString());
@@ -1258,7 +1203,6 @@
         setTxt('cpLeadTime', getVal('tcLead')); setTxt('cpDeliveryTerm', getVal('tcDelivery'));
         setTxt('cpSignName', getVal('signName')); setTxt('cpSignPhone', getVal('signPhone'));
         
-        // Fix for Customer PDF missing the RM prefix on the final cell
         setTxt('cpGrandTotal', "RM " + window.currentGrandTotal);
         
         let tH = '';
@@ -1267,7 +1211,6 @@
             tH += `<tr><td style="border:1px solid #000; text-align:center;">${i+1}</td><td style="border:1px solid #000; padding:6px;"><strong>Pressed Steel Sectional Water Tank</strong><br>Standard: ${t.std}<br>Dimension: ${dimStr}<br>Material: ${t.coat}</td><td style="border:1px solid #000; text-align:center;">1 Set</td><td style="border:1px solid #000; text-align:right;">RM ${t.baseCost.toLocaleString('en-MY',{minimumFractionDigits:2})}</td></tr>`;
         });
         
-        // Append Custom Items to Customer PDF Table
         appCustomItems.forEach((c, i) => {
             let lineCost = ((parseFloat(c.qty)||0) * (parseFloat(c.cost)||0));
             tH += `<tr><td style="border:1px solid #000; text-align:center;">-</td><td style="border:1px solid #000; padding:6px;"><strong>${c.name}</strong></td><td style="border:1px solid #000; text-align:center;">${c.qty} ${c.unit}</td><td style="border:1px solid #000; text-align:right;">RM ${lineCost.toLocaleString('en-MY',{minimumFractionDigits:2})}</td></tr>`;
@@ -1280,26 +1223,11 @@
     }
     
     function printInternal() { processTankData(); setTimeout(() => { document.body.className = 'print-internal'; syncPrintHeader(window.currentUnit||'ft'); window.print(); }, 100); }
-    
-    function printCustomer() { 
-        processTankData(); 
-        syncPrintHeader(window.currentUnit||'ft'); 
-        switchTab('preview'); 
-        setTimeout(() => { document.body.className = 'print-customer'; window.print(); }, 200); 
-    }
-    
-    function printCustomerFromPreview() { 
-        document.body.className = 'print-customer'; 
-        setTimeout(() => window.print(), 100); 
-    }
-    
+    function printCustomer() { processTankData(); syncPrintHeader(window.currentUnit||'ft'); switchTab('preview'); setTimeout(() => { document.body.className = 'print-customer'; window.print(); }, 200); }
+    function printCustomerFromPreview() { document.body.className = 'print-customer'; setTimeout(() => window.print(), 100); }
     function printChecklist() { document.body.className = 'print-checklist'; setTxt('so_customer', getVal('custCompany')); setTxt('so_project', getVal('projectName')); setTxt('so_custpo', getVal('custPoNo')); syncPrintHeader(window.currentUnit||'ft'); window.print(); }
-    
     window.addEventListener('afterprint', () => { document.body.className = ''; });
 
-    // ==========================================
-    // RESTORED MASTER ADMIN CONTROLS
-    // ==========================================
     function buildAdminTable() {
         let h = '';
         systemBaseStructure.forEach((sec, cIdx) => {
@@ -1328,22 +1256,13 @@
     }
     function applyCompanyProfileToHeaders() { setTxt('printHeaderName1', companyProfile.name); setTxt('printHeaderReg1', companyProfile.reg); setTxt('printHeaderAddr1', companyProfile.address); setTxt('cpHeaderName', companyProfile.name); setTxt('cpHeaderReg', companyProfile.reg); setTxt('cpHeaderAddr', companyProfile.address); setTxt('cpHeaderContact', companyProfile.contact); setTxt('cpHeaderWeb', companyProfile.website); setTxt('cpSignCompany', companyProfile.name); }
 
-    function proceedLogin(user) {
+    function forceLoginBypass() {
         setDisp('securityOverlay', false); setDisp('topNav', true); setDisp('mainContent', true);
         if(!getVal('quoteIdInput')) { setVal('quoteIdInput', (companyProfile.quotePrefix || "QP-26-") + (companyProfile.quoteSeq || 1001)); setVal('sstPct', companyProfile.taxRate); setVal('fullTermsNotes', companyProfile.terms); }
         appTanks = [defaultTank()]; renderAllDynamicUI(); safeProcess();
-        showToast(`Welcome back, ${user.username}!`);
+        showToast("Logged in successfully (Bypass Active)");
     }
 
-    function checkLogin() {
-        let u = getVal('userInput').trim().toLowerCase(); let p = getVal('passInput').trim();
-        
-        // Emergency bypass logic in case cloud fetching fails or admin is deleted
-        if (u === "admin" && p === "adminmaster99") { proceedLogin({ username: "admin", role: "admin" }); return; }
-        
-        let foundUser = winkoUsers.find(user => user && user.username && user.username.toLowerCase() === u && user.password === p);
-        if (foundUser) { proceedLogin(foundUser); } else { showToast("Incorrect Password!", "error"); }
-    }
 </script>
 </body>
 </html>
