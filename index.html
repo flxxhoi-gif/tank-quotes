@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Winko / Jutarama - Enterprise Quoting ERP V151 (Modern PDF Restored)</title>
+    <title>Winko / Jutarama - Enterprise Quoting ERP V152 (Print Engine Fixed)</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -184,7 +184,7 @@
             <span onclick="togglePass('passInput')" style="position: absolute; right: 12px; top: 35px; cursor: pointer; font-size: 16px;" title="Show/Hide Password">👁️</span>
         </div>
         <button onclick="forceLoginBypass()">Secure Login</button>
-        <p style="font-size: 10px; color: #94a3b8; margin-top: 20px;">V151 Modern PDF Core</p>
+        <p style="font-size: 10px; color: #94a3b8; margin-top: 20px;">V152 Print Engine Fixed</p>
     </div>
 </div>
 
@@ -394,7 +394,6 @@
                     </div>
                 </div>
 
-                <!-- Removed no-print from drawings page so it displays properly in internal prints -->
                 <div class="module-card drawings-page internal-hide-except-print">
                     <div class="card-header" onclick="this.parentElement.classList.toggle('collapsed')"><span>📏</span> 3. Auto-Drawings (Panel Layout)</div>
                     <div class="card-body">
@@ -490,7 +489,6 @@
     </div>
     
     <div id="customerPrintViewEditor" contenteditable="true">
-        <!-- Modern Header -->
         <div style="display:flex; border-bottom: 3px solid #ea580c; padding-bottom: 20px; margin-bottom: 25px; align-items:center;">
             <div style="width:30%; padding:5px;"><img src="winko logo.png" alt="Company Logo" style="width:120px;" onerror="this.style.display='none'"></div>
             <div style="width:70%; text-align:right;">
@@ -501,7 +499,6 @@
             </div>
         </div>
 
-        <!-- Modern Meta Grid -->
         <div class="editable-section" style="display: flex; justify-content: space-between; margin-bottom: 25px; font-size: 9pt;">
             <div style="width: 55%; background: #f8fafc; padding: 15px; border-radius: 6px; border-left: 4px solid #0f172a;">
                 <div style="margin-bottom: 5px;"><strong>Customer:</strong> <span id="cpCustName"></span></div>
@@ -522,7 +519,6 @@
             <p style="font-size: 9.5pt; font-weight: 800; color: #0f172a; text-decoration: underline;">RE: SUPPLY, DELIVER AND INSTALL PRESSED STEEL TANK</p>
         </div>
 
-        <!-- Modern Table -->
         <table class="editable-section cp-modern-table avoid-break">
             <thead><tr>
                 <th style="width:5%;">Item</th>
@@ -531,16 +527,8 @@
                 <th style="width:25%; text-align:right;">Total Price</th>
             </tr></thead>
             <tbody id="cpDynamicTanksBody"></tbody>
-            <tbody>
-                <tr class="total-row">
-                    <td colspan="2"></td>
-                    <td style="text-align:right; font-weight:bold;">TOTAL (Incl. SST)</td>
-                    <td style="text-align:right; font-weight:900; font-size:11pt; color:#ea580c;" id="cpGrandTotal"></td>
-                </tr>
-            </tbody>
-        </table>
+            </table>
 
-        <!-- Blueprint Section (Dynamically Injected) -->
         <div id="cpDrawingsContainer" style="margin-top:20px;"></div>
 
         <div class="page-break">
@@ -634,7 +622,7 @@
 </div>
 
 <script>
-    const cv = "V151"; 
+    const cv = "V152"; 
     
     const getVal = (id) => { let e = document.getElementById(id); return e ? e.value : ''; };
     const getNum = (id) => { let v = parseFloat(getVal(id)); return isNaN(v) ? 0 : v; };
@@ -1033,7 +1021,7 @@
     function removeTank(i) { if(confirm("Remove tank?")) { appTanks.splice(i, 1); renderAllDynamicUI(); processTankData(); } }
     function updateBomField(t, s, i, f, v, isNum) { appTanks[t].bom[s].items[i][f] = isNum ? (parseFloat(v)||0) : v; safeProcess(); }
     function updateNozzle(t, nId, f, v, isNum) { let n = appTanks[t].nozzles.find(x=>x.id==nId); if(n) { n[f] = isNum ? (parseFloat(v)||0) : v; safeProcess(); } }
-    function addNozzle(t) { if(!appTanks[t].nozzles) appTanks[t].nozzles = []; appTanks[t].nozzles.push({id: Date.now(), type: "Warning", size: "2\"", qty: 1, pos: "Side panel"}); renderAllDynamicUI(); }
+    function addNozzle(t) { if(!appTanks[t].nozzles) appTanks[t].nozzles = []; appTanks[t].nozzles.push({id: Date.now(), type: "Inlet", size: "2\"", qty: 1, pos: "Side panel"}); renderAllDynamicUI(); }
 
     function addNewCustomItem() { appCustomItems.push({ id: Date.now(), name: "Custom Service / Add-on", qty: 1, unit: "Lot", cost: 0 }); renderAllDynamicUI(); safeProcess(); }
     function updateCustomItem(i, f, v, isNum) { appCustomItems[i][f] = isNum ? parseFloat(v)||0 : v; safeProcess(); }
@@ -1045,7 +1033,7 @@
             if(!t.nozzles) t.nozzles = []; let nozHtml = "";
             t.nozzles.forEach(n => {
                 nozHtml += `<div class="nozzle-row">
-                    <div class="form-group" style="flex:1.5;"><select onchange="updateNozzle(${i}, ${n.id}, 'type', this.value)"><option ${n.type=='Inlet'?'selected':''}>Inlet</option><option ${n.type=='Outlet'?'selected':''}>Outlet</option><option ${n.type=='Overflow'?'selected':''}>Overflow</option><option ${n.type=='Drain'?'selected':''}>Drain</option><option ${n.type=='Warning'?'selected':''}>Warning</option></select></div>
+                    <div class="form-group" style="flex:1.5;"><select onchange="updateNozzle(${i}, ${n.id}, 'type', this.value)"><option ${n.type=='Inlet'?'selected':''}>Inlet</option><option ${n.type=='Outlet'?'selected':''}>Outlet</option><option ${n.type=='Overflow'?'selected':''}>Overflow</option><option ${n.type=='Drain'?'selected':''}>Drain</option><option ${n.type=='Scour'?'selected':''}>Scour</option><option ${n.type=='Warning'?'selected':''}>Warning</option></select></div>
                     <div class="form-group" style="flex:1;"><input type="text" value="${n.size}" oninput="updateNozzle(${i}, ${n.id}, 'size', this.value)"></div>
                     <div class="form-group" style="flex:0.8;"><input type="number" value="${n.qty}" oninput="updateNozzle(${i}, ${n.id}, 'qty', this.value, true)"></div>
                     <div class="form-group" style="flex:2;"><input type="text" value="${n.pos}" oninput="updateNozzle(${i}, ${n.id}, 'pos', this.value)"></div>
@@ -1100,7 +1088,7 @@
         let pSize = 35; let w = Math.max(1, cols) * pSize; let h = Math.max(1, rows) * pSize;
         let pad = 10; let svg = `<div style="text-align:center; background:#fff; padding:15px; border:1.5px solid #cbd5e1; border-radius:8px; display:inline-block; margin-bottom:15px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05);">
             <h4 style="margin:0 0 10px 0; font-size:12px; font-weight:800; color:#0f172a; text-transform:uppercase;">${title}</h4>
-            <svg width="${w + pad*2}" height="${h + pad*2}"><g transform="translate(${pad}, ${pad})">`;
+            <svg xmlns="http://www.w3.org/2000/svg" width="${w + pad*2}" height="${h + pad*2}"><g transform="translate(${pad}, ${pad})">`;
         
         for(let r=0; r<rows; r++) {
             for(let c=0; c<cols; c++) {
@@ -1220,15 +1208,37 @@
         setTxt('cpGrandTotal', "RM " + window.currentGrandTotal);
         
         let tH = '';
+        let subtotalAccumulator = 0;
+
+        // BUG FIX: The customer print view was showing internal raw cost. Now it calculates individual selling price.
         appTanks.forEach((t, i) => {
             let dimStr = u==='ft' ? `${t.L}' x ${t.W}' x ${t.H}' (H)` : `${t.L}m x ${t.W}m x ${t.H}m (H)`;
-            tH += `<tr><td class="text-center" style="font-weight:bold;">${i+1}</td><td><strong style="color:#0f172a; font-size:10pt;">Pressed Steel Sectional Water Tank</strong><br><span style="color:#475569;">Standard: ${t.std}<br>Dimension: ${dimStr}<br>Material: ${t.coat}</span></td><td class="text-center" style="font-weight:bold;">1 Set</td><td class="text-right" style="font-weight:bold;">RM ${t.baseCost.toLocaleString('en-MY',{minimumFractionDigits:2})}</td></tr>`;
+            let mkup = getNum('markupPct') / 100;
+            let tankSellPrice = t.baseCost * (1 + mkup);
+            subtotalAccumulator += tankSellPrice;
+            tH += `<tr><td class="text-center" style="font-weight:bold;">${i+1}</td><td><strong style="color:#0f172a; font-size:10pt;">Pressed Steel Sectional Water Tank</strong><br><span style="color:#475569;">Standard: ${t.std}<br>Dimension: ${dimStr}<br>Material: ${t.coat}</span></td><td class="text-center" style="font-weight:bold;">1 Set</td><td class="text-right" style="font-weight:bold;">RM ${tankSellPrice.toLocaleString('en-MY',{minimumFractionDigits:2})}</td></tr>`;
         });
         
         appCustomItems.forEach((c, i) => {
             let lineCost = ((parseFloat(c.qty)||0) * (parseFloat(c.cost)||0));
+            subtotalAccumulator += lineCost;
             tH += `<tr><td class="text-center" style="font-weight:bold;">-</td><td><strong style="color:#0f172a; font-size:10pt;">${c.name}</strong></td><td class="text-center" style="font-weight:bold;">${c.qty} ${c.unit}</td><td class="text-right" style="font-weight:bold;">RM ${lineCost.toLocaleString('en-MY',{minimumFractionDigits:2})}</td></tr>`;
         });
+
+        // BUG FIX: The math lines for Subtotal, Discount, and SST were missing on the Customer PDF!
+        let dscPct = getNum('discountPct');
+        let dscAmt = subtotalAccumulator * (dscPct/100);
+        let net = subtotalAccumulator - dscAmt;
+        let sstPct = getNum('sstPct');
+        let sstAmt = net * (sstPct/100);
+
+        if (dscAmt > 0) {
+            tH += `<tr><td colspan="2" style="border:none;"></td><td style="text-align:right; border:none; padding-bottom:2px; font-weight:bold;">Gross Subtotal</td><td style="text-align:right; border:none; padding-bottom:2px; font-weight:bold;">RM ${subtotalAccumulator.toLocaleString('en-MY',{minimumFractionDigits:2})}</td></tr>`;
+            tH += `<tr><td colspan="2" style="border:none;"></td><td style="text-align:right; border:none; padding-top:2px; padding-bottom:2px; color:#dc2626; font-weight:bold;">Discount (${dscPct}%)</td><td style="text-align:right; border:none; padding-top:2px; padding-bottom:2px; color:#dc2626; font-weight:bold;">- RM ${dscAmt.toLocaleString('en-MY',{minimumFractionDigits:2})}</td></tr>`;
+        }
+        if (sstAmt > 0) {
+            tH += `<tr><td colspan="2" style="border:none;"></td><td style="text-align:right; border:none; padding-top:2px; font-weight:bold;">SST Tax (${sstPct}%)</td><td style="text-align:right; border:none; padding-top:2px; font-weight:bold;">+ RM ${sstAmt.toLocaleString('en-MY',{minimumFractionDigits:2})}</td></tr>`;
+        }
         
         setHtml('cpDynamicTanksBody', tH);
         
@@ -1257,6 +1267,31 @@
 
         let nozH = ''; appTanks.forEach((t,i) => { if(t.nozzles) t.nozzles.forEach(n => { nozH += `<tr><td style="border:1px solid #000; text-align:center;">${n.type}</td><td style="border:1px solid #000; text-align:center;">${n.size}</td><td style="border:1px solid #000; text-align:center;">${n.qty}</td><td style="border:1px solid #000; padding-left:5px;">Tank ${i+1}: ${n.pos}</td></tr>`; }) });
         setHtml('so_nozzle_body', nozH);
+
+        // BUG FIX: The missing Sales Order/Checklist BOM Item Generation
+        let soHtml = '';
+        appTanks.forEach((t, i) => {
+            soHtml += `<div style="background:#0f172a; color:white; padding:6px 10px; font-weight:bold; font-size:9pt; margin-top:15px; border-radius:4px;">TANK ${i+1} - ${t.L}x${t.W}x${t.H}</div>`;
+            t.bom.forEach(sec => {
+                let secItems = '';
+                sec.items.forEach(it => {
+                    let qty = sec.category === 'Services' ? 1 : (parseFloat(it.qty)||0);
+                    if (qty > 0) {
+                        let unit = sec.category === 'Services' ? 'Lot' : 'Pcs';
+                        secItems += `<div style="display:flex; padding:5px 10px; border-bottom:1px solid #e2e8f0;">
+                            <div style="width:6%; text-align:center; color:#64748b;">-</div>
+                            <div style="width:74%; font-weight:600;">${it.name}</div>
+                            <div style="width:10%; text-align:center;">${unit}</div>
+                            <div style="width:10%; text-align:center; font-weight:bold; color:#0f172a;">${qty}</div>
+                        </div>`;
+                    }
+                });
+                if (secItems !== '') {
+                    soHtml += `<div style="padding:4px 10px; font-weight:bold; font-size:8.5pt; color:#ea580c; background:#fff7ed; border-bottom:1px solid #fed7aa; margin-top:5px;">${sec.category}</div>` + secItems;
+                }
+            });
+        });
+        setHtml('so_table_body', soHtml);
     }
     
     function triggerPrint(type) {
