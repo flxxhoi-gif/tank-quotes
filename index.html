@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Winko / Jutarama - Enterprise Quoting ERP V156</title>
+    <title>Winko / Jutarama - Enterprise Quoting ERP V157</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -136,7 +136,6 @@
             body.print-internal input, body.print-internal .desc-input { border: none !important; background: transparent !important; padding: 0 !important; width: auto;}
             body.print-internal .summary-box { background: #fff !important; border: 2.5px solid #0f172a !important; border-radius: 8px !important; padding: 0 !important; width: 40% !important; float: right !important;}
             
-            /* FIX: Removed page-break-before to fix blank first page */
             body.print-internal .drawings-page { display: block !important; padding-top: 10px !important; clear: both !important;}
 
             /* --- CUSTOMER PRINT --- */
@@ -184,7 +183,7 @@
             <span onclick="togglePass('passInput')" style="position: absolute; right: 12px; top: 35px; cursor: pointer; font-size: 16px;" title="Show/Hide Password">👁️</span>
         </div>
         <button onclick="forceLoginBypass()">Secure Login</button>
-        <p style="font-size: 10px; color: #94a3b8; margin-top: 20px;">V156 - Bug Fix Patch (BOM Override & Print Edits)</p>
+        <p style="font-size: 10px; color: #94a3b8; margin-top: 20px;">V157 - Global Crash Fix & Browser Compatibility</p>
     </div>
 </div>
 
@@ -489,6 +488,7 @@
     </div>
     
     <div id="customerPrintViewEditor" contenteditable="true">
+        <!-- V130 Classic Header -->
         <div style="display:flex; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 20px; align-items:flex-end;">
             <div style="width:25%;"><img src="winko logo.png" alt="Company Logo" style="width:140px;" onerror="this.style.display='none'"></div>
             <div style="width:75%; text-align:right;">
@@ -503,6 +503,7 @@
             <h1 style="margin:0; font-size:18pt; text-decoration:underline; color:#000; letter-spacing:2px;">QUOTATION</h1>
         </div>
 
+        <!-- Classic Meta Grid -->
         <table style="width:100%; font-size:9.5pt; margin-bottom:20px; border:none;">
             <tr style="border:none;"><td style="width:60%; padding:3px 0; border:none;"><strong>Customer:</strong> <span id="cpCustName"></span></td><td style="width:40%; padding:3px 0; border:none;"><strong>Date:</strong> <span id="cpDate"></span></td></tr>
             <tr style="border:none;"><td style="padding:3px 0; border:none;"><strong>Address:</strong> <span id="cpCustAddress"></span></td><td style="padding:3px 0; border:none;"><strong>Our Ref:</strong> <span id="cpRef"></span></td></tr>
@@ -515,6 +516,7 @@
             <p style="font-size: 10pt; font-weight: 800; text-decoration: underline;">RE: SUPPLY, DELIVER AND INSTALL PRESSED STEEL TANK</p>
         </div>
 
+        <!-- Classic 130 Perfect Table -->
         <table class="editable-section cp-classic-table avoid-break">
             <thead><tr>
                 <th style="width:5%; text-align:center;">Item</th>
@@ -618,7 +620,15 @@
 </div>
 
 <script>
-    const cv = "V156"; 
+    // --- GLOBAL ERROR CATCHER ---
+    window.onerror = function(msg, url, line, col, error) {
+        let tc = document.getElementById('toast-container');
+        if(!tc) { tc = document.createElement('div'); tc.id = 'toast-container'; document.body.appendChild(tc); }
+        tc.innerHTML += `<div class="toast error" style="background:#dc2626; color:white; padding:15px; margin-bottom:10px; border-radius:8px;"><div>❌ <strong>SYSTEM CRASHED:</strong><br>${msg}<br>Line: ${line}</div></div>`;
+        return false;
+    };
+
+    const cv = "V157"; 
     
     const getVal = (id) => { let e = document.getElementById(id); return e ? e.value : ''; };
     const getNum = (id) => { let v = parseFloat(getVal(id)); return isNaN(v) ? 0 : v; };
@@ -651,10 +661,16 @@
     };
 
     let cloudDB = null;
-    if(FIREBASE_CONFIG.apiKey !== "") {
-        firebase.initializeApp(FIREBASE_CONFIG);
-        cloudDB = firebase.firestore();
-    } 
+    
+    // SAFE FIREBASE STARTUP
+    try {
+        if(typeof firebase !== 'undefined' && FIREBASE_CONFIG.apiKey !== "") {
+            firebase.initializeApp(FIREBASE_CONFIG);
+            cloudDB = firebase.firestore();
+        }
+    } catch(err) {
+        console.warn("Firebase blocked or failed. Running strictly in offline mode.", err);
+    }
     
     let winkoUsers = [{ username: "admin", password: "adminmaster99", role: "admin" }]; 
     let currentUserRole = "user";
@@ -722,21 +738,26 @@
 
     function initCloudListeners() {
         if (!cloudDB) return;
-        cloudDB.collection("winko_settings").doc("master_bom").onSnapshot(doc => { if(doc.exists) { systemBaseStructure = doc.data().data || doc.data() || systemBaseStructure; if(document.getElementById('adminContent').style.display === 'block') buildAdminTable(); } });
-        cloudDB.collection("winko_settings").doc("crm").onSnapshot(doc => { if(doc.exists) { let d = doc.data(); winkoCustomers = d.data || d || winkoCustomers; updateCustomerDatalist(); if(document.getElementById('adminContent').style.display === 'block') renderCustomerAdmin(); } });
-        cloudDB.collection("winko_settings").doc("inventory").onSnapshot(doc => { if(doc.exists) { let d = doc.data(); winkoInventory = d.data || d || winkoInventory; if(document.getElementById('inventoryContent').style.display === 'block') renderInventoryUI(); safeProcess(); } });
-        cloudDB.collection("winko_settings").doc("company").onSnapshot(doc => { if(doc.exists) { companyProfile = doc.data(); applyCompanyProfileToAdmin(); applyCompanyProfileToHeaders(); } });
-        cloudDB.collection("winko_settings").doc("users").onSnapshot(doc => { if(doc.exists) { let d = doc.data(); let newUsers = d.data || d; if(Array.isArray(newUsers) && newUsers.length > 0) { winkoUsers = newUsers; if(document.getElementById('adminContent').style.display === 'block') renderUserTable(); } } });
-        cloudDB.collection("winko_projects").onSnapshot(snapshot => { let m = {}; snapshot.forEach(doc => { m[doc.id] = doc.data(); }); window.cloudMemoryBank = m; if(document.getElementById('projectsContent').style.display === 'block') drawProjectBankTable(); });
+        try {
+            cloudDB.collection("winko_settings").doc("master_bom").onSnapshot(doc => { if(doc.exists) { systemBaseStructure = doc.data().data || doc.data() || systemBaseStructure; if(document.getElementById('adminContent').style.display === 'block') buildAdminTable(); } });
+            cloudDB.collection("winko_settings").doc("crm").onSnapshot(doc => { if(doc.exists) { let d = doc.data(); winkoCustomers = d.data || d || winkoCustomers; updateCustomerDatalist(); if(document.getElementById('adminContent').style.display === 'block') renderCustomerAdmin(); } });
+            cloudDB.collection("winko_settings").doc("inventory").onSnapshot(doc => { if(doc.exists) { let d = doc.data(); winkoInventory = d.data || d || winkoInventory; if(document.getElementById('inventoryContent').style.display === 'block') renderInventoryUI(); safeProcess(); } });
+            cloudDB.collection("winko_settings").doc("company").onSnapshot(doc => { if(doc.exists) { companyProfile = doc.data(); applyCompanyProfileToAdmin(); applyCompanyProfileToHeaders(); } });
+            cloudDB.collection("winko_settings").doc("users").onSnapshot(doc => { if(doc.exists) { let d = doc.data(); let newUsers = d.data || d; if(Array.isArray(newUsers) && newUsers.length > 0) { winkoUsers = newUsers; if(document.getElementById('adminContent').style.display === 'block') renderUserTable(); } } });
+            cloudDB.collection("winko_projects").onSnapshot(snapshot => { let m = {}; snapshot.forEach(doc => { m[doc.id] = doc.data(); }); window.cloudMemoryBank = m; if(document.getElementById('projectsContent').style.display === 'block') drawProjectBankTable(); });
+        } catch(e) { console.warn("Snapshot error", e); }
     }
 
     function initSystemData() {
-        applyCompanyProfileToHeaders();
-        applyCompanyProfileToAdmin();
-        setVal('quoteIdInput', (companyProfile.quotePrefix || "QP-26-") + (companyProfile.quoteSeq || 1001)); setVal('sstPct', companyProfile.taxRate); setVal('fullTermsNotes', companyProfile.terms); setVal('shortExclusions', "- Float valve chamber or top sumps\n- Flanges, nozzles, pipes, vortex, valves, electrode sensor, pumps and filter.\n- Scaffolding\n- Unloading and hoisting of materials.\n- HIRARC, permit application, medical test and site safety supervisor.");
-        initCloudListeners();
-        if (cloudDB) { document.getElementById('cloudStatusDot').classList.add('online'); document.getElementById('cloudStatusDot').title = "Live Cloud Sync Connected"; }
+        try {
+            applyCompanyProfileToHeaders();
+            applyCompanyProfileToAdmin();
+            setVal('quoteIdInput', (companyProfile.quotePrefix || "QP-26-") + (companyProfile.quoteSeq || 1001)); setVal('sstPct', companyProfile.taxRate); setVal('fullTermsNotes', companyProfile.terms); setVal('shortExclusions', "- Float valve chamber or top sumps\n- Flanges, nozzles, pipes, vortex, valves, electrode sensor, pumps and filter.\n- Scaffolding\n- Unloading and hoisting of materials.\n- HIRARC, permit application, medical test and site safety supervisor.");
+            initCloudListeners();
+            if (cloudDB) { document.getElementById('cloudStatusDot').classList.add('online'); document.getElementById('cloudStatusDot').title = "Live Cloud Sync Connected"; }
+        } catch(e) { console.error(e); }
     }
+    
     initSystemData();
 
     function switchTab(tabId) {
@@ -848,9 +869,12 @@
 
     function renderInventoryChart() {
         let ctx = document.getElementById('invChartCanvas'); if(!ctx) return;
-        let labels = Object.keys(winkoInventory).sort(); let data = labels.map(k => winkoInventory[k].stock); let colors = labels.map(k => winkoInventory[k].stock <= winkoInventory[k].alert ? '#ef4444' : '#10b981'); 
-        if(invChart) { invChart.data.labels = labels; invChart.data.datasets[0].data = data; invChart.data.datasets[0].backgroundColor = colors; invChart.update(); } 
-        else { invChart = new Chart(ctx, { type: 'bar', data: { labels: labels, datasets: [{ label: 'Current Stock', data: data, backgroundColor: colors, borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#e2e8f0' } }, x: { grid: { display: false } } } } }); }
+        try {
+            if(typeof Chart === 'undefined') return;
+            let labels = Object.keys(winkoInventory).sort(); let data = labels.map(k => winkoInventory[k].stock); let colors = labels.map(k => winkoInventory[k].stock <= winkoInventory[k].alert ? '#ef4444' : '#10b981'); 
+            if(invChart) { invChart.data.labels = labels; invChart.data.datasets[0].data = data; invChart.data.datasets[0].backgroundColor = colors; invChart.update(); } 
+            else { invChart = new Chart(ctx, { type: 'bar', data: { labels: labels, datasets: [{ label: 'Current Stock', data: data, backgroundColor: colors, borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#e2e8f0' } }, x: { grid: { display: false } } } } }); }
+        } catch(e) { console.warn("Chart error", e); }
     }
 
     function saveToMemory() {
@@ -869,7 +893,6 @@
             t.bom.forEach(sec => sec.items.forEach(it => {
                 let qty = (sec.category==="Services") ? 1 : (Number(it.qty)||0);
                 if(qty > 0) {
-                    // Quick fallback logic for CSV export
                     let cost = it.manualPrice ? (parseFloat(it.def)||0) : ((winkoInventory[it.name] && winkoInventory[it.name].cost > 0) ? winkoInventory[it.name].cost : (it.def||0));
                     csv += `"${it.name}",${qty},${cost},${qty*cost}\n`;
                 }
@@ -998,10 +1021,19 @@
 
     function updateTankField(i, f, v, isNum) { 
         appTanks[i][f] = isNum ? (parseFloat(v)||0) : v; 
+        
+        // FIX: Removed dangerous optional chaining for older browsers
         if (f === 'coat') {
             let mult = (v === 'Painted Steel') ? companyProfile.matMult.painted : (v === 'Stainless Steel (SS 304)' ? companyProfile.matMult.ss304 : (v === 'Stainless Steel (SS 316)' ? companyProfile.matMult.ss316 : 1.0));
-            appTanks[i].bom.forEach(sec => sec.items.forEach((it, idx) => { if(sec.category !== 'Services') it.def = (systemBaseStructure.find(s=>s.category==sec.category)?.items[idx]?.def || 0) * mult; }));
+            appTanks[i].bom.forEach(sec => sec.items.forEach((it, idx) => { 
+                if(sec.category !== 'Services') {
+                    let baseSec = systemBaseStructure.find(s => s.category == sec.category);
+                    let baseDef = (baseSec && baseSec.items && baseSec.items[idx]) ? baseSec.items[idx].def : 0;
+                    it.def = baseDef * mult; 
+                }
+            }));
         }
+        
         if (['L', 'W', 'H', 'partitionCol'].includes(f)) {
             autoCalculateBOM(i);
         }
@@ -1020,9 +1052,7 @@
     function updateBomField(t, s, i, f, v, isNum) { 
         appTanks[t].bom[s].items[i][f] = isNum ? (parseFloat(v)||0) : v; 
         
-        // FIX 1: Allow overriding price. If they change the def cost, tag it as manual so inventory doesn't steal it back
         if(f === 'def') appTanks[t].bom[s].items[i].manualPrice = true;
-        // If they edit the name, reset the manual price flag so it tries to re-sync with inventory
         if(f === 'name') appTanks[t].bom[s].items[i].manualPrice = false;
 
         safeProcess(); 
@@ -1105,4 +1135,268 @@
         for(let r=0; r<rows; r++) {
             for(let c=0; c<cols; c++) {
                 let px = c*pSize; let py = r*pSize;
-                svg += `<rect x="${px}" y="${py}" width="${pSize}" height="${pSize}" fill="#f8fafc" stroke="#33415
+                svg += `<rect x="${px}" y="${py}" width="${pSize}" height="${pSize}" fill="#f8fafc" stroke="#334155" stroke-width="1.5"/>`;
+                if(isWall) {
+                    svg += `<line x1="${px}" y1="${py}" x2="${px+pSize}" y2="${py+pSize}" stroke="#94a3b8" stroke-width="0.8"/>
+                            <line x1="${px+pSize}" y1="${py}" x2="${px}" y2="${py+pSize}" stroke="#94a3b8" stroke-width="0.8"/>`;
+                }
+            }
+        }
+        
+        if(title === 'Front View') {
+            let drawLadder = (colNum) => {
+                if(colNum > 0 && colNum <= cols) {
+                    let lx = (colNum - 1) * pSize + (pSize/2); 
+                    svg += `<line x1="${lx-8}" y1="0" x2="${lx-8}" y2="${h}" stroke="#ea580c" stroke-width="2"/>
+                            <line x1="${lx+8}" y1="0" x2="${lx+8}" y2="${h}" stroke="#ea580c" stroke-width="2"/>`;
+                    for(let r=10; r<h; r+=10) { svg += `<line x1="${lx-8}" y1="${r}" x2="${lx+8}" y2="${r}" stroke="#ea580c" stroke-width="1.5"/>`; }
+                }
+            };
+            if(ladder1Col > 0 || ladder2Col > 0) { drawLadder(ladder1Col); drawLadder(ladder2Col); } 
+            else if (cols >= 5) { drawLadder(3); drawLadder(5); }
+        }
+
+        if (partitionCol > 0 && partitionCol < cols && (title === 'Front View' || title === 'Roof Plan' || title === 'Base Plan')) {
+            let px = partitionCol * pSize;
+            svg += `<line x1="${px}" y1="0" x2="${px}" y2="${h}" stroke="#dc2626" stroke-width="4" stroke-dasharray="8,6"/>`;
+        }
+        
+        svg += `</g></svg></div>`; 
+        return svg;
+    }
+
+    function renderDrawings() {
+        let h = ``;
+        appTanks.forEach((t, i) => {
+            let pL = Math.max(1, window.currentUnit === 'ft' ? Math.floor(t.L/4) : Math.floor(t.L));
+            let pW = Math.max(1, window.currentUnit === 'ft' ? Math.floor(t.W/4) : Math.floor(t.W));
+            let pH = Math.max(1, window.currentUnit === 'ft' ? Math.floor(t.H/4) : Math.floor(t.H));
+            let pCol = Math.max(0, parseInt(t.partitionCol) || 0);
+            let l1 = parseInt(t.ladder1Col) || 0;
+            let l2 = parseInt(t.ladder2Col) || 0;
+            
+            h += `<div class="tank-section-title" style="margin-top:20px; background:#e0e7ff; border-left-color:#4f46e5; color: #000;">TANK ${i+1} BLUEPRINTS</div>
+                  <div style="display:flex; flex-wrap:wrap; gap:20px; justify-content:center; page-break-inside: avoid;">
+                    ${createSVG(pL, pH, 'Front View', true, pCol, l1, l2)}
+                    ${createSVG(pW, pH, 'Side View', true, 0, 0, 0)}
+                    ${createSVG(pL, pW, 'Roof Plan', false, pCol, 0, 0)}
+                    ${createSVG(pL, pW, 'Base Plan', false, pCol, 0, 0)}
+                  </div>`;
+        });
+        
+        // Inject into internal workspace
+        setHtml('dynamicDrawingsContainer', h);
+        
+        // Inject into the bottom of the Sales Order Print
+        setHtml('so_drawings_container', h);
+    }
+
+    function processTankData() {
+        try {
+            let u = getVal('unitChoice') || 'ft'; window.currentUnit = u;
+            let totalBase = 0, totalC = 0;
+            appTanks.forEach((t, i) => {
+                t.effLiters = ((u === 'ft') ? (t.L * t.W * t.H * 28.3168) : (t.L * t.W * t.H * 1000)) * 0.9;
+                totalC += t.effLiters; t.baseCost = 0;
+                
+                t.bom.forEach((sec, sIdx) => {
+                    sec.items.forEach((it, iIdx) => {
+                        let invItem = winkoInventory[it.name];
+                        let unitPrice = 0;
+                        
+                        if (it.manualPrice) {
+                            unitPrice = parseFloat(it.def) || 0;
+                        } else {
+                            unitPrice = (invItem && invItem.cost > 0) ? invItem.cost : (parseFloat(it.def) || 0);
+                        }
+                        
+                        let calcQty = (sec.category === "Services") ? 1 : (Number(it.qty) || 0);
+                        let lTot = calcQty * unitPrice;
+                        t.baseCost += lTot;
+                        
+                        let tagEl = document.getElementById(`price_tag_${i}_${sIdx}_${iIdx}`);
+                        if(tagEl) { 
+                            if (it.manualPrice) {
+                                tagEl.innerText = "[Manual Override]"; 
+                                tagEl.className = "price-tag";
+                                tagEl.style.color = "#ea580c"; 
+                            } else if (invItem && invItem.cost > 0) {
+                                tagEl.innerText = "[Synced to Inventory]"; 
+                                tagEl.className = "price-tag synced";
+                                tagEl.style.color = "";
+                            } else {
+                                tagEl.innerText = "[Fallback Cost]"; 
+                                tagEl.className = "price-tag";
+                                tagEl.style.color = "";
+                            }
+                        }
+                        
+                        let totEl = document.getElementById(`tot_${i}_${sIdx}_${iIdx}`);
+                        if(totEl) totEl.innerText = lTot.toLocaleString('en-MY',{minimumFractionDigits:2});
+                    });
+                });
+                totalBase += t.baseCost;
+            });
+
+            let customTotal = 0;
+            appCustomItems.forEach(c => { customTotal += ((parseFloat(c.qty)||0) * (parseFloat(c.cost)||0)); });
+
+            let mkAmt = totalBase * (getNum('markupPct')/100); 
+            let sub = totalBase + mkAmt + customTotal;
+            let dscAmt = sub * (getNum('discountPct')/100); 
+            let net = sub - dscAmt;
+            let sstAmt = net * (getNum('sstPct')/100); 
+            let grand = net + sstAmt;
+            window.currentGrandTotal = grand.toLocaleString('en-MY',{minimumFractionDigits:2});
+
+            const setM=(ids,v)=>ids.forEach(id=>setTxt(id,v));
+            setM(['sumBaseCost_screen','sumBaseCost_print'],totalBase.toLocaleString('en-MY',{minimumFractionDigits:2}));
+            setM(['sumCustomCost_screen', 'sumCustomCost_print'], customTotal.toLocaleString('en-MY',{minimumFractionDigits:2}));
+            setM(['sumMarkup_screen','sumMarkup_print'],mkAmt.toLocaleString('en-MY',{minimumFractionDigits:2}));
+            setM(['sumSubtotal_screen','sumSubtotal_print'],sub.toLocaleString('en-MY',{minimumFractionDigits:2}));
+            setM(['sumDiscount_screen','sumDiscount_print'],dscAmt.toLocaleString('en-MY',{minimumFractionDigits:2}));
+            setM(['sumSST_screen','sumSST_print'],sstAmt.toLocaleString('en-MY',{minimumFractionDigits:2}));
+            setM(['grandTotal_screen','grandTotal_print'],window.currentGrandTotal);
+            setM(['sumCapacity_screen','sumCapacity_print'], totalC.toLocaleString('en-MY',{maximumFractionDigits:0})+" L");
+            
+            renderDrawings();
+        } catch(e) { console.error("Calc error:", e); }
+    }
+    function safeProcess() { processTankData(); }
+
+    function syncPrintHeader(u) {
+        setTxt('metaQuoteId', getVal('quoteIdInput')); setTxt('cpRef', getVal('quoteIdInput'));
+        setTxt('metaDate', new Date().toLocaleDateString()); setTxt('cpDate', new Date().toLocaleDateString());
+        setTxt('metaProject', getVal('projectName')); setTxt('cpProject', getVal('projectName'));
+        setTxt('cpCustName', getVal('custCompany')); setTxt('cpAttention', getVal('custAttn')); setTxt('cpCustAddress', getVal('custAddr'));
+        setTxt('cpValidity', getVal('tcValidity')); setTxt('cpPayment', getVal('tcPayment').replace(/\n/g, '<br>'));
+        setTxt('cpLeadTime', getVal('tcLead')); setTxt('cpDeliveryTerm', getVal('tcDelivery'));
+        setTxt('cpSignName', getVal('signName')); setTxt('cpSignPhone', getVal('signPhone'));
+        setHtml('cpShortExclusionsText', getVal('shortExclusions').replace(/\n/g, '<br>'));
+        setTxt('cpFullTermsText', getVal('fullTermsNotes'));
+        
+        let tH = '';
+        let subtotalAccumulator = 0;
+
+        appTanks.forEach((t, i) => {
+            let dimStr = u==='ft' ? `${t.L}' x ${t.W}' x ${t.H}' (H)` : `${t.L}m x ${t.W}m x ${t.H}m (H)`;
+            let mkup = getNum('markupPct') / 100;
+            let tankSellPrice = t.baseCost * (1 + mkup);
+            subtotalAccumulator += tankSellPrice;
+            tH += `<tr><td class="text-center" style="font-weight:bold;">${i+1}</td><td><strong style="color:#000; font-size:10pt;">Pressed Steel Sectional Water Tank</strong><br><span style="color:#333;">Standard: ${t.std}<br>Dimension: ${dimStr}<br>Material: ${t.coat}</span></td><td class="text-center" style="font-weight:bold;">1 Set</td><td class="text-right" style="font-weight:bold;">RM ${tankSellPrice.toLocaleString('en-MY',{minimumFractionDigits:2})}</td></tr>`;
+        });
+        
+        appCustomItems.forEach((c, i) => {
+            let lineCost = ((parseFloat(c.qty)||0) * (parseFloat(c.cost)||0));
+            subtotalAccumulator += lineCost;
+            tH += `<tr><td class="text-center" style="font-weight:bold;">-</td><td><strong style="color:#000; font-size:10pt;">${c.name}</strong></td><td class="text-center" style="font-weight:bold;">${c.qty} ${c.unit}</td><td class="text-right" style="font-weight:bold;">RM ${lineCost.toLocaleString('en-MY',{minimumFractionDigits:2})}</td></tr>`;
+        });
+
+        let dscPct = getNum('discountPct');
+        let dscAmt = subtotalAccumulator * (dscPct/100);
+        let net = subtotalAccumulator - dscAmt;
+
+        if (dscAmt > 0) {
+            tH += `<tr><td colspan="2" style="border:none;"></td><td style="text-align:right; border:none; padding:8px 5px; font-weight:bold; border-top:2px solid #000;">Gross Subtotal</td><td style="text-align:right; border:none; padding:8px 5px; font-weight:bold; border-top:2px solid #000;">RM ${subtotalAccumulator.toLocaleString('en-MY',{minimumFractionDigits:2})}</td></tr>`;
+            tH += `<tr><td colspan="2" style="border:none;"></td><td style="text-align:right; border:none; padding:4px 5px; font-weight:bold;">Discount (${dscPct}%)</td><td style="text-align:right; border:none; padding:4px 5px; font-weight:bold;">- RM ${dscAmt.toLocaleString('en-MY',{minimumFractionDigits:2})}</td></tr>`;
+        }
+        
+        let finalCustomerTotal = net.toLocaleString('en-MY',{minimumFractionDigits:2});
+        tH += `<tr><td colspan="2" style="border:none;"></td><td style="text-align:right; border:none; padding:10px 5px; font-weight:900; font-size:11pt; border-top:2px solid #000;">Total Amount</td><td style="text-align:right; border:none; padding:10px 5px; font-weight:900; font-size:11pt; border-top:2px solid #000;">RM ${finalCustomerTotal}</td></tr>`;
+        
+        setHtml('cpDynamicTanksBody', tH);
+        
+        let nozH = ''; appTanks.forEach((t,i) => { if(t.nozzles) t.nozzles.forEach(n => { nozH += `<tr><td style="border:1px solid #000; text-align:center;">${n.type}</td><td style="border:1px solid #000; text-align:center;">${n.size}</td><td style="border:1px solid #000; text-align:center;">${n.qty}</td><td style="border:1px solid #000; padding-left:5px;">Tank ${i+1}: ${n.pos}</td></tr>`; }) });
+        setHtml('so_nozzle_body', nozH);
+
+        let soHtml = '';
+        appTanks.forEach((t, i) => {
+            soHtml += `<div style="background:#000; color:white; padding:6px 10px; font-weight:bold; font-size:10pt; margin-top:15px; text-transform:uppercase;">TANK ${i+1} - ${t.L}x${t.W}x${t.H}</div>`;
+            t.bom.forEach(sec => {
+                let secItems = '';
+                sec.items.forEach(it => {
+                    let qty = sec.category === 'Services' ? 1 : (parseFloat(it.qty)||0);
+                    if (qty > 0) {
+                        let unitDisp = sec.category === 'Services' ? '' : 'Pcs';
+                        let qtyDisp = sec.category === 'Services' ? '' : qty;
+                        
+                        secItems += `<div style="display:flex; padding:5px 10px; border-bottom:1px solid #cbd5e1;">
+                            <div style="width:6%; text-align:center; color:#000;">-</div>
+                            <div style="width:74%; font-weight:bold; color:#000;">${it.name}</div>
+                            <div style="width:10%; text-align:center; color:#000;">${unitDisp}</div>
+                            <div style="width:10%; text-align:center; font-weight:bold; color:#000;">${qtyDisp}</div>
+                        </div>`;
+                    }
+                });
+                if (secItems !== '') {
+                    soHtml += `<div style="padding:4px 10px; font-weight:bold; font-size:9pt; background:#f1f5f9; border-bottom:1px solid #cbd5e1; margin-top:5px; text-transform:uppercase;">${sec.category}</div>` + secItems;
+                }
+            });
+        });
+        setHtml('so_table_body', soHtml);
+    }
+    
+    function triggerPrint(type) {
+        if (type !== 'customer_from_preview') {
+            processTankData(); 
+            syncPrintHeader(window.currentUnit||'ft');
+        }
+        
+        if (type === 'customer') {
+            switchTab('preview'); 
+            setTimeout(() => { document.body.className = 'print-customer'; window.print(); }, 200);
+        } else if (type === 'customer_from_preview') {
+            document.body.className = 'print-customer'; setTimeout(() => window.print(), 100);
+        } else if (type === 'internal') {
+            document.body.className = 'print-internal'; setTimeout(() => window.print(), 100);
+        } else if (type === 'checklist') {
+            setTxt('so_customer', getVal('custCompany')); setTxt('so_project', getVal('projectName')); setTxt('so_custpo', getVal('custPoNo')); 
+            document.body.className = 'print-checklist'; setTimeout(() => window.print(), 100);
+        }
+    }
+    window.addEventListener('afterprint', () => { document.body.className = ''; });
+
+    function buildAdminTable() {
+        let h = '';
+        systemBaseStructure.forEach((sec, cIdx) => {
+            h += `<tr style="background:#f1f5f9;"><td colspan="4"><strong>${sec.category}</strong> <button onclick="addAdminItem(${cIdx})" class="action-btn" style="display:inline-block; padding:4px 8px; width:auto; font-size:11px; margin-left:10px;">+ Item</button></td></tr>`;
+            sec.items.forEach((it, iIdx) => { h += `<tr><td class="text-center"><button class="del-btn" onclick="removeAdminItem(${cIdx}, ${iIdx})">X</button></td><td><input type="text" class="admin-input" value="${it.name}" onchange="systemBaseStructure[${cIdx}].items[${iIdx}].name=this.value"></td><td><input type="number" class="admin-input" value="${it.wt||0}" onchange="systemBaseStructure[${cIdx}].items[${iIdx}].wt=parseFloat(this.value)||0"></td><td><input type="number" step="0.01" class="admin-input" value="${it.def||0}" onchange="systemBaseStructure[${cIdx}].items[${iIdx}].def=parseFloat(this.value)||0"></td></tr>`; });
+        });
+        setHtml('adminBody', h);
+    }
+    function addAdminCat() { systemBaseStructure.push({category: "New Category", markup: 0, items: []}); buildAdminTable(); }
+    function addAdminItem(c) { systemBaseStructure[c].items.push({name:"New Item", wt:0, def:0}); buildAdminTable(); }
+    function removeAdminItem(c, i) { systemBaseStructure[c].items.splice(i, 1); buildAdminTable(); }
+    function saveAdminDefaults() { if(cloudDB) cloudDB.collection("winko_settings").doc("master_bom").set({data: systemBaseStructure}); showToast("Master BOM Saved"); }
+    
+    function renderCustomerAdmin() {
+        let f = getVal('custSearchBox').toLowerCase(); let h = '';
+        Object.keys(winkoCustomers).forEach(c => { if(!f || c.toLowerCase().includes(f)) h += `<tr><td><strong>${c}</strong></td><td>${winkoCustomers[c].attn||'-'}</td><td>${winkoCustomers[c].addr||'-'}</td><td class="text-center"><button class="del-btn" onclick="deleteCustomer('${encodeURIComponent(c)}')">X</button></td></tr>`; });
+        setHtml('customerAdminBody', h);
+    }
+    function updateCustomerDatalist() { let h = ''; Object.keys(winkoCustomers).forEach(c => h += `<option value="${c}"></option>`); setHtml('customerDatalist', h); }
+    function deleteCustomer(safeC) { let c = decodeURIComponent(safeC); if(confirm(`Remove customer: ${c}?`)) { delete winkoCustomers[c]; if(cloudDB) cloudDB.collection("winko_settings").doc("crm").set({data: winkoCustomers}); renderCustomerAdmin(); } }
+    
+    function applyCompanyProfileToAdmin() { setVal('profileName', companyProfile.name); setVal('profileReg', companyProfile.reg); setVal('profileAddress', companyProfile.address); setVal('profileContact', companyProfile.contact); setVal('profileWebsite', companyProfile.website); setVal('profileTax', companyProfile.taxRate); setVal('profileTerms', companyProfile.terms); setVal('mat_painted', companyProfile.matMult.painted); setVal('mat_ss304', companyProfile.matMult.ss304); setVal('mat_ss316', companyProfile.matMult.ss316); setVal('profilePrefix', companyProfile.quotePrefix); setVal('profileSeq', companyProfile.quoteSeq); }
+    function saveCompanyProfile() {
+        companyProfile.name = getVal('profileName'); companyProfile.reg = getVal('profileReg'); companyProfile.address = getVal('profileAddress'); companyProfile.contact = getVal('profileContact'); companyProfile.website = getVal('profileWebsite'); companyProfile.taxRate = getNum('profileTax'); companyProfile.terms = getVal('profileTerms'); companyProfile.matMult = { painted: getNum('mat_painted'), ss304: getNum('mat_ss304'), ss316: getNum('mat_ss316') }; companyProfile.quotePrefix = getVal('profilePrefix'); companyProfile.quoteSeq = parseInt(getVal('profileSeq')) || 1001;
+        if(cloudDB) cloudDB.collection("winko_settings").doc("company").set(companyProfile); showToast('Profile Updated!');
+    }
+    function applyCompanyProfileToHeaders() { setTxt('printHeaderName1', companyProfile.name); setTxt('printHeaderReg1', companyProfile.reg); setTxt('printHeaderAddr1', companyProfile.address); setTxt('cpHeaderName', companyProfile.name); setTxt('cpHeaderReg', companyProfile.reg); setTxt('cpHeaderAddr', companyProfile.address); setTxt('cpHeaderContact', companyProfile.contact); setTxt('cpHeaderWeb', companyProfile.website); setTxt('cpSignCompany', companyProfile.name); }
+
+    function forceLoginBypass() {
+        try {
+            setDisp('securityOverlay', false); setDisp('topNav', true); setDisp('mainContent', true);
+            appTanks = [defaultTank()]; 
+            renderAllDynamicUI(); 
+            autoCalculateBOM(0);
+            safeProcess();
+            showToast("Logged in successfully");
+        } catch(e) {
+            console.error("Login Bypass Failed", e);
+            alert("Error trying to load workspace. Please check the top right red box for the error code.");
+        }
+    }
+</script>
+</body>
+</html>
