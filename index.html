@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Winko / Jutarama - Enterprise Quoting ERP V157</title>
+    <title>Winko / Jutarama - Enterprise Quoting ERP V158</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -34,6 +34,10 @@
         .nav-logo { color: white; font-weight: 900; font-size: 1.1em; display:flex; align-items:center; gap:10px; }
         .cloud-indicator { width: 10px; height: 10px; border-radius: 50%; background: #64748b; display: inline-block; }
         .cloud-indicator.online { background: #10b981; box-shadow: 0 0 8px #10b981; }
+        
+        .user-menu-btn { background: #334155; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; transition: 0.2s; display: flex; align-items: center; gap: 5px; }
+        .user-menu-btn:hover { background: #475569; }
+        .logout-btn { background: #ef4444; } .logout-btn:hover { background: #dc2626; }
         
         #mainContent, #adminContent, #customerPreviewContainer, #projectsContent, #inventoryContent { display: none; padding: 20px; }
         #checklistPrintView, .print-only, .internal-only-tag { display: none; }
@@ -144,7 +148,6 @@
             body.print-customer .preview-toolbar { display: none !important; }
             body.print-customer #customerPrintViewEditor { max-width: none !important; padding: 0 !important; margin: 0 !important; border:none; box-shadow:none;}
             
-            /* Classic 130 CP Table Styles for Print */
             .cp-classic-table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 20px; font-size: 9.5pt; color: #000; }
             .cp-classic-table th { background: transparent !important; color: #000 !important; padding: 8px 5px; text-align: left; font-weight: bold; border-top: 1.5px solid #000 !important; border-bottom: 1.5px solid #000 !important; text-transform:uppercase; }
             .cp-classic-table td { padding: 8px 5px; vertical-align: top; border-bottom: 1px dashed #cbd5e1 !important; }
@@ -157,7 +160,6 @@
             .chk-box { display: inline-block; width: 12px; height: 12px; border: 1px solid #000; text-align: center; line-height: 12px; margin-right: 4px; font-weight:bold;}
         }
         
-        /* Classic 130 Customer Preview Screen Styles */
         .cp-classic-table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 20px; font-size: 9.5pt; color: #000; }
         .cp-classic-table th { background: transparent; color: #000; padding: 10px 5px; text-align: left; font-weight: bold; border-top: 2px solid #000; border-bottom: 2px solid #000; text-transform:uppercase; }
         .cp-classic-table td { border-bottom: 1px dashed #cbd5e1; padding: 10px 5px; vertical-align: top;}
@@ -169,6 +171,21 @@
 
 <datalist id="customerDatalist"></datalist>
 
+<!-- Profile Management Modal -->
+<div id="profileOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index: 10001; align-items:center; justify-content:center;">
+    <div class="module-card" style="width: 350px; background: white; padding: 30px;">
+        <div class="card-header" style="border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px;">👤 Update Password</div>
+        <div class="form-group">
+            <label>New Password</label>
+            <input type="password" id="myNewPassword" placeholder="Enter new password">
+        </div>
+        <div style="display:flex; gap:10px; margin-top: 20px;">
+            <button class="action-btn" onclick="saveMyPassword()" style="flex:1;">Save Password</button>
+            <button class="action-btn export-btn" onclick="document.getElementById('profileOverlay').style.display='none'" style="flex:1;">Cancel</button>
+        </div>
+    </div>
+</div>
+
 <div id="securityOverlay">
     <div class="login-card">
         <h2 style="margin: 0 0 5px 0; color: #0f172a; font-weight: 900; font-size: 24px;">WINKO ERP</h2>
@@ -179,16 +196,21 @@
         </div>
         <div style="position: relative; width: 100%; text-align: left; margin-top: 5px;">
             <label style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-left: 4px;">Password</label>
-            <input type="password" id="passInput" placeholder="••••••••" onkeypress="if(event.key==='Enter') forceLoginBypass()" style="width: 100%; padding-right: 40px;">
+            <input type="password" id="passInput" placeholder="••••••••" onkeypress="if(event.key==='Enter') processSecureLogin()" style="width: 100%; padding-right: 40px;">
             <span onclick="togglePass('passInput')" style="position: absolute; right: 12px; top: 35px; cursor: pointer; font-size: 16px;" title="Show/Hide Password">👁️</span>
         </div>
-        <button onclick="forceLoginBypass()">Secure Login</button>
-        <p style="font-size: 10px; color: #94a3b8; margin-top: 20px;">V157 - Global Crash Fix & Browser Compatibility</p>
+        <button onclick="processSecureLogin()">Secure Login</button>
+        <p style="font-size: 10px; color: #94a3b8; margin-top: 20px;">V158 - RBAC Security & Profile Controls</p>
     </div>
 </div>
 
 <div id="topNav">
-    <div class="nav-logo" id="navLogoText">WINKO ERP <span id="cloudStatusDot" class="cloud-indicator" title="Offline Local Mode"></span></div>
+    <div class="nav-logo" id="navLogoText">WINKO ERP <span id="cloudStatusDot" class="cloud-indicator" title="Offline Local Mode"></span>
+        <div style="display:flex; gap:8px; margin-left:15px; border-left: 2px solid rgba(255,255,255,0.2); padding-left:15px;">
+            <button class="user-menu-btn" onclick="openMyProfile()">👤 My Profile</button>
+            <button class="user-menu-btn logout-btn" onclick="logout()">🚪 Logout</button>
+        </div>
+    </div>
     <div class="nav-links">
         <button class="nav-btn active" id="btnTabQuote" onclick="switchTab('quote')">📝 Workspace</button>
         <button class="nav-btn" id="btnTabProjects" onclick="switchTab('projects')">📂 Project Bank</button>
@@ -628,7 +650,7 @@
         return false;
     };
 
-    const cv = "V157"; 
+    const cv = "V158"; 
     
     const getVal = (id) => { let e = document.getElementById(id); return e ? e.value : ''; };
     const getNum = (id) => { let v = parseFloat(getVal(id)); return isNaN(v) ? 0 : v; };
@@ -662,7 +684,6 @@
 
     let cloudDB = null;
     
-    // SAFE FIREBASE STARTUP
     try {
         if(typeof firebase !== 'undefined' && FIREBASE_CONFIG.apiKey !== "") {
             firebase.initializeApp(FIREBASE_CONFIG);
@@ -672,8 +693,12 @@
         console.warn("Firebase blocked or failed. Running strictly in offline mode.", err);
     }
     
-    let winkoUsers = [{ username: "admin", password: "adminmaster99", role: "admin" }]; 
-    let currentUserRole = "user";
+    let winkoUsers = [
+        { username: "admin", password: "adminmaster99", role: "admin" },
+        { username: "staff", password: "password123", role: "user" }
+    ]; 
+    let loggedInUser = null;
+
     let winkoCustomers = {}; 
     let winkoInventory = {}; 
     let invChart = null;
@@ -759,6 +784,71 @@
     }
     
     initSystemData();
+
+    // --- SECURE LOGIN & RBAC ---
+    function processSecureLogin() {
+        let u = getVal('userInput').trim();
+        let p = getVal('passInput').trim();
+        if(!u || !p) return showToast("Enter username and password", "error");
+        
+        let user = winkoUsers.find(x => x.username === u && x.password === p);
+        if(user) {
+            loggedInUser = user;
+            setDisp('securityOverlay', false); 
+            setDisp('topNav', true); 
+            setDisp('mainContent', true);
+            
+            // Role Based Access Control
+            if(user.role === 'admin') {
+                document.getElementById('btnTabAdmin').style.display = 'inline-block';
+            } else {
+                document.getElementById('btnTabAdmin').style.display = 'none';
+            }
+            
+            switchTab('quote');
+            
+            appTanks = [defaultTank()]; 
+            renderAllDynamicUI(); 
+            autoCalculateBOM(0);
+            safeProcess();
+            
+            showToast(`Welcome back, ${u}!`);
+        } else {
+            showToast("Invalid credentials", "error");
+        }
+    }
+    
+    function openMyProfile() {
+        setVal('myNewPassword', '');
+        document.getElementById('profileOverlay').style.display = 'flex';
+    }
+    
+    function saveMyPassword() {
+        let p = getVal('myNewPassword').trim();
+        if(!p) return showToast("Password cannot be empty", "error");
+        
+        let userIndex = winkoUsers.findIndex(x => x.username === loggedInUser.username);
+        if(userIndex > -1) {
+            winkoUsers[userIndex].password = p;
+            loggedInUser.password = p;
+            if(cloudDB) cloudDB.collection("winko_settings").doc("users").set({data: winkoUsers});
+            showToast("Password updated successfully!");
+            document.getElementById('profileOverlay').style.display = 'none';
+        }
+    }
+    
+    function logout() {
+        loggedInUser = null;
+        setDisp('topNav', false);
+        setDisp('mainContent', false);
+        setDisp('adminContent', false);
+        setDisp('customerPreviewContainer', false);
+        setDisp('projectsContent', false);
+        setDisp('inventoryContent', false);
+        setDisp('securityOverlay', true);
+        setVal('userInput', '');
+        setVal('passInput', '');
+    }
 
     function switchTab(tabId) {
         setDisp('mainContent', false); setDisp('adminContent', false); setDisp('customerPreviewContainer', false); setDisp('projectsContent', false); setDisp('inventoryContent', false);
@@ -1022,7 +1112,6 @@
     function updateTankField(i, f, v, isNum) { 
         appTanks[i][f] = isNum ? (parseFloat(v)||0) : v; 
         
-        // FIX: Removed dangerous optional chaining for older browsers
         if (f === 'coat') {
             let mult = (v === 'Painted Steel') ? companyProfile.matMult.painted : (v === 'Stainless Steel (SS 304)' ? companyProfile.matMult.ss304 : (v === 'Stainless Steel (SS 316)' ? companyProfile.matMult.ss316 : 1.0));
             appTanks[i].bom.forEach(sec => sec.items.forEach((it, idx) => { 
@@ -1184,10 +1273,7 @@
                   </div>`;
         });
         
-        // Inject into internal workspace
         setHtml('dynamicDrawingsContainer', h);
-        
-        // Inject into the bottom of the Sales Order Print
         setHtml('so_drawings_container', h);
     }
 
@@ -1384,19 +1470,6 @@
     }
     function applyCompanyProfileToHeaders() { setTxt('printHeaderName1', companyProfile.name); setTxt('printHeaderReg1', companyProfile.reg); setTxt('printHeaderAddr1', companyProfile.address); setTxt('cpHeaderName', companyProfile.name); setTxt('cpHeaderReg', companyProfile.reg); setTxt('cpHeaderAddr', companyProfile.address); setTxt('cpHeaderContact', companyProfile.contact); setTxt('cpHeaderWeb', companyProfile.website); setTxt('cpSignCompany', companyProfile.name); }
 
-    function forceLoginBypass() {
-        try {
-            setDisp('securityOverlay', false); setDisp('topNav', true); setDisp('mainContent', true);
-            appTanks = [defaultTank()]; 
-            renderAllDynamicUI(); 
-            autoCalculateBOM(0);
-            safeProcess();
-            showToast("Logged in successfully");
-        } catch(e) {
-            console.error("Login Bypass Failed", e);
-            alert("Error trying to load workspace. Please check the top right red box for the error code.");
-        }
-    }
 </script>
 </body>
 </html>
