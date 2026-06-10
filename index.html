@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Winko / Jutarama - Enterprise Quoting ERP V190</title>
+    <title>Winko / Jutarama - Enterprise Quoting ERP V191</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -286,7 +286,7 @@
             <span onclick="togglePass('passInput')" style="position: absolute; right: 14px; top: 34px; cursor: pointer; font-size: 16px; opacity: 0.6; transition: 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6" title="Show/Hide Password">👁️</span>
         </div>
         <button onclick="processSecureLogin()">Secure Login</button>
-        <p style="font-size: 11px; color: #94a3b8; margin-top: 24px; font-weight: 500;">V190 - Matched to Your Excel BOM</p>
+        <p style="font-size: 11px; color: #94a3b8; margin-top: 24px; font-weight: 500;">V191 - Excel BOM + Workflow Upgrades</p>
     </div>
 </div>
 
@@ -457,6 +457,7 @@
             <h2>Project Workspace</h2>
             <div class="live-clock">
                 <span id="liveClock" style="margin-right: 8px;"></span>
+                <button class="action-btn print-btn" style="margin:0; padding: 10px 20px; background: #334155; border-radius: 20px;" onclick="newQuote()">✨ New Quote</button>
                 <button class="action-btn print-btn" style="margin:0; padding: 10px 20px; background: #ea580c; border-radius: 20px;" onclick="saveToMemory()">💾 Save Quote</button>
                 <button class="action-btn print-btn" style="margin:0; padding: 10px 20px; background: #8b5cf6; border-radius: 20px;" onclick="confirmOrderAndDeduct()">📦 Confirm & Deduct Stock</button>
             </div>
@@ -712,7 +713,7 @@
         return false;
     };
 
-    const cv = "V190"; 
+    const cv = "V191"; 
     
     const getVal = (id) => { let e = document.getElementById(id); return e ? e.value : ''; };
     const getNum = (id) => { let v = parseFloat(getVal(id)); return isNaN(v) ? 0 : v; };
@@ -854,7 +855,7 @@
         if(user) {
             loggedInUser = user; setDisp('securityOverlay', false); setDisp('topNav', true); setDisp('mainContent', true);
             if(user.role === 'admin') document.getElementById('btnTabAdmin').style.display = 'inline-block'; else document.getElementById('btnTabAdmin').style.display = 'none';
-            switchTab('quote'); appTanks = [defaultTank()]; renderAllDynamicUI(); autoCalculateBOM(0); safeProcess(); showToast(`Welcome back, ${u}!`);
+            switchTab('quote'); appTanks = [defaultTank()]; renderAllDynamicUI(); autoCalculateBOM(0); safeProcess(); window._dirtyQuote = false; showToast(`Welcome back, ${u}!`);
             logAction("User Logged In");
         } else { showToast("Invalid credentials", "error"); }
     }
@@ -969,6 +970,7 @@
         let qid = getVal('quoteIdInput'); if(!qid) return showToast("Enter Quote ID first", "error");
         let d = { tanks: appTanks, custom: appCustomItems, projectName: getVal('projectName'), customer: getVal('custCompany'), total: window.currentGrandTotal, date: new Date().toISOString().split('T')[0] };
         configIDs.forEach(id => d[id] = getVal(id)); if(cloudDB) cloudDB.collection("winko_projects").doc(qid).set(d); 
+        window._dirtyQuote = false;
         showToast("Project Saved to Cloud!");
         logAction(`Saved / Updated Project Quote: ${qid}`);
     }
@@ -1003,7 +1005,7 @@
         configIDs.forEach(id => { if(d[id]!==undefined) setVal(id, d[id]); }); 
         appTanks = d.tanks || []; appCustomItems = d.custom || []; 
         appTanks.forEach((_, i) => autoCalculateBOM(i)); 
-        switchTab('quote'); safeProcess(); showToast("Project Loaded & Synced!"); 
+        switchTab("quote"); safeProcess(); window._dirtyQuote = false; showToast("Project Loaded & Synced!"); 
     }
 
     function backupSystem() {
@@ -1199,7 +1201,22 @@
     }
 
     function addNewTank() { appTanks.push(defaultTank()); renderAllDynamicUI(); autoCalculateBOM(appTanks.length - 1); safeProcess(); }
+    function duplicateTank(i) {
+        let copy = JSON.parse(JSON.stringify(appTanks[i])); copy.id = Date.now();
+        appTanks.splice(i + 1, 0, copy);
+        renderAllDynamicUI(); autoCalculateBOM(i + 1); safeProcess(); showToast("Tank duplicated.");
+    }
     function removeTank(i) { if(confirm("Remove tank?")) { appTanks.splice(i, 1); renderAllDynamicUI(); processTankData(); } }
+    function newQuote() {
+        if(!confirm("Start a new blank quote? Any unsaved changes will be lost.")) return;
+        appTanks = [defaultTank()]; appCustomItems = [];
+        ['projectName','custCompany','custAttn','custAddr','custPoNo','custDelDate'].forEach(id => setVal(id, ''));
+        setVal('markupPct', 0); setVal('discountPct', 0);
+        let nextSeq = (parseInt(companyProfile.quoteSeq) || 1001);
+        setVal('quoteIdInput', (companyProfile.quotePrefix || 'QP-26-') + nextSeq);
+        renderAllDynamicUI(); autoCalculateBOM(0); safeProcess(); window._dirtyQuote = false;
+        switchTab('quote'); showToast("New blank quote started.");
+    }
     
     function addPartition(tIdx) { if(!appTanks[tIdx].partitions) appTanks[tIdx].partitions = []; if(appTanks[tIdx].partitions.length < 3) { appTanks[tIdx].partitions.push(0); renderAllDynamicUI(); autoCalculateBOM(tIdx); safeProcess(); } }
     function updatePartition(tIdx, pIdx, val) { appTanks[tIdx].partitions[pIdx] = parseInt(val) || 0; renderDrawings(); }
@@ -1303,9 +1320,12 @@
             let partAnglesHtml = t.partitions.length > 0 ? `<div class="dim-grid" style="margin-top:16px; border-top:1px dashed #fbcfe8; padding-top:16px;"><div class="form-group"><label style="color:#db2777;">Partition L1 Stay (Type)</label><input type="text" value="${t.partL1Angle || 'Partition Angle Stay'}" oninput="updateTankField(${i}, 'partL1Angle', this.value)"></div><div class="form-group"><label style="color:#db2777;">Partition L2 Stay (Type)</label><input type="text" value="${t.partL2Angle || '92.5\" (L2 Stay)'}" oninput="updateTankField(${i}, 'partL2Angle', this.value)"></div><div class="form-group"><label style="color:#db2777;">Partition L3 Stay (Type)</label><input type="text" value="${t.partL3Angle || '135.5\" (L3 Stay)'}" oninput="updateTankField(${i}, 'partL3Angle', this.value)"></div></div>` : ``;
 
             let displayQtyText = (t.tankQty && t.tankQty > 1) ? ` - ${t.tankQty} Sets` : ``;
+            let _u = getVal('unitChoice') || 'ft';
+            let _capL = (((_u === 'ft') ? (t.L * t.W * t.H * 28.3168) : (t.L * t.W * t.H * 1000)) * 0.9);
+            let capStr = _capL > 0 ? ` · ${Math.round(_capL).toLocaleString('en-MY')} L` : ``;
 
             tH += `<div class="tank-block" style="border-top:2px dashed #cbd5e1; margin-top:32px; padding-top:24px;">
-                <div class="tank-section-title"><span>Tank ${i+1} Specs${displayQtyText}</span><button class="del-btn no-print" onclick="removeTank(${i})">X REMOVE</button></div>
+                <div class="tank-section-title"><span>Tank ${i+1} Specs${displayQtyText}<span style="font-weight:500; color:#0284c7; font-size:11px;">${capStr}</span></span><span style="display:flex; gap:8px;"><button class="del-btn no-print" style="background:#e0f2fe; color:#0369a1;" onclick="duplicateTank(${i})">⎘ DUPLICATE</button><button class="del-btn no-print" onclick="removeTank(${i})">X REMOVE</button></span></div>
                 <div class="config-grid"><div class="form-group"><label>Standard</label><select onchange="updateTankField(${i}, 'std', this.value)"><option ${t.std.includes('SANS')?'selected':''}>SANS 10329:2020 Approved by SIRIM & SPAN</option><option ${t.std.includes('SS 22')?'selected':''}>SS 22: 1979</option></select></div><div class="form-group"><label>Material</label><select onchange="updateTankField(${i}, 'coat', this.value)"><option ${t.coat==='Hot Dipped Galvanised'?'selected':''}>Hot Dipped Galvanised</option><option ${t.coat==='Painted Steel'?'selected':''}>Painted Steel</option><option ${t.coat==='Stainless Steel (SS 304)'?'selected':''}>Stainless Steel (SS 304)</option><option ${t.coat==='Stainless Steel (SS 316)'?'selected':''}>Stainless Steel (SS 316)</option></select></div></div>
                 
                 <div class="tank-section-title" style="margin-top:16px; background:#f0fdf4; border-left-color:#22c55e;">🛡️ Panel Thickness Config (mm)</div>
@@ -1430,7 +1450,7 @@ function processTankData() {
         } catch(e) { console.error("Calc error:", e); }
     }
     let _recalcTimer = null;
-    function safeProcess() { clearTimeout(_recalcTimer); _recalcTimer = setTimeout(processTankData, 180); }
+    function safeProcess() { window._dirtyQuote = true; clearTimeout(_recalcTimer); _recalcTimer = setTimeout(processTankData, 180); }
 
     function syncPrintHeader(u) {
         setTxt('metaQuoteId', getVal('quoteIdInput')); setTxt('cpRef', getVal('quoteIdInput')); setTxt('metaDate', new Date().toLocaleDateString()); setTxt('cpDate', new Date().toLocaleDateString()); setTxt('metaProject', getVal('projectName')); setTxt('cpProject', getVal('projectName')); setTxt('cpCustName', getVal('custCompany')); setTxt('cpAttention', getVal('custAttn')); setTxt('cpCustAddress', getVal('custAddr')); setTxt('cpValidity', getVal('tcValidity')); setTxt('cpPayment', getVal('tcPayment').replace(/\n/g, '<br>')); setTxt('cpLeadTime', getVal('tcLead')); setTxt('cpDeliveryTerm', getVal('tcDelivery')); setTxt('cpSignName', getVal('signName')); setTxt('cpSignPhone', getVal('signPhone')); setTxt('cpFullTermsText', getVal('fullTermsNotes'));
@@ -1585,7 +1605,18 @@ function processTankData() {
 
     setInterval(() => { let el = document.getElementById('liveClock'); if(el) el.innerText = new Date().toLocaleString('en-MY'); }, 1000);
 
-    console.log("✅ Winko ERP Script v190 successfully loaded!");
+    // Ctrl/Cmd+S saves the current quote
+    window.addEventListener('keydown', function(e) {
+        if((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+            if(loggedInUser && document.getElementById('mainContent').style.display !== 'none') { e.preventDefault(); saveToMemory(); }
+        }
+    });
+    // Warn before leaving with unsaved changes
+    window.addEventListener('beforeunload', function(e) {
+        if(window._dirtyQuote && loggedInUser) { e.preventDefault(); e.returnValue = ''; return ''; }
+    });
+
+    console.log("✅ Winko ERP Script v191 successfully loaded!");
 </script>
 </body>
 </html>
